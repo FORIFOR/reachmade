@@ -3,7 +3,7 @@
 ## 結果
 
 - `npm run check`: **61 tests passed / 0 failed**。Node.js v22.16.0。
-- `python tests/browser-check.py`: **89 checks passed / 0 failed**。Chromium 144.0.7559.96。
+- `python tests/browser-check.py`: **89 checks passed / 0 failed**（2026-09-15の記録）。Chromium 144.0.7559.96。製品台帳をデータ駆動にした後の再実行は、この環境にPlaywrightがないため未実施。
 - 上記はこの**サイトのコード**の検証。掲載する各製品を今回再実行・再評価した結果ではない。
 
 ## 61件の静的・ローカルHTTPテスト
