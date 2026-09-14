@@ -106,7 +106,7 @@ test('Cloudflare security headers and apex redirection are included',async()=>{
  const r=await fs.readFile(path.join(dist,'_redirects'),'utf8');assert.match(r,/^\/ja\/ \/ 301/m);const w=await fs.readFile(path.join(root,'worker.js'),'utf8');assert.match(w,/www\.reachmade\.com/);assert.match(w,/reachmade\.com/);
 });
 test('deployment config has no account tokens or automatic domain writes',async()=>{
- const w=JSON.parse(await fs.readFile(path.join(root,'wrangler.jsonc'),'utf8'));assert.equal(w.name,'reachmade');assert.equal(w.main,'worker.js');assert.equal(w.assets.directory,'./dist');assert.equal(w.assets.binding,'ASSETS');assert.ok(!w.routes&&!w.account_id&&!w.api_token);
+ const w=JSON.parse(await fs.readFile(path.join(root,'wrangler.jsonc'),'utf8'));assert.equal(w.name,'reachmade');assert.equal(w.main,'worker.js');assert.equal(w.assets.directory,'./dist');assert.equal(w.assets.binding,'ASSETS');assert.equal(w.assets.run_worker_first,true);assert.ok(!w.routes&&!w.account_id&&!w.api_token);
 });
 test('source provenance covers six products',async()=>{
  const s=JSON.parse(await fs.readFile(path.join(root,'docs/content-sources.json'),'utf8'));assert.equal(s.products.length,6);assert.match(s.method,/not rerun/);
