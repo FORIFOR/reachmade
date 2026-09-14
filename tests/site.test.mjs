@@ -103,10 +103,10 @@ test('OG image is an actual 1200 by 630 PNG',async()=>{
 });
 test('Cloudflare security headers and apex redirection are included',async()=>{
  const h=await fs.readFile(path.join(dist,'_headers'),'utf8');assert.match(h,/connect-src 'none'/);assert.match(h,/frame-ancestors 'none'/);assert.match(h,/form-action 'none'/);
- const r=await fs.readFile(path.join(dist,'_redirects'),'utf8');assert.match(r,/https:\/\/www\.reachmade\.com\/\* https:\/\/reachmade\.com\/:splat 301/);
+ const r=await fs.readFile(path.join(dist,'_redirects'),'utf8');assert.match(r,/^\/ja\/ \/ 301/m);const w=await fs.readFile(path.join(root,'worker.js'),'utf8');assert.match(w,/www\.reachmade\.com/);assert.match(w,/reachmade\.com/);
 });
 test('deployment config has no account tokens or automatic domain writes',async()=>{
- const w=JSON.parse(await fs.readFile(path.join(root,'wrangler.jsonc'),'utf8'));assert.equal(w.name,'reachmade');assert.equal(w.assets.directory,'./dist');assert.ok(!w.routes&&!w.account_id&&!w.api_token);
+ const w=JSON.parse(await fs.readFile(path.join(root,'wrangler.jsonc'),'utf8'));assert.equal(w.name,'reachmade');assert.equal(w.main,'worker.js');assert.equal(w.assets.directory,'./dist');assert.equal(w.assets.binding,'ASSETS');assert.ok(!w.routes&&!w.account_id&&!w.api_token);
 });
 test('source provenance covers six products',async()=>{
  const s=JSON.parse(await fs.readFile(path.join(root,'docs/content-sources.json'),'utf8'));assert.equal(s.products.length,6);assert.match(s.method,/not rerun/);

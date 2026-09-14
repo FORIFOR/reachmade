@@ -62,6 +62,7 @@ public/assets/site.js     メニュー、絞り込み、相談文のコピー
 public/assets/og.png      SNS共有用の実画像
 public/_headers           Cloudflare配信用ヘッダー
 public/_redirects         Cloudflare配信用リダイレクト
+worker.js                 wwwからapexへのリダイレクトと静的アセット配信
 wrangler.jsonc            Workers Static Assets設定
 ```
 

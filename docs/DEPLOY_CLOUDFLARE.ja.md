@@ -82,7 +82,7 @@ www.reachmade.com
 
 この構成では、ドメインの配信先をCloudflareに管理させます。Namecheapに戻って適当なAレコードやIPアドレスを入れる必要はありません。
 
-`public/_redirects`に`www`→apexの301転送を含めています。**wwwをこのWorkerに接続しないと転送ルールも実行されません。** HTTPからHTTPSへの転送はCloudflareのSSL/TLS → Edge Certificates → Always Use HTTPSも確認してください。
+`worker.js`が`www`→apexの301転送を行います。**wwwをこのWorkerに接続しないと転送ルールも実行されません。** HTTPからHTTPSへの転送はCloudflareのSSL/TLS → Edge Certificates → Always Use HTTPSも確認してください。
 
 名前解決が有効でも、SSL証明書と実コンテンツの公開完了は別です。ブラウザで実際のページを確認してください。
 
