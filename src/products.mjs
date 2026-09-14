@@ -2,7 +2,7 @@
 export const products = [
   {
     id: 'genie', name: 'Genie', index: '01', category: 'work', discipline: 'AI WORKSPACE',
-    repo: 'https://github.com/FORIFOR/genie', site: 'https://genie-forifor.forifor.chatgpt.site',
+    repo: 'https://github.com/FORIFOR/genie', labSite: 'https://genie.reachmade.com/', site: 'https://genie-forifor.forifor.chatgpt.site',
     source: 'https://github.com/FORIFOR/genie/blob/main/README.md',
     evidence: 'https://github.com/FORIFOR/genie/blob/main/docs/ENTERPRISE_READINESS.md',
     demo: 'https://genie-forifor.forifor.chatgpt.site/#demo',
@@ -30,7 +30,7 @@ export const products = [
   },
   {
     id: 'ai-meeting', name: 'AI Meeting', index: '02', category: 'voice', discipline: 'VOICE & INTERACTION',
-    repo: 'https://github.com/FORIFOR/AI-meeting', site: 'https://ai-meeting.web.app/',
+    repo: 'https://github.com/FORIFOR/AI-meeting', labSite: 'https://ai-meeting.reachmade.com/', site: 'https://ai-meeting.web.app/',
     source: 'https://github.com/FORIFOR/AI-meeting/blob/main/README.md',
     evidence: 'https://github.com/FORIFOR/AI-meeting/blob/main/docs/validation.md',
     demo: 'https://youtu.be/qLenE6R7-nI', sourceSha: '3b269e92d9d8126f2506409ebd52d4add0781c6e',
@@ -57,7 +57,7 @@ export const products = [
   },
   {
     id: 'oathra', name: 'Oathra', index: '03', category: 'voice', discipline: 'PHONE & EVIDENCE',
-    repo: 'https://github.com/FORIFOR/oathra', site: 'https://forifor.github.io/oathra/',
+    repo: 'https://github.com/FORIFOR/oathra', labSite: 'https://oathra.reachmade.com/', site: 'https://forifor.github.io/oathra/',
     source: 'https://github.com/FORIFOR/oathra/blob/main/README.md',
     evidence: 'https://github.com/FORIFOR/oathra/blob/main/docs/ENTERPRISE_READINESS.md',
     demo: 'https://forifor.github.io/oathra/check.html',
@@ -84,7 +84,7 @@ export const products = [
   },
   {
     id: 'aisecure', name: 'AI Secure', index: '04', category: 'trust', discipline: 'SECURITY & INVESTIGATION',
-    repo: 'https://github.com/FORIFOR/AISecure', site: 'https://forifor.github.io/AISecure/',
+    repo: 'https://github.com/FORIFOR/AISecure', labSite: 'https://aisecure.reachmade.com/', site: 'https://forifor.github.io/AISecure/',
     source: 'https://github.com/FORIFOR/AISecure/blob/main/README.md',
     evidence: 'https://github.com/FORIFOR/AISecure/blob/main/docs/TUNING.md',
     demo: 'https://forifor.github.io/AISecure/try.html', sourceSha: '357abc6d30d32a317be62c738d36550febb08167',
@@ -111,7 +111,7 @@ export const products = [
   },
   {
     id: 'agent-team', name: 'Agent Team', index: '05', category: 'work', discipline: 'MULTI-AGENT SYSTEMS',
-    repo: 'https://github.com/FORIFOR/Multibot', site: 'https://forifor.github.io/Multibot/',
+    repo: 'https://github.com/FORIFOR/Multibot', labSite: 'https://multibot.reachmade.com/', site: 'https://forifor.github.io/Multibot/',
     source: 'https://github.com/FORIFOR/Multibot/blob/main/README.md',
     evidence: 'https://github.com/FORIFOR/Multibot/blob/main/docs/evidence/readiness-2026-09-14/README.md',
     demo: 'https://forifor.github.io/Multibot/',
@@ -138,7 +138,7 @@ export const products = [
   },
   {
     id: 'launchloom', name: 'Launchloom', index: '06', category: 'creation', discipline: 'PRODUCT & MEDIA',
-    repo: 'https://github.com/FORIFOR/Launchloom', site: 'https://forifor.github.io/Launchloom/',
+    repo: 'https://github.com/FORIFOR/Launchloom', labSite: 'https://launchloom.reachmade.com/', site: 'https://forifor.github.io/Launchloom/',
     source: 'https://github.com/FORIFOR/Launchloom/blob/main/README.md',
     evidence: 'https://github.com/FORIFOR/Launchloom/blob/main/docs/VERIFICATION.md',
     demo: 'https://forifor.github.io/Launchloom/', sourceSha: 'b32d110aa187d4865817411cfa011d47e668ab20',

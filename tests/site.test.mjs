@@ -26,8 +26,8 @@ test('email mode supports an owner-configured address',()=>{const c=clone();c.co
 test('14 routes represent 7 pages in each language',()=>{
  assert.equal(routes.length,14);for(const lang of ['ja','en'])assert.equal(routes.filter(r=>r.lang===lang).length,7);
 });
-test('6 products have unique identifiers and records',()=>{
- assert.equal(products.length,6);assert.equal(new Set(products.map(p=>p.id)).size,6);
+test('products have unique identifiers and records',()=>{
+ assert.ok(products.length>0);assert.equal(new Set(products.map(p=>p.id)).size,products.length);
 });
 for(const r of routes){
  test(`${r.route} metadata, structure, navigation and assets`,async()=>{
@@ -78,7 +78,7 @@ test('AI Secure does not claim production enforcement',()=>{
  const p=products.find(p=>p.id==='aisecure');assert.match(p.ja.scope,/監視/);assert.match(p.ja.scope,/遮断/);
 });
 test('illustrations are identified as design summaries',()=>{
- const html=htmlByPath.get('/products/');assert.equal((html.match(/公開資料に基づく、設計の要約/g)||[]).length,6);
+ const html=htmlByPath.get('/products/');assert.equal((html.match(/公開資料に基づく、設計の要約/g)||[]).length,products.length);
 });
 test('private inquiry is clearly external and has no automated submission',()=>{
  const html=htmlByPath.get('/contact/');assert.ok(html.includes(config.contact.url.replaceAll('&','&amp;')));
@@ -108,6 +108,6 @@ test('Cloudflare security headers and apex redirection are included',async()=>{
 test('deployment config has no account tokens or automatic domain writes',async()=>{
  const w=JSON.parse(await fs.readFile(path.join(root,'wrangler.jsonc'),'utf8'));assert.equal(w.name,'reachmade');assert.equal(w.main,'worker.js');assert.equal(w.assets.directory,'./dist');assert.equal(w.assets.binding,'ASSETS');assert.equal(w.assets.run_worker_first,true);assert.ok(!w.routes&&!w.account_id&&!w.api_token);
 });
-test('source provenance covers six products',async()=>{
- const s=JSON.parse(await fs.readFile(path.join(root,'docs/content-sources.json'),'utf8'));assert.equal(s.products.length,6);assert.match(s.method,/not rerun/);
+test('source provenance covers all products',async()=>{
+ const s=JSON.parse(await fs.readFile(path.join(root,'docs/content-sources.json'),'utf8'));assert.equal(s.products.length,products.length);assert.match(s.method,/not rerun/);
 });

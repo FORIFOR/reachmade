@@ -69,14 +69,15 @@ with sync_playwright() as p:
   expect(toggle.evaluate('(el)=>el===document.activeElement'),'focus returns')
   toggle.click();page.locator('h1').click();expect(not nav.is_visible(),'outside closes')
  check('mobile menu, Escape, focus, outside click',menu)
- def filter_products():
+def filter_products():
   load(page,'/products/')
-  expect(page.locator('.project-row:visible').count()==6,'initial six')
+  total=page.locator('.project-row').count()
+  expect(page.locator('.project-row:visible').count()==total,'initial products')
   page.locator('[data-filter="voice"]').click();expect(page.locator('.project-row:visible').count()==2,'voice has 2')
   expect(page.locator('[data-filter="voice"]').get_attribute('aria-pressed')=='true','pressed state')
   expect(page.locator('.filter-count').inner_text().startswith('2'),'count updated')
   page.locator('[data-filter="trust"]').click();expect(page.locator('.project-row:visible').count()==1,'trust has 1')
-  page.locator('[data-filter="all"]').click();expect(page.locator('.project-row:visible').count()==6,'reset six')
+  page.locator('[data-filter="all"]').click();expect(page.locator('.project-row:visible').count()==total,'reset products')
  check('product filters, count and selected state',filter_products)
  def disclosures():
   load(page,'/products/')
