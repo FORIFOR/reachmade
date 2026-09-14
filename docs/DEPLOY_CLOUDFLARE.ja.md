@@ -4,7 +4,7 @@
 
 ## 今あるもの / まだないもの
 
-- あるもの: 購入済み`reachmade.com`、Cloudflare DNS、`FORIFOR/reachmade`のソース、Workers Static Assetsへのデプロイ、`reachmade.com`と`www.reachmade.com`のWorker接続、現在の各プロダクト用サブドメイン6件。
+- あるもの: 購入済み`reachmade.com`、Cloudflare DNS、`FORIFOR/reachmade`のソース、Workers Static Assetsへのデプロイ、`reachmade.com`と`www.reachmade.com`のWorker接続、台帳に登録した各プロダクト用サブドメイン（現在6件）。
 - まだないもの: 専用のReachmadeメールボックス、問い合わせ受信・実機表示の確認。
 - Namecheapの登録・更新は継続します。ネームサーバーを元に戻したり、有料のホスティングを追加契約したりする手順ではありません。
 
@@ -90,7 +90,7 @@ launchloom.reachmade.com
 
 `worker.js`が`www`→apexの301転送を行います。**wwwをこのWorkerに接続しないと転送ルールも実行されません。** HTTPからHTTPSへの転送はCloudflareのSSL/TLS → Edge Certificates → Always Use HTTPSも確認してください。
 
-プロダクト用6サブドメインは、現時点では各製品の既存公開先へ302転送する入口です。製品サイト自体をこのWorkerへ移したわけではありません。新しい製品を追加するときは、`src/products.mjs`に`labSite`と`site`を持つレコードを追加し、そのサブドメインをCloudflareのカスタムドメインへ一度接続します。Workerは同じ台帳から転送先を組み立てます。
+プロダクト用サブドメインは、現時点では各製品の既存公開先へ302転送する入口です（現在6件）。製品サイト自体をこのWorkerへ移したわけではありません。新しい製品を追加するときは、`src/products.mjs`に`labSite`と`site`を持つレコードを追加し、そのサブドメインをCloudflareのカスタムドメインへ一度接続します。Workerは同じ台帳から転送先を組み立てます。
 
 名前解決が有効でも、SSL証明書と実コンテンツの公開完了は別です。ブラウザで実際のページを確認してください。
 
@@ -103,7 +103,7 @@ curl -I https://reachmade.com/does-not-exist/
 curl -I https://genie.reachmade.com/
 ```
 
-確認済み（2026-09-15）: apexが200、wwwがapexの同じパスへ301、存在しないページが404、6サブドメインが各公開先へ302、パスとクエリを保持。DNSは1.1.1.1で全6件のAレコードを返し、Cloudflare IPを指定したHTTPSで転送を確認しました。通常の名前解決で一部に古い負のキャッシュが残る場合があります。ヘッダーのCSPとnosniff、HTTP版のHTTPS転送も実環境で確認済みです。
+確認済み（2026-09-15）: apexが200、wwwがapexの同じパスへ301、存在しないページが404、台帳登録中の6サブドメインが各公開先へ302、パスとクエリを保持。DNSは1.1.1.1で全6件のAレコードを返し、Cloudflare IPを指定したHTTPSで転送を確認しました。通常の名前解決で一部に古い負のキャッシュが残る場合があります。ヘッダーのCSPとnosniff、HTTP版のHTTPS転送も実環境で確認済みです。
 
 続いてSafariとiPhoneなどの実機、問い合わせの実受信、SNS共有画像を確認します。詳細はRELEASE_CHECKLIST.md。
 

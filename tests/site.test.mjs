@@ -77,12 +77,14 @@ test('Oathra does not conflate speech with system registration',()=>{
 test('AI Secure does not claim production enforcement',()=>{
  const p=products.find(p=>p.id==='aisecure');assert.match(p.ja.scope,/監視/);assert.match(p.ja.scope,/遮断/);
 });
-test('illustrations are identified as design summaries',()=>{
- const html=htmlByPath.get('/products/');assert.equal((html.match(/公開資料に基づく、設計の要約/g)||[]).length,products.length);
+test('product previews use real local project assets',async()=>{
+ const html=htmlByPath.get('/products/');
+ assert.equal((html.match(/class="product-preview/g)||[]).length,products.length);
+ for(const p of products){assert.ok(p.preview);await fs.access(path.join(root,'public',p.preview));assert.match(html,new RegExp(`src="${p.preview.replaceAll('/','\\/') }"`));}
 });
 test('private inquiry is clearly external and has no automated submission',()=>{
  const html=htmlByPath.get('/contact/');assert.ok(html.includes(config.contact.url.replaceAll('&','&amp;')));
- assert.match(html,/専用メール・直接送信フォームは未設定/);
+ assert.match(html,/直接送信フォームは未設定/);
  assert.match(html,/送信済みにはなりません/);
  assert.match(html,/type="button" id="copy-brief"/);
 });

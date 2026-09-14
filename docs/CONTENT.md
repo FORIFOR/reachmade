@@ -4,6 +4,8 @@
 
 2026-09-15にGitHub連携で各製品の現行READMEを読み、サイトの記述を作成。詳細はcontent-sources.json。アプリの実行、性能の再測定、顧客環境での受け入れテストはこのサイト制作では行っていない。
 
+製品パネルの画像は、各プロジェクト内で公開されている検証記録から選び、Reachmadeの静的アセットとして縮小掲載している。Reachmade側で新たに録画・再検証したものではないため、画面上でも公開記録由来であることを示す。対応表と元ファイルは`content-sources.json`の`preview` / `previewSource`に記録する。
+
 ## Must keep
 
 - Genie: 現在のリポジトリ名はgenie。セットアップが必要なdeveloper preview。プロジェクト全体のOSSライセンスは未設定。自動で仕事を何でも完遂するとは書かない。

@@ -28,7 +28,8 @@ export function validateConfig(config) {
     for (const field of ['repo','site','source','evidence','demo']) {
       if (!product[field]?.startsWith('https://')) throw new Error(`Invalid URL: ${product.id}.${field}`);
     }
-    for (const lang of ['ja','en']) for (const field of ['headline','short','description','scope','status','proof','license']) {
+    if (product.preview && (!product.preview.startsWith('/assets/') || product.preview.includes('..'))) throw new Error(`Invalid local preview: ${product.id}.preview`);
+    for (const lang of ['ja','en']) for (const field of ['headline','short','description','scope','status','proof','license','previewLabel','demoLabel']) {
       if (!product[lang]?.[field]) throw new Error(`Missing ${product.id}.${lang}.${field}`);
     }
   }
@@ -49,8 +50,12 @@ function icon(id) {
  };
  return `<svg class="product-icon" viewBox="0 0 48 48" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${shapes[id]}</svg>`;
 }
-function identityStudy(c) {
- return `<figure class="identity-study" aria-label="Reachmade brand study"><div class="study-head"><span>REACH / MADE</span><span>STUDY — 001</span></div><div class="reach-architecture" aria-hidden="true"><div class="measure-v"><span>IDEA</span><span>REAL</span></div><div class="reach-line line-1"></div><div class="reach-line line-2"></div><div class="reach-line line-3"></div><div class="reach-line line-4"></div><div class="reach-line line-5"></div><div class="reach-line line-6"></div><div class="measure-h"><span>01</span><span>→</span><span>${productTotal}</span></div></div><figcaption>${c.heroCaption}</figcaption></figure>`;
+function identityStudy(c,lang) {
+ const featured=products.find(p=>p.featured && p.preview) || products.find(p=>p.preview) || products[0];
+ const t=featured[lang];
+ if (!featured.preview) return `<figure class="identity-study" aria-label="${e(t.previewLabel)}"><div class="study-head"><span>WORKING PREVIEW / ${e(featured.name)}</span><span>${featured.index} / ${productTotal}</span></div>${productIllustration(featured,lang)}<figcaption>${c.heroCaption}</figcaption></figure>`;
+ const featuredLink=featured.labSite?link(featured.labSite,c.heroProofLink,'text-link'):'';
+ return `<figure class="identity-study hero-proof" aria-label="${e(t.previewLabel)}"><div class="study-head"><span>WORKING PREVIEW / ${e(featured.name)}</span><span>${featured.index} / ${productTotal}</span></div><div class="hero-proof-image"><img src="${e(featured.preview)}" alt="${e(t.previewLabel)}" fetchpriority="high"><span class="proof-badge">${lang==='ja'?'実画面の記録':'Recorded product screen'}</span></div><figcaption><span>${c.heroCaption}</span>${featuredLink}</figcaption></figure>`;
 }
 function nav(lang, current, config) {
  const c=copy[lang];
@@ -69,22 +74,25 @@ function pageIntro(label,title,lead,extra='') {
  return `<section class="page-intro container"><p class="eyebrow">${label}</p><h1>${title}</h1><p class="lead">${lead}</p>${extra}</section>`;
 }
 function productIllustration(p,lang) {
- // Original editorial notation, not a screenshot, simulation, or live application.
  const t=p[lang];
+ if (p.preview) {
+   return `<figure class="product-preview preview-${p.id}"><div class="preview-frame"><img src="${e(p.preview)}" alt="${e(t.previewLabel)}" loading="lazy"><span class="proof-badge">${e(t.previewLabel)}</span></div><figcaption><span>${lang==='ja'?'実際の画面記録':'Recorded product screen'}</span><span>${lang==='ja'?'GitHub公開記録から':'From a public GitHub record'}</span></figcaption></figure>`;
+ }
+ // Fallback for future products that have not supplied a local preview yet.
  const sub=lang==='ja'?'公開資料に基づく、設計の要約':'Design summary from the public documentation';
  const parts=t.outcome.split(' → ');
  return `<div class="product-notation notation-${p.id}"><div class="notation-top"><span>${p.discipline}</span><span>${p.index} / ${productTotal}</span></div><div class="notation-center">${icon(p.id)}<span class="notation-name">${p.name}</span><span class="notation-rule"></span><div class="notation-flow">${parts.map((s,i)=>`<span>${e(s)}</span>${i<parts.length-1?'<i aria-hidden="true">↗</i>':''}`).join('')}</div></div><div class="notation-bottom"><span>${sub}</span><span aria-hidden="true">↗</span></div></div>`;
 }
 function productRow(p,lang,full=false) {
  const c=copy[lang],t=p[lang];
- return `<article class="project-row${full?' project-full':''}" id="${p.id}" data-category="${p.category}"><div class="project-visual">${productIllustration(p,lang)}</div><div class="project-content"><div class="project-heading"><span class="eyebrow">${p.index} — ${p.name}</span><span class="status-label">${t.status}</span></div><h${full?'2':'3'}>${t.headline}</h${full?'2':'3'}><p>${t.description}</p><div class="project-actions">${p.labSite?link(p.labSite,c.productSite,'button button-outline'):''}${link(p.demo,c.realDemo,'button button-outline')}${link(p.repo,'GitHub','text-link')}</div><p class="project-scope">${t.scope}</p>${full?`<details class="project-detail"><summary>${lang==='ja'?'検証・導入条件を確認する':'Evidence & reuse conditions'}<span aria-hidden="true">＋</span></summary><div><h3>${c.proof}</h3><p>${t.proof}</p><h3>${lang==='ja'?'再利用の条件':'Reuse conditions'}</h3><p>${t.license}</p><h3>${lang==='ja'?'この技術を活かせる相談':'Potential project scope'}</h3><p>${t.consult}</p><div class="project-detail-links">${link(p.source,c.readSource)}${link(p.evidence,c.evidence)}<a class="text-link" href="${href(lang,'contact')}?product=${p.id}">${c.inquiry}${arrow}</a></div></div></details>`:''}</div></article>`;
+ return `<article class="project-row${full?' project-full':''}" id="${p.id}" data-category="${p.category}"><div class="project-visual">${productIllustration(p,lang)}</div><div class="project-content"><div class="project-heading"><span class="eyebrow">${p.index} — ${p.name}</span><span class="status-label">${t.status}</span></div><h${full?'2':'3'}>${t.headline}</h${full?'2':'3'}><p>${t.description}</p><div class="project-actions">${p.labSite?link(p.labSite,c.productSite,'button button-outline'):''}${link(p.demo,t.demoLabel,'button button-outline')}${link(p.repo,'GitHub','text-link')}</div><p class="project-scope">${t.scope}</p>${full?`<details class="project-detail"><summary>${lang==='ja'?'検証・導入条件を確認する':'Evidence & reuse conditions'}<span aria-hidden="true">＋</span></summary><div><h3>${c.proof}</h3><p>${t.proof}</p><h3>${lang==='ja'?'再利用の条件':'Reuse conditions'}</h3><p>${t.license}</p><h3>${lang==='ja'?'この技術を活かせる相談':'Potential project scope'}</h3><p>${t.consult}</p><div class="project-detail-links">${link(p.source,c.readSource)}${link(p.evidence,c.evidence)}<a class="text-link" href="${href(lang,'contact')}?product=${p.id}">${c.inquiry}${arrow}</a></div></div></details>`:''}</div></article>`;
 }
 function home(lang,config) {
  const c=copy[lang];
- return `<section class="hero container"><div class="hero-copy"><p class="eyebrow"><span class="label-square" aria-hidden="true"></span>${c.heroLabel}</p><h1>${c.tagline}</h1><p class="hero-description">${c.heroText}</p><div class="hero-actions"><a class="button" href="${href(lang,'products')}">${c.heroPrimary}${arrow}</a><a class="text-link" href="${href(lang,'contact')}">${c.heroSecondary}${arrow}</a></div><div class="hero-footnote"><span>APPLIED RESEARCH</span><span>PRODUCT ENGINEERING</span></div></div>${identityStudy(c)}</section>
+ return `<section class="hero container"><div class="hero-copy"><p class="eyebrow"><span class="label-square" aria-hidden="true"></span>${c.heroLabel}</p><h1>${c.tagline}</h1><p class="hero-description">${c.heroText}</p><div class="hero-actions"><a class="button" href="${href(lang,'products')}">${c.heroPrimary}${arrow}</a><a class="text-link" href="${href(lang,'contact')}">${c.heroSecondary}${arrow}</a></div><div class="hero-footnote"><span>APPLIED RESEARCH</span><span>PRODUCT ENGINEERING</span></div></div>${identityStudy(c,lang)}</section>
 <section class="product-ribbon" aria-label="${lang==='ja'?'自主開発プロダクト':'Independent products'}"><div class="container ribbon-inner"><span class="ribbon-title">BUILT HERE</span>${products.map(p=>`<a href="${href(lang,'products')}#${p.id}">${p.name}<sup>${p.index}</sup></a>`).join('')}</div></section>
 <section class="manifesto container"><p class="eyebrow">OUR APPROACH</p><div><h2>${c.statement}</h2><p>${c.statementText}</p></div><span class="section-marker" aria-hidden="true">↗</span></section>
-<section class="selected-work container" id="products"><div class="section-title"><div><p class="eyebrow">${c.selectedLabel}</p><h2>${c.selectedTitle}</h2></div><p>${c.selectedText}</p></div>${['oathra','agent-team','ai-meeting'].map(id=>productRow(products.find(p=>p.id===id),lang)).join('')}<div class="section-end"><a class="text-link large-link" href="${href(lang,'products')}">${c.allProducts}${arrow}</a></div></section>
+<section class="selected-work container" id="products"><div class="section-title"><div><p class="eyebrow">${c.selectedLabel}</p><h2>${c.selectedTitle}</h2></div><p>${c.selectedText}</p></div>${(products.filter(p=>p.featured).slice(0,3).length ? products.filter(p=>p.featured).slice(0,3) : products.slice(0,3)).map(p=>productRow(p,lang)).join('')}<div class="section-end"><a class="text-link large-link" href="${href(lang,'products')}">${c.allProducts}${arrow}</a></div></section>
 <section class="service-preview"><div class="container service-preview-grid"><div><p class="eyebrow">${c.supportEyebrow}</p><h2>${c.supportTitle}</h2><p>${c.supportText}</p><a class="button button-light" href="${href(lang,'services')}">${c.servicesLink}${arrow}</a></div><div class="service-preview-list">${c.serviceCards.map(x=>`<a href="${href(lang,'services')}#service-${x[0]}"><span>${x[0]}</span><h3>${x[1]}</h3>${arrow}</a>`).join('')}</div></div></section>
 <section class="principles container"><p class="eyebrow">HOW WE BUILD</p><h2>${c.philosophy}</h2><div class="principle-grid">${c.principles.map((x,i)=>`<article><span class="principle-number">0${i+1}</span><h3>${x[0]}</h3><p>${x[1]}</p></article>`).join('')}</div></section>${contactCTA(lang)}`;
 }
@@ -98,11 +106,13 @@ function services(lang) {
 }
 function work(lang,config) {
  const c=copy[lang];
- return `${pageIntro('WORK NOTES',c.workTitle,c.workLead)}<section class="container work-records"><p class="source-notice">${c.workNote}<br><span>${lang==='ja'?'資料確認日':'Source review date'}: ${config.checkedAt}</span></p>${products.map(p=>`<article class="work-record" id="${p.id}"><div class="work-record-name"><span class="eyebrow">NOTE ${p.index}</span><h2>${p.name}</h2><span class="status-label">${p[lang].status}</span></div><div class="work-record-body"><h3>${c.proof}</h3><p>${p[lang].proof}</p><h3>${c.limits}</h3><p>${p[lang].scope}</p><div class="record-links">${link(p.evidence,c.evidence)}${link(p.demo,c.recordedDemo)}${link(p.source,c.readSource)}</div></div></article>`).join('')}</section>${contactCTA(lang,true)}`;
+ return `${pageIntro('WORK NOTES',c.workTitle,c.workLead)}<section class="container work-records"><p class="source-notice">${c.workNote}<br><span>${lang==='ja'?'資料確認日':'Source review date'}: ${config.checkedAt}</span></p>${products.map(p=>`<article class="work-record" id="${p.id}"><div class="work-record-name"><span class="eyebrow">NOTE ${p.index}</span><h2>${p.name}</h2><span class="status-label">${p[lang].status}</span></div><div class="work-record-body"><h3>${c.proof}</h3><p>${p[lang].proof}</p><h3>${c.limits}</h3><p>${p[lang].scope}</p><div class="record-links">${link(p.evidence,c.evidence)}${link(p.demo,p[lang].demoLabel)}${link(p.source,c.readSource)}</div></div></article>`).join('')}</section>${contactCTA(lang,true)}`;
 }
 function about(lang,config) {
  const c=copy[lang];
- return `${pageIntro('ABOUT REACHMADE',c.aboutTitle,c.aboutLead)}<section class="container about-story"><div class="about-emblem" aria-hidden="true">${mark()}<span>REACH<br>MADE.</span></div><div class="about-prose"><p>${c.aboutBody}</p><p>${c.aboutBody2}</p><div class="name-note"><h2>Reach / made</h2><p>${c.identity}</p></div></div></section><section class="container founder"><div><p class="eyebrow">THE PERSON BEHIND THE WORK</p><h2>${e(config.owner)}</h2><span>${c.ownerRole}</span></div><div><p>${c.ownerText}</p>${link(config.github,lang==='ja'?'FORIFORのGitHubを見る':'Explore FORIFOR on GitHub','button button-outline')}<p class="source-notice">${c.aboutNotice}</p></div></section><section class="principles container"><p class="eyebrow">HOW WE BUILD</p><h2>${c.philosophy}</h2><div class="principle-grid">${c.principles.map((x,i)=>`<article><span class="principle-number">0${i+1}</span><h3>${x[0]}</h3><p>${x[1]}</p></article>`).join('')}</div></section>${contactCTA(lang,true)}`;
+ const projectNames=products.map(p=>e(p.name)).join(lang==='ja'?'、':' · ');
+ const projectTrail=lang==='ja'?`${c.ownerText}${projectNames}。コードや設計、検証記録をGitHubで公開しています。`:`${c.ownerText}${projectNames}. Code, design notes, and evaluation records are published on GitHub.`;
+ return `${pageIntro('ABOUT REACHMADE',c.aboutTitle,c.aboutLead)}<section class="container about-story"><div class="about-emblem" aria-hidden="true">${mark()}<span>REACH<br>MADE.</span></div><div class="about-prose"><p>${c.aboutBody}</p><p>${c.aboutBody2}</p><div class="name-note"><h2>Reach / made</h2><p>${c.identity}</p></div></div></section><section class="container founder"><div><p class="eyebrow">THE PERSON BEHIND THE WORK</p><h2>${e(config.owner)}</h2><span>${c.ownerRole}</span></div><div><p>${projectTrail}</p>${link(config.github,lang==='ja'?'FORIFORのGitHubを見る':'Explore FORIFOR on GitHub','button button-outline')}<p class="source-notice">${c.aboutNotice}</p></div></section><section class="principles container"><p class="eyebrow">HOW WE BUILD</p><h2>${c.philosophy}</h2><div class="principle-grid">${c.principles.map((x,i)=>`<article><span class="principle-number">0${i+1}</span><h3>${x[0]}</h3><p>${x[1]}</p></article>`).join('')}</div></section>${contactCTA(lang,true)}`;
 }
 function contact(lang,config) {
  const c=copy[lang];
@@ -143,7 +153,7 @@ export async function build() {
  await fs.writeFile(path.join(dist,'sitemap.xml'),sitemap);
  await fs.writeFile(path.join(dist,'robots.txt'),`User-agent: *\nAllow: /\nSitemap: ${config.origin}/sitemap.xml\n`);
  // Machine-readable claims inventory; nothing private is exported.
- await fs.writeFile(path.join(root,'docs','content-sources.json'),JSON.stringify({checkedAt:config.checkedAt,method:'Read public READMEs with the GitHub connector; applications were not rerun.',products:products.map(p=>({id:p.id,repo:p.repo,source:p.source,sourceBlobSha:p.sourceSha??null,evidence:p.evidence,status:p.ja.status,scope:p.ja.scope}))},null,2)+'\n');
+ await fs.writeFile(path.join(root,'docs','content-sources.json'),JSON.stringify({checkedAt:config.checkedAt,method:'Read public READMEs with the GitHub connector; applications were not rerun.',products:products.map(p=>({id:p.id,repo:p.repo,source:p.source,sourceBlobSha:p.sourceSha??null,evidence:p.evidence,preview:p.preview??null,previewSource:p.previewSource??null,status:p.ja.status,scope:p.ja.scope}))},null,2)+'\n');
  await fs.writeFile(path.join(root,'docs','routes.json'),JSON.stringify(routes,null,2)+'\n');
  console.log(`Built ${routes.length} localized pages + 404 into dist/. No network or API keys required.`);
  return routes;

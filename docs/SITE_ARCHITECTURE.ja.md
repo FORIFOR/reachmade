@@ -35,7 +35,7 @@ Reachmade Lab の親サイトはすでに作成・公開されています。
 | 役割 | URL |
 |---|---|
 | Reachmade Lab の信用・活動紹介 | `https://reachmade.com/` |
-| 6製品の一覧 | `https://reachmade.com/products/` |
+| 現在の製品一覧 | `https://reachmade.com/products/` |
 | 企業向けAI実装・FDE支援 | `https://reachmade.com/services/` |
 | 開発・検証記録 | `https://reachmade.com/work/` |
 | 開発者・ラボ紹介 | `https://reachmade.com/about/` |
@@ -54,13 +54,13 @@ Reachmade Lab の親サイトはすでに作成・公開されています。
 - GitHub: リポジトリ単位のスター、Issue、リリース取得
 - SNS: 発信アカウント単位の投稿・反応。共用アカウントの全体値を製品成果に重複計上しない
 
-親サイトから製品へ送るリンクには、導線を確認できる範囲で `utm_source=reachmade`、`utm_medium=referral`、`utm_campaign=product-directory` を使います。導入前に計測基盤とプライバシー説明を確認し、未設定の値を成果として扱いません。
+現在の親サイトから製品へ送るリンクにはUTMパラメータを付けていません。計測基盤を導入する場合は、製品IDを含むパラメータとプライバシー説明を同時に確認し、未設定の値を成果として扱いません。
 
 ## 現時点の判定
 
 - **親サイト:** 公開済み・閲覧可能
-- **製品本体:** 6件すべて、台帳記載の既存URLはHTTPS 200を確認
-- **製品サブドメイン:** 6件すべて、権威DNSで解決し、Cloudflare Worker の302転送を確認（通常DNSは一時的に古い負のキャッシュを返す場合あり）
+- **製品本体:** 現在の台帳登録分（6件）は、台帳記載の既存URLでHTTPS 200を確認
+- **製品サブドメイン:** 現在の台帳登録分（6件）は、権威DNSで解決し、Cloudflare Worker の302転送を確認（通常DNSは一時的に古い負のキャッシュを返す場合あり）
 - **移行:** 製品本体を一斉移転していない。現在はサブドメインを入口とする段階
 - **事業導線:** 相談先は外部窓口で、Reachmade専用の受信は未確認
 

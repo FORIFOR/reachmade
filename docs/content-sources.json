@@ -8,6 +8,8 @@
       "source": "https://github.com/FORIFOR/genie/blob/main/README.md",
       "sourceBlobSha": "b432b390dc50225743135e400afe9f7fba81ea31",
       "evidence": "https://github.com/FORIFOR/genie/blob/main/docs/ENTERPRISE_READINESS.md",
+      "preview": "/assets/products/genie.jpg",
+      "previewSource": "genie/docs/golden-screenshots/workspace-ux/home-1162-light.png",
       "status": "開発者プレビュー",
       "scope": "アプリだけでは利用が完結しません。ローカルサービスとモデルの設定が必要です。以前の名称はAstraです。"
     },
@@ -17,6 +19,8 @@
       "source": "https://github.com/FORIFOR/AI-meeting/blob/main/README.md",
       "sourceBlobSha": "3b269e92d9d8126f2506409ebd52d4add0781c6e",
       "evidence": "https://github.com/FORIFOR/AI-meeting/blob/main/docs/validation.md",
+      "preview": "/assets/products/ai-meeting.jpg",
+      "previewSource": "AI-meeting/docs/reports/img/gate7-result.png",
       "status": "ベータ",
       "scope": "登録不要のタスク機能と、メール認証・時間制限のある音声体験は別です。外部会議への接続は個別の設定と検証が必要です。"
     },
@@ -26,6 +30,8 @@
       "source": "https://github.com/FORIFOR/oathra/blob/main/README.md",
       "sourceBlobSha": null,
       "evidence": "https://github.com/FORIFOR/oathra/blob/main/docs/ENTERPRISE_READINESS.md",
+      "preview": "/assets/products/oathra.jpg",
+      "previewSource": "oathra/docs/media/arena-confirmed.png",
       "status": "開発版",
       "scope": "会話上の合意と、店舗システムへの登録は別です。シミュレーターと実電話の検証も区別します。実電話には設定と費用が必要です。"
     },
@@ -35,6 +41,8 @@
       "source": "https://github.com/FORIFOR/AISecure/blob/main/README.md",
       "sourceBlobSha": "357abc6d30d32a317be62c738d36550febb08167",
       "evidence": "https://github.com/FORIFOR/AISecure/blob/main/docs/TUNING.md",
+      "preview": "/assets/products/aisecure.jpg",
+      "previewSource": "AISecure/docs/screenshots/audit.png",
       "status": "検証用プロトタイプ",
       "scope": "スナップショット分析です。常時監視、実際の遮断、漏えいの確定は行いません。公開検証は合成データで、本番の性能保証ではありません。"
     },
@@ -44,6 +52,8 @@
       "source": "https://github.com/FORIFOR/Multibot/blob/main/README.md",
       "sourceBlobSha": null,
       "evidence": "https://github.com/FORIFOR/Multibot/blob/main/docs/evidence/readiness-2026-09-14/README.md",
+      "preview": "/assets/products/agent-team.jpg",
+      "previewSource": "Multibot/docs/media/timeline.png",
       "status": "開発・評価中",
       "scope": "単一エージェントより高品質とはまだ言えません。公開比較には失敗や実行環境による制約があり、顧客環境での本番受け入れは別評価です。"
     },
@@ -53,6 +63,8 @@
       "source": "https://github.com/FORIFOR/Launchloom/blob/main/README.md",
       "sourceBlobSha": "b32d110aa187d4865817411cfa011d47e668ab20",
       "evidence": "https://github.com/FORIFOR/Launchloom/blob/main/docs/VERIFICATION.md",
+      "preview": "/assets/products/launchloom.jpg",
+      "previewSource": "Launchloom/homepage/generated-page.png",
       "status": "アルファ",
       "scope": "単一利用者向けです。素材の生成とSNSへの公開は別工程で、実アカウントへの投稿は検証未完了。成果や反響は保証しません。"
     }
