@@ -1,0 +1,72 @@
+[
+  {
+    "route": "/",
+    "lang": "ja",
+    "page": "home"
+  },
+  {
+    "route": "/products/",
+    "lang": "ja",
+    "page": "products"
+  },
+  {
+    "route": "/services/",
+    "lang": "ja",
+    "page": "services"
+  },
+  {
+    "route": "/work/",
+    "lang": "ja",
+    "page": "work"
+  },
+  {
+    "route": "/about/",
+    "lang": "ja",
+    "page": "about"
+  },
+  {
+    "route": "/contact/",
+    "lang": "ja",
+    "page": "contact"
+  },
+  {
+    "route": "/privacy/",
+    "lang": "ja",
+    "page": "privacy"
+  },
+  {
+    "route": "/en/",
+    "lang": "en",
+    "page": "home"
+  },
+  {
+    "route": "/en/products/",
+    "lang": "en",
+    "page": "products"
+  },
+  {
+    "route": "/en/services/",
+    "lang": "en",
+    "page": "services"
+  },
+  {
+    "route": "/en/work/",
+    "lang": "en",
+    "page": "work"
+  },
+  {
+    "route": "/en/about/",
+    "lang": "en",
+    "page": "about"
+  },
+  {
+    "route": "/en/contact/",
+    "lang": "en",
+    "page": "contact"
+  },
+  {
+    "route": "/en/privacy/",
+    "lang": "en",
+    "page": "privacy"
+  }
+]

@@ -1,0 +1,373 @@
+{
+  "testedAt": "2026-09-15",
+  "mode": "In-memory HTML/CSS/JS rendering, not HTTP navigation or Cloudflare deployment",
+  "browser": "Chromium 144.0.7559.96",
+  "passed": 89,
+  "failed": 0,
+  "checks": [
+    {
+      "name": "layout / 320px",
+      "passed": true
+    },
+    {
+      "name": "layout / 390px",
+      "passed": true
+    },
+    {
+      "name": "layout / 768px",
+      "passed": true
+    },
+    {
+      "name": "layout / 1440px",
+      "passed": true
+    },
+    {
+      "name": "layout / 1920px",
+      "passed": true
+    },
+    {
+      "name": "layout /products/ 320px",
+      "passed": true
+    },
+    {
+      "name": "layout /products/ 390px",
+      "passed": true
+    },
+    {
+      "name": "layout /products/ 768px",
+      "passed": true
+    },
+    {
+      "name": "layout /products/ 1440px",
+      "passed": true
+    },
+    {
+      "name": "layout /products/ 1920px",
+      "passed": true
+    },
+    {
+      "name": "layout /services/ 320px",
+      "passed": true
+    },
+    {
+      "name": "layout /services/ 390px",
+      "passed": true
+    },
+    {
+      "name": "layout /services/ 768px",
+      "passed": true
+    },
+    {
+      "name": "layout /services/ 1440px",
+      "passed": true
+    },
+    {
+      "name": "layout /services/ 1920px",
+      "passed": true
+    },
+    {
+      "name": "layout /work/ 320px",
+      "passed": true
+    },
+    {
+      "name": "layout /work/ 390px",
+      "passed": true
+    },
+    {
+      "name": "layout /work/ 768px",
+      "passed": true
+    },
+    {
+      "name": "layout /work/ 1440px",
+      "passed": true
+    },
+    {
+      "name": "layout /work/ 1920px",
+      "passed": true
+    },
+    {
+      "name": "layout /about/ 320px",
+      "passed": true
+    },
+    {
+      "name": "layout /about/ 390px",
+      "passed": true
+    },
+    {
+      "name": "layout /about/ 768px",
+      "passed": true
+    },
+    {
+      "name": "layout /about/ 1440px",
+      "passed": true
+    },
+    {
+      "name": "layout /about/ 1920px",
+      "passed": true
+    },
+    {
+      "name": "layout /contact/ 320px",
+      "passed": true
+    },
+    {
+      "name": "layout /contact/ 390px",
+      "passed": true
+    },
+    {
+      "name": "layout /contact/ 768px",
+      "passed": true
+    },
+    {
+      "name": "layout /contact/ 1440px",
+      "passed": true
+    },
+    {
+      "name": "layout /contact/ 1920px",
+      "passed": true
+    },
+    {
+      "name": "layout /privacy/ 320px",
+      "passed": true
+    },
+    {
+      "name": "layout /privacy/ 390px",
+      "passed": true
+    },
+    {
+      "name": "layout /privacy/ 768px",
+      "passed": true
+    },
+    {
+      "name": "layout /privacy/ 1440px",
+      "passed": true
+    },
+    {
+      "name": "layout /privacy/ 1920px",
+      "passed": true
+    },
+    {
+      "name": "layout /en/ 320px",
+      "passed": true
+    },
+    {
+      "name": "layout /en/ 390px",
+      "passed": true
+    },
+    {
+      "name": "layout /en/ 768px",
+      "passed": true
+    },
+    {
+      "name": "layout /en/ 1440px",
+      "passed": true
+    },
+    {
+      "name": "layout /en/ 1920px",
+      "passed": true
+    },
+    {
+      "name": "layout /en/products/ 320px",
+      "passed": true
+    },
+    {
+      "name": "layout /en/products/ 390px",
+      "passed": true
+    },
+    {
+      "name": "layout /en/products/ 768px",
+      "passed": true
+    },
+    {
+      "name": "layout /en/products/ 1440px",
+      "passed": true
+    },
+    {
+      "name": "layout /en/products/ 1920px",
+      "passed": true
+    },
+    {
+      "name": "layout /en/services/ 320px",
+      "passed": true
+    },
+    {
+      "name": "layout /en/services/ 390px",
+      "passed": true
+    },
+    {
+      "name": "layout /en/services/ 768px",
+      "passed": true
+    },
+    {
+      "name": "layout /en/services/ 1440px",
+      "passed": true
+    },
+    {
+      "name": "layout /en/services/ 1920px",
+      "passed": true
+    },
+    {
+      "name": "layout /en/work/ 320px",
+      "passed": true
+    },
+    {
+      "name": "layout /en/work/ 390px",
+      "passed": true
+    },
+    {
+      "name": "layout /en/work/ 768px",
+      "passed": true
+    },
+    {
+      "name": "layout /en/work/ 1440px",
+      "passed": true
+    },
+    {
+      "name": "layout /en/work/ 1920px",
+      "passed": true
+    },
+    {
+      "name": "layout /en/about/ 320px",
+      "passed": true
+    },
+    {
+      "name": "layout /en/about/ 390px",
+      "passed": true
+    },
+    {
+      "name": "layout /en/about/ 768px",
+      "passed": true
+    },
+    {
+      "name": "layout /en/about/ 1440px",
+      "passed": true
+    },
+    {
+      "name": "layout /en/about/ 1920px",
+      "passed": true
+    },
+    {
+      "name": "layout /en/contact/ 320px",
+      "passed": true
+    },
+    {
+      "name": "layout /en/contact/ 390px",
+      "passed": true
+    },
+    {
+      "name": "layout /en/contact/ 768px",
+      "passed": true
+    },
+    {
+      "name": "layout /en/contact/ 1440px",
+      "passed": true
+    },
+    {
+      "name": "layout /en/contact/ 1920px",
+      "passed": true
+    },
+    {
+      "name": "layout /en/privacy/ 320px",
+      "passed": true
+    },
+    {
+      "name": "layout /en/privacy/ 390px",
+      "passed": true
+    },
+    {
+      "name": "layout /en/privacy/ 768px",
+      "passed": true
+    },
+    {
+      "name": "layout /en/privacy/ 1440px",
+      "passed": true
+    },
+    {
+      "name": "layout /en/privacy/ 1920px",
+      "passed": true
+    },
+    {
+      "name": "layout /404.html 320px",
+      "passed": true
+    },
+    {
+      "name": "layout /404.html 390px",
+      "passed": true
+    },
+    {
+      "name": "layout /404.html 768px",
+      "passed": true
+    },
+    {
+      "name": "layout /404.html 1440px",
+      "passed": true
+    },
+    {
+      "name": "layout /404.html 1920px",
+      "passed": true
+    },
+    {
+      "name": "mobile menu, Escape, focus, outside click",
+      "passed": true
+    },
+    {
+      "name": "product filters, count and selected state",
+      "passed": true
+    },
+    {
+      "name": "product disclosure works",
+      "passed": true
+    },
+    {
+      "name": "brief rejects empty input without submission",
+      "passed": true
+    },
+    {
+      "name": "clipboard denial uses safe manual copy; no fake success",
+      "passed": true
+    },
+    {
+      "name": "clipboard success is distinct from inquiry submission",
+      "passed": true
+    },
+    {
+      "name": "no-JavaScript navigation, content and contact fallback",
+      "passed": true
+    },
+    {
+      "name": "reduced motion disables smooth scrolling",
+      "passed": true
+    },
+    {
+      "name": "language switch retains products",
+      "passed": true
+    },
+    {
+      "name": "language switch retains services",
+      "passed": true
+    },
+    {
+      "name": "language switch retains work",
+      "passed": true
+    },
+    {
+      "name": "language switch retains about",
+      "passed": true
+    },
+    {
+      "name": "language switch retains contact",
+      "passed": true
+    },
+    {
+      "name": "language switch retains privacy",
+      "passed": true
+    }
+  ],
+  "notTested": [
+    "Cloudflare authentication and live deployment",
+    "External demo availability and actual product execution",
+    "Existing external contact form delivery",
+    "Safari / iPhone / real mobile devices",
+    "Live CSP enforcement in the browser",
+    "Core Web Vitals field data or Lighthouse score"
+  ]
+}
