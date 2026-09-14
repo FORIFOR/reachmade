@@ -51,7 +51,7 @@ function icon(id) {
  return `<svg class="product-icon" viewBox="0 0 48 48" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${shapes[id]}</svg>`;
 }
 function identityStudy(c,lang) {
- const featured=products.find(p=>p.featured && p.preview) || products.find(p=>p.preview) || products[0];
+ const featured=products.find(p=>p.hero && p.preview) || products.find(p=>p.featured && p.preview) || products.find(p=>p.preview) || products[0];
  const t=featured[lang];
  if (!featured.preview) return `<figure class="identity-study" aria-label="${e(t.previewLabel)}"><div class="study-head"><span>WORKING PREVIEW / ${e(featured.name)}</span><span>${featured.index} / ${productTotal}</span></div>${productIllustration(featured,lang)}<figcaption>${c.heroCaption}</figcaption></figure>`;
  const featuredLink=featured.labSite?link(featured.labSite,c.heroProofLink,'text-link'):'';

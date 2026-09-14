@@ -3,7 +3,7 @@ export const products = [
   {
     id: 'genie', name: 'Genie', index: '01', category: 'work', discipline: 'AI WORKSPACE',
     repo: 'https://github.com/FORIFOR/genie', labSite: 'https://genie.reachmade.com/', site: 'https://genie-forifor.forifor.chatgpt.site',
-    preview: '/assets/products/genie.jpg', previewSource: 'genie/docs/golden-screenshots/workspace-ux/home-1162-light.png',
+    preview: '/assets/products/genie.jpg', previewSource: 'genie/docs/golden-screenshots/workspace-ux/home-1162-light.png', hero: true,
     source: 'https://github.com/FORIFOR/genie/blob/main/README.md',
     evidence: 'https://github.com/FORIFOR/genie/blob/main/docs/ENTERPRISE_READINESS.md',
     demo: 'https://genie-forifor.forifor.chatgpt.site/#demo',
