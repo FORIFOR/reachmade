@@ -103,7 +103,7 @@ curl -I https://reachmade.com/does-not-exist/
 curl -I https://genie.reachmade.com/
 ```
 
-確認済み（2026-09-15）: apexが200、wwwがapexの同じパスへ301、存在しないページが404、6サブドメインが各公開先へ302、パスとクエリを保持。DNSはCloudflareのAレコードを返します。ヘッダーのCSPとnosniff、HTTP版のHTTPS転送も実環境で確認します。
+確認済み（2026-09-15）: apexが200、wwwがapexの同じパスへ301、存在しないページが404、6サブドメインが各公開先へ302、パスとクエリを保持。DNSは1.1.1.1で全6件のAレコードを返し、Cloudflare IPを指定したHTTPSで転送を確認しました。通常の名前解決で一部に古い負のキャッシュが残る場合があります。ヘッダーのCSPとnosniff、HTTP版のHTTPS転送も実環境で確認済みです。
 
 続いてSafariとiPhoneなどの実機、問い合わせの実受信、SNS共有画像を確認します。詳細はRELEASE_CHECKLIST.md。
 
