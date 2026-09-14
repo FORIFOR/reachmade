@@ -112,4 +112,4 @@ python tests/browser-check.py
 
 ---
 
-**Applied AI research & product development.** From independent products to collaborative development. Japanese and English, built as a dependency-free static site. See the deployment guide before connecting the production domain.
+**Applied AI research & product development.** From independent products to collaborative development. Japanese and English, built as a dependency-free static site. The production domain and current product aliases are connected; see the deployment guide for future changes.
