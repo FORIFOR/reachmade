@@ -1,11 +1,12 @@
-const productSites = {
-  'genie.reachmade.com': 'https://genie-forifor.forifor.chatgpt.site/',
-  'ai-meeting.reachmade.com': 'https://ai-meeting.web.app/',
-  'oathra.reachmade.com': 'https://forifor.github.io/oathra/',
-  'aisecure.reachmade.com': 'https://forifor.github.io/AISecure/',
-  'multibot.reachmade.com': 'https://forifor.github.io/Multibot/',
-  'launchloom.reachmade.com': 'https://forifor.github.io/Launchloom/',
-};
+import { products } from './src/products.mjs';
+
+// The product registry is the single source for both the directory and aliases.
+// A new record with labSite + site automatically receives the same redirect behavior.
+const productSites = Object.fromEntries(
+  products
+    .filter(product => product.labSite && product.site)
+    .map(product => [new URL(product.labSite).hostname, product.site]),
+);
 
 function productRedirect(url) {
   const origin = productSites[url.hostname];
