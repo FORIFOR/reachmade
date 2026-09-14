@@ -6,7 +6,6 @@ export const copy = {
   heroLabel: 'INDEPENDENT AI PRODUCT LAB',
   heroText: '音声AIと業務エージェントを、設計から実装・検証まで。<br>自主開発で得た知見を、人と企業の「できる」へ。',
   heroPrimary: '実物を見る', heroSecondary: '共同開発を相談する',
-  heroCaption: 'Genieの実画面。自主開発で検証中のワークスペース。', heroProofLink: 'Genieの製品サイト',
   statement: '可能性について語るより、<br>触れられるものを。',
   statementText: '自然に話す。仕事を進める。結果を確かめる。<br>新しいAIの使い方を、プロダクトで探っています。',
   selectedLabel: 'SELECTED PRODUCTS', selectedTitle: '実物から、はじめる。',
@@ -73,7 +72,7 @@ export const copy = {
  en: {
   nav:['Products','For companies','Work notes','About the lab'], contact:'Work with us', menu:'Menu', close:'Close',
   tagline:'Make room<br>for possible.', heroLabel:'INDEPENDENT AI PRODUCT LAB',
-  heroText:'We design, build, and evaluate voice AI and workflow agents.<br>Then bring what we learn to people and businesses.', heroPrimary:'See what is real', heroSecondary:'Discuss a project', heroCaption:'Genie in use — a workspace under independent evaluation.', heroProofLink:'Open the Genie product site',
+  heroText:'We design, build, and evaluate voice AI and workflow agents.<br>Then bring what we learn to people and businesses.', heroPrimary:'See what is real', heroSecondary:'Discuss a project',
   statement:'Less talk about possibility.<br>More things you can try.', statementText:'Talk naturally. Move work forward. Inspect the result.<br>We explore what AI can do by building products.',
   selectedLabel:'SELECTED PRODUCTS', selectedTitle:'Start with something real.', selectedText:'Independently developed products, not client deployment claims. Each has its own capabilities, conditions, and open questions.', allProducts:'Explore all products',
   productLabel:'Product guide', productSite:'Product site', realDemo:'Open the real demo', source:'Source & documentation', proof:'What you can inspect', limits:'Current scope', inquiry:'Discuss this technology', evidence:'Read the evaluation',
