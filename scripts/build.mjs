@@ -53,9 +53,10 @@ function icon(id) {
 function identityStudy(c,lang) {
  const featured=products.find(p=>p.hero && p.preview) || products.find(p=>p.featured && p.preview) || products.find(p=>p.preview) || products[0];
  const t=featured[lang];
+ const heroCaption=lang==='ja'?`${featured.name}の実画面。自主開発で検証中。`:`${featured.name} in use — a product under independent evaluation.`;
  if (!featured.preview) return `<figure class="identity-study" aria-label="${e(t.previewLabel)}"><div class="study-head"><span>WORKING PREVIEW / ${e(featured.name)}</span><span>${featured.index} / ${productTotal}</span></div>${productIllustration(featured,lang)}<figcaption>${c.heroCaption}</figcaption></figure>`;
- const featuredLink=featured.labSite?link(featured.labSite,c.heroProofLink,'text-link'):'';
- return `<figure class="identity-study hero-proof" aria-label="${e(t.previewLabel)}"><div class="study-head"><span>WORKING PREVIEW / ${e(featured.name)}</span><span>${featured.index} / ${productTotal}</span></div><div class="hero-proof-image"><img src="${e(featured.preview)}" alt="${e(t.previewLabel)}" fetchpriority="high"><span class="proof-badge">${lang==='ja'?'実画面の記録':'Recorded product screen'}</span></div><figcaption><span>${c.heroCaption}</span>${featuredLink}</figcaption></figure>`;
+ const featuredLink=featured.labSite?link(featured.labSite,lang==='ja'?'製品サイトを見る':'Open the product site','text-link'):'';
+ return `<figure class="identity-study hero-proof" aria-label="${e(t.previewLabel)}"><div class="study-head"><span>WORKING PREVIEW / ${e(featured.name)}</span><span>${featured.index} / ${productTotal}</span></div><div class="hero-proof-image"><img src="${e(featured.preview)}" alt="${e(t.previewLabel)}" fetchpriority="high"><span class="proof-badge">${lang==='ja'?'実画面の記録':'Recorded product screen'}</span></div><figcaption><span>${heroCaption}</span>${featuredLink}</figcaption></figure>`;
 }
 function nav(lang, current, config) {
  const c=copy[lang];
