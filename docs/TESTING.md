@@ -37,12 +37,18 @@ HTTPレスポンスは、別のNodeテストでローカルサーバーを起動
 
 トップのPC/モバイル、製品一覧、相談ページ、英語トップのキャプチャを確認。これらはローカルHTMLのプレビューであり、公開済みサイトのスクリーンショットではない。
 
+## 本番確認済み / 2026-09-15
+
+- `https://reachmade.com/` がHTTP 200で配信される。
+- `www.reachmade.com` が同じパスとクエリをapexへHTTP 301転送する。
+- `reachmade.com/does-not-exist/` がHTTP 404を返す。
+- `genie`、`ai-meeting`、`oathra`、`aisecure`、`multibot`、`launchloom`の各サブドメインがCloudflare DNSで解決し、既存公開先へHTTP 302転送する。パスとクエリも保持する。
+- workers.devのデプロイとWorkerのカスタムドメイン接続。
+
 ## 未検証
 
-- Cloudflareへのログイン・認可・Wrangler実行・ライブデプロイ。
-- 独自ドメインへのWeb配信、www転送、HTTPS証明書発行、本番ヘッダー。
-- 外部デモの現在の稼働と、既存相談フォームからのメール到達。
 - Safari、Firefox、iPhone/Androidの実機、読み上げソフト。
+- 外部デモの現在の稼働と、既存相談フォームからのメール到達。
 - Lighthouse計測、実利用のCore Web Vitals。
 - 広告やアクセス解析、流入・反響の計測（未導入）。
 

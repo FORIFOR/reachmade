@@ -4,7 +4,7 @@
 
 Reachmade Labの企業向けサイトと自主開発プロダクトの案内。公開先は **https://reachmade.com**。日本語・英語の静的サイトです。
 
-> **この初版はGitHubの`FORIFOR/reachmade`からCloudflare Workers Static Assetsへデプロイし、`reachmade.com`と`www.reachmade.com`を接続済みです。問い合わせ受信や実機表示など、個別の運用確認は別途必要です。**
+> **この初版はGitHubの`FORIFOR/reachmade`からCloudflare Workers Static Assetsへデプロイし、`reachmade.com`と`www.reachmade.com`を接続済みです。現在掲載している各プロダクトにも`*.reachmade.com`の入口を用意しています。問い合わせ受信や実機表示など、個別の運用確認は別途必要です。**
 
 ## ローカルで見る
 
@@ -35,8 +35,21 @@ npm run dev
 
 ## 公開後に残っていること
 
-1. 問い合わせの受信確認、Safari/iPhone実機確認、HTTPSとリダイレクトの実測を行う。
+1. 問い合わせの受信確認、Safari/iPhone実機確認を行う。
 2. 必要に応じてCloudflareのGitHub連携による自動デプロイを設定する。
+
+### プロダクトの入口
+
+プロダクト一覧に登録した各項目は、`labSite`に設定した`<slug>.reachmade.com`から既存の公開先へ302転送します。現在の入口は次の6件です。新しいプロダクトを追加するときは、`src/products.mjs`のレコードと`worker.js`の転送先を追加します。
+
+| プロダクト | Reachmade入口 | 現在の転送先 |
+|---|---|---|
+| Genie | https://genie.reachmade.com/ | https://genie-forifor.forifor.chatgpt.site/ |
+| AI Meeting | https://ai-meeting.reachmade.com/ | https://ai-meeting.web.app/ |
+| Oathra | https://oathra.reachmade.com/ | https://forifor.github.io/oathra/ |
+| AI Secure | https://aisecure.reachmade.com/ | https://forifor.github.io/AISecure/ |
+| Agent Team | https://multibot.reachmade.com/ | https://forifor.github.io/Multibot/ |
+| Launchloom | https://launchloom.reachmade.com/ | https://forifor.github.io/Launchloom/ |
 
 画面操作は **[Cloudflareへの公開手順](docs/DEPLOY_CLOUDFLARE.ja.md)** にまとめています。
 

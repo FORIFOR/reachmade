@@ -4,7 +4,7 @@
 
 ## 今あるもの / まだないもの
 
-- あるもの: 購入済み`reachmade.com`、Cloudflare DNS、`FORIFOR/reachmade`のソース、Workers Static Assetsへのデプロイ、`reachmade.com`と`www.reachmade.com`のWorker接続。
+- あるもの: 購入済み`reachmade.com`、Cloudflare DNS、`FORIFOR/reachmade`のソース、Workers Static Assetsへのデプロイ、`reachmade.com`と`www.reachmade.com`のWorker接続、現在の各プロダクト用サブドメイン6件。
 - まだないもの: 専用のReachmadeメールボックス、問い合わせ受信・実機表示の確認。
 - Namecheapの登録・更新は継続します。ネームサーバーを元に戻したり、有料のホスティングを追加契約したりする手順ではありません。
 
@@ -59,7 +59,7 @@ GitHub連携を求められたら、まず`FORIFOR/reachmade`のみを許可す�
 
 設定ファイル`wrangler.jsonc`が`dist/`を配信対象として指定します。Pages用の「Build output directory」と混同しないでください。コードのビルドにAPIキーは不要です。公開処理に必要なCloudflare権限は、所有者のアカウント内で設定します。
 
-Wrangler 4は初回にnpmから取得されます。厳密なバージョン固定を行うときは、手元で検証できたバージョンをdevDependencyに固定してロックファイルをコミットしてください。この作業環境ではWrangler実行・認可・クラウド公開は未検証です。
+Wrangler 4は初回にnpmから取得されます。厳密なバージョン固定を行うときは、手元で検証できたバージョンをdevDependencyに固定してロックファイルをコミットしてください。Wrangler実行・認可・クラウド公開は2026-09-15に実施済みです。
 
 ## 3. 一時URLで確認する
 
@@ -76,6 +76,12 @@ Worker `reachmade` → Settings → Domains & Routes → Add → Custom Domain�
 ```text
 reachmade.com
 www.reachmade.com
+genie.reachmade.com
+ai-meeting.reachmade.com
+oathra.reachmade.com
+aisecure.reachmade.com
+multibot.reachmade.com
+launchloom.reachmade.com
 ```
 
 既存のWebサイト向けレコードと競合する警告が出た場合は、そのレコードの用途を確認してから処理します。**MX/TXTなどメール用レコードは、Web接続のために削除しません。**
@@ -83,6 +89,8 @@ www.reachmade.com
 この構成では、ドメインの配信先をCloudflareに管理させます。Namecheapに戻って適当なAレコードやIPアドレスを入れる必要はありません。
 
 `worker.js`が`www`→apexの301転送を行います。**wwwをこのWorkerに接続しないと転送ルールも実行されません。** HTTPからHTTPSへの転送はCloudflareのSSL/TLS → Edge Certificates → Always Use HTTPSも確認してください。
+
+プロダクト用6サブドメインは、現時点では各製品の既存公開先へ302転送する入口です。製品サイト自体をこのWorkerへ移したわけではありません。新しい製品を追加するときは、`src/products.mjs`の`labSite`と`worker.js`の転送先を追加します。
 
 名前解決が有効でも、SSL証明書と実コンテンツの公開完了は別です。ブラウザで実際のページを確認してください。
 
@@ -92,9 +100,10 @@ www.reachmade.com
 curl -I https://reachmade.com/
 curl -I https://www.reachmade.com/products/
 curl -I https://reachmade.com/does-not-exist/
+curl -I https://genie.reachmade.com/
 ```
 
-期待すること: apexが200、wwwがapexの同じパスへ301、存在しないページが404。ヘッダーのCSPとnosniffを確認。HTTP版もHTTPSへ転送されることを確認します。
+確認済み（2026-09-15）: apexが200、wwwがapexの同じパスへ301、存在しないページが404、6サブドメインが各公開先へ302、パスとクエリを保持。DNSはCloudflareのAレコードを返します。ヘッダーのCSPとnosniff、HTTP版のHTTPS転送も実環境で確認します。
 
 続いてSafariとiPhoneなどの実機、問い合わせの実受信、SNS共有画像を確認します。詳細はRELEASE_CHECKLIST.md。
 

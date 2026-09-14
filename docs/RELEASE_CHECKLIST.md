@@ -2,18 +2,18 @@
 
 公開前に所有者が確認する項目です。チェック済みを装うための一覧ではありません。
 
-- [ ] リポジトリ`FORIFOR/reachmade`の作成とソース配置を確認。
+- [x] リポジトリ`FORIFOR/reachmade`の作成とソース配置を確認。
 - [ ] 支援内容と事業者表示を本人が確認。
 - [ ] コードの公開範囲・再利用ライセンスを決定。
-- [ ] `npm run check`が成功する。
-- [ ] Cloudflare Workersの実ビルド・デプロイが成功する。
-- [ ] 発行されたworkers.dev上でページ・CSS・JS・OG画像が表示される。
+- [x] `npm run check`が成功する。
+- [x] Cloudflare Workersの実ビルド・デプロイが成功する。
+- [x] 発行されたworkers.dev上でページ・CSS・JS・OG画像が表示される。
 - [ ] 外部の各製品デモ・GitHub・検証記録のリンクを実際に開く。
 - [ ] 問い合わせ先の所有者・取り扱いと、実際の受信を確認。
 - [ ] 問い合わせコピーを「送信完了」と誤認しないことを確認。
-- [ ] `reachmade.com`、`www.reachmade.com`の接続と証明書を確認。
-- [ ] HTTP→HTTPS、www→apex、パス付きURLの転送を実測。
-- [ ] 存在しないページはHTTP 404（200の偽404ではない）。
+- [x] `reachmade.com`、`www.reachmade.com`の接続と証明書を確認。
+- [x] HTTP→HTTPS、www→apex、パス付きURLの転送を実測。
+- [x] 存在しないページはHTTP 404（200の偽404ではない）。
 - [ ] CSPで必要な操作を壊していない。レスポンスヘッダーを本番で確認。
 - [ ] Safari / Chrome / Firefox、iPhone / Android実機で確認。
 - [ ] メニュー、Tab順、Escape、200%拡大、読み上げを手動確認。

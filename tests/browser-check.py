@@ -69,7 +69,7 @@ with sync_playwright() as p:
   expect(toggle.evaluate('(el)=>el===document.activeElement'),'focus returns')
   toggle.click();page.locator('h1').click();expect(not nav.is_visible(),'outside closes')
  check('mobile menu, Escape, focus, outside click',menu)
-def filter_products():
+ def filter_products():
   load(page,'/products/')
   total=page.locator('.project-row').count()
   expect(page.locator('.project-row:visible').count()==total,'initial products')
@@ -114,7 +114,7 @@ def filter_products():
  def no_js():
   load(page,'/products/',enhance=False)
   expect(page.locator('#main-nav').is_visible(),'navigation available without JS')
-  expect(page.locator('.project-row:visible').count()==6,'all products available without JS')
+  expect(page.locator('.project-row:visible').count()==page.locator('.project-row').count(),'all products available without JS')
   expect(not page.locator('.product-filters').is_visible(),'nonworking filters hidden')
   load(page,'/contact/',enhance=False)
   expect(not page.locator('#copy-brief').is_visible(),'nonworking copy button hidden')
