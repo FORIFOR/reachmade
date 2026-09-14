@@ -38,6 +38,10 @@ npm run dev
 1. 問い合わせの受信確認、Safari/iPhone実機確認を行う。
 2. 必要に応じてCloudflareのGitHub連携による自動デプロイを設定する。
 
+サイト構成と移行手順は、[サイト構成・URL設計](docs/SITE_ARCHITECTURE.ja.md) と [6製品サイト移行計画](docs/MIGRATION_PLAN.ja.md) に固定しています。親サイトと6つのサブドメイン入口は、権威DNSとHTTPS転送を実測済みです。製品本体のログイン・機能・問い合わせ受信は別途確認します。
+
+確認結果のスナップショットは [構成レビューと公開状況](docs/REACHMADE_ROLLOUT_STATUS_2026-09-15.ja.md) に保存しています。
+
 ### プロダクトの入口
 
 プロダクト一覧に登録した各項目は、`labSite`に設定した`<slug>.reachmade.com`から`site`の既存公開先へ302転送します。現在の入口は次の6件です。新しいプロダクトを追加するときは、`src/products.mjs`に`labSite`と`site`を持つレコードを追加し、そのサブドメインをCloudflareのWorkerカスタムドメインへ一度接続します。レコード追加後は一覧とWorkerの転送対象が同じ台帳から生成されます。
