@@ -40,7 +40,7 @@ npm run dev
 
 ### プロダクトの入口
 
-プロダクト一覧に登録した各項目は、`labSite`に設定した`<slug>.reachmade.com`から`site`の既存公開先へ302転送します。現在の入口は次の6件です。新しいプロダクトを追加するときは、`src/products.mjs`に`labSite`と`site`を持つレコードを追加すると、一覧と入口に反映されます。
+プロダクト一覧に登録した各項目は、`labSite`に設定した`<slug>.reachmade.com`から`site`の既存公開先へ302転送します。現在の入口は次の6件です。新しいプロダクトを追加するときは、`src/products.mjs`に`labSite`と`site`を持つレコードを追加し、そのサブドメインをCloudflareのWorkerカスタムドメインへ一度接続します。レコード追加後は一覧とWorkerの転送対象が同じ台帳から生成されます。
 
 | プロダクト | Reachmade入口 | 現在の転送先 |
 |---|---|---|

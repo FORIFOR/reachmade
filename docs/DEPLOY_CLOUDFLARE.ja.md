@@ -90,7 +90,7 @@ launchloom.reachmade.com
 
 `worker.js`が`www`→apexの301転送を行います。**wwwをこのWorkerに接続しないと転送ルールも実行されません。** HTTPからHTTPSへの転送はCloudflareのSSL/TLS → Edge Certificates → Always Use HTTPSも確認してください。
 
-プロダクト用6サブドメインは、現時点では各製品の既存公開先へ302転送する入口です。製品サイト自体をこのWorkerへ移したわけではありません。新しい製品を追加するときは、`src/products.mjs`に`labSite`と`site`を持つレコードを追加します。Workerは同じ台帳から転送先を組み立てます。
+プロダクト用6サブドメインは、現時点では各製品の既存公開先へ302転送する入口です。製品サイト自体をこのWorkerへ移したわけではありません。新しい製品を追加するときは、`src/products.mjs`に`labSite`と`site`を持つレコードを追加し、そのサブドメインをCloudflareのカスタムドメインへ一度接続します。Workerは同じ台帳から転送先を組み立てます。
 
 名前解決が有効でも、SSL証明書と実コンテンツの公開完了は別です。ブラウザで実際のページを確認してください。
 
