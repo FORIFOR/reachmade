@@ -2,9 +2,9 @@
 
 **できることの、その先をつくる。**
 
-Reachmade Labの企業向けサイトと自主開発プロダクトの案内。公開予定ドメインは **reachmade.com**。日本語・英語の静的サイトです。
+Reachmade Labの企業向けサイトと自主開発プロダクトの案内。公開先は **https://reachmade.com**。日本語・英語の静的サイトです。
 
-> **この初版はローカルで作成・検証した公開準備版です。GitHubリポジトリの作成、Cloudflareへのデプロイ、独自ドメインの接続完了を示すものではありません。**
+> **この初版はGitHubの`FORIFOR/reachmade`からCloudflare Workers Static Assetsへデプロイし、`reachmade.com`と`www.reachmade.com`を接続済みです。問い合わせ受信や実機表示など、個別の運用確認は別途必要です。**
 
 ## ローカルで見る
 
@@ -33,12 +33,10 @@ npm run dev
 
 プロダクトはGenie / AI Meeting / Oathra / AI Secure / Agent Team（Multibot）/ Launchloom。公開READMEを確認し、できること・未検証範囲・ライセンスを分けて掲載しています。顧客の導入事例や本番の安全性を保証するものではありません。
 
-## 公開までに残っていること
+## 公開後に残っていること
 
-1. `FORIFOR/reachmade`のGitHubリポジトリを作成し、このソースを配置する。
-2. CloudflareでGitHubを接続し、Workers Static Assetsへデプロイする。
-3. `workers.dev`で確認してから、`reachmade.com`と`www.reachmade.com`をCustom Domainとして接続する。
-4. 問い合わせの受信確認、Safari/iPhone実機確認、HTTPSとリダイレクトの実測を行う。
+1. 問い合わせの受信確認、Safari/iPhone実機確認、HTTPSとリダイレクトの実測を行う。
+2. 必要に応じてCloudflareのGitHub連携による自動デプロイを設定する。
 
 画面操作は **[Cloudflareへの公開手順](docs/DEPLOY_CLOUDFLARE.ja.md)** にまとめています。
 

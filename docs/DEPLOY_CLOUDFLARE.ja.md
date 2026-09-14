@@ -4,8 +4,8 @@
 
 ## 今あるもの / まだないもの
 
-- あるもの: 購入済み`reachmade.com`、ユーザー画面で確認済みのCloudflare DNS有効化、サイトのソースと公開用ビルド。
-- まだないもの: 作成済みGitHubリポジトリという確認、Cloudflareへのデプロイ、カスタムドメイン接続の確認、専用のReachmadeメールボックス。
+- あるもの: 購入済み`reachmade.com`、Cloudflare DNS、`FORIFOR/reachmade`のソース、Workers Static Assetsへのデプロイ、`reachmade.com`と`www.reachmade.com`のWorker接続。
+- まだないもの: 専用のReachmadeメールボックス、問い合わせ受信・実機表示の確認。
 - Namecheapの登録・更新は継続します。ネームサーバーを元に戻したり、有料のホスティングを追加契約したりする手順ではありません。
 
 ## 1. GitHubにリポジトリを作る
@@ -118,4 +118,4 @@ NamecheapのMXレコードをCloudflareに残すだけで、無料メール転�
 - ヘッダー: https://developers.cloudflare.com/workers/static-assets/headers/
 - リダイレクト: https://developers.cloudflare.com/workers/static-assets/redirects/
 
-この手順は公式資料に基づく準備手順です。所有者アカウントでデプロイを実施した結果ではありません。
+この手順は公式資料に基づく運用メモです。デプロイと独自ドメイン接続は2026-09-15に所有者アカウントで実施済みです。
