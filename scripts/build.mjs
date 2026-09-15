@@ -56,7 +56,7 @@ function identityStudy(c,lang) {
  const heroCaption=lang==='ja'?`${featured.name}の実画面。自主開発で検証中。`:`${featured.name} in use — a product under independent evaluation.`;
  if (!featured.preview) return `<figure class="identity-study" aria-label="${e(t.previewLabel)}"><div class="study-head"><span>WORKING PREVIEW / ${e(featured.name)}</span><span>${featured.index} / ${productTotal}</span></div>${productIllustration(featured,lang)}<figcaption>${heroCaption}</figcaption></figure>`;
  const featuredLink=featured.labSite?link(featured.labSite,lang==='ja'?'製品サイトを見る':'Open the product site','text-link'):'';
- return `<figure class="identity-study hero-proof" aria-label="${e(t.previewLabel)}"><div class="study-head"><span>WORKING PREVIEW / ${e(featured.name)}</span><span>${featured.index} / ${productTotal}</span></div><div class="hero-proof-image"><img src="${e(featured.preview)}" alt="${e(t.previewLabel)}" fetchpriority="high"><span class="proof-badge">${lang==='ja'?'実画面の記録':'Recorded product screen'}</span></div><figcaption><span>${heroCaption}</span>${featuredLink}</figcaption></figure>`;
+ return `<figure class="identity-study hero-proof" aria-label="${e(t.previewLabel)}"><div class="study-head"><span>WORKING PREVIEW / ${e(featured.name)}</span><span>${featured.index} / ${productTotal}</span></div><div class="hero-proof-image"><img src="${e(featured.preview)}" alt="${e(t.previewLabel)}" fetchpriority="high"></div><figcaption><span>${heroCaption}</span>${featuredLink}</figcaption></figure>`;
 }
 function nav(lang, current, config) {
  const c=copy[lang];
@@ -77,7 +77,7 @@ function pageIntro(label,title,lead,extra='') {
 function productIllustration(p,lang) {
  const t=p[lang];
  if (p.preview) {
-   return `<figure class="product-preview preview-${p.id}"><div class="preview-frame"><img src="${e(p.preview)}" alt="${e(t.previewLabel)}" loading="lazy"><span class="proof-badge">${e(t.previewLabel)}</span></div><figcaption><span>${lang==='ja'?'実際の画面記録':'Recorded product screen'}</span><span>${lang==='ja'?'GitHub公開記録から':'From a public GitHub record'}</span></figcaption></figure>`;
+   return `<figure class="product-preview preview-${p.id}"><div class="preview-frame"><img src="${e(p.preview)}" alt="${e(t.previewLabel)}" loading="lazy"></div><figcaption><span>${lang==='ja'?'実際の画面記録':'Recorded product screen'}</span><span>${lang==='ja'?'GitHub公開記録から':'From a public GitHub record'}</span></figcaption></figure>`;
  }
  // Fallback for future products that have not supplied a local preview yet.
  const sub=lang==='ja'?'公開資料に基づく、設計の要約':'Design summary from the public documentation';
