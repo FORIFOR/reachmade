@@ -116,7 +116,7 @@ export const products = [
   {
     id: 'agent-team', name: 'Agent Team', index: '05', category: 'work', discipline: 'MULTI-AGENT SYSTEMS',
     repo: 'https://github.com/FORIFOR/Multibot', labSite: 'https://multibot.reachmade.com/', site: 'https://forifor.github.io/Multibot/',
-    preview: '/assets/products/agent-team.jpg', previewSource: 'Multibot/docs/media/timeline.png', featured: true,
+    preview: '/assets/products/agent-team.jpg', previewSource: 'Multibot/docs/media/timeline.png',
     source: 'https://github.com/FORIFOR/Multibot/blob/main/README.md',
     evidence: 'https://github.com/FORIFOR/Multibot/blob/main/docs/evidence/readiness-2026-09-14/README.md',
     demo: 'https://forifor.github.io/Multibot/',

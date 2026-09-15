@@ -64,6 +64,15 @@ test('each product is rendered exactly once in each product directory',()=>{
   for(const p of products)assert.equal((html.match(new RegExp(`id="${p.id}"`,'g'))||[]).length,1);
  }
 });
+test('home leads with evidence and keeps the catalog data-driven',()=>{
+ const html=htmlByPath.get('/');
+ assert.ok(html.indexOf('class="hero container"') < html.indexOf('class="selected-work container"'));
+ assert.ok(html.indexOf('class="selected-work container"') < html.indexOf('class="service-preview"'));
+ assert.ok(html.indexOf('class="service-preview"') < html.indexOf('class="build-note container"'));
+ assert.equal((html.match(/class="project-row"/g)||[]).length,products.filter(p=>p.featured).length);
+ assert.equal((html.match(/class="compact-product"/g)||[]).length,products.filter(p=>!p.featured && !p.hero).length);
+ assert.doesNotMatch(html,/class="product-ribbon"|class="manifesto/);
+});
 test('Genie license and setup limits are explicit',()=>{
  const p=products.find(p=>p.id==='genie');assert.match(p.ja.license,/未設定/);assert.match(p.en.license,/no project-wide/);
  assert.equal(p.repo,'https://github.com/FORIFOR/genie');
