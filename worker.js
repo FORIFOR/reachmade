@@ -1,5 +1,5 @@
 import { products } from './src/products.mjs';
-import { serveRecording } from './src/films.mjs';
+import { serveStaticRecording } from './src/static-recordings.mjs';
 
 // The product registry is the single source for both the directory and aliases.
 // A new record with labSite + site automatically receives the same redirect behavior.
@@ -33,7 +33,7 @@ export default {
     const productTarget = productRedirect(url);
     if (productTarget) return Response.redirect(productTarget.toString(), 302);
 
-    const recording = await serveRecording(request);
+    const recording = await serveStaticRecording(request, env.ASSETS);
     if (recording) return recording;
 
     return env.ASSETS.fetch(request);
