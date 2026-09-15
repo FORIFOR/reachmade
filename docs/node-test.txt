@@ -1,389 +1,387 @@
 
-> reachmade-lab@0.1.0 check
-> npm run build && npm test
-
-
 > reachmade-lab@0.1.0 build
 > node scripts/build.mjs
 
 Built 14 localized pages + 404 into dist/. No network or API keys required.
-
-> reachmade-lab@0.1.0 test
-> node --test tests/*.test.mjs
-
 TAP version 13
 # Subtest: HTTP GET /
 ok 1 - HTTP GET /
   ---
-  duration_ms: 33.673004
+  duration_ms: 22.853333
   type: 'test'
   ...
 # Subtest: HTTP GET /en/
 ok 2 - HTTP GET /en/
   ---
-  duration_ms: 4.074124
+  duration_ms: 1.922208
   type: 'test'
   ...
 # Subtest: HTTP GET /products/
 ok 3 - HTTP GET /products/
   ---
-  duration_ms: 3.848635
+  duration_ms: 2.53075
   type: 'test'
   ...
 # Subtest: HTTP GET /contact/
 ok 4 - HTTP GET /contact/
   ---
-  duration_ms: 3.463834
+  duration_ms: 2.337209
   type: 'test'
   ...
 # Subtest: HTTP GET /assets/site.css
 ok 5 - HTTP GET /assets/site.css
   ---
-  duration_ms: 1.750229
+  duration_ms: 3.178209
   type: 'test'
   ...
 # Subtest: HTTP GET /assets/site.js
 ok 6 - HTTP GET /assets/site.js
   ---
-  duration_ms: 1.911543
+  duration_ms: 2.063625
   type: 'test'
   ...
 # Subtest: HTTP GET /assets/og.png
 ok 7 - HTTP GET /assets/og.png
   ---
-  duration_ms: 1.819945
+  duration_ms: 2.195458
   type: 'test'
   ...
 # Subtest: HTTP HEAD omits body
 ok 8 - HTTP HEAD omits body
   ---
-  duration_ms: 3.269631
+  duration_ms: 3.6085
   type: 'test'
   ...
 # Subtest: redirect adds trailing slash and retains query
 ok 9 - redirect adds trailing slash and retains query
   ---
-  duration_ms: 1.987858
+  duration_ms: 2.202833
   type: 'test'
   ...
 # Subtest: unknown pages have HTTP 404
 ok 10 - unknown pages have HTTP 404
   ---
-  duration_ms: 4.015776
+  duration_ms: 1.964083
   type: 'test'
   ...
 # Subtest: POST is rejected rather than accepting private data
 ok 11 - POST is rejected rather than accepting private data
   ---
-  duration_ms: 5.842762
+  duration_ms: 3.1685
   type: 'test'
   ...
 # Subtest: non-public path is refused: /site.config.json
 ok 12 - non-public path is refused: /site.config.json
   ---
-  duration_ms: 3.297232
+  duration_ms: 1.984917
   type: 'test'
   ...
 # Subtest: non-public path is refused: /.env
 ok 13 - non-public path is refused: /.env
   ---
-  duration_ms: 1.026989
+  duration_ms: 1.609666
   type: 'test'
   ...
 # Subtest: non-public path is refused: /src/copy.mjs
 ok 14 - non-public path is refused: /src/copy.mjs
   ---
-  duration_ms: 1.583137
+  duration_ms: 1.925334
   type: 'test'
   ...
 # Subtest: non-public path is refused: /_headers
 ok 15 - non-public path is refused: /_headers
   ---
-  duration_ms: 1.033659
+  duration_ms: 1.687
   type: 'test'
   ...
 # Subtest: non-public path is refused: /_redirects
 ok 16 - non-public path is refused: /_redirects
   ---
-  duration_ms: 1.905824
+  duration_ms: 0.428916
   type: 'test'
   ...
 # Subtest: non-public path is refused: /%00
 ok 17 - non-public path is refused: /%00
   ---
-  duration_ms: 0.746366
+  duration_ms: 1.022375
   type: 'test'
   ...
 # Subtest: non-public path is refused: /%E0%A4%A
 ok 18 - non-public path is refused: /%E0%A4%A
   ---
-  duration_ms: 1.039017
+  duration_ms: 1.523917
   type: 'test'
   ...
 # Subtest: local HTTP security headers are present
 ok 19 - local HTTP security headers are present
   ---
-  duration_ms: 1.208131
+  duration_ms: 0.633208
   type: 'test'
   ...
 # Subtest: configuration is valid
 ok 20 - configuration is valid
   ---
-  duration_ms: 1.479901
+  duration_ms: 0.710917
   type: 'test'
   ...
 # Subtest: HTML escaping includes attributes
 ok 21 - HTML escaping includes attributes
   ---
-  duration_ms: 0.217869
+  duration_ms: 0.102875
   type: 'test'
   ...
 # Subtest: rejects invalid origin http://reachmade.com
 ok 22 - rejects invalid origin http://reachmade.com
   ---
-  duration_ms: 0.870533
+  duration_ms: 0.136375
   type: 'test'
   ...
 # Subtest: rejects invalid origin https://reachmade.com/path
 ok 23 - rejects invalid origin https://reachmade.com/path
   ---
-  duration_ms: 0.104678
+  duration_ms: 0.056292
   type: 'test'
   ...
 # Subtest: rejects invalid origin https://user:pw@reachmade.com
 ok 24 - rejects invalid origin https://user:pw@reachmade.com
   ---
-  duration_ms: 0.093411
+  duration_ms: 0.049542
   type: 'test'
   ...
 # Subtest: rejects invalid origin https://reachmade.com/?a=1
 ok 25 - rejects invalid origin https://reachmade.com/?a=1
   ---
-  duration_ms: 0.09936
+  duration_ms: 0.055625
   type: 'test'
   ...
 # Subtest: rejects invalid origin https://reachmade.com/\#x
 ok 26 - rejects invalid origin https://reachmade.com/\#x
   ---
-  duration_ms: 0.125329
+  duration_ms: 0.065
   type: 'test'
   ...
 # Subtest: contact must use a known mode
 ok 27 - contact must use a known mode
   ---
-  duration_ms: 0.131268
+  duration_ms: 0.067083
   type: 'test'
   ...
 # Subtest: rejects non-HTTPS contact
 ok 28 - rejects non-HTTPS contact
   ---
-  duration_ms: 0.281795
+  duration_ms: 0.07125
   type: 'test'
   ...
 # Subtest: email mode rejects an absent address
 ok 29 - email mode rejects an absent address
   ---
-  duration_ms: 0.494616
+  duration_ms: 0.137625
   type: 'test'
   ...
 # Subtest: email mode supports an owner-configured address
 ok 30 - email mode supports an owner-configured address
   ---
-  duration_ms: 0.262606
+  duration_ms: 0.124625
   type: 'test'
   ...
 # Subtest: 14 routes represent 7 pages in each language
 ok 31 - 14 routes represent 7 pages in each language
   ---
-  duration_ms: 0.102094
+  duration_ms: 0.067625
   type: 'test'
   ...
-# Subtest: 6 products have unique identifiers and records
-ok 32 - 6 products have unique identifiers and records
+# Subtest: products have unique identifiers and records
+ok 32 - products have unique identifiers and records
   ---
-  duration_ms: 0.070176
+  duration_ms: 0.065208
   type: 'test'
   ...
 # Subtest: / metadata, structure, navigation and assets
 ok 33 - / metadata, structure, navigation and assets
   ---
-  duration_ms: 10.45682
+  duration_ms: 4.079083
   type: 'test'
   ...
 # Subtest: /products/ metadata, structure, navigation and assets
 ok 34 - /products/ metadata, structure, navigation and assets
   ---
-  duration_ms: 2.560501
+  duration_ms: 0.641292
   type: 'test'
   ...
 # Subtest: /services/ metadata, structure, navigation and assets
 ok 35 - /services/ metadata, structure, navigation and assets
   ---
-  duration_ms: 0.594006
+  duration_ms: 0.275125
   type: 'test'
   ...
 # Subtest: /work/ metadata, structure, navigation and assets
 ok 36 - /work/ metadata, structure, navigation and assets
   ---
-  duration_ms: 0.62362
+  duration_ms: 0.261
   type: 'test'
   ...
 # Subtest: /about/ metadata, structure, navigation and assets
 ok 37 - /about/ metadata, structure, navigation and assets
   ---
-  duration_ms: 0.549368
+  duration_ms: 0.245875
   type: 'test'
   ...
 # Subtest: /contact/ metadata, structure, navigation and assets
 ok 38 - /contact/ metadata, structure, navigation and assets
   ---
-  duration_ms: 0.656621
+  duration_ms: 0.413791
   type: 'test'
   ...
 # Subtest: /privacy/ metadata, structure, navigation and assets
 ok 39 - /privacy/ metadata, structure, navigation and assets
   ---
-  duration_ms: 0.769902
+  duration_ms: 0.259625
   type: 'test'
   ...
 # Subtest: /en/ metadata, structure, navigation and assets
 ok 40 - /en/ metadata, structure, navigation and assets
   ---
-  duration_ms: 0.816882
+  duration_ms: 0.490125
   type: 'test'
   ...
 # Subtest: /en/products/ metadata, structure, navigation and assets
 ok 41 - /en/products/ metadata, structure, navigation and assets
   ---
-  duration_ms: 1.600193
+  duration_ms: 0.515833
   type: 'test'
   ...
 # Subtest: /en/services/ metadata, structure, navigation and assets
 ok 42 - /en/services/ metadata, structure, navigation and assets
   ---
-  duration_ms: 1.067059
+  duration_ms: 0.653
   type: 'test'
   ...
 # Subtest: /en/work/ metadata, structure, navigation and assets
 ok 43 - /en/work/ metadata, structure, navigation and assets
   ---
-  duration_ms: 3.643495
+  duration_ms: 0.318916
   type: 'test'
   ...
 # Subtest: /en/about/ metadata, structure, navigation and assets
 ok 44 - /en/about/ metadata, structure, navigation and assets
   ---
-  duration_ms: 1.073659
+  duration_ms: 0.190833
   type: 'test'
   ...
 # Subtest: /en/contact/ metadata, structure, navigation and assets
 ok 45 - /en/contact/ metadata, structure, navigation and assets
   ---
-  duration_ms: 4.118671
+  duration_ms: 0.192084
   type: 'test'
   ...
 # Subtest: /en/privacy/ metadata, structure, navigation and assets
 ok 46 - /en/privacy/ metadata, structure, navigation and assets
   ---
-  duration_ms: 0.828489
+  duration_ms: 0.191334
   type: 'test'
   ...
 # Subtest: product filter categories match content
 ok 47 - product filter categories match content
   ---
-  duration_ms: 0.712835
+  duration_ms: 0.501667
   type: 'test'
   ...
 # Subtest: each product is rendered exactly once in each product directory
 ok 48 - each product is rendered exactly once in each product directory
   ---
-  duration_ms: 0.218199
+  duration_ms: 0.141583
+  type: 'test'
+  ...
+# Subtest: home leads with evidence and keeps the catalog data-driven
+ok 49 - home leads with evidence and keeps the catalog data-driven
+  ---
+  duration_ms: 0.142916
   type: 'test'
   ...
 # Subtest: Genie license and setup limits are explicit
-ok 49 - Genie license and setup limits are explicit
+ok 50 - Genie license and setup limits are explicit
   ---
-  duration_ms: 0.080191
+  duration_ms: 0.037875
   type: 'test'
   ...
 # Subtest: Agent Team does not claim a benchmark advantage
-ok 50 - Agent Team does not claim a benchmark advantage
+ok 51 - Agent Team does not claim a benchmark advantage
   ---
-  duration_ms: 0.13976
+  duration_ms: 0.051209
   type: 'test'
   ...
 # Subtest: Oathra does not conflate speech with system registration
-ok 51 - Oathra does not conflate speech with system registration
+ok 52 - Oathra does not conflate speech with system registration
   ---
-  duration_ms: 0.164698
+  duration_ms: 0.032666
   type: 'test'
   ...
 # Subtest: AI Secure does not claim production enforcement
-ok 52 - AI Secure does not claim production enforcement
+ok 53 - AI Secure does not claim production enforcement
   ---
-  duration_ms: 0.077657
+  duration_ms: 0.023583
   type: 'test'
   ...
-# Subtest: illustrations are identified as design summaries
-ok 53 - illustrations are identified as design summaries
+# Subtest: product previews use real local project assets
+ok 54 - product previews use real local project assets
   ---
-  duration_ms: 0.064768
+  duration_ms: 0.856167
   type: 'test'
   ...
 # Subtest: private inquiry is clearly external and has no automated submission
-ok 54 - private inquiry is clearly external and has no automated submission
+ok 55 - private inquiry is clearly external and has no automated submission
   ---
-  duration_ms: 0.06621
+  duration_ms: 0.063584
   type: 'test'
   ...
 # Subtest: no third-party executable code or storage APIs are shipped
-ok 55 - no third-party executable code or storage APIs are shipped
+ok 56 - no third-party executable code or storage APIs are shipped
   ---
-  duration_ms: 5.4372
+  duration_ms: 0.412333
   type: 'test'
   ...
 # Subtest: custom 404 is noindex rather than soft-success
-ok 56 - custom 404 is noindex rather than soft-success
+ok 57 - custom 404 is noindex rather than soft-success
   ---
-  duration_ms: 2.040738
+  duration_ms: 0.210459
   type: 'test'
   ...
 # Subtest: sitemap has every published route once and excludes 404
-ok 57 - sitemap has every published route once and excludes 404
+ok 58 - sitemap has every published route once and excludes 404
   ---
-  duration_ms: 0.906176
+  duration_ms: 0.225
   type: 'test'
   ...
 # Subtest: OG image is an actual 1200 by 630 PNG
-ok 58 - OG image is an actual 1200 by 630 PNG
+ok 59 - OG image is an actual 1200 by 630 PNG
   ---
-  duration_ms: 1.462365
+  duration_ms: 0.301125
   type: 'test'
   ...
 # Subtest: Cloudflare security headers and apex redirection are included
-ok 59 - Cloudflare security headers and apex redirection are included
+ok 60 - Cloudflare security headers and apex redirection are included
   ---
-  duration_ms: 1.076834
+  duration_ms: 0.385666
   type: 'test'
   ...
 # Subtest: deployment config has no account tokens or automatic domain writes
-ok 60 - deployment config has no account tokens or automatic domain writes
+ok 61 - deployment config has no account tokens or automatic domain writes
   ---
-  duration_ms: 0.653035
+  duration_ms: 0.298292
   type: 'test'
   ...
-# Subtest: source provenance covers six products
-ok 61 - source provenance covers six products
+# Subtest: source provenance covers all products
+ok 62 - source provenance covers all products
   ---
-  duration_ms: 0.699785
+  duration_ms: 0.259666
   type: 'test'
   ...
-1..61
-# tests 61
+1..62
+# tests 62
 # suites 0
-# pass 61
+# pass 62
 # fail 0
 # cancelled 0
 # skipped 0
 # todo 0
-# duration_ms 194.009961
+# duration_ms 157.598167
