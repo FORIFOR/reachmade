@@ -14,6 +14,7 @@ def main():
     out = ROOT / 'film-qa'; out.mkdir(exist_ok=True)
     manifest = json.loads((ROOT / 'dist/media/products/manifest.json').read_text())
     report = {'scope': 'Packaged media and built pages through local Wrangler, not production or Safari', 'media': [], 'pages': [], 'errors': []}
+    by_id = {}
     for attempt in range(60):
         try:
             with urllib.request.urlopen(BASE, timeout=2) as response:
@@ -22,6 +23,8 @@ def main():
             if attempt == 59: raise
             time.sleep(1)
     for item in manifest['recordings']:
+        result = {'id': item['id'], 'sha256': item['sha256']}
+        report['media'].append(result); by_id[item['id']] = result
         try:
             target = ROOT / 'dist' / item['path'].lstrip('/')
             raw = target.read_bytes()
@@ -30,12 +33,13 @@ def main():
             metadata = json.loads(subprocess.check_output(['ffprobe', '-v', 'error', '-show_entries', 'format=duration:stream=codec_type,codec_name,width,height', '-of', 'json', str(target)], text=True, timeout=30))
             assert any(s.get('codec_type') == 'video' for s in metadata['streams'])
             assert float(metadata['format']['duration']) > 1
+            result.update(bytes=len(raw), metadata=metadata)
             for method, headers in [('HEAD', {}), ('GET', {'Range': 'bytes=0-63'})]:
                 with urllib.request.urlopen(urllib.request.Request(BASE + item['path'], method=method, headers=headers), timeout=15) as r:
-                    assert r.status == (206 if headers else 200), (item['id'], r.status)
+                    assert r.status == (206 if headers else 200), (item['id'], method, r.status)
                     assert r.headers.get_content_type() == 'video/mp4'
-                    if method == 'GET': assert len(r.read()) == 64
-            report['media'].append({'id': item['id'], 'sha256': item['sha256'], 'bytes': len(raw), 'metadata': metadata, 'head_and_range': True})
+                    if method == 'GET': assert r.read() == raw[:64]
+            result['head_and_range'] = True
         except Exception as error: report['errors'].append(item['id'] + ': ' + str(error))
     with sync_playwright() as pw:
         browser = pw.chromium.launch()
@@ -60,9 +64,10 @@ def main():
             context.close()
         context = browser.new_context(viewport={'width': 1440, 'height': 1000}, reduced_motion='reduce')
         page = context.new_page(); page.set_default_timeout(20000)
-        page.goto(BASE + '/products/', wait_until='networkidle')
         for item in manifest['recordings']:
             try:
+                # Each recording is independent; a previous failure must not leave a modal over it.
+                page.goto(BASE + '/products/', wait_until='networkidle')
                 frame = page.locator('[data-product-film="' + item['id'] + '"]')
                 frame.scroll_into_view_if_needed(); frame.locator('.rm-film-toggle').click()
                 page.wait_for_function('id => { const v=document.querySelector(`[data-product-film="${id}"] video`); return !v.paused && v.readyState>=2 && v.getVideoPlaybackQuality().totalVideoFrames > 0; }', arg=item['id'])
@@ -71,10 +76,15 @@ def main():
                 frame.locator('.rm-film-expand').click()
                 page.wait_for_function('()=>document.querySelector(".rm-film-full").readyState>=2')
                 page.locator('.rm-film-full').evaluate('v=>{v.pause();v.currentTime=Math.min(3,v.duration/2)}')
-                page.wait_for_function('()=>document.querySelector(".rm-film-full").currentTime>0')
+                page.wait_for_function('()=>{const v=document.querySelector(".rm-film-full");return !v.seeking && v.currentTime>0 && v.readyState>=2}')
                 page.locator('.rm-film-close').click()
-                report['media'][list(manifest['recordings']).index(item)]['play_pause_expand_seek'] = True
-            except Exception as error: report['errors'].append('playback ' + item['id'] + ': ' + str(error))
+                assert page.locator('.rm-film-dialog').get_attribute('open') is None
+                by_id[item['id']]['play_pause_expand_seek'] = True
+            except Exception as error:
+                report['errors'].append('playback ' + item['id'] + ': ' + str(error))
+                by_id[item['id']]['playback_state'] = page.locator('.rm-film-full').evaluate('(v)=>({src:v.currentSrc,error:v.error?.code,time:v.currentTime,readyState:v.readyState})') if page.locator('.rm-film-full').count() else None
+            finally:
+                page.evaluate('document.querySelector(".rm-film-dialog[open]")?.close()')
         browser.close()
     (out / 'packaged-report.json').write_text(json.dumps(report, ensure_ascii=False, indent=2))
     print(json.dumps(report, ensure_ascii=False, indent=2))
