@@ -1,0 +1,40 @@
+name: Product film playback QA
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/product-film-qa.yml'
+      - 'scripts/verify-product-films.py'
+      - 'src/films.mjs'
+      - 'public/assets/product-films.*'
+permissions:
+  contents: read
+jobs:
+  playback:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: npm run check
+      - run: python -m pip install playwright==1.57.0
+      - run: python -m playwright install --with-deps chromium
+      - name: Ensure video inspection tools
+        run: |
+          if ! command -v ffprobe >/dev/null || ! command -v ffmpeg >/dev/null; then
+            sudo apt-get update
+            sudo apt-get install -y ffmpeg
+          fi
+      - run: python scripts/verify-product-films.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: product-film-qa
+          path: film-qa/
+          retention-days: 7
