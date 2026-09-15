@@ -5,6 +5,7 @@ import path from 'node:path';
 import { root, escapeHTML, validateConfig } from '../scripts/build.mjs';
 import { products } from '../src/products.mjs';
 import { copy } from '../src/copy.mjs';
+import { contactDestination } from '../src/site-experience.mjs';
 const dist=path.join(root,'dist');
 const config=JSON.parse(await fs.readFile(path.join(root,'site.config.json'),'utf8'));
 const routes=JSON.parse(await fs.readFile(path.join(root,'docs/routes.json'),'utf8'));
@@ -91,9 +92,10 @@ test('product previews use real local project assets',async()=>{
  assert.equal((html.match(/class="product-preview/g)||[]).length,products.length);
  for(const p of products){assert.ok(p.preview);await fs.access(path.join(root,'public',p.preview));assert.match(html,new RegExp(`src="${p.preview.replaceAll('/','\\/') }"`));}
 });
-test('private inquiry is clearly external and has no automated submission',()=>{
- const html=htmlByPath.get('/contact/');assert.ok(html.includes(config.contact.url.replaceAll('&','&amp;')));
- assert.match(html,/直接送信フォームは未設定/);
+test('private inquiry is localized, external, optional to draft and never silently submitted',()=>{
+ const html=htmlByPath.get('/contact/');assert.ok(html.includes(contactDestination(config,'ja').replaceAll('&','&amp;')));
+ assert.match(html,/このページで下書きを作る必要はありません/);
+ assert.match(html,/<details class="optional-brief">/);
  assert.match(html,/送信済みにはなりません/);
  assert.match(html,/type="button" id="copy-brief"/);
 });
