@@ -1,4 +1,6 @@
-/* Progressive enhancement. No analytics, external requests, persistence, or hidden submissions. */
+/* Progressive enhancement. No analytics, persistence, or hidden submissions.
+ * Product previews load same-origin media only; see docs/PRODUCT_FILMS.ja.md.
+ */
 (() => {
   'use strict';
   document.documentElement.classList.add('js');
@@ -68,4 +70,12 @@
       status.textContent = lang==='ja'?'自動コピーを利用できません。下の文章を選択してコピーしてください。まだ送信していません。':'Automatic copying is unavailable. Select and copy the text below. Nothing has been sent.';
     } finally {copy.disabled=false;}
   });
+
+  // Leave the existing static previews intact if scripts cannot be loaded.
+  if (document.querySelector('.hero-proof-image, .project-visual, .compact-product')) {
+    const films = document.createElement('script');
+    films.src = '/assets/product-films.js?v=20260915-1';
+    films.defer = true;
+    document.head.append(films);
+  }
 })();
