@@ -121,7 +121,7 @@
   close.addEventListener('click',()=>dialog.close());
   dialog.addEventListener('click',e=>{if(e.target===dialog){const r=dialog.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)dialog.close();}});
   dialog.addEventListener('close',()=>{opened=false;full.pause();full.removeAttribute('src');full.load();fullError.hidden=true;opener?.focus();choose();});
-  full.addEventListener('error',()=>{if(opened)fullError.hidden=true;});
+  full.addEventListener('error',()=>{if(opened)fullError.hidden=false;});
 
   for (const {film,host} of targets) {
     const poster=host.querySelector('img')?.getAttribute('src')||`/assets/products/${film.id}.jpg`;
