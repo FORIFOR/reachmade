@@ -31,9 +31,23 @@ jobs:
             sudo apt-get update
             sudo apt-get install -y ffmpeg
           fi
-      - run: python scripts/verify-product-films.py
-      - uses: actions/upload-artifact@v4
+      - name: Verify real recordings and built pages
+        run: python scripts/verify-product-films.py
+      - name: Put verification results in the job summary
         if: always()
+        run: |
+          if [ -f film-qa/report.json ]; then
+            printf '## Product film verification\n\nBuilt pages, not production or Safari.\n\n```json\n' >> "$GITHUB_STEP_SUMMARY"
+            cat film-qa/report.json >> "$GITHUB_STEP_SUMMARY"
+            printf '\n```\n' >> "$GITHUB_STEP_SUMMARY"
+          fi
+      # The account hit its existing artifact-storage quota on 2026-09-15.
+      # Do not change billing or delete unrelated artifacts. Playback failures
+      # remain blocking; optional screenshot archival is a separate concern.
+      - name: Archive screenshots when explicitly enabled
+        uses: actions/upload-artifact@v4
+        if: ${{ always() && vars.REACHMADE_QA_UPLOAD_ARTIFACTS == 'true' }}
+        continue-on-error: true
         with:
           name: product-film-qa
           path: film-qa/
