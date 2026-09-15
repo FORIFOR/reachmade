@@ -42,6 +42,20 @@ function sliceStream(body, start, end) {
     cancel(reason) { return reader.cancel(reason); },
   });
 }
+async function readBounded(body) {
+  const reader = body.getReader(); const chunks = []; let length = 0;
+  try {
+    while (true) {
+      const { done, value } = await reader.read(); if (done) break;
+      length += value.byteLength;
+      if (length > MAX_BYTES) { await reader.cancel(); throw new Error('Packaged recording exceeds limit'); }
+      chunks.push(value);
+    }
+    const bytes = new Uint8Array(length); let offset = 0;
+    for (const chunk of chunks) { bytes.set(chunk, offset); offset += chunk.byteLength; }
+    return bytes;
+  } finally { reader.releaseLock(); }
+}
 export async function serveStaticRecording(request, assets) {
   const url = new URL(request.url);
   if (!url.pathname.startsWith('/media/products/')) return null;
@@ -68,18 +82,29 @@ export async function serveStaticRecording(request, assets) {
   for (const name of ['content-length', 'content-range', 'etag', 'last-modified']) {
     const value = response.headers.get(name); if (value) out.set(name, value);
   }
-  // Local ASSETS may ignore Range. Preserve byte-range semantics for video seeking.
+  // Some ASSETS implementations return a complete, chunked body for Range.
+  // A bounded read is used only when the total length is absent; ordinary reads stream.
   if (response.status === 200 && range && ifRangeMatches(request.headers.get('if-range'), response.headers)) {
-    const length = Number(response.headers.get('content-length'));
-    if (!Number.isSafeInteger(length) || length < 1 || length > MAX_BYTES || !response.body) {
-      await response.body?.cancel(); return reply(503, 'Invalid packaged recording length');
+    let bytes = null;
+    let length = Number(response.headers.get('content-length'));
+    if (!response.body) return reply(503, 'Empty packaged recording');
+    if (!response.headers.has('content-length')) {
+      try { bytes = await readBounded(response.body); length = bytes.byteLength; }
+      catch { return reply(503, 'Invalid packaged recording stream'); }
+    }
+    if (!Number.isSafeInteger(length) || length < 1 || length > MAX_BYTES) {
+      if (!bytes) await response.body.cancel();
+      return reply(503, 'Invalid packaged recording length');
     }
     const bounds = byteRange(range, length);
-    if (!bounds) { await response.body.cancel(); return reply(416, 'Unsatisfiable byte range', { 'Content-Range': `bytes */${length}` }); }
+    if (!bounds) {
+      if (!bytes) await response.body.cancel();
+      return reply(416, 'Unsatisfiable byte range', { 'Content-Range': `bytes */${length}` });
+    }
     const [start, end] = bounds;
     out.set('Content-Range', `bytes ${start}-${end}/${length}`);
     out.set('Content-Length', String(end - start + 1));
-    return new Response(sliceStream(response.body, start, end), { status: 206, headers: out });
+    return new Response(bytes ? bytes.subarray(start, end + 1) : sliceStream(response.body, start, end), { status: 206, headers: out });
   }
   if (response.status === 416) out.set('Cache-Control', 'no-store');
   return new Response(request.method === 'HEAD' || response.status === 304 ? null : response.body, { status: response.status, headers: out });
