@@ -74,7 +74,7 @@
   // Leave the existing static previews intact if scripts cannot be loaded.
   if (document.querySelector('.hero-proof-image, .project-visual, .compact-product')) {
     const films = document.createElement('script');
-    films.src = '/assets/product-films.js?v=20260915-1';
+    films.src = '/assets/product-films.js?v=20260916-premium1';
     films.defer = true;
     document.head.append(films);
   }
