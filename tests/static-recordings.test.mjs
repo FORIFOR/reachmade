@@ -10,6 +10,7 @@ function box(name,n=8){const b=Buffer.alloc(n);b.writeUInt32BE(n);b.write(name,4
 const mp4=()=>Buffer.concat([box('ftyp',24),box('moov',16),box('mdat',16)]);
 const jpeg=()=>Buffer.concat([Buffer.from([0xff,0xd8]),Buffer.alloc(1024),Buffer.from([0xff,0xd9])]);
 const fakeRenderer=async({input,output,poster})=>{await fs.copyFile(input,output);await fs.writeFile(poster,jpeg());};
+const fakeSignatureRenderer=async({inputs,output,poster})=>{await fs.copyFile(inputs[0],output);await fs.writeFile(poster,jpeg());};
 test('MP4 requires complete boxes',()=>{
  validateMp4(mp4());for(const b of [Buffer.from('<html>no</html>'),mp4().subarray(0,40),Buffer.concat([box('ftyp',24),box('mdat',16)])])assert.throws(()=>validateMp4(b));
 });
@@ -22,10 +23,12 @@ test('failed premium batches preserve the prior packaged files',async()=>{
  try{
   await fs.writeFile(path.join(dir,'index.html'),'ok');
   const good=async()=>new Response(mp4(),{headers:{'Content-Type':'video/mp4'}});
-  const report=await prepareMedia({dist:dir,fetcher:good,renderer:fakeRenderer});
-  assert.equal(report.recordings.length,6);assert.equal(report.schema,2);assert.equal(report.mode,'premium-site-edits');
+  const report=await prepareMedia({dist:dir,fetcher:good,renderer:fakeRenderer,signatureRenderer:fakeSignatureRenderer});
+  assert.equal(report.recordings.length,6);assert.equal(report.schema,3);assert.equal(report.mode,'premium-site-edits');
+  assert.equal(report.signature.duration,12);assert.equal(report.signature.speed,1);assert.equal(report.signature.transition,'hard-cut');
+  assert.equal((await fs.readFile(path.join(dir,'assets/reachmade-signature.mp4'))).length,mp4().length);
   const before=await fs.readFile(path.join(dir,'media/products/manifest.json'),'utf8');let count=0;
-  await assert.rejects(prepareMedia({dist:dir,renderer:fakeRenderer,fetcher:async()=>{if(++count>2)throw Error('offline');return good();}}),/Deployment stopped/);
+  await assert.rejects(prepareMedia({dist:dir,renderer:fakeRenderer,signatureRenderer:fakeSignatureRenderer,fetcher:async()=>{if(++count>2)throw Error('offline');return good();}}),/Deployment stopped/);
   assert.equal(await fs.readFile(path.join(dir,'media/products/manifest.json'),'utf8'),before);
   assert.deepEqual(await fs.readdir(path.join(dir,'media')),['products']);
  }finally{await fs.rm(dir,{recursive:true,force:true});}
