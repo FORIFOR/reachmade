@@ -1,0 +1,87 @@
+name: patch hero art direction
+on:
+  push:
+    branches: [art/reachmade-heroes-20260917]
+permissions:
+  contents: write
+jobs:
+  patch:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: art/reachmade-heroes-20260917
+      - name: Apply product-specific hero markup
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          p=Path('src/product-landings.mjs')
+          s=p.read_text(encoding='utf-8')
+          anchor="export const landingIds = Object.freeze(['genie','ai-meeting','oathra','aisecure','agent-team','launchloom']);\n"
+          insert="""export const landingIds = Object.freeze(['genie','ai-meeting','oathra','aisecure','agent-team','launchloom']);
+const heroSignatures = Object.freeze({
+  genie:{ja:['依頼','作業','成果物'],en:['REQUEST','WORK','ARTIFACT']},
+  'ai-meeting':{ja:['話す','確かめる','次の行動'],en:['SPEAK','REVIEW','NEXT STEP']},
+  oathra:{ja:['主張','根拠','照合'],en:['CLAIM','EVIDENCE','VERIFIED']},
+  aisecure:{ja:['入力','検査','拒否'],en:['INPUT','CHECK','BLOCK']},
+  'agent-team':{ja:['作成','レビュー','修正'],en:['DRAFT','REVIEW','REVISION']},
+  launchloom:{ja:['実録画','用途別素材','ローンチキット'],en:['RECORDING','FORMATS','LAUNCH KIT']},
+});
+function renderHeroSignature(id,lang){
+  const labels=heroSignatures[id]?.[lang];
+  if(!labels) return '';
+  return `<div class=\"owned-hero-signature owned-hero-signature--${id}\" aria-hidden=\"true\">${labels.map((label,i)=>`<span><small>0${i+1}</small><b>${e(label)}</b></span>${i<labels.length-1?'<em>→</em>':''}`).join('')}</div>`;
+}
+"""
+          if anchor not in s: raise SystemExit('landingIds anchor not found')
+          s=s.replace(anchor,insert,1)
+          old='<p class="owned-kicker">${e(product.index)} / ${e(product.discipline)} / ${e(p.status)}</p><h1>${e(x.title)}</h1><figure class="owned-film owned-film--hero" id="recording">'
+          new='<p class="owned-kicker">${e(product.index)} / ${e(product.discipline)} / ${e(p.status)}</p><h1>${e(x.title)}</h1>${renderHeroSignature(product.id,lang)}<figure class="owned-film owned-film--hero" id="recording">'
+          if old not in s: raise SystemExit('product hero anchor not found')
+          s=s.replace(old,new,1)
+          p.write_text(s,encoding='utf-8')
+
+          p=Path('scripts/build-core.mjs')
+          s=p.read_text(encoding='utf-8')
+          old='return `<figure class="identity-study hero-proof" aria-label="${e(t.previewLabel)}"><div class="study-head">'
+          new='return `<figure class="identity-study hero-proof" aria-label="${e(t.previewLabel)}"><div class="reachmade-signature-mark" aria-hidden="true"><span>CLAIM</span><i></i><span>PROOF</span></div><div class="study-head">'
+          if old not in s: raise SystemExit('home proof anchor not found')
+          s=s.replace(old,new,1)
+          p.write_text(s,encoding='utf-8')
+
+          p=Path('public/assets/site.js')
+          s=p.read_text(encoding='utf-8')
+          s=s.replace("headParts[0].textContent = 'SIGNATURE FILM / 6 REAL PRODUCTS';","headParts[0].textContent = 'CLAIM → PROOF / 6 REAL PRODUCTS';",1)
+          s=s.replace("const initialPlayLabel = ja ? '12秒の実演を見る ▶' : 'Watch the 12-second reel ▶';","const initialPlayLabel = ja ? '12秒で実物を見る ▶' : 'See the real products in 12 seconds ▶';",1)
+          old="? 'Genie → AI Meeting → Oathra → AI Secure → Agent Team → Launchloom。各2秒の実録画を通常速度でつないでいます。'\n      : 'Genie → AI Meeting → Oathra → AI Secure → Agent Team → Launchloom. Two real seconds from each product, at normal speed.';"
+          new="? 'Genie → AI Meeting → Oathra → AI Secure → Agent Team → Launchloom。6つの製品を言葉ではなく実録画で確認する12秒です。各2秒・通常速度。'\n      : 'Genie → AI Meeting → Oathra → AI Secure → Agent Team → Launchloom. Six products shown as real recordings, not claims. Two seconds each, at normal speed.';"
+          if old not in s: raise SystemExit('signature caption anchor not found')
+          s=s.replace(old,new,1)
+          p.write_text(s,encoding='utf-8')
+
+          p=Path('tests/horio-premium.test.mjs')
+          s=p.read_text(encoding='utf-8')
+          old="    '@import url(\"./precision-polish.css\");',\n"
+          new=old+"    '@import url(\"./art-direction.css\");',\n"
+          if old not in s: raise SystemExit('css import test anchor not found')
+          s=s.replace(old,new,1)
+          s=s.replace("assert.match(site,/SIGNATURE FILM \\/ 6 REAL PRODUCTS/);","assert.match(site,/CLAIM → PROOF \\/ 6 REAL PRODUCTS/);",1)
+          p.write_text(s,encoding='utf-8')
+
+          p=Path('tests/product-landings.test.mjs')
+          s=p.read_text(encoding='utf-8')
+          old="    assert.equal((html.match(/class=\"owned-try-now\"/g)||[]).length,1);\n"
+          new=old+"    assert.match(html,new RegExp(`owned-hero-signature owned-hero-signature--${id}`));\n"
+          if old not in s: raise SystemExit('landing test anchor not found')
+          s=s.replace(old,new,1)
+          p.write_text(s,encoding='utf-8')
+          PY
+      - name: Commit patch
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add src/product-landings.mjs scripts/build-core.mjs public/assets/site.js tests/horio-premium.test.mjs tests/product-landings.test.mjs
+          git commit -m 'design: give Reachmade and six products distinct hero signatures'
+          git push origin HEAD:art/reachmade-heroes-20260917
