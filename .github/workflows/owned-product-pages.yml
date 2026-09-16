@@ -1,17 +1,17 @@
 name: Owned product pages
 on:
   pull_request:
-    paths: ['src/product-landings.mjs', 'src/site-experience.mjs', 'src/site-content.mjs', 'scripts/build*.mjs', 'public/assets/product-landings.*', 'tests/product-landings.test.mjs', 'scripts/verify-product-landings.py', '.github/workflows/owned-product-pages.yml']
+    paths: ['src/product-landings.mjs', 'src/site-experience.mjs', 'src/site-content.mjs', 'scripts/build*.mjs', 'public/assets/product-landings.*', 'tests/product-landings.test.mjs', 'tests/site.test.mjs', 'scripts/verify-product-landings.py', '.github/workflows/owned-product-pages.yml']
   push:
     branches: [main]
-    paths: ['src/product-landings.mjs', 'src/site-experience.mjs', 'src/site-content.mjs', 'scripts/build*.mjs', 'public/assets/product-landings.*', 'scripts/verify-product-landings.py', '.github/workflows/owned-product-pages.yml']
+    paths: ['src/product-landings.mjs', 'src/site-experience.mjs', 'src/site-content.mjs', 'scripts/build*.mjs', 'public/assets/product-landings.*', 'tests/product-landings.test.mjs', 'tests/site.test.mjs', 'scripts/verify-product-landings.py', '.github/workflows/owned-product-pages.yml']
   workflow_dispatch:
 permissions:
   contents: read
 jobs:
   browser:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 12
     env:
       WRANGLER_SEND_METRICS: 'false'
       CI: 'true'
@@ -24,10 +24,16 @@ jobs:
         with:
           python-version: '3.12'
       - run: npm run check
+      - name: Ensure video render tools
+        run: |
+          if ! command -v ffmpeg >/dev/null || ! command -v ffprobe >/dev/null; then
+            sudo apt-get update
+            sudo apt-get install -y ffmpeg
+          fi
       - run: npm run media:prepare
       - run: python -m pip install playwright==1.57.0
       - run: python -m playwright install --with-deps chromium
-      - name: Test the complete pages and actual recordings
+      - name: Test all twelve pages and the six actual recordings
         run: |
           npx wrangler@4 dev --local --ip 127.0.0.1 --port 8787 > /tmp/owned-pages-worker.log 2>&1 &
           PID=$!
@@ -37,7 +43,7 @@ jobs:
         if: always()
         run: |
           if [ -f film-qa/product-landings/report.json ]; then
-            printf '## Local Chromium checks (not production or Safari)\n\n```json\n' >> "$GITHUB_STEP_SUMMARY"
+            printf '## Six video-first product pages — local Chromium\n\n1440 / 1024 / 390, Japanese and English. Not production or Safari.\n\n```json\n' >> "$GITHUB_STEP_SUMMARY"
             cat film-qa/product-landings/report.json >> "$GITHUB_STEP_SUMMARY"
             printf '\n```\n' >> "$GITHUB_STEP_SUMMARY"
           else
@@ -49,11 +55,10 @@ jobs:
         if: always()
         continue-on-error: true
         with:
-          name: owned-product-pages-review
+          name: six-video-first-product-pages
           path: film-qa/product-landings/
           retention-days: 1
       - name: Disclose unavailable review images
         if: always() && steps.screenshots.outcome == 'failure'
         run: |
-          echo '::warning::Screenshots could not be archived. The browser test remains required; its report is in the log and job summary. No visual review of the missing artifact is claimed.'
-          printf '\n**Screenshot archival failed.** The tests above remain required. Images are unavailable for visual review; no billing or existing artifact data was changed.\n' >> "$GITHUB_STEP_SUMMARY"
+          echo '::warning::Screenshot archival failed. Browser checks are still required and the JSON report remains available.'
