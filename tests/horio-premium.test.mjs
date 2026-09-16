@@ -46,19 +46,22 @@ test('the six product heroes have six explicit art directions',()=>{
   const ids=['genie','ai-meeting','oathra','aisecure','agent-team','launchloom'];
   for(const id of ids) assert.match(artDirection,new RegExp(`owned-product--${id.replace('-','\\-')} \\.owned-hero-grid`));
   const templates=[...artDirection.matchAll(/grid-template-areas:([^!;]+)!important/g)].map(x=>x[1].trim());
-  assert.ok(new Set(templates).size>=5,'product heroes must not collapse back to one shared composition');
+  assert.equal(new Set(templates).size,6,'all six desktop heroes must have their own composition');
   assert.match(artDirection,/owned-product--oathra[\s\S]*box-shadow:0 0 0 100vmax #171a17/);
   assert.match(artDirection,/owned-product--agent-team[\s\S]*grid-template-columns:minmax\(230px,.62fr\) minmax\(0,1.42fr\) minmax\(230px,.58fr\)/);
+  assert.match(artDirection,/owned-product--launchloom[\s\S]*grid-template-areas:"kicker kicker" "title try" "actions try" "film film"/);
   assert.match(artDirection,/owned-product--launchloom[\s\S]*font-size:clamp\(50px,5.3vw,74px\)/);
 });
 
 test('wide stages keep the primary action before the recording',()=>{
-  for(const id of ['ai-meeting','aisecure','launchloom']){
+  for(const id of ['ai-meeting','aisecure']){
     const start=artDirection.indexOf(`.owned-product--${id} .owned-hero-grid`);
     assert.ok(start>=0);
     const block=artDirection.slice(start,start+900);
     assert.match(block,/"title try" "title actions" "film film"/);
   }
+  const launch=artDirection.slice(artDirection.indexOf('.owned-product--launchloom .owned-hero-grid'));
+  assert.match(launch,/"title try" "actions try" "film film"/);
 });
 
 test('home leads with a real product surface before any JavaScript enhancement',()=>{
