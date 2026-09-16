@@ -63,14 +63,18 @@ with sync_playwright() as p:
                         assert film['x'] > h1['x'] + h1['width']*.55, (h1,film)
                         assert film['width'] > h1['width'], (h1,film)
                         assert primary['y'] < height, (primary,height)
+                        if lang == 'en':
+                            assert h1['height'] <= 300, (route,h1)
                     else:
-                        # Narrow screens prioritize the decision path: headline → real film → first task → CTA → click expectation → supporting copy.
                         assert film['y'] >= h1['y']+h1['height']-2, (h1,film)
                         assert first_try['y'] >= film['y']+film['height']-2, (first_try,film)
                         assert primary['y'] >= first_try['y']+first_try['height']-2, (primary,first_try)
                         assert note['y'] >= primary['y']+primary['height']-2, (note,primary)
                         assert lead['y'] >= note['y']+note['height']-2, (lead,note)
                         assert primary['y'] <= height+120, (primary,height)
+                        if width == 1024:
+                            assert 735 <= film['width'] <= 745, (route,film)
+                            assert primary['y'] <= height+40, (route,primary,height)
                     if width==390:
                         assert film['x']<=1 and film['width']>=388, film
                     assert not js_errors, js_errors
@@ -82,7 +86,6 @@ with sync_playwright() as p:
                 finally:
                     context.close()
 
-    # One real playback per product is enough to verify each packaged master; layout coverage above is exhaustive.
     context = browser.new_context(viewport={'width':1440,'height':1000})
     page = context.new_page(); page.set_default_timeout(30000)
     for product in PRODUCTS:
@@ -105,5 +108,9 @@ with sync_playwright() as p:
 assert len(report['layouts']) == len(PRODUCTS)*2*len(VIEWPORTS) or report['errors']
 assert len(report['playback']) == len(PRODUCTS) or report['errors']
 (OUT/'report.json').write_text(json.dumps(report,ensure_ascii=False,indent=2))
-print(json.dumps(report,ensure_ascii=False,indent=2))
+if report['errors']:
+    print(json.dumps({'errors': report['errors']},ensure_ascii=False,indent=2))
+else:
+    selected=[x for x in report['layouts'] if x['width'] in (1440,1024) and ('/en/' in x['route'] or x['route'].endswith('/aisecure/'))]
+    print(json.dumps({'layout_count':len(report['layouts']),'playback_count':len(report['playback']),'selected_metrics':selected},ensure_ascii=False,indent=2))
 raise SystemExit(bool(report['errors']))

@@ -5,6 +5,7 @@
   'use strict';
   document.documentElement.classList.add('js');
   const lang = document.documentElement.lang;
+  const ja = lang.startsWith('ja');
   const toggle = document.querySelector('.nav-toggle');
   const nav = document.getElementById('main-nav');
   const closeNav = () => { nav?.classList.remove('open'); toggle?.setAttribute('aria-expanded','false'); };
@@ -39,6 +40,94 @@
   placeHeroProof();
   narrowHero.addEventListener?.('change', placeHeroProof);
 
+  /* One signature moment only: a 12-second hard-cut reel generated from the six
+   * real product recordings. No synthetic frames, no speed changes, no tracking.
+   */
+  const signatureHost = heroProof?.querySelector('.hero-proof-image');
+  if (hero && heroProof && signatureHost) {
+    const head = heroProof.querySelector('.study-head');
+    const headParts = head?.querySelectorAll('span');
+    if (headParts?.[0]) headParts[0].textContent = 'SIGNATURE FILM / 6 REAL PRODUCTS';
+    if (headParts?.[1]) headParts[1].textContent = '12 SEC / 1×';
+    const caption = heroProof.querySelector('figcaption');
+    const captionText = caption?.querySelector('span');
+    if (captionText) captionText.textContent = ja
+      ? 'Genie → AI Meeting → Oathra → AI Secure → Agent Team → Launchloom。各2秒の実録画を通常速度でつないでいます。'
+      : 'Genie → AI Meeting → Oathra → AI Secure → Agent Team → Launchloom. Two real seconds from each product, at normal speed.';
+    const captionLink = caption?.querySelector('a');
+    if (captionLink) {
+      captionLink.href = ja ? '/products/' : '/en/products/';
+      captionLink.textContent = ja ? '6製品を見る' : 'Explore all six';
+      captionLink.removeAttribute('target');
+      captionLink.removeAttribute('rel');
+    }
+
+    const stage = document.createElement('div'); stage.className = 'rm-signature-stage';
+    const video = document.createElement('video'); video.className = 'rm-signature-video';
+    video.muted = true; video.defaultMuted = true; video.playsInline = true; video.loop = true; video.preload = 'none';
+    video.poster = '/assets/reachmade-signature.jpg';
+    video.setAttribute('aria-label', ja ? 'Reachmade 6製品の実録画12秒リール' : 'Reachmade 12-second reel of six real product recordings');
+    const play = document.createElement('button'); play.type = 'button'; play.className = 'rm-signature-play';
+    const initialPlayLabel = ja ? '12秒の実演を見る ▶' : 'Watch the 12-second reel ▶';
+    const resumeLabel = ja ? '再開 ▶' : 'Resume ▶';
+    const fallbackLabel = ja ? '6製品を見る' : 'Explore all six';
+    const fallbackHref = ja ? '/products/' : '/en/products/';
+    play.textContent = initialPlayLabel;
+    stage.append(video, play); signatureHost.replaceChildren(stage); heroProof.dataset.signatureReady = 'true';
+
+    const wideSignature = window.matchMedia('(min-width:1181px)');
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const connection = navigator.connection;
+    let ratio = 0;
+    let fallback = false;
+    const canAuto = () => !fallback && wideSignature.matches && !reducedMotion.matches && !connection?.saveData && ratio >= .35 && !document.hidden;
+    const showFallback = () => {
+      fallback = true;
+      try { video.pause(); } catch {}
+      play.hidden = false;
+      play.textContent = fallbackLabel;
+      play.dataset.fallback = 'true';
+      stage.dataset.mediaState = 'unavailable';
+    };
+    const ensureSource = () => {
+      if (!video.hasAttribute('src')) { video.src = '/assets/reachmade-signature.mp4'; video.controls = true; video.load(); }
+    };
+    const start = () => {
+      if (fallback) return;
+      ensureSource();
+      const attempt = video.play();
+      if (attempt?.then) attempt.then(() => { play.hidden = true; }).catch(showFallback);
+    };
+    const stopAuto = () => { if (!video.paused) video.pause(); };
+    const reevaluate = () => { if (canAuto()) start(); else if (wideSignature.matches === false || reducedMotion.matches || connection?.saveData || document.hidden || ratio < .35) stopAuto(); };
+    play.addEventListener('click', () => {
+      if (fallback) { location.href = fallbackHref; return; }
+      start();
+    });
+    video.addEventListener('playing', () => {
+      if (fallback) return;
+      play.hidden = true;
+      play.removeAttribute('data-fallback');
+      stage.dataset.mediaState = 'playing';
+    });
+    video.addEventListener('pause', () => {
+      if (fallback) return;
+      play.hidden = false;
+      play.textContent = resumeLabel;
+      stage.dataset.mediaState = 'paused';
+    });
+    video.addEventListener('error', showFallback);
+    if ('IntersectionObserver' in window) {
+      const observer = new IntersectionObserver(entries => { ratio = entries[0]?.isIntersecting ? entries[0].intersectionRatio : 0; reevaluate(); }, {threshold:[0,.35,.75,1]});
+      observer.observe(stage);
+    }
+    wideSignature.addEventListener?.('change', reevaluate);
+    reducedMotion.addEventListener?.('change', reevaluate);
+    connection?.addEventListener?.('change', reevaluate);
+    document.addEventListener('visibilitychange', reevaluate);
+    window.addEventListener('pagehide', stopAuto);
+  }
+
   const filters = [...document.querySelectorAll('[data-filter]')];
   const cards = [...document.querySelectorAll('.product-directory [data-category]')];
   const count = document.querySelector('.filter-count');
@@ -62,7 +151,7 @@
   const brief = document.getElementById('brief');
   const timing = document.getElementById('timing');
   const status = document.querySelector('.copy-status');
-  const fallback = document.getElementById('copy-fallback');
+  const fallbackField = document.getElementById('copy-fallback');
   const params = new URLSearchParams(location.search);
   const productNames = {'genie':'Genie','ai-meeting':'AI Meeting','oathra':'Oathra','aisecure':'AI Secure','agent-team':'Agent Team','launchloom':'Launchloom'};
   const chosenProduct = productNames[params.get('product')];
@@ -79,13 +168,13 @@
     const content = lang==='ja'
       ? `Reachmade Labへの開発相談\n\n【相談内容】${topic.value}\n\n【対象業務・実現したいこと】\n${text}\n\n【時期・現在の状況】\n${timing.value.trim() || '未定'}\n`
       : `Project inquiry for Reachmade Lab\n\nTopic: ${topic.value}\n\nWorkflow / idea:\n${text}\n\nTiming / stage:\n${timing.value.trim() || 'Not decided yet'}\n`;
-    copy.disabled=true; fallback.hidden=true;
+    copy.disabled=true; fallbackField.hidden=true;
     try {
       if(!navigator.clipboard?.writeText) throw new Error('Clipboard unavailable');
       await navigator.clipboard.writeText(content);
       status.textContent = lang==='ja'?'コピーしました。まだ送信していません。相談フォームに貼り付けてください。':'Copied. Nothing has been sent. Paste this into the inquiry form.';
     } catch {
-      fallback.value=content; fallback.hidden=false; fallback.focus(); fallback.select();
+      fallbackField.value=content; fallbackField.hidden=false; fallbackField.focus(); fallbackField.select();
       status.textContent = lang==='ja'?'自動コピーを利用できません。下の文章を選択してコピーしてください。まだ送信していません。':'Automatic copying is unavailable. Select and copy the text below. Nothing has been sent.';
     } finally {copy.disabled=false;}
   });
@@ -93,8 +182,15 @@
   // Leave the existing static previews intact if scripts cannot be loaded.
   if (document.querySelector('.hero-proof-image, .project-visual, .compact-product')) {
     const films = document.createElement('script');
-    films.src = '/assets/product-films.js?v=20260916-premium1';
+    films.src = '/assets/product-films.js?v=20260917-signature1';
     films.defer = true;
+    films.addEventListener('load', () => {
+      if (!hero) return;
+      const hint = document.querySelector('.selected-work .rm-film-hint');
+      if (hint) hint.textContent = ja
+        ? '自動で動くのはトップの12秒Signature Filmだけです。個別製品の実録画は再生ボタンから確認できます。'
+        : 'Only the 12-second Signature Film moves automatically. Individual product recordings remain manual.';
+    });
     document.head.append(films);
   }
 })();

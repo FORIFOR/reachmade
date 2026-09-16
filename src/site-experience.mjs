@@ -6,16 +6,16 @@ export function improveCopy(original) {
   const copy = originalCopy(original);
   Object.assign(copy.ja, {
     heroLabel: '6 INDEPENDENT AI PRODUCTS / REAL SCREENS',
-    tagline: '会話をタスクに。<br>録画を公開素材に。',
-    heroText: '会話・電話・調査・レビュー・制作を、6つの自主開発プロダクトで検証しています。<br>実画面と録画から、できることと検証中のことを確認できます。',
+    tagline: '仕事も、会話も、調査も。<br>AIを、動く製品に。',
+    heroText: '作成・電話・レビュー・制作まで、6つの自主開発プロダクトを実際の画面で公開しています。<br>12秒の実録画から、できること・試せること・残る制約まで確認できます。',
     heroPrimary: '実製品を見る',
     selectedTitle: '実物から、選ぶ。',
     selectedText: '代表的な製品は、実際の画面記録と一緒に紹介します。機能・利用条件・残る制約を分けて確認できます。',
   });
   Object.assign(copy.en, {
     heroLabel: '6 INDEPENDENT AI PRODUCTS / REAL SCREENS',
-    tagline: 'Conversations into tasks.<br>Recordings into launch materials.',
-    heroText: 'Six independently built products explore conversations, calls, investigation, review and creation.<br>See the real interfaces and recordings, together with what is still being validated.',
+    tagline: 'Work. Voice. Investigation.<br>AI, built into real products.',
+    heroText: 'Six independently built products cover drafting, calls, review and launch work as well.<br>A 12-second real-recording reel shows what works, what you can try, and what remains constrained.',
     heroPrimary: 'See the real products',
     selectedTitle: 'Choose from the real work.',
     selectedText: 'Representative products are shown with recorded interfaces. Capabilities, access requirements and remaining limitations stay separate.',

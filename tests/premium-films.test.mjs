@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { recordings } from '../src/films.mjs';
 import { premiumFilmCuts, premiumFilmPolicy, validatePremiumFilmCuts } from '../src/premium-film-cuts.mjs';
-import { buildPremiumFilter, ffmpegArgs } from '../scripts/prepare-media.mjs';
+import { buildPremiumFilter, ffmpegArgs, buildSignatureFilter, signatureFfmpegArgs, SIGNATURE_ORDER, SIGNATURE_SEGMENT_SECONDS } from '../scripts/prepare-media.mjs';
 
 const ids = Object.keys(recordings).sort();
 
@@ -58,6 +58,22 @@ test('ffmpeg command strips audio, preserves normal speed and optimizes MP4 for 
   assert.equal((joined.match(/setpts=PTS-STARTPTS/g)||[]).length,2);
   assert.doesNotMatch(joined.replaceAll('setpts=PTS-STARTPTS',''),/setpts=/i);
   assert.doesNotMatch(joined,/-filter:a|-af |atempo|drawtext|overlay|xfade|zoompan/i);
+});
+
+test('signature film uses all six real product edits for two seconds each at normal speed',()=>{
+  assert.deepEqual([...SIGNATURE_ORDER].sort(),ids);
+  assert.equal(SIGNATURE_SEGMENT_SECONDS,2);
+  const filter=buildSignatureFilter();
+  assert.match(filter,/concat=n=6:v=1:a=0/);
+  assert.equal((filter.match(/duration=2/g)||[]).length,6);
+  assert.equal((filter.match(/setpts=PTS-STARTPTS/g)||[]).length,6);
+  assert.doesNotMatch(filter.replaceAll('setpts=PTS-STARTPTS',''),/setpts=/i);
+  assert.doesNotMatch(filter,/drawtext|overlay|xfade|zoompan/i);
+  const args=signatureFfmpegArgs(SIGNATURE_ORDER.map(id=>`/tmp/${id}.mp4`),'/tmp/signature.mp4').join(' ');
+  assert.equal((args.match(/ -i /g)||[]).length,6);
+  assert.match(args,/-an/);
+  assert.match(args,/\+faststart/);
+  assert.match(args,/hard cuts; playback speed unchanged/);
 });
 
 test('product film UI discloses the edit instead of implying a continuous full recording',async()=>{

@@ -1,0 +1,109 @@
+/* Final composition polish: language-aware type, tablet density, one real-recording signature film. */
+
+/* English headlines need optical, not mechanical, parity with Japanese. */
+html[lang="en"] .owned-product .owned-hero-grid h1{
+  font-size:clamp(38px,3.65vw,54px)!important;
+  line-height:1.08!important;
+  letter-spacing:-.042em!important;
+  max-width:14ch;
+  text-wrap:balance;
+}
+html[lang="en"] .owned-product--aisecure .owned-hero-grid h1{
+  font-size:clamp(36px,3.35vw,49px)!important;
+  max-width:13.5ch;
+}
+html[lang="en"] .owned-product--agent-team .owned-hero-grid h1{
+  font-size:clamp(37px,3.5vw,51px)!important;
+  max-width:13.5ch;
+}
+
+/* Tablet is its own composition: keep the real film dominant without pushing the first action away. */
+@media (min-width:461px) and (max-width:1100px){
+  .owned-product .owned-film--hero{
+    width:min(100%,740px)!important;
+    margin-inline:auto!important;
+    justify-self:center;
+  }
+  /* English captions and action copy are longer. Compress only their vertical rhythm,
+     preserving font size, tap targets, film size and the 390px mobile composition. */
+  html[lang="en"] .owned-product .owned-film--hero{
+    margin-top:18px!important;
+  }
+  html[lang="en"] .owned-product .owned-film figcaption{
+    padding-block:9px 11px;
+  }
+  html[lang="en"] .owned-product .owned-try-now{
+    margin-top:14px;
+    padding-top:12px;
+  }
+}
+
+/* Reachmade's single signature moment is one calm reel made only from the six real recordings. */
+.hero .rm-signature-stage{
+  position:relative;
+  overflow:hidden;
+  aspect-ratio:16/9;
+  background:#171a17;
+  border:1px solid #30342f;
+  border-radius:16px;
+  box-shadow:0 30px 70px -48px #0008;
+}
+.hero .rm-signature-video{
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  background:#171a17;
+}
+.hero .rm-signature-play{
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  min-height:52px;
+  padding:12px 18px;
+  border:1px solid rgba(255,255,255,.28);
+  border-radius:8px;
+  background:#f6f5f0;
+  color:#20251f;
+  font:inherit;
+  font-size:14px;
+  font-weight:650;
+  cursor:pointer;
+  box-shadow:0 10px 36px rgba(0,0,0,.22);
+}
+.hero .rm-signature-play[hidden]{display:none!important}
+.hero .hero-proof[data-signature-ready="true"] .study-head span:first-child{color:#f6f5f0}
+
+/* 1024-class homepage: keep the promise editorial, but get the proof and CTA closer to the first view. */
+@media (min-width:651px) and (max-width:1180px){
+  .hero.container h1{
+    max-width:20ch!important;
+    font-size:clamp(46px,5.2vw,54px)!important;
+    line-height:1.14!important;
+  }
+  html[lang="en"] .hero.container h1{
+    max-width:24ch!important;
+    font-size:clamp(46px,5vw,52px)!important;
+    line-height:1.04!important;
+  }
+  .hero .rm-signature-stage{
+    width:min(100%,820px);
+    margin-inline:auto;
+  }
+}
+
+@media(max-width:650px){
+  .hero .rm-signature-stage{
+    width:100vw;
+    margin-left:calc(50% - 50vw);
+    border-radius:0;
+    border-inline:0;
+    box-shadow:none;
+  }
+  .hero .rm-signature-play{min-height:48px;font-size:13px}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .hero .rm-signature-video{scroll-behavior:auto}
+}

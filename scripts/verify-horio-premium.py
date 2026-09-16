@@ -12,7 +12,7 @@ BASE = 'http://127.0.0.1:8787'
 OUT = Path('film-qa/horio-premium')
 OUT.mkdir(parents=True, exist_ok=True)
 report = {
-    'scope': 'Actual generated Reachmade pages and premium edits of real recordings in local Chromium; not production Safari',
+    'scope': 'Actual generated Reachmade pages, the six-product signature reel and premium edits of real recordings in local Chromium; not production Safari',
     'viewports': [], 'gates': {}, 'errors': []
 }
 
@@ -36,15 +36,16 @@ def box(locator):
 
 def ensure_first_view(page, viewport_height):
     h1 = page.locator('.hero h1')
-    stage = page.locator('.hero .rm-film-stage')
+    stage = page.locator('.hero .rm-signature-stage')
     label = page.locator('.hero .eyebrow').first
     assert h1.is_visible() and stage.is_visible() and label.is_visible()
     hb, sb = box(h1), box(stage)
     assert hb['y'] < viewport_height, hb
     assert sb['y'] < viewport_height, sb
     text = page.locator('.hero').inner_text()
-    assert ('6 INDEPENDENT AI PRODUCTS' in text)
-    assert ('Genie' in text)
+    assert '6 INDEPENDENT AI PRODUCTS' in text
+    assert 'SIGNATURE FILM / 6 REAL PRODUCTS' in text
+    assert 'Genie' in text and 'Launchloom' in text
     return hb, sb
 
 
@@ -69,29 +70,33 @@ with sync_playwright() as pw:
                 else:
                     assert sb['y'] >= hb['y'] + hb['height'] - 2, (hb, sb)
                     assert desc['y'] >= sb['y'] + sb['height'] - 2, (desc, sb)
+                if width == 1024:
+                    assert hb['height'] <= 190, (language, hb)
+                    assert 810 <= sb['width'] <= 822, (language, sb)
                 if width == 390:
                     assert sb['x'] <= 1 and sb['width'] >= 388, sb
                 h_area = hb['width'] * hb['height']
                 s_area = min(sb['width'] * sb['height'], sb['width'] * max(1, height - sb['y']))
                 assert s_area > h_area, (h_area, s_area)
-                video = page.locator('.hero .rm-film-preview')
+                video = page.locator('.hero .rm-signature-video')
                 if width >= 1181:
-                    page.wait_for_function("() => { const v=document.querySelector('.hero .rm-film-preview'); return v && v.currentTime > .20 && !v.paused; }")
-                    playing = page.locator('.rm-film-preview').evaluate_all('(vs)=>vs.filter(v=>!v.paused).map(v=>v.closest("[data-product-film]")?.dataset.productFilm)')
-                    assert playing == ['genie'], playing
+                    page.wait_for_function("() => { const v=document.querySelector('.hero .rm-signature-video'); return v && v.currentTime > .20 && !v.paused; }")
+                    assert video.get_attribute('src') == '/assets/reachmade-signature.mp4'
+                    playing_lower = page.locator('.rm-film-preview').evaluate_all('(vs)=>vs.filter(v=>!v.paused).length')
+                    assert playing_lower == 0, playing_lower
                 else:
-                    assert video.get_attribute('src') is None, 'narrow view auto-loaded media'
+                    assert video.get_attribute('src') is None, 'narrow view auto-loaded signature media'
                     assert video.evaluate('(v)=>v.paused')
                 assert not page_errors, page_errors
                 shot = OUT / f'home-{language}-{width}.png'
                 page.screenshot(path=str(shot), full_page=True)
                 report['viewports'].append({
                     'language': language, 'width': width, 'height': height,
-                    'headline': hb, 'product_stage': sb, 'description': desc,
+                    'headline': hb, 'signature_stage': sb, 'description': desc,
                     'horizontal_overflow': False,
                     'desktop_spread': width >= 1181,
                     'mobile_full_bleed': width == 390,
-                    'hero_auto_play': width >= 1181,
+                    'signature_auto_play': width >= 1181,
                     'screenshot': str(shot),
                 })
             except Exception as e:
@@ -106,8 +111,8 @@ with sync_playwright() as pw:
         page.goto(BASE + '/', wait_until='networkidle'); page.wait_for_function('() => window.__reachmadeFilms === true')
         page.evaluate("""() => { const s=document.querySelector('.site-header .brand > span'); if(s) s.textContent='Sample Studio'; }""")
         hero = page.locator('.hero').inner_text()
-        assert '会話をタスクに' in hero and 'Genie' in hero and 'REAL SCREENS' in hero
-        assert page.locator('.hero .rm-film-stage').is_visible()
+        assert '仕事も、会話も、調査も' in hero and 'Genie' in hero and 'Launchloom' in hero and 'REAL SCREENS' in hero
+        assert page.locator('.hero .rm-signature-stage').is_visible()
         page.screenshot(path=str(OUT / 'logo-swap-1440.png'), full_page=False)
         report['gates']['logo_swap_test'] = True
     except Exception as e:
@@ -115,17 +120,16 @@ with sync_playwright() as pw:
     finally:
         context.close()
 
-    # Stillness is now the poster generated from the exact same edited film, not a separate old screenshot.
     context = browser.new_context(viewport={'width': 1440, 'height': 1000}, reduced_motion='reduce')
     page = context.new_page(); page.set_default_timeout(30000)
     try:
         page.goto(BASE + '/', wait_until='networkidle'); page.wait_for_function('() => window.__reachmadeFilms === true')
         ensure_first_view(page, 1000)
-        video = page.locator('.hero .rm-film-preview')
+        video = page.locator('.hero .rm-signature-video')
         assert video.get_attribute('src') is None
         assert video.evaluate('(v)=>v.paused')
-        assert video.get_attribute('poster') == '/media/products/genie.jpg'
-        assert not page.locator('.hero .rm-film-error').is_visible()
+        assert video.get_attribute('poster') == '/assets/reachmade-signature.jpg'
+        assert page.locator('.hero .rm-signature-play').is_visible()
         page.screenshot(path=str(OUT / 'stillness-reduced-motion-1440.png'), full_page=False)
         report['gates']['stillness_test'] = True
     except Exception as e:
@@ -133,18 +137,20 @@ with sync_playwright() as pw:
     finally:
         context.close()
 
-    # If automatic playback fails, the generated poster stays clean. A manual retry must disclose the error.
-    context = browser.new_context(viewport={'width': 1440, 'height': 1000})
-    context.route('**/media/products/genie.mp4', lambda route: route.abort())
+    # A deliberate play attempt with a failed media request must stay quiet and preserve the real poster.
+    context = browser.new_context(viewport={'width': 1440, 'height': 1000}, reduced_motion='reduce')
+    context.route('**/assets/reachmade-signature.mp4', lambda route: route.abort())
     page = context.new_page(); page.set_default_timeout(30000)
     try:
         page.goto(BASE + '/', wait_until='networkidle'); page.wait_for_function('() => window.__reachmadeFilms === true')
-        page.wait_for_timeout(1000)
-        assert page.locator('.hero .rm-film-preview').get_attribute('poster') == '/media/products/genie.jpg'
-        assert not page.locator('.hero .rm-film-error').is_visible(), 'automatic failure leaked error into first view'
-        page.locator('.hero .rm-film-toggle').click()
-        page.wait_for_function("() => { const e=document.querySelector('.hero .rm-film-error'); return e && !e.hidden; }")
-        assert page.locator('.hero .rm-film-error').is_visible()
+        play = page.locator('.hero .rm-signature-play')
+        assert play.is_visible()
+        play.click()
+        page.wait_for_function("() => { const b=document.querySelector('.hero .rm-signature-play'); return b && !b.hidden && /6製品を見る|Explore all six/.test(b.textContent); }")
+        video = page.locator('.hero .rm-signature-video')
+        assert video.get_attribute('poster') == '/assets/reachmade-signature.jpg'
+        assert page.locator('.hero').inner_text().find('MEDIA_UNAVAILABLE') == -1
+        assert play.is_visible()
         report['gates']['media_failure_fallback'] = True
     except Exception as e:
         report['errors'].append({'media_failure_fallback': str(e)})
