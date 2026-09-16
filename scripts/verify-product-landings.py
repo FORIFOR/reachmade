@@ -1,4 +1,4 @@
-"""Read-only Chromium checks of generated pages through the real local Worker."""
+"""Read-only Chromium checks of all six video-first product pages through local Wrangler."""
 from pathlib import Path
 import json
 import time
@@ -8,56 +8,87 @@ from playwright.sync_api import sync_playwright
 BASE = 'http://127.0.0.1:8787'
 OUT = Path('film-qa/product-landings')
 OUT.mkdir(parents=True, exist_ok=True)
-report = {'scope': 'Generated pages and actual packaged recordings in local Chromium, not production or Safari', 'checks': [], 'errors': []}
+PRODUCTS = ['genie','ai-meeting','oathra','aisecure','agent-team','launchloom']
+VIEWPORTS = [(1440,1000),(1024,900),(390,844)]
+report = {'scope': 'Six generated video-first product pages and packaged real recordings in local Chromium; not production or Safari', 'layouts': [], 'playback': [], 'errors': []}
 end = time.monotonic() + 90
 while True:
     try:
         with urllib.request.urlopen(BASE + '/', timeout=2) as response:
-            if response.status == 200:
-                break
+            if response.status == 200: break
     except Exception:
-        if time.monotonic() > end:
-            raise RuntimeError('Local Worker did not become ready')
+        if time.monotonic() > end: raise RuntimeError('Local Worker did not become ready')
         time.sleep(1)
+
+def box(locator):
+    value=locator.bounding_box()
+    if not value: raise AssertionError('Element has no box')
+    return {k:round(v,2) for k,v in value.items()}
 
 with sync_playwright() as p:
     browser = p.chromium.launch()
-    for width in [390, 1440]:
-        for lang in ['ja', 'en']:
-            for product in ['genie', 'ai-meeting']:
+    for width,height in VIEWPORTS:
+        for lang in ['ja','en']:
+            for product in PRODUCTS:
                 route = ('/en' if lang == 'en' else '') + f'/products/{product}/'
-                context = browser.new_context(viewport={'width': width, 'height': 900}, reduced_motion='reduce')
-                page = context.new_page()
-                errors = []
-                page.on('pageerror', lambda err: errors.append(str(err)))
+                context = browser.new_context(viewport={'width': width, 'height': height}, reduced_motion='reduce')
+                page = context.new_page(); page.set_default_timeout(30000)
+                js_errors=[]; page.on('pageerror',lambda err:js_errors.append(str(err)))
                 try:
                     page.goto(BASE + route, wait_until='networkidle')
-                    video = page.locator('.owned-film video')
-                    button = page.locator('.owned-film__play')
-                    assert video.count() == 1
-                    assert video.get_attribute('src') is None, 'Video was loaded before explicit intent'
-                    assert video.get_attribute('preload') == 'none'
-                    bounds = button.bounding_box()
-                    assert bounds and bounds['height'] >= 44
-                    button.click()
-                    page.wait_for_function("() => { const v=document.querySelector('.owned-film video'); return v && v.readyState>=2 && v.currentTime>0.25 && !v.error; }", timeout=30000)
-                    state = video.evaluate('(v)=>({src:v.currentSrc,duration:v.duration,time:v.currentTime,width:v.videoWidth,height:v.videoHeight,controls:v.controls})')
-                    assert state['src'] == BASE + f'/media/products/{product}.mp4'
-                    assert state['width'] > 0 and state['duration'] > 1 and state['controls']
-                    assert not button.is_visible()
-                    video.evaluate('(v)=>v.pause()')
-                    assert video.evaluate('(v)=>v.paused')
-                    overflow = page.evaluate('document.documentElement.scrollWidth > innerWidth + 1')
-                    assert not overflow, 'Horizontal overflow'
-                    assert not errors, errors
-                    page.screenshot(path=str(OUT / f'{product}-{lang}-{width}.png'), full_page=True)
-                    report['checks'].append({'route':route,'width':width,'no_initial_media':True,'explicit_playback':state,'paused_with_native_api':True,'overflow':False})
+                    assert page.locator('h1').count()==1
+                    assert page.locator('.owned-film').count()==1
+                    assert page.locator('.owned-flow li').count()==3
+                    assert page.locator('.owned-boundaries article').count()==2
+                    assert not page.evaluate('document.documentElement.scrollWidth > innerWidth + 1')
+                    h1=box(page.locator('.owned-hero-grid h1')); film=box(page.locator('.owned-film--hero')); lead=box(page.locator('.owned-lead'))
+                    video=page.locator('.owned-film video'); button=page.locator('.owned-film__play')
+                    assert video.get_attribute('src') is None, 'Video loaded before explicit intent'
+                    assert video.get_attribute('preload')=='none'
+                    assert video.get_attribute('poster')==f'/media/products/{product}.jpg'
+                    b=button.bounding_box(); assert b and b['height']>=44
+                    assert h1['y'] < height and film['y'] < height, (h1,film,height)
+                    if width>=1101:
+                        assert film['x'] > h1['x'] + h1['width']*.55, (h1,film)
+                        assert film['width'] > h1['width'], (h1,film)
+                    else:
+                        assert film['y'] >= h1['y']+h1['height']-2, (h1,film)
+                        assert lead['y'] >= film['y']+film['height']-2, (lead,film)
+                    if width==390:
+                        assert film['x']<=1 and film['width']>=388, film
+                    primary=page.locator('.owned-hero-grid .owned-primary')
+                    assert primary.is_visible() and primary.get_attribute('href').startswith('https://')
+                    assert not js_errors, js_errors
+                    page.screenshot(path=str(OUT/f'{product}-{lang}-{width}.png'),full_page=True)
+                    report['layouts'].append({'route':route,'width':width,'headline':h1,'film':film,'lead':lead,'video_first':True,'overflow':False,'no_initial_media':True})
                 except Exception as error:
                     report['errors'].append({'route':route,'width':width,'error':str(error)})
-                    page.screenshot(path=str(OUT / f'failed-{product}-{lang}-{width}.png'), full_page=True)
+                    page.screenshot(path=str(OUT/f'failed-{product}-{lang}-{width}.png'),full_page=True)
                 finally:
                     context.close()
-    browser.close()
-(OUT / 'report.json').write_text(json.dumps(report, ensure_ascii=False, indent=2))
-print(json.dumps(report, ensure_ascii=False, indent=2))
+
+    # One real playback per product is enough to verify each packaged master; layout coverage above is exhaustive.
+    context = browser.new_context(viewport={'width':1440,'height':1000})
+    page = context.new_page(); page.set_default_timeout(30000)
+    for product in PRODUCTS:
+        route=f'/products/{product}/'
+        try:
+            page.goto(BASE+route,wait_until='networkidle')
+            video=page.locator('.owned-film video'); button=page.locator('.owned-film__play')
+            button.click()
+            page.wait_for_function("id => { const v=document.querySelector('.owned-film video'); return v && v.readyState>=2 && v.currentTime>.25 && !v.paused && !v.error && v.currentSrc.endsWith('/media/products/'+id+'.mp4'); }",arg=product)
+            state=video.evaluate('(v)=>({src:v.currentSrc,duration:v.duration,time:v.currentTime,width:v.videoWidth,height:v.videoHeight,paused:v.paused})')
+            assert 12 <= state['duration'] <= 14
+            assert state['width']==1280 and state['height']==720
+            assert not button.is_visible()
+            video.evaluate('(v)=>v.pause()'); assert video.evaluate('(v)=>v.paused')
+            report['playback'].append({'product':product,**state})
+        except Exception as error:
+            report['errors'].append({'playback':product,'error':str(error)})
+    context.close(); browser.close()
+
+assert len(report['layouts']) == len(PRODUCTS)*2*len(VIEWPORTS) or report['errors']
+assert len(report['playback']) == len(PRODUCTS) or report['errors']
+(OUT/'report.json').write_text(json.dumps(report,ensure_ascii=False,indent=2))
+print(json.dumps(report,ensure_ascii=False,indent=2))
 raise SystemExit(bool(report['errors']))
