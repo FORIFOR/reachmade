@@ -6,7 +6,8 @@ import { root } from '../scripts/build.mjs';
 
 const css = await fs.readFile(path.join(root,'public/assets/horio-premium.css'),'utf8');
 const precision = await fs.readFile(path.join(root,'public/assets/precision-polish.css'),'utf8');
-const declarations = (css+'\n'+precision).replace(/\/\*[\s\S]*?\*\//g,'');
+const artDirection = await fs.readFile(path.join(root,'public/assets/art-direction.css'),'utf8');
+const declarations = (css+'\n'+precision+'\n'+artDirection).replace(/\/\*[\s\S]*?\*\//g,'');
 const entryCss = await fs.readFile(path.join(root,'public/assets/site.css'),'utf8');
 const films = await fs.readFile(path.join(root,'public/assets/product-films.js'),'utf8');
 const site = await fs.readFile(path.join(root,'public/assets/site.js'),'utf8');
@@ -28,7 +29,26 @@ test('all design layers are imported before any CSS declarations',()=>{
     '@import url("./quiet-cinema.css");',
     '@import url("./horio-premium.css");',
     '@import url("./precision-polish.css");',
+    '@import url("./art-direction.css");',
   ]);
+});
+
+test('Reachmade owns one visual signature without replacing real product proof',()=>{
+  assert.match(artDirection,/background:url\("\.\/mark\.svg"\)/);
+  assert.match(artDirection,/\.hero-footnote\{/);
+  assert.match(artDirection,/\.hero \.rm-signature-stage\{/);
+  assert.doesNotMatch(artDirection,/filter:blur|animation:|@keyframes/);
+  assert.match(home,/src="\/assets\/products\/genie\.jpg"/);
+});
+
+test('the six product heroes have six explicit art directions',()=>{
+  const ids=['genie','ai-meeting','oathra','aisecure','agent-team','launchloom'];
+  for(const id of ids) assert.match(artDirection,new RegExp(`owned-product--${id.replace('-','\\-')} \\.owned-hero-grid`));
+  const templates=[...artDirection.matchAll(/grid-template-areas:([^!;]+)!important/g)].map(x=>x[1].trim());
+  assert.ok(new Set(templates).size>=5,'product heroes must not collapse back to one shared composition');
+  assert.match(artDirection,/owned-product--oathra[\s\S]*box-shadow:0 0 0 100vmax #171a17/);
+  assert.match(artDirection,/owned-product--agent-team[\s\S]*grid-template-columns:minmax\(230px,.62fr\) minmax\(0,1.42fr\) minmax\(230px,.58fr\)/);
+  assert.match(artDirection,/owned-product--launchloom[\s\S]*font-size:clamp\(50px,5.7vw,80px\)/);
 });
 
 test('home leads with a real product surface before any JavaScript enhancement',()=>{
