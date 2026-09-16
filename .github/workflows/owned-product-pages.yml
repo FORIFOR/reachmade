@@ -1,10 +1,10 @@
 name: Owned product pages
 on:
   pull_request:
-    paths: ['src/product-landings.mjs', 'src/site-experience.mjs', 'src/site-content.mjs', 'scripts/build*.mjs', 'public/assets/product-landings.*', 'public/assets/reachmade-art-direction.css', 'public/assets/visual-ownership-responsive.css', 'tests/art-direction.test.mjs', 'tests/product-landings.test.mjs', 'tests/site.test.mjs', 'scripts/verify-product-landings.py', '.github/workflows/owned-product-pages.yml']
+    paths: ['src/product-landings.mjs', 'src/site-experience.mjs', 'src/site-content.mjs', 'scripts/build*.mjs', 'public/assets/product-landings.*', 'public/assets/reachmade-art-direction.css', 'public/assets/visual-ownership-responsive.css', 'public/assets/hero-layouts.css', 'tests/art-direction.test.mjs', 'tests/hero-layouts.test.mjs', 'tests/horio-premium.test.mjs', 'tests/product-landings.test.mjs', 'tests/site.test.mjs', 'scripts/verify-product-landings.py', '.github/workflows/owned-product-pages.yml']
   push:
     branches: [main]
-    paths: ['src/product-landings.mjs', 'src/site-experience.mjs', 'src/site-content.mjs', 'scripts/build*.mjs', 'public/assets/product-landings.*', 'public/assets/reachmade-art-direction.css', 'public/assets/visual-ownership-responsive.css', 'tests/art-direction.test.mjs', 'tests/product-landings.test.mjs', 'tests/site.test.mjs', 'scripts/verify-product-landings.py', '.github/workflows/owned-product-pages.yml']
+    paths: ['src/product-landings.mjs', 'src/site-experience.mjs', 'src/site-content.mjs', 'scripts/build*.mjs', 'public/assets/product-landings.*', 'public/assets/reachmade-art-direction.css', 'public/assets/visual-ownership-responsive.css', 'public/assets/hero-layouts.css', 'tests/art-direction.test.mjs', 'tests/hero-layouts.test.mjs', 'tests/horio-premium.test.mjs', 'tests/product-landings.test.mjs', 'tests/site.test.mjs', 'scripts/verify-product-landings.py', '.github/workflows/owned-product-pages.yml']
   workflow_dispatch:
 permissions:
   contents: read
@@ -49,7 +49,7 @@ jobs:
           else
             printf 'No browser report was produced; earlier steps must be checked.\n' >> "$GITHUB_STEP_SUMMARY"
           fi
-      - name: Preserve optional screenshots when artifact storage is available
+      - name: Preserve optional screenshots when storage is available
         id: screenshots
         uses: actions/upload-artifact@v4
         if: always()

@@ -30,6 +30,7 @@ test('all design layers are imported before any CSS declarations',()=>{
     '@import url("./precision-polish.css");',
     '@import url("./reachmade-art-direction.css");',
     '@import url("./visual-ownership-responsive.css");',
+    '@import url("./hero-layouts.css");',
   ]);
 });
 
