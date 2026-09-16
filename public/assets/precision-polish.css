@@ -63,6 +63,24 @@ html[lang="en"] .owned-product--agent-team .owned-hero-grid h1{
 .hero .rm-signature-play[hidden]{display:none!important}
 .hero .hero-proof[data-signature-ready="true"] .study-head span:first-child{color:#f6f5f0}
 
+/* 1024-class homepage: keep the promise editorial, but get the proof and CTA closer to the first view. */
+@media (min-width:651px) and (max-width:1180px){
+  .hero.container h1{
+    max-width:20ch!important;
+    font-size:clamp(46px,5.2vw,54px)!important;
+    line-height:1.14!important;
+  }
+  html[lang="en"] .hero.container h1{
+    max-width:18ch!important;
+    font-size:clamp(46px,5vw,52px)!important;
+    line-height:1.04!important;
+  }
+  .hero .rm-signature-stage{
+    width:min(100%,820px);
+    margin-inline:auto;
+  }
+}
+
 @media(max-width:650px){
   .hero .rm-signature-stage{
     width:100vw;
