@@ -8,6 +8,8 @@ import { recordings } from '../src/films.mjs';
 import { PREMIUM_FILM_VERSION, premiumFilmCuts, premiumFilmPolicy, validatePremiumFilmCuts } from '../src/premium-film-cuts.mjs';
 
 export const MAX_BYTES = 24 * 1024 * 1024;
+export const SIGNATURE_ORDER = Object.freeze(['genie','ai-meeting','oathra','aisecure','agent-team','launchloom']);
+export const SIGNATURE_SEGMENT_SECONDS = 2;
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
 export function validateMp4(bytes) {
@@ -69,6 +71,25 @@ export function ffmpegArgs(input, output, plan, policy = premiumFilmPolicy) {
   ];
 }
 
+export function buildSignatureFilter(order = SIGNATURE_ORDER, policy = premiumFilmPolicy) {
+  const start = policy.startHold;
+  const clips = order.map((_, index) => `[${index}:v]trim=start=${start}:duration=${SIGNATURE_SEGMENT_SECONDS},setpts=PTS-STARTPTS,fps=${policy.fps},setsar=1,format=yuv420p[s${index}]`);
+  const inputs = order.map((_, index) => `[s${index}]`).join('');
+  return `${clips.join(';')};${inputs}concat=n=${order.length}:v=1:a=0[outv]`;
+}
+
+export function signatureFfmpegArgs(inputs, output, policy = premiumFilmPolicy) {
+  const inputArgs = inputs.flatMap(input => ['-i', input]);
+  return [
+    '-hide_banner', '-loglevel', 'error', '-y', ...inputArgs,
+    '-filter_complex', buildSignatureFilter(SIGNATURE_ORDER, policy), '-map', '[outv]', '-an',
+    '-c:v', 'libx264', '-preset', policy.preset, '-crf', String(policy.crf),
+    '-profile:v', 'high', '-level', '4.0', '-pix_fmt', 'yuv420p',
+    '-movflags', '+faststart', '-metadata', 'comment=Reachmade signature film; six real product recordings; two seconds each; hard cuts; playback speed unchanged',
+    output,
+  ];
+}
+
 async function run(command, args) {
   await new Promise((resolve, reject) => {
     const child = spawn(command, args, { stdio: ['ignore', 'ignore', 'pipe'] });
@@ -86,16 +107,22 @@ export async function renderPremiumFilm({ input, output, poster, plan, ffmpeg = 
   await run(ffmpeg, ['-hide_banner','-loglevel','error','-y','-ss',String(premiumFilmPolicy.startHold),'-i',output,'-frames:v','1','-q:v','2',poster]);
 }
 
-export async function prepareMedia({ dist = path.join(root, 'dist'), fetcher = fetch, ffmpeg = process.env.FFMPEG_BIN || 'ffmpeg', renderer = renderPremiumFilm } = {}) {
+export async function renderSignatureFilm({ inputs, output, poster, ffmpeg = process.env.FFMPEG_BIN || 'ffmpeg' }) {
+  await run(ffmpeg, signatureFfmpegArgs(inputs, output));
+  await run(ffmpeg, ['-hide_banner','-loglevel','error','-y','-ss','0.1','-i',output,'-frames:v','1','-q:v','2',poster]);
+}
+
+export async function prepareMedia({ dist = path.join(root, 'dist'), fetcher = fetch, ffmpeg = process.env.FFMPEG_BIN || 'ffmpeg', renderer = renderPremiumFilm, signatureRenderer = renderSignatureFilm } = {}) {
   await fs.access(path.join(dist, 'index.html'));
   validatePremiumFilmCuts();
   const recordingIds = Object.keys(recordings).sort();
   const cutIds = Object.keys(premiumFilmCuts).sort();
   if (JSON.stringify(recordingIds) !== JSON.stringify(cutIds)) throw new Error('Premium film cuts must cover exactly the six packaged recordings');
+  if (JSON.stringify([...SIGNATURE_ORDER].sort()) !== JSON.stringify(recordingIds)) throw new Error('Signature film must cover exactly the six packaged recordings');
   const mediaRoot = path.join(dist, 'media'); await fs.mkdir(mediaRoot, { recursive: true });
   const stage = await fs.mkdtemp(path.join(mediaRoot, '.recordings-'));
   const rawRoot = await fs.mkdtemp(path.join(mediaRoot, '.raw-'));
-  const manifest = { schema: 2, mode: 'premium-site-edits', editVersion: PREMIUM_FILM_VERSION, policy: premiumFilmPolicy, recordings: [] };
+  const manifest = { schema: 3, mode: 'premium-site-edits', editVersion: PREMIUM_FILM_VERSION, policy: premiumFilmPolicy, recordings: [], signature: null };
   try {
     for (const [id, source] of Object.entries(recordings)) {
       if (!/^[a-z0-9-]+$/.test(id)) throw new Error('Invalid recording ID');
@@ -120,13 +147,38 @@ export async function prepareMedia({ dist = path.join(root, 'dist'), fetcher = f
         edit: { version: PREMIUM_FILM_VERSION, clips: premiumFilmCuts[id].clips, speed: 1, audio: false, label: premiumFilmCuts[id].label },
       });
     }
+
+    const signaturePath = path.join(stage, 'reachmade-signature.mp4');
+    const signaturePosterPath = path.join(stage, 'reachmade-signature.jpg');
+    const signatureInputs = SIGNATURE_ORDER.map(id => path.join(stage, `${id}.mp4`));
+    await signatureRenderer({ inputs: signatureInputs, output: signaturePath, poster: signaturePosterPath, ffmpeg });
+    const signatureBytes = await fs.readFile(signaturePath); validateMp4(signatureBytes);
+    const signaturePosterBytes = await fs.readFile(signaturePosterPath); validateJpeg(signaturePosterBytes);
+    manifest.signature = {
+      order: SIGNATURE_ORDER,
+      secondsPerProduct: SIGNATURE_SEGMENT_SECONDS,
+      duration: SIGNATURE_ORDER.length * SIGNATURE_SEGMENT_SECONDS,
+      speed: 1,
+      audio: false,
+      transition: 'hard-cut',
+      path: '/assets/reachmade-signature.mp4',
+      poster: '/assets/reachmade-signature.jpg',
+      bytes: signatureBytes.length,
+      sha256: createHash('sha256').update(signatureBytes).digest('hex'),
+    };
+
     await fs.writeFile(path.join(stage, 'manifest.json'), JSON.stringify(manifest, null, 2) + '\n');
     const destination = path.join(mediaRoot, 'products');
     await fs.rm(destination, { recursive: true, force: true });
     await fs.rename(stage, destination);
-    const posterDestination = path.join(dist, 'assets', 'products'); await fs.mkdir(posterDestination, { recursive: true });
+    const assetRoot = path.join(dist, 'assets'); await fs.mkdir(assetRoot, { recursive: true });
+    await fs.copyFile(path.join(destination, 'reachmade-signature.mp4'), path.join(assetRoot, 'reachmade-signature.mp4'));
+    await fs.copyFile(path.join(destination, 'reachmade-signature.jpg'), path.join(assetRoot, 'reachmade-signature.jpg'));
+    await fs.rm(path.join(destination, 'reachmade-signature.mp4'), { force: true });
+    await fs.rm(path.join(destination, 'reachmade-signature.jpg'), { force: true });
+    const posterDestination = path.join(assetRoot, 'products'); await fs.mkdir(posterDestination, { recursive: true });
     for (const { id } of manifest.recordings) await fs.copyFile(path.join(destination, `${id}.jpg`), path.join(posterDestination, `${id}.jpg`));
-    console.log(`Rendered ${manifest.recordings.length} premium website films from validated real recordings. Playback speed unchanged; no synthetic product frames added.`);
+    console.log(`Rendered ${manifest.recordings.length} premium website films plus one ${manifest.signature.duration}s six-product signature film from validated real recordings. Playback speed unchanged; no synthetic product frames added.`);
     return manifest;
   } finally {
     await fs.rm(stage, { recursive: true, force: true });
