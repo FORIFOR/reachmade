@@ -1,80 +1,103 @@
 /* Reachmade Visual Ownership — shared craft, product-specific art direction.
- * The real recording remains the evidence. These stages frame it; they do not
- * invent product UI, usage numbers, or shipped capabilities.
+ * Real recordings remain the evidence. Premium feel comes from typography,
+ * whitespace, crop, line, composition and solid color — not AI-template effects.
  */
 :root{--rm-proof-red:#a83b2f;--rm-proof-ink:#20251f;--rm-proof-paper:#f6f5f0}
 
-/* Reachmade signature: one brand idea, repeated without adding another motion system. */
+/* Reachmade signature. The existing 12-second real-product film stays the only major motion. */
 .hero-copy h1::after{content:"CLAIM  →  PROOF";display:block;margin-top:clamp(30px,4.4vw,64px);padding-top:14px;border-top:1px solid currentColor;font-size:clamp(15px,1.75vw,25px);line-height:1;letter-spacing:.17em;font-weight:760;color:var(--rm-proof-red);white-space:nowrap}
 .hero-description::before{content:"REAL SCREEN  /  REAL LIMIT  /  REAL EVIDENCE";display:block;margin-bottom:13px;font-size:10px;line-height:1.4;letter-spacing:.16em;font-weight:750;color:var(--rm-proof-red)}
 .hero-proof[data-signature-ready="true"]{border:0!important;background:transparent!important;box-shadow:none!important}
 .hero-proof[data-signature-ready="true"] .study-head{border-bottom:0;padding-inline:0}
-.hero-proof[data-signature-ready="true"] .hero-proof-image{position:relative;overflow:hidden;border:1px solid #2a2e2a;border-radius:2px 34px 2px 2px;background:#111512;box-shadow:0 34px 90px rgba(25,30,24,.16)}
-.hero-proof[data-signature-ready="true"] .hero-proof-image::before{content:"PROOF / 06";position:absolute;z-index:4;left:18px;top:18px;padding:7px 9px;border:1px solid rgba(255,255,255,.22);background:rgba(14,17,15,.68);backdrop-filter:blur(8px);color:#f3f1ea;font-size:9px;line-height:1;letter-spacing:.14em;font-weight:750;pointer-events:none}
-.hero-proof[data-signature-ready="true"] .hero-proof-image::after{content:"ONLY WORKING OUTPUTS GET THE BIG FRAME";position:absolute;z-index:4;right:18px;bottom:18px;max-width:30ch;text-align:right;color:rgba(245,243,237,.72);font-size:9px;line-height:1.5;letter-spacing:.12em;font-weight:700;pointer-events:none}
+.hero-proof[data-signature-ready="true"] .hero-proof-image{position:relative;overflow:hidden;border:1px solid #2a2e2a;border-radius:2px;background:#111512;box-shadow:none}
+.hero-proof[data-signature-ready="true"] .hero-proof-image::before{content:"PROOF / 06";position:absolute;z-index:4;left:18px;top:18px;padding:7px 9px;border:1px solid #6f746d;background:#111512;color:#f3f1ea;font-size:9px;line-height:1;letter-spacing:.14em;font-weight:750;pointer-events:none}
+.hero-proof[data-signature-ready="true"] .hero-proof-image::after{content:"ONLY WORKING OUTPUTS GET THE BIG FRAME";position:absolute;z-index:4;right:18px;bottom:18px;max-width:30ch;text-align:right;color:#c7c9c3;font-size:9px;line-height:1.5;letter-spacing:.12em;font-weight:700;pointer-events:none}
 .hero-proof[data-signature-ready="true"] .rm-signature-video{display:block;width:100%;height:100%;min-height:clamp(390px,47vw,660px);object-fit:cover;background:#111512}
 .hero-proof[data-signature-ready="true"] figcaption{padding-inline:0}
 
-/* Product pages: remove the universal laptop/frame feeling. */
-.owned-product{--owned-stage-pad:40px;--owned-video-radius:10px}
-.owned-product .owned-hero-grid{grid-template-columns:minmax(270px,.72fr) minmax(0,1.58fr);column-gap:clamp(44px,5vw,82px)}
+/* Remove the universal laptop/frame feeling. */
+.owned-product{--owned-stage-pad:38px;--owned-video-radius:6px}
 .owned-product .owned-film{background:transparent;border:0;border-radius:0;overflow:visible;box-shadow:none;color:var(--ink)}
 .owned-product .owned-film__bar{padding:0 0 12px;border:0;color:var(--muted);font-size:9px;letter-spacing:.13em}
 .owned-product .owned-film__bar span:first-child{color:var(--ink);font-size:11px;letter-spacing:.08em}
-.owned-product .owned-film__screen{position:relative;isolation:isolate;aspect-ratio:auto;min-height:420px;display:grid;place-items:center;padding:var(--owned-stage-pad);overflow:hidden;border:0;border-radius:var(--owned-stage-radius,20px);background:var(--owned-stage,#171a17);box-shadow:var(--owned-stage-shadow,0 26px 72px rgba(30,35,29,.14))}
-.owned-product .owned-film__screen video{position:relative;z-index:2;display:block;width:100%;height:auto;aspect-ratio:16/9;object-fit:contain;border-radius:var(--owned-video-radius);background:#111512;box-shadow:var(--owned-video-shadow,0 18px 54px rgba(0,0,0,.18))}
-.owned-product .owned-film__screen::before,.owned-product .owned-film__screen::after{position:absolute;z-index:1;pointer-events:none;white-space:pre;box-sizing:border-box}
-.owned-product .owned-film__play{z-index:5}
+.owned-product .owned-film__screen{position:relative;isolation:isolate;aspect-ratio:auto;min-height:420px;display:grid;place-items:center;padding:var(--owned-stage-pad);overflow:hidden;border:1px solid var(--owned-stage-line,#c9ccc4);border-radius:var(--owned-stage-radius,8px);background:var(--owned-stage,#171a17);box-shadow:none}
+.owned-product .owned-film__screen video{position:relative;z-index:2;display:block;width:100%;height:auto;aspect-ratio:16/9;object-fit:contain;border:1px solid var(--owned-video-line,#2d312d);border-radius:var(--owned-video-radius);background:#111512;box-shadow:none}
+.owned-product .owned-film__screen::before,.owned-product .owned-film__screen::after{position:absolute;z-index:3;pointer-events:none;white-space:pre;box-sizing:border-box}
+.owned-product .owned-film__play{z-index:5;box-shadow:none}
 .owned-product .owned-film figcaption{padding:13px 0 0;color:var(--muted);border:0}
 .owned-product .owned-film figcaption a{color:var(--ink);text-decoration-color:#9a9d96}
 .owned-product .owned-film__status{padding:10px 0 0;color:#9d342a}
 
-/* 01 — Genie / workspace: editorial desk, request on the left, artifact as the object. */
-.owned-product--genie{--accent:#9a3b31;--owned-stage:#e9e5dc;--owned-stage-radius:4px;--owned-stage-pad:42px 42px 42px 152px;--owned-video-radius:3px;--owned-stage-shadow:0 34px 80px rgba(48,43,34,.13);--owned-video-shadow:0 20px 50px rgba(45,39,31,.18)}
-.owned-product--genie .owned-film__screen{background-image:linear-gradient(90deg,rgba(32,37,31,.06) 1px,transparent 1px),linear-gradient(rgba(32,37,31,.045) 1px,transparent 1px);background-size:28px 28px;background-color:#e9e5dc}
-.owned-product--genie .owned-film__screen::before{content:"REQUEST\A\AWORK\A\AARTIFACT";left:26px;top:30px;bottom:30px;width:98px;padding:10px 18px 10px 0;border-right:1px solid rgba(32,37,31,.22);color:#31372f;font-size:10px;line-height:2.2;letter-spacing:.13em;font-weight:750}
-.owned-product--genie .owned-film__screen::after{content:"OUTPUT / KEEP IT";right:20px;bottom:16px;color:#8b3a31;font-size:9px;letter-spacing:.14em;font-weight:800}
+/* Static signature line: distinct per product, no second motion system. */
+.owned-product .owned-hero-grid h1::after{display:block;margin-top:20px;padding-top:10px;border-top:1px solid currentColor;color:var(--accent);font:720 9px/1.55 ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:.12em;white-space:normal}
 
-/* 02 — AI Meeting / voice space: the recording sits inside a live acoustic field. */
-.owned-product--ai-meeting{--accent:#315b82;--owned-stage:#09131e;--owned-stage-radius:42px;--owned-stage-pad:58px 78px 72px;--owned-video-radius:20px;--owned-stage-shadow:0 34px 90px rgba(14,31,48,.2);--owned-video-shadow:0 18px 70px rgba(0,0,0,.38)}
-.owned-product--ai-meeting .owned-film__screen{background-image:radial-gradient(circle at 18% 24%,rgba(83,148,197,.22),transparent 20%),radial-gradient(circle at 82% 72%,rgba(132,170,199,.14),transparent 22%),linear-gradient(135deg,#08121d,#102131 56%,#07111b)}
-.owned-product--ai-meeting .owned-film__screen::before{content:"LIVE CONVERSATION";left:26px;top:22px;color:#a7c7dd;font-size:9px;letter-spacing:.17em;font-weight:760}
-.owned-product--ai-meeting .owned-film__screen::after{content:"VOICE  ·  CONTEXT  ·  NEXT ACTION";left:50%;bottom:24px;transform:translateX(-50%);width:calc(100% - 72px);padding-top:13px;border-top:1px solid rgba(174,211,236,.22);text-align:center;color:#b9d1e1;font-size:9px;letter-spacing:.15em;font-weight:720}
-.owned-product--ai-meeting .owned-film__bar span:first-child,.owned-product--ai-meeting .owned-film__bar{color:#485d6b}
+/* 01 — Genie / editorial workspace. Request → work → artifact. */
+.owned-product--genie{--accent:#8c4c37;--paper:#f4f0e7;--owned-stage:#e8e2d6;--owned-stage-line:#c9c0af;--owned-stage-radius:2px;--owned-stage-pad:38px 38px 38px 146px;--owned-video-radius:2px;--owned-video-line:#b7ae9f}
+.owned-product--genie .owned-hero-grid{grid-template-columns:minmax(265px,.60fr) minmax(0,1.60fr);column-gap:72px}
+.owned-product--genie .owned-hero-grid h1::after{content:"REQUEST  →  WORK  →  ARTIFACT"}
+.owned-product--genie .owned-film__screen::before{content:"REQUEST\A\AWORK\A\AARTIFACT";left:24px;top:28px;bottom:28px;width:94px;padding-right:16px;border-right:1px solid #9f9688;color:#363b35;font-size:9px;line-height:2.15;letter-spacing:.13em;font-weight:760}
+.owned-product--genie .owned-film__screen::after{content:"OUTPUT / KEEP IT";right:18px;bottom:14px;color:#8c4c37;font-size:8px;letter-spacing:.14em;font-weight:800}
 
-/* 03 — Oathra / evidence ledger: a claim never occupies the whole stage by itself. */
-.owned-product--oathra{--accent:#8e3b31;--owned-stage:#f0ede4;--owned-stage-radius:2px;--owned-stage-pad:42px 146px 42px 42px;--owned-video-radius:2px;--owned-stage-shadow:0 30px 76px rgba(48,43,34,.12);--owned-video-shadow:0 14px 42px rgba(40,36,30,.16)}
-.owned-product--oathra .owned-film__screen{background-image:linear-gradient(rgba(32,37,31,.07) 1px,transparent 1px);background-size:100% 36px;background-color:#f0ede4}
-.owned-product--oathra .owned-film__screen::before{content:"CLAIM\A   ↓\AEVIDENCE\A   ↓\AVERIFIED";right:24px;top:50%;transform:translateY(-50%);width:96px;color:#273027;font-size:10px;line-height:2.15;letter-spacing:.12em;font-weight:780}
-.owned-product--oathra .owned-film__screen::after{content:"OTHER PARTY'S WORDS > AGENT CONFIDENCE";left:22px;bottom:14px;color:#8e3b31;font-size:8px;letter-spacing:.12em;font-weight:800}
+/* 02 — AI Meeting / one wide conversation surface. */
+.owned-product--ai-meeting{--accent:#365f77;--paper:#f1f4f5;--owned-stage:#15232b;--owned-stage-line:#40525e;--owned-stage-radius:20px;--owned-stage-pad:48px 68px 62px;--owned-video-radius:14px;--owned-video-line:#587080}
+.owned-product--ai-meeting .owned-hero-grid{grid-template-columns:1fr;grid-template-areas:"kicker" "title" "actions" "film" "try" "note" "lead" "requirements";padding-top:50px}
+.owned-product--ai-meeting .owned-hero-grid h1{max-width:14ch;font-size:clamp(48px,5.5vw,78px)}
+.owned-product--ai-meeting .owned-hero-grid h1::after{content:"VOICE  │  REVIEW  │  NEXT STEP";max-width:760px}
+.owned-product--ai-meeting .owned-actions{margin-top:18px}
+.owned-product--ai-meeting .owned-film--hero{margin-top:22px;width:100%}
+.owned-product--ai-meeting .owned-film__screen{aspect-ratio:2.05/1;min-height:0}
+.owned-product--ai-meeting .owned-film__screen::before{content:"LIVE CONVERSATION";left:24px;top:20px;color:#bed0db;font-size:8px;letter-spacing:.16em;font-weight:760}
+.owned-product--ai-meeting .owned-film__screen::after{content:"VOICE  ·  CONTEXT  ·  NEXT ACTION";left:34px;right:34px;bottom:20px;padding-top:10px;border-top:1px solid #526775;text-align:center;color:#bed0db;font-size:8px;letter-spacing:.14em;font-weight:720}
+.owned-product--ai-meeting .owned-lead,.owned-product--ai-meeting .owned-try-now,.owned-product--ai-meeting .owned-actions,.owned-product--ai-meeting .owned-action-note,.owned-product--ai-meeting .owned-requirements{max-width:760px}
 
-/* 04 — AI Secure / incident map: alerts converge, observed and inferred stay separate. */
-.owned-product--aisecure{--accent:#b3473c;--owned-stage:#101514;--owned-stage-radius:14px;--owned-stage-pad:54px 44px 82px;--owned-video-radius:8px;--owned-stage-shadow:0 36px 90px rgba(14,20,18,.24);--owned-video-shadow:0 18px 54px rgba(0,0,0,.32)}
-.owned-product--aisecure .owned-film__screen{background-image:radial-gradient(circle at 14% 24%,#b54b3f 0 3px,transparent 4px),radial-gradient(circle at 82% 18%,#c98a42 0 3px,transparent 4px),radial-gradient(circle at 87% 78%,#6a8270 0 3px,transparent 4px),linear-gradient(rgba(255,255,255,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.045) 1px,transparent 1px),linear-gradient(135deg,#0e1312,#171f1d);background-size:auto,auto,auto,34px 34px,34px 34px,auto}
-.owned-product--aisecure .owned-film__screen::before{content:"SIGNALS  →  ONE INCIDENT";left:24px;top:22px;color:#d9ded8;font-size:9px;letter-spacing:.17em;font-weight:780}
-.owned-product--aisecure .owned-film__screen::after{content:"OBSERVED  ≠  HYPOTHESIS  ≠  UNKNOWN";left:28px;right:28px;bottom:24px;padding-top:13px;border-top:1px solid rgba(255,255,255,.16);color:#bac2bb;font-size:9px;letter-spacing:.14em;font-weight:720}
+/* 03 — Oathra / evidence ledger. Real recording first, claim beside it. */
+.owned-product--oathra{--accent:#8e3b31;--paper:#f4efe6;--owned-stage:#efebe1;--owned-stage-line:#cbbfaf;--owned-stage-radius:2px;--owned-stage-pad:38px 142px 38px 38px;--owned-video-radius:2px;--owned-video-line:#b9ae9f}
+.owned-product--oathra .owned-hero-grid{grid-template-columns:minmax(0,1.35fr) minmax(300px,.65fr);grid-template-areas:"film kicker" "film title" "film lead" "film try" "film actions" "film note" "film requirements";column-gap:72px}
+.owned-product--oathra .owned-hero-grid h1::after{content:"CLAIM  ≠  PROOF   ·   EVIDENCE  →  VERIFIED"}
+.owned-product--oathra .owned-film__screen::before{content:"CLAIM\A   ↓\AEVIDENCE\A   ↓\AVERIFIED";right:22px;top:50%;transform:translateY(-50%);width:92px;color:#2c332d;font-size:9px;line-height:2.1;letter-spacing:.12em;font-weight:780}
+.owned-product--oathra .owned-film__screen::after{content:"OTHER PARTY'S WORDS > AGENT CONFIDENCE";left:20px;bottom:13px;color:#8e3b31;font-size:7.5px;letter-spacing:.11em;font-weight:800}
 
-/* 05 — Agent Team / orchestration graph: the process is visible, not only the answer. */
-.owned-product--agent-team{--accent:#685783;--owned-stage:#ece9f0;--owned-stage-radius:28px 4px 28px 4px;--owned-stage-pad:72px 46px 44px;--owned-video-radius:10px;--owned-stage-shadow:0 32px 84px rgba(49,40,62,.13);--owned-video-shadow:0 18px 48px rgba(45,38,57,.16)}
-.owned-product--agent-team .owned-film__screen{background-image:radial-gradient(circle at 12% 19%,rgba(104,87,131,.38) 0 5px,transparent 6px),radial-gradient(circle at 50% 12%,rgba(104,87,131,.28) 0 5px,transparent 6px),radial-gradient(circle at 87% 20%,rgba(104,87,131,.38) 0 5px,transparent 6px),linear-gradient(112deg,transparent 19%,rgba(104,87,131,.14) 19.2% 19.5%,transparent 19.7%),linear-gradient(68deg,transparent 19%,rgba(104,87,131,.14) 19.2% 19.5%,transparent 19.7%),linear-gradient(#ece9f0,#e4e0e8)}
-.owned-product--agent-team .owned-film__screen::before{content:"DRAFT   →   REVIEW   →   REVISE";left:50%;top:24px;transform:translateX(-50%);width:calc(100% - 70px);text-align:center;color:#594c6d;font-size:9px;letter-spacing:.16em;font-weight:790}
-.owned-product--agent-team .owned-film__screen::after{content:"ARTIFACT + WORK TRAIL";right:22px;bottom:15px;color:#685783;font-size:8px;letter-spacing:.14em;font-weight:800}
+/* 04 — AISecure / a hard outbound gate. Input → check → block; not executed. */
+.owned-product--aisecure{--accent:#75cdb8;--paper:#101b2c;--ink:#f5f7f8;--muted:#a9b5c3;--line:#314054;--owned-stage:#0b1422;--owned-stage-line:#43536a;--owned-stage-radius:8px;--owned-stage-pad:48px 40px 64px;--owned-video-radius:6px;--owned-video-line:#506278;background:#101b2c}
+.owned-product--aisecure .owned-header{border-color:#314054}.owned-product--aisecure .owned-header a{color:#f5f7f8}.owned-product--aisecure .owned-brand span{color:#a9b5c3}
+.owned-product--aisecure .owned-hero-grid{grid-template-columns:minmax(280px,.66fr) minmax(0,1.34fr);column-gap:58px}
+.owned-product--aisecure .owned-hero-grid h1{color:#fff}.owned-product--aisecure .owned-hero-grid h1::after{content:"INPUT  →  CHECK  ⟂  BLOCK   /   not_executed";color:#8de0cc}
+.owned-product--aisecure .owned-film__screen::before{content:"INPUT  →  CHECK  →  BLOCK";left:24px;top:20px;color:#e6edf4;font-size:8px;letter-spacing:.17em;font-weight:780}
+.owned-product--aisecure .owned-film__screen::after{content:"RESULT / not_executed";left:28px;right:28px;bottom:20px;padding-top:10px;border-top:1px solid #43536a;color:#8de0cc;font-size:8px;letter-spacing:.14em;font-weight:760}
+.owned-product--aisecure .owned-primary{background:#f6f5f0;color:#101b2c;border-color:#f6f5f0}.owned-product--aisecure .owned-secondary,.owned-product--aisecure .owned-footer a,.owned-product--aisecure .owned-boundaries a{color:#f5f7f8}.owned-product--aisecure .owned-start{background:#18263a;color:#fff;border-color:#3b4a5d}.owned-product--aisecure .owned-start p{color:#b7c2d0}
 
-/* 06 — Launchloom / cinema + output wall: the result owns the stage. */
-.owned-product--launchloom{--accent:#c0563f;--owned-stage:#0d0f0e;--owned-stage-radius:2px;--owned-stage-pad:30px 148px 30px 30px;--owned-video-radius:0;--owned-stage-shadow:0 38px 96px rgba(9,11,10,.24);--owned-video-shadow:0 20px 58px rgba(0,0,0,.42)}
-.owned-product--launchloom .owned-film__screen{background-image:linear-gradient(90deg,transparent 0 78%,rgba(255,255,255,.055) 78% 78.2%,transparent 78.2%),linear-gradient(135deg,#0b0d0c,#171a18)}
-.owned-product--launchloom .owned-film__screen::before{content:"16:9\A\A9:16\A\ALP\A\APOST";right:31px;top:50%;transform:translateY(-50%);width:82px;color:#e8e4da;font-size:10px;line-height:1.7;letter-spacing:.15em;font-weight:790}
-.owned-product--launchloom .owned-film__screen::after{content:"ONE SOURCE  →  MANY LAUNCH ASSETS";left:22px;bottom:12px;color:#ce6952;font-size:8px;letter-spacing:.14em;font-weight:800}
+/* 05 — Agent Team / visible review loop. */
+.owned-product--agent-team{--accent:#665b88;--paper:#f2f0f4;--owned-stage:#e9e5ed;--owned-stage-line:#c4bccd;--owned-stage-radius:18px 2px 18px 2px;--owned-stage-pad:60px 42px 40px;--owned-video-radius:7px;--owned-video-line:#b3a9bf}
+.owned-product--agent-team .owned-hero-grid{grid-template-columns:.72fr 1.28fr;column-gap:68px}
+.owned-product--agent-team .owned-hero-grid h1::after{content:"DRAFT  →  REVIEW  →  REVISION"}
+.owned-product--agent-team .owned-film__screen::before{content:"DRAFT   →   REVIEW   →   REVISE";left:34px;right:34px;top:20px;text-align:center;color:#5c526f;font-size:8px;letter-spacing:.16em;font-weight:790}
+.owned-product--agent-team .owned-film__screen::after{content:"ARTIFACT + WORK TRAIL";right:20px;bottom:13px;color:#665b88;font-size:7.5px;letter-spacing:.14em;font-weight:800}
+.owned-product--agent-team .owned-start{background:#e9e5ed;border-radius:18px 3px 18px 3px}
 
-/* Different page rhythm, not six copies of the same template. */
-.owned-product--genie .owned-flow,.owned-product--oathra .owned-flow{background:linear-gradient(90deg,transparent 0 13%,rgba(32,37,31,.035) 13% 13.08%,transparent 13.08%)}
-.owned-product--ai-meeting .owned-flow ol{border-top-color:#b9c4ca}.owned-product--ai-meeting .owned-step-index{color:#315b82}
-.owned-product--aisecure .owned-start{background:#171d1b;color:#f4f3ef;border-color:#2d3531}.owned-product--aisecure .owned-start p{color:#b7beb8}.owned-product--aisecure .owned-start .owned-secondary{color:#f0f1ed}
-.owned-product--agent-team .owned-start{background:#ece9f0;border-radius:26px 6px 26px 6px}
+/* 06 — Launchloom / output formats own the composition. */
+.owned-product--launchloom{--accent:#ad4d38;--paper:#f5eee7;--owned-stage:#111310;--owned-stage-line:#343731;--owned-stage-radius:2px;--owned-stage-pad:28px 142px 28px 28px;--owned-video-radius:0;--owned-video-line:#434740}
+.owned-product--launchloom .owned-hero-grid{grid-template-columns:minmax(280px,.70fr) minmax(0,1.30fr);column-gap:56px}
+.owned-product--launchloom .owned-hero-grid h1::after{content:"16:9   /   9:16   /   LP   /   SOCIAL"}
+.owned-product--launchloom .owned-film__screen::before{content:"16:9\A\A9:16\A\ALP\A\APOST";right:30px;top:50%;transform:translateY(-50%);width:78px;color:#ebe7df;font-size:9px;line-height:1.65;letter-spacing:.15em;font-weight:790}
+.owned-product--launchloom .owned-film__screen::after{content:"ONE SOURCE  →  MANY LAUNCH ASSETS";left:20px;bottom:12px;color:#d16b53;font-size:7.5px;letter-spacing:.14em;font-weight:800}
 .owned-product--launchloom .owned-outcome{padding-block:90px}.owned-product--launchloom .owned-outcome h2{font-size:clamp(36px,4.5vw,62px)}
 
 @media(min-width:1181px){.hero.container{grid-template-columns:minmax(320px,.78fr) minmax(0,1.42fr);column-gap:clamp(54px,6vw,110px);align-items:center}.hero-proof[data-signature-ready="true"]{margin-right:min(-5vw,-36px)}.hero-proof[data-signature-ready="true"] .hero-proof-image{min-height:560px}}
-@media(max-width:1100px){.owned-product .owned-hero-grid{grid-template-columns:1fr}.owned-product .owned-film--hero{width:min(100%,920px)}.owned-product .owned-film__screen{min-height:0}}
-@media(max-width:800px){.hero-copy h1::after{margin-top:28px;font-size:14px;letter-spacing:.13em}.hero-description::before{font-size:9px}.hero-proof[data-signature-ready="true"] .rm-signature-video{min-height:0;aspect-ratio:16/10}.owned-product{--owned-stage-pad:28px 18px 52px}.owned-product .owned-film__screen{border-radius:18px}.owned-product .owned-film__screen video{border-radius:8px}.owned-product--genie{--owned-stage-pad:74px 18px 24px}.owned-product--genie .owned-film__screen::before{left:18px;right:18px;top:18px;bottom:auto;width:auto;height:38px;padding:0 0 12px;border-right:0;border-bottom:1px solid rgba(32,37,31,.2);content:"REQUEST  →  WORK  →  ARTIFACT"}.owned-product--oathra{--owned-stage-pad:28px 18px 78px}.owned-product--oathra .owned-film__screen::before{left:18px;right:18px;top:auto;bottom:20px;transform:none;width:auto;content:"CLAIM  →  EVIDENCE  →  VERIFIED";line-height:1.4}.owned-product--launchloom{--owned-stage-pad:28px 18px 74px}.owned-product--launchloom .owned-film__screen::before{left:18px;right:18px;top:auto;bottom:22px;transform:none;width:auto;content:"16:9   /   9:16   /   LP   /   POST";line-height:1.4}.owned-product--ai-meeting{--owned-stage-pad:46px 18px 66px}.owned-product--agent-team{--owned-stage-pad:66px 18px 28px}.owned-product--aisecure{--owned-stage-pad:46px 18px 70px}}
-@media(max-width:460px){.hero-copy h1::after{white-space:normal;line-height:1.25}.hero-proof[data-signature-ready="true"] .hero-proof-image{border-radius:0 22px 0 0}.hero-proof[data-signature-ready="true"] .hero-proof-image::after{display:none}.owned-product .owned-film--hero{margin-inline:-20px;width:calc(100% + 40px)}.owned-product .owned-film__bar,.owned-product .owned-film figcaption{padding-inline:14px}.owned-product .owned-film__screen{border-radius:0}.owned-product .owned-film__screen video{border-radius:4px}}
-@media(prefers-reduced-motion:reduce){.hero-proof[data-signature-ready="true"] .hero-proof-image,.owned-product .owned-film__screen{scroll-behavior:auto}}
+
+@media(max-width:1100px){
+  .owned-product .owned-hero-grid{padding-top:24px;grid-template-columns:1fr;grid-template-areas:"kicker" "title" "film" "try" "actions" "note" "lead" "requirements"}
+  .owned-product .owned-hero-grid h1::after{margin-top:8px}
+  .owned-product .owned-film--hero{width:min(100%,740px)!important;justify-self:center;margin-top:8px}
+  .owned-product .owned-film__screen{min-height:0}
+  .owned-product .owned-try-now{margin-top:10px}
+  .owned-product--ai-meeting .owned-actions{margin-top:16px}
+  .owned-product--ai-meeting .owned-film__screen{aspect-ratio:auto}
+}
+
+@media(max-width:800px){.hero-copy h1::after{white-space:normal;letter-spacing:.12em}.hero-proof[data-signature-ready="true"] .hero-proof-image::after{display:none}}
+@media(max-width:460px){
+  .hero-copy h1::after{font-size:13px;margin-top:28px}.hero-description::before{font-size:8px;letter-spacing:.12em}
+  .hero-proof[data-signature-ready="true"] .hero-proof-image{border-radius:0;border-inline:0}.hero-proof[data-signature-ready="true"] .rm-signature-video{min-height:0;aspect-ratio:16/9}
+  .owned-product .owned-hero-grid{padding-top:30px}.owned-product .owned-hero-grid h1::after{margin-top:10px;font-size:8px;letter-spacing:.08em}.owned-product .owned-film--hero{width:calc(100% + 40px)!important;margin-inline:-20px}
+  .owned-product--oathra .owned-hero-grid h1::after{content:"CLAIM ≠ PROOF  ·  EVIDENCE"}.owned-product--aisecure .owned-hero-grid h1::after{content:"INPUT → CHECK → BLOCK"}.owned-product--agent-team .owned-hero-grid h1::after{content:"DRAFT → REVIEW → REVISION"}
+}
