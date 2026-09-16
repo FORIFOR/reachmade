@@ -64,17 +64,18 @@ with sync_playwright() as p:
                         assert film['width'] > h1['width'], (h1,film)
                         assert primary['y'] < height, (primary,height)
                     else:
+                        # Narrow screens prioritize the decision path: headline → real film → first task → CTA → click expectation → supporting copy.
                         assert film['y'] >= h1['y']+h1['height']-2, (h1,film)
-                        assert lead['y'] >= film['y']+film['height']-2, (lead,film)
-                        assert first_try['y'] >= lead['y']+lead['height']-2, (first_try,lead)
+                        assert first_try['y'] >= film['y']+film['height']-2, (first_try,film)
                         assert primary['y'] >= first_try['y']+first_try['height']-2, (primary,first_try)
                         assert note['y'] >= primary['y']+primary['height']-2, (note,primary)
-                        assert primary['y'] <= height+220, (primary,height)
+                        assert lead['y'] >= note['y']+note['height']-2, (lead,note)
+                        assert primary['y'] <= height+120, (primary,height)
                     if width==390:
                         assert film['x']<=1 and film['width']>=388, film
                     assert not js_errors, js_errors
                     page.screenshot(path=str(OUT/f'{product}-{lang}-{width}.png'),full_page=True)
-                    report['layouts'].append({'route':route,'width':width,'headline':h1,'film':film,'lead':lead,'first_try':first_try,'primary_cta':primary,'action_note':note,'video_first':True,'first_action_explicit':True,'overflow':False,'no_initial_media':True})
+                    report['layouts'].append({'route':route,'width':width,'headline':h1,'film':film,'lead':lead,'first_try':first_try,'primary_cta':primary,'action_note':note,'video_first':True,'first_action_explicit':True,'conversion_first_narrow':width<1101,'overflow':False,'no_initial_media':True})
                 except Exception as error:
                     report['errors'].append({'route':route,'width':width,'error':str(error)})
                     page.screenshot(path=str(OUT/f'failed-{product}-{lang}-{width}.png'),full_page=True)
