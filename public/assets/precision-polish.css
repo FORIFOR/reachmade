@@ -20,7 +20,7 @@ html[lang="en"] .owned-product--agent-team .owned-hero-grid h1{
 /* Tablet is its own composition: keep the real film dominant without pushing the first action away. */
 @media (min-width:461px) and (max-width:1100px){
   .owned-product .owned-film--hero{
-    width:min(100%,760px)!important;
+    width:min(100%,740px)!important;
     margin-inline:auto!important;
     justify-self:center;
   }
