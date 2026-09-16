@@ -103,7 +103,7 @@ with sync_playwright() as p:
     for lang in ['ja','en']:
         values=list(desktop_directions[lang].values())
         if len(values)==len(PRODUCTS):
-            assert len(set(values)) >= 5, (lang,desktop_directions[lang])
+            assert len(set(values)) == len(PRODUCTS), (lang,desktop_directions[lang])
 
     context = browser.new_context(viewport={'width':1440,'height':1000})
     page = context.new_page(); page.set_default_timeout(30000)
