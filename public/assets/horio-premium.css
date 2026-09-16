@@ -9,25 +9,17 @@
   --hp-measure:66ch;
 }
 
-/* The homepage is an editorial spread: message and real product share the first viewport. */
+/* Desktop is an editorial spread: concise promise beside the real product. */
 .hero.container{
   display:grid;
   grid-template-columns:minmax(280px,.66fr) minmax(0,1.34fr);
-  grid-template-areas:
-    "label stage"
-    "title stage"
-    "desc stage"
-    "actions stage"
-    "foot stage";
   column-gap:clamp(44px,5vw,86px);
-  row-gap:0;
-  align-items:start;
+  align-items:center;
   padding-block:clamp(72px,7vw,108px) clamp(86px,8vw,126px);
 }
-.hero-copy{display:contents}
-.hero-copy>.eyebrow{grid-area:label;align-self:end;margin:0 0 18px}
+.hero-copy{display:block;min-width:0;max-width:none}
+.hero-copy>.eyebrow{margin:0 0 18px}
 .hero.container h1{
-  grid-area:title;
   max-width:11.5ch;
   margin:0;
   font-size:clamp(44px,4.25vw,66px);
@@ -36,10 +28,10 @@
   font-weight:560;
 }
 html[lang=en] .hero.container h1{font-size:clamp(46px,4.7vw,70px);line-height:1.04;max-width:12ch}
-.hero-description{grid-area:desc;max-width:36em;margin:27px 0 0;font-size:17px;line-height:1.92}
-.hero-actions{grid-area:actions;margin:28px 0 0;display:flex;align-items:center;gap:12px 22px;flex-wrap:wrap}
-.hero-footnote{grid-area:foot;margin:38px 0 0}
-.hero-proof{grid-area:stage;align-self:center;width:100%;margin:0;min-width:0}
+.hero-description{max-width:36em;margin:27px 0 0;font-size:17px;line-height:1.92}
+.hero-actions{margin:28px 0 0;display:flex;align-items:center;gap:12px 22px;flex-wrap:wrap}
+.hero-footnote{margin:38px 0 0}
+.hero-proof{align-self:center;width:100%;margin:0;min-width:0}
 .hero-proof .study-head{font-size:10px;letter-spacing:.08em;margin:0;padding:0 2px 13px}
 .hero-proof figcaption{display:flex;justify-content:space-between;gap:20px;align-items:start;padding:13px 2px 0;font-size:12px;line-height:1.7}
 .hero-proof figcaption>span{max-width:52ch}
@@ -47,7 +39,7 @@ html[lang=en] .hero.container h1{font-size:clamp(46px,4.7vw,70px);line-height:1.
 .hero .rm-film-toolbar{padding-top:12px}
 .hero .rm-film-note{max-width:70ch}
 
-/* Product proof is large and calm. Copy has room to breathe; no bento wall. */
+/* Product proof is large and calm. Copy has room to breathe. */
 .selected-work{padding-bottom:112px}
 .selected-work>.section-title{padding-top:50px;margin-bottom:18px;align-items:start}
 .selected-work>.section-title h2{font-size:clamp(34px,3.5vw,48px);line-height:1.28;letter-spacing:-.045em}
@@ -58,7 +50,7 @@ html[lang=en] .hero.container h1{font-size:clamp(46px,4.7vw,70px);line-height:1.
 .selected-work .project-content>p{font-size:16px;line-height:1.92}
 .selected-work .project-scope{max-width:44em}
 
-/* The remaining products become an editorial index, not repeated cards/mini-demos. */
+/* The remaining products are an editorial index instead of repeated mini-demo cards. */
 .compact-products{display:block!important;margin-top:56px;border-top:1px solid var(--line)}
 .compact-products-heading{display:flex;justify-content:space-between;align-items:center;gap:24px;padding:24px 0 20px}
 .compact-products-heading h3{font-size:14px;letter-spacing:.02em;font-weight:600}
@@ -84,18 +76,14 @@ html[lang=en] .hero.container h1{font-size:clamp(46px,4.7vw,70px);line-height:1.
 .project-row .rm-film-stage,.product-directory .rm-film-stage{box-shadow:none}
 .rm-film-row .rm-film-toolbar,.product-directory .rm-film-toolbar{min-height:50px}
 
-/* 1024-class layouts become a deliberate editorial stack instead of squeezed desktop columns. */
+/* 1024-class layouts deliberately move the real product between promise and explanation. */
 @media(max-width:1180px){
-  .hero.container{
-    grid-template-columns:minmax(0,1fr);
-    grid-template-areas:"label" "title" "stage" "desc" "actions" "foot";
-    gap:0;
-    padding-block:58px 78px;
-  }
+  .hero.container{display:block;padding-block:58px 78px}
+  .hero-copy{max-width:none}
   .hero-copy>.eyebrow{margin-bottom:18px}
   .hero.container h1{max-width:15ch;font-size:clamp(44px,6vw,62px)}
   html[lang=en] .hero.container h1{max-width:15ch;font-size:clamp(46px,6.2vw,64px)}
-  .hero-proof{margin-top:34px}
+  .hero-copy>.hero-proof{margin-top:34px}
   .hero-description{max-width:52em;margin-top:28px}
   .hero-actions{margin-top:24px}
   .hero-footnote{margin-top:30px}
@@ -107,17 +95,14 @@ html[lang=en] .hero.container h1{font-size:clamp(46px,4.7vw,70px);line-height:1.
 
 /* Mobile composition: promise, full-bleed real product, then explanation and actions. */
 @media(max-width:650px){
-  .hero.container{
-    grid-template-areas:"label" "title" "stage" "desc" "actions" "foot";
-    padding-block:34px 62px;
-  }
+  .hero.container{padding-block:34px 62px}
   .hero-copy>.eyebrow{margin-bottom:13px;font-size:9px;letter-spacing:.11em}
   .hero.container h1{font-size:clamp(32px,10vw,42px);line-height:1.25;letter-spacing:-.048em;max-width:11ch}
   html[lang=en] .hero.container h1{font-size:clamp(37px,11vw,48px);line-height:1.02;max-width:10ch}
-  .hero-proof{width:100vw;margin:27px 0 0 calc(50% - 50vw)}
+  .hero-copy>.hero-proof{width:100vw;margin:27px 0 0 calc(50% - 50vw);padding:0!important;border-inline:0!important}
   .hero-proof .study-head,.hero-proof figcaption{padding-inline:20px}
-  .hero-proof .study-head{padding-bottom:10px}
-  .hero-proof figcaption{flex-direction:column;gap:3px;padding-top:10px}
+  .hero-proof .study-head{padding-top:12px;padding-bottom:10px}
+  .hero-proof figcaption{flex-direction:column;gap:3px;padding-top:10px;padding-bottom:4px}
   .hero-proof-image.rm-film-hero{padding:0!important}
   .hero .rm-film-stage{border-radius:0!important;border-inline:0!important;box-shadow:none}
   .hero .rm-film-preview{object-fit:contain!important}
