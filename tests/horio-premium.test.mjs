@@ -1,0 +1,43 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import { root } from '../scripts/build.mjs';
+
+const css = await fs.readFile(path.join(root,'public/assets/horio-premium.css'),'utf8');
+const films = await fs.readFile(path.join(root,'public/assets/product-films.js'),'utf8');
+const home = await fs.readFile(path.join(root,'dist/index.html'),'utf8');
+const en = await fs.readFile(path.join(root,'dist/en/index.html'),'utf8');
+
+test('Horio Premium avoids generic AI visual shortcuts',()=>{
+  assert.doesNotMatch(css,/linear-gradient|radial-gradient|conic-gradient|backdrop-filter|glassmorphism|particles?|bento/i);
+  assert.match(css,/--hp-stage:#171a17/);
+  assert.match(css,/font-size:clamp\(44px/);
+});
+
+test('home leads with a real product surface before any JavaScript enhancement',()=>{
+  assert.match(home,/6 INDEPENDENT AI PRODUCTS \/ REAL SCREENS/);
+  assert.match(home,/会話をタスクに/);
+  assert.match(home,/src="\/assets\/products\/genie\.jpg"/);
+  assert.match(home,/WORKING PREVIEW \/ Genie/);
+  assert.match(en,/6 INDEPENDENT AI PRODUCTS \/ REAL SCREENS/);
+});
+
+test('the homepage has one automatic signature moment and manual lower films',()=>{
+  assert.match(films,/autoEligible:!!host\.closest\('\.hero'\)/);
+  assert.match(films,/min-width: 1181px/);
+  assert.match(films,/if \(!isHome\)/);
+  assert.match(films,/s\.manual===true\|\|\(s\.autoEligible/);
+});
+
+test('automatic media failure stays visually quiet until the visitor explicitly tries playback',()=>{
+  assert.match(films,/const disclose = s\.manual === true/);
+  assert.match(films,/s\.error\.hidden=!disclose/);
+});
+
+test('mobile has a different composition rather than a desktop scale-down',()=>{
+  assert.match(css,/@media\(max-width:650px\)/);
+  assert.match(css,/grid-template-areas:"label" "title" "stage" "desc" "actions" "foot"/);
+  assert.match(css,/width:100vw/);
+  assert.match(css,/calc\(50% - 50vw\)/);
+});
