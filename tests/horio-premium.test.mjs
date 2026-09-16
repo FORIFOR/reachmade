@@ -72,5 +72,5 @@ test('English product typography is optically tuned and tablet film density is r
   assert.match(precision,/owned-product--aisecure/);
   assert.match(precision,/owned-product--agent-team/);
   assert.match(precision,/max-width:1100px/);
-  assert.match(precision,/width:min\(100%,760px\)!important/);
+  assert.match(precision,/width:min\(100%,740px\)!important/);
 });
