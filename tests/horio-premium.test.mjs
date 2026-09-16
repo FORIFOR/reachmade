@@ -37,6 +37,7 @@ test('Reachmade owns one visual signature without replacing real product proof',
   assert.match(artDirection,/background:url\("\.\/mark\.svg"\)/);
   assert.match(artDirection,/\.hero-footnote\{/);
   assert.match(artDirection,/\.hero \.rm-signature-stage\{/);
+  assert.match(artDirection,/grid-template-columns:minmax\(350px,.82fr\) minmax\(0,1.38fr\)/);
   assert.doesNotMatch(artDirection,/filter:blur|animation:|@keyframes/);
   assert.match(home,/src="\/assets\/products\/genie\.jpg"/);
 });
@@ -48,7 +49,16 @@ test('the six product heroes have six explicit art directions',()=>{
   assert.ok(new Set(templates).size>=5,'product heroes must not collapse back to one shared composition');
   assert.match(artDirection,/owned-product--oathra[\s\S]*box-shadow:0 0 0 100vmax #171a17/);
   assert.match(artDirection,/owned-product--agent-team[\s\S]*grid-template-columns:minmax\(230px,.62fr\) minmax\(0,1.42fr\) minmax\(230px,.58fr\)/);
-  assert.match(artDirection,/owned-product--launchloom[\s\S]*font-size:clamp\(50px,5.7vw,80px\)/);
+  assert.match(artDirection,/owned-product--launchloom[\s\S]*font-size:clamp\(50px,5.3vw,74px\)/);
+});
+
+test('wide stages keep the primary action before the recording',()=>{
+  for(const id of ['ai-meeting','aisecure','launchloom']){
+    const start=artDirection.indexOf(`.owned-product--${id} .owned-hero-grid`);
+    assert.ok(start>=0);
+    const block=artDirection.slice(start,start+900);
+    assert.match(block,/"title try" "title actions" "film film"/);
+  }
 });
 
 test('home leads with a real product surface before any JavaScript enhancement',()=>{
