@@ -8,6 +8,8 @@ import { serveStaticRecording } from '../src/static-recordings.mjs';
 const request=(p,init)=>new Request('https://reachmade.com'+p,init);
 function box(name,n=8){const b=Buffer.alloc(n);b.writeUInt32BE(n);b.write(name,4);return b;}
 const mp4=()=>Buffer.concat([box('ftyp',24),box('moov',16),box('mdat',16)]);
+const jpeg=()=>Buffer.concat([Buffer.from([0xff,0xd8]),Buffer.alloc(1024),Buffer.from([0xff,0xd9])]);
+const fakeRenderer=async({input,output,poster})=>{await fs.copyFile(input,output);await fs.writeFile(poster,jpeg());};
 test('MP4 requires complete boxes',()=>{
  validateMp4(mp4());for(const b of [Buffer.from('<html>no</html>'),mp4().subarray(0,40),Buffer.concat([box('ftyp',24),box('mdat',16)])])assert.throws(()=>validateMp4(b));
 });
@@ -15,14 +17,15 @@ test('downloads reject non-video responses and excess size',async()=>{
  for(const response of [new Response('html',{headers:{'Content-Type':'text/html'}}),new Response(null,{status:302}),new Response('a',{headers:{'Content-Type':'video/mp4','Content-Length':String(MAX_BYTES+1)}})])await assert.rejects(downloadRecording('https://example.org/a.mp4',async()=>response));
  await assert.rejects(downloadRecording('https://user@host/a.mp4',()=>{throw Error('not reached');}));
 });
-test('failed batches preserve the prior packaged files',async()=>{
+test('failed premium batches preserve the prior packaged files',async()=>{
  const dir=await fs.mkdtemp(path.join(os.tmpdir(),'rm-media-'));
  try{
   await fs.writeFile(path.join(dir,'index.html'),'ok');
   const good=async()=>new Response(mp4(),{headers:{'Content-Type':'video/mp4'}});
-  const report=await prepareMedia({dist:dir,fetcher:good});assert.equal(report.recordings.length,6);
+  const report=await prepareMedia({dist:dir,fetcher:good,renderer:fakeRenderer});
+  assert.equal(report.recordings.length,6);assert.equal(report.schema,2);assert.equal(report.mode,'premium-site-edits');
   const before=await fs.readFile(path.join(dir,'media/products/manifest.json'),'utf8');let count=0;
-  await assert.rejects(prepareMedia({dist:dir,fetcher:async()=>{if(++count>2)throw Error('offline');return good();}}),/Deployment stopped/);
+  await assert.rejects(prepareMedia({dist:dir,renderer:fakeRenderer,fetcher:async()=>{if(++count>2)throw Error('offline');return good();}}),/Deployment stopped/);
   assert.equal(await fs.readFile(path.join(dir,'media/products/manifest.json'),'utf8'),before);
   assert.deepEqual(await fs.readdir(path.join(dir,'media')),['products']);
  }finally{await fs.rm(dir,{recursive:true,force:true});}
