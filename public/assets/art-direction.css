@@ -59,22 +59,11 @@
 }
 
 /* The system stays consistent; the hero art direction does not. */
-.owned-product{
-  --art-accent:var(--accent);
-}
-.owned-product .owned-hero-grid{
-  position:relative;
-  isolation:isolate;
-}
-.owned-product .owned-film--hero{
-  box-shadow:none!important;
-}
-.owned-product .owned-film__bar{
-  border-bottom:0;
-}
-.owned-product .owned-film figcaption{
-  border-top:0;
-}
+.owned-product{--art-accent:var(--accent)}
+.owned-product .owned-hero-grid{position:relative;isolation:isolate}
+.owned-product .owned-film--hero{box-shadow:none!important}
+.owned-product .owned-film__bar{border-bottom:0}
+.owned-product .owned-film figcaption{border-top:0}
 
 /* 01 — Genie: workspace first. A large working surface beside a compact request block. */
 .owned-product--genie{--art-accent:#a83b2f;--accent:#a83b2f}
@@ -105,7 +94,7 @@
   }
   .owned-product--ai-meeting .owned-kicker{margin-bottom:8px!important}
   .owned-product--ai-meeting .owned-hero-grid h1{max-width:14ch;font-size:clamp(48px,5.4vw,76px)!important;line-height:1.05!important;margin-bottom:30px!important}
-  .owned-product--ai-meeting .owned-film--hero{border-radius:22px 22px 6px 6px!important}
+  .owned-product--ai-meeting .owned-film--hero{width:min(100%,1040px);justify-self:center;border-radius:22px 22px 6px 6px!important}
   .owned-product--ai-meeting .owned-lead{max-width:39em!important}
   .owned-product--ai-meeting .owned-try-now{border-top:0!important;border-left:3px solid var(--art-accent)!important;padding:0 0 0 18px!important;margin-top:24px!important}
   .owned-product--ai-meeting .owned-actions{justify-content:flex-end!important}
@@ -139,7 +128,7 @@
   .owned-product--oathra .owned-try-now{border-top:1px solid #505650!important}
 }
 
-/* 04 — AI Secure: one case board. Headline and action frame a single full-width investigation surface. */
+/* 04 — AI Secure: one case board. Headline and action frame a single investigation surface. */
 .owned-product--aisecure{--art-accent:#9e3f35;--accent:#9e3f35}
 @media(min-width:1101px){
   .owned-product--aisecure .owned-hero-grid{
@@ -150,13 +139,13 @@
     padding-block:46px 68px!important;
   }
   .owned-product--aisecure .owned-hero-grid h1{max-width:10ch;line-height:1.08!important;margin-bottom:30px!important}
-  .owned-product--aisecure .owned-film--hero{border-radius:4px!important;border-width:2px!important}
+  .owned-product--aisecure .owned-film--hero{width:min(100%,1040px);justify-self:center;border-radius:4px!important;border-width:2px!important}
   .owned-product--aisecure .owned-try-now{align-self:end;border-top:3px solid var(--art-accent)!important;max-width:430px!important;justify-self:end;padding-top:14px!important}
   .owned-product--aisecure .owned-actions{justify-content:flex-end!important}
   .owned-product--aisecure .owned-action-note{text-align:right;justify-self:end!important;max-width:38em!important}
 }
 
-/* 05 — Agent Team: three-role composition. Request, real work trail, and review action occupy separate columns. */
+/* 05 — Agent Team: three-role composition. Request, work trail and review action occupy separate columns. */
 .owned-product--agent-team{--art-accent:#5d5a36;--accent:#5d5a36}
 @media(min-width:1101px){
   .owned-product--agent-team .owned-hero-grid{
@@ -186,7 +175,7 @@
     padding-block:42px 72px!important;
   }
   .owned-product--launchloom .owned-hero-grid h1{max-width:18ch;font-size:clamp(50px,5.7vw,80px)!important;line-height:1.03!important;margin-bottom:26px!important}
-  .owned-product--launchloom .owned-film--hero{border-radius:0!important;border-inline:0!important}
+  .owned-product--launchloom .owned-film--hero{width:min(100%,1040px);justify-self:center;border-radius:0!important;border-inline:0!important}
   .owned-product--launchloom .owned-try-now{border-top:3px solid var(--art-accent)!important;padding-top:13px!important}
   .owned-product--launchloom .owned-lead{max-width:44em!important}
 }
