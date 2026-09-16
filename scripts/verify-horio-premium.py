@@ -70,6 +70,9 @@ with sync_playwright() as pw:
                 else:
                     assert sb['y'] >= hb['y'] + hb['height'] - 2, (hb, sb)
                     assert desc['y'] >= sb['y'] + sb['height'] - 2, (desc, sb)
+                if width == 1024:
+                    assert hb['height'] <= 190, (language, hb)
+                    assert 810 <= sb['width'] <= 822, (language, sb)
                 if width == 390:
                     assert sb['x'] <= 1 and sb['width'] >= 388, sb
                 h_area = hb['width'] * hb['height']
@@ -134,17 +137,20 @@ with sync_playwright() as pw:
     finally:
         context.close()
 
-    # Automatic failure must remain quiet: retain the real poster and expose a clean route to all six products.
-    context = browser.new_context(viewport={'width': 1440, 'height': 1000})
+    # A deliberate play attempt with a failed media request must stay quiet and preserve the real poster.
+    context = browser.new_context(viewport={'width': 1440, 'height': 1000}, reduced_motion='reduce')
     context.route('**/assets/reachmade-signature.mp4', lambda route: route.abort())
     page = context.new_page(); page.set_default_timeout(30000)
     try:
         page.goto(BASE + '/', wait_until='networkidle'); page.wait_for_function('() => window.__reachmadeFilms === true')
+        play = page.locator('.hero .rm-signature-play')
+        assert play.is_visible()
+        play.click()
         page.wait_for_function("() => { const b=document.querySelector('.hero .rm-signature-play'); return b && !b.hidden && /6製品を見る|Explore all six/.test(b.textContent); }")
         video = page.locator('.hero .rm-signature-video')
         assert video.get_attribute('poster') == '/assets/reachmade-signature.jpg'
         assert page.locator('.hero').inner_text().find('MEDIA_UNAVAILABLE') == -1
-        assert page.locator('.hero .rm-signature-play').is_visible()
+        assert play.is_visible()
         report['gates']['media_failure_fallback'] = True
     except Exception as e:
         report['errors'].append({'media_failure_fallback': str(e)})
