@@ -40,27 +40,41 @@ with sync_playwright() as p:
                     assert page.locator('.owned-film').count()==1
                     assert page.locator('.owned-flow li').count()==3
                     assert page.locator('.owned-boundaries article').count()==2
+                    assert page.locator('.owned-try-now').count()==1
+                    assert page.locator('.owned-action-note').count()==1
                     assert not page.evaluate('document.documentElement.scrollWidth > innerWidth + 1')
-                    h1=box(page.locator('.owned-hero-grid h1')); film=box(page.locator('.owned-film--hero')); lead=box(page.locator('.owned-lead'))
+                    h1=box(page.locator('.owned-hero-grid h1'))
+                    film=box(page.locator('.owned-film--hero'))
+                    lead=box(page.locator('.owned-lead'))
+                    first_try=box(page.locator('.owned-try-now'))
+                    primary_locator=page.locator('.owned-hero-grid .owned-primary')
+                    primary=box(primary_locator)
+                    note=box(page.locator('.owned-action-note'))
                     video=page.locator('.owned-film video'); button=page.locator('.owned-film__play')
                     assert video.get_attribute('src') is None, 'Video loaded before explicit intent'
                     assert video.get_attribute('preload')=='none'
                     assert video.get_attribute('poster')==f'/media/products/{product}.jpg'
                     b=button.bounding_box(); assert b and b['height']>=44
                     assert h1['y'] < height and film['y'] < height, (h1,film,height)
+                    assert primary_locator.is_visible() and primary_locator.get_attribute('href').startswith('https://')
+                    assert page.locator('.owned-try-now strong').inner_text().strip()
+                    assert page.locator('.owned-action-note').inner_text().strip()
                     if width>=1101:
                         assert film['x'] > h1['x'] + h1['width']*.55, (h1,film)
                         assert film['width'] > h1['width'], (h1,film)
+                        assert primary['y'] < height, (primary,height)
                     else:
                         assert film['y'] >= h1['y']+h1['height']-2, (h1,film)
                         assert lead['y'] >= film['y']+film['height']-2, (lead,film)
+                        assert first_try['y'] >= lead['y']+lead['height']-2, (first_try,lead)
+                        assert primary['y'] >= first_try['y']+first_try['height']-2, (primary,first_try)
+                        assert note['y'] >= primary['y']+primary['height']-2, (note,primary)
+                        assert primary['y'] <= height+220, (primary,height)
                     if width==390:
                         assert film['x']<=1 and film['width']>=388, film
-                    primary=page.locator('.owned-hero-grid .owned-primary')
-                    assert primary.is_visible() and primary.get_attribute('href').startswith('https://')
                     assert not js_errors, js_errors
                     page.screenshot(path=str(OUT/f'{product}-{lang}-{width}.png'),full_page=True)
-                    report['layouts'].append({'route':route,'width':width,'headline':h1,'film':film,'lead':lead,'video_first':True,'overflow':False,'no_initial_media':True})
+                    report['layouts'].append({'route':route,'width':width,'headline':h1,'film':film,'lead':lead,'first_try':first_try,'primary_cta':primary,'action_note':note,'video_first':True,'first_action_explicit':True,'overflow':False,'no_initial_media':True})
                 except Exception as error:
                     report['errors'].append({'route':route,'width':width,'error':str(error)})
                     page.screenshot(path=str(OUT/f'failed-{product}-{lang}-{width}.png'),full_page=True)
