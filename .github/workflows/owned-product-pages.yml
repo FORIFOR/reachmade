@@ -1,10 +1,10 @@
 name: Owned product pages
 on:
   pull_request:
-    paths: ['src/product-landings.mjs', 'src/site-experience.mjs', 'src/site-content.mjs', 'scripts/build*.mjs', 'public/assets/product-landings.*', 'tests/product-landings.test.mjs', 'tests/site.test.mjs', 'scripts/verify-product-landings.py', '.github/workflows/owned-product-pages.yml']
+    paths: ['src/product-landings.mjs', 'src/site-experience.mjs', 'src/site-content.mjs', 'scripts/build*.mjs', 'public/assets/product-landings.*', 'public/assets/site.css', 'public/assets/art-direction.css', 'tests/product-landings.test.mjs', 'tests/site.test.mjs', 'tests/horio-premium.test.mjs', 'scripts/verify-product-landings.py', '.github/workflows/owned-product-pages.yml']
   push:
     branches: [main]
-    paths: ['src/product-landings.mjs', 'src/site-experience.mjs', 'src/site-content.mjs', 'scripts/build*.mjs', 'public/assets/product-landings.*', 'tests/product-landings.test.mjs', 'tests/site.test.mjs', 'scripts/verify-product-landings.py', '.github/workflows/owned-product-pages.yml']
+    paths: ['src/product-landings.mjs', 'src/site-experience.mjs', 'src/site-content.mjs', 'scripts/build*.mjs', 'public/assets/product-landings.*', 'public/assets/site.css', 'public/assets/art-direction.css', 'tests/product-landings.test.mjs', 'tests/site.test.mjs', 'tests/horio-premium.test.mjs', 'scripts/verify-product-landings.py', '.github/workflows/owned-product-pages.yml']
   workflow_dispatch:
 permissions:
   contents: read
@@ -43,7 +43,7 @@ jobs:
         if: always()
         run: |
           if [ -f film-qa/product-landings/report.json ]; then
-            printf '## Six video-first product pages — local Chromium\n\n1440 / 1024 / 390, Japanese and English. Not production or Safari.\n\n```json\n' >> "$GITHUB_STEP_SUMMARY"
+            printf '## Six product-specific hero compositions — local Chromium\n\n1440 / 1024 / 390, Japanese and English. Real packaged recordings. Not production or Safari.\n\n```json\n' >> "$GITHUB_STEP_SUMMARY"
             cat film-qa/product-landings/report.json >> "$GITHUB_STEP_SUMMARY"
             printf '\n```\n' >> "$GITHUB_STEP_SUMMARY"
           else
@@ -55,7 +55,7 @@ jobs:
         if: always()
         continue-on-error: true
         with:
-          name: six-video-first-product-pages
+          name: six-product-art-direction
           path: film-qa/product-landings/
           retention-days: 1
       - name: Disclose unavailable review images
