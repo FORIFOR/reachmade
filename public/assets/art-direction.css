@@ -43,11 +43,12 @@
 .owned-product--genie .owned-film__bar span:first-child{color:#2f342e}
 .owned-product--genie .owned-film__screen{background:#e9e4d9}
 
-/* 02 — AI Meeting: conversation fills the page before explanation. */
+/* 02 — AI Meeting: the conversation is the largest surface, while the first CTA remains in view. */
 .owned-product--ai-meeting{--accent:#365f77;--paper:#f2f5f6;--stage:#15232b}
-.owned-product--ai-meeting .owned-hero-grid{grid-template-columns:1fr;grid-template-areas:"kicker" "title" "film" "lead" "try" "actions" "note" "requirements";padding-top:60px}
+.owned-product--ai-meeting .owned-hero-grid{grid-template-columns:1fr;grid-template-areas:"kicker" "title" "actions" "film" "try" "note" "lead" "requirements";padding-top:60px}
 .owned-product--ai-meeting .owned-hero-grid h1{max-width:14ch;font-size:clamp(48px,5.5vw,78px)}
 .owned-product--ai-meeting .owned-hero-grid h1::after{content:"VOICE  │  REVIEW  │  NEXT STEP";color:#365f77}
+.owned-product--ai-meeting .owned-actions{margin-top:20px}
 .owned-product--ai-meeting .owned-film--hero{margin-top:24px;border-radius:22px}
 .owned-product--ai-meeting .owned-film__screen{aspect-ratio:2.05/1}
 .owned-product--ai-meeting .owned-lead,.owned-product--ai-meeting .owned-try-now,.owned-product--ai-meeting .owned-actions,.owned-product--ai-meeting .owned-action-note,.owned-product--ai-meeting .owned-requirements{max-width:760px}
@@ -87,19 +88,24 @@
 .owned-product--launchloom .owned-film__screen{border:0;aspect-ratio:1.9/1}
 
 @media(max-width:1100px){
-  .owned-product--genie .owned-hero-grid,.owned-product--oathra .owned-hero-grid,.owned-product--aisecure .owned-hero-grid,.owned-product--agent-team .owned-hero-grid,.owned-product--launchloom .owned-hero-grid{
+  .owned-product .owned-hero-grid{padding-top:34px}
+  .owned-product .owned-hero-grid h1::after{margin-top:12px}
+  .owned-product .owned-film--hero{margin-top:14px}
+  .owned-product .owned-try-now{margin-top:16px}
+  .owned-product--genie .owned-hero-grid,.owned-product--ai-meeting .owned-hero-grid,.owned-product--oathra .owned-hero-grid,.owned-product--aisecure .owned-hero-grid,.owned-product--agent-team .owned-hero-grid,.owned-product--launchloom .owned-hero-grid{
     grid-template-columns:1fr;grid-template-areas:"kicker" "title" "film" "try" "actions" "note" "lead" "requirements";
   }
-  .owned-product--oathra .owned-film--hero,.owned-product--launchloom .owned-film--hero{margin-top:26px}
+  .owned-product--ai-meeting .owned-actions{margin-top:18px}
+  .owned-product--oathra .owned-film--hero,.owned-product--launchloom .owned-film--hero{margin-top:14px}
   .owned-product--oathra .owned-film--hero{grid-area:film}
 }
 
 @media(max-width:650px){
   .hero-proof::before{padding-inline:20px;margin-bottom:10px;font-size:13px;letter-spacing:.1em}
   .hero-proof::after{padding-inline:20px;margin-top:9px;font-size:8px}
-  .owned-product .owned-hero-grid{padding-top:32px}
+  .owned-product .owned-hero-grid{padding-top:30px}
   .owned-product .owned-hero-grid h1,.owned-product--ai-meeting .owned-hero-grid h1{font-size:clamp(34px,11vw,47px);line-height:1.08;max-width:12ch}
-  .owned-product .owned-hero-grid h1::after{margin-top:16px;font-size:8.5px;line-height:1.55;letter-spacing:.08em;max-width:100%}
+  .owned-product .owned-hero-grid h1::after{margin-top:11px;font-size:8.5px;line-height:1.55;letter-spacing:.08em;max-width:100%}
   .owned-product--oathra .owned-hero-grid h1::after{content:"CLAIM ≠ PROOF  ·  EVIDENCE"}
   .owned-product--aisecure .owned-hero-grid h1::after{content:"INPUT → CHECK → BLOCK"}
   .owned-product--agent-team .owned-hero-grid h1::after{content:"DRAFT → REVIEW → REVISION"}
