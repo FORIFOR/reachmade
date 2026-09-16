@@ -1,0 +1,11 @@
+/* Responsive corrections for Reachmade Visual Ownership.
+ * Keep the signature visible without letting decorative copy alter headline metrics,
+ * and keep the first concrete action within reach on tablet layouts.
+ */
+.hero-copy h1{position:relative;margin-bottom:clamp(58px,6vw,82px)}
+.hero-copy h1::after{position:absolute;left:0;bottom:clamp(-68px,-5vw,-54px);width:100%;margin-top:0}
+
+@media(min-width:801px) and (max-width:1100px){
+  .owned-product--aisecure{--owned-stage-pad:28px 28px 46px}
+  .owned-product--agent-team{--owned-stage-pad:38px 28px 18px}
+}
