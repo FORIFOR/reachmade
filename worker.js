@@ -16,7 +16,6 @@ export default {
     const url = new URL(request.url);
     if (url.hostname === 'www.reachmade.com') {
       url.hostname = 'reachmade.com';
-      // Never redirect an inquiry body using a method-changing 301.
       return Response.redirect(url.toString(), request.method === 'GET' || request.method === 'HEAD' ? 301 : 308);
     }
     const productTarget = productRedirect(url);
@@ -25,6 +24,13 @@ export default {
     if (inquiry) return inquiry;
     const recording = await serveStaticRecording(request, env.ASSETS);
     if (recording) return recording;
-    return env.ASSETS.fetch(request);
+    const asset = await env.ASSETS.fetch(request);
+    if (['/contact/','/en/contact/','/contact/index.html','/en/contact/index.html'].includes(url.pathname) && asset.status === 200) {
+      const headers = new Headers(asset.headers);
+      headers.set('Content-Security-Policy', "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; media-src 'self'; object-src 'none'; base-uri 'none'; frame-src 'none'; frame-ancestors 'none'; form-action 'none'; upgrade-insecure-requests");
+      headers.set('Cache-Control','no-store');
+      return new Response(asset.body,{status:asset.status,statusText:asset.statusText,headers});
+    }
+    return asset;
   },
 };
