@@ -7,6 +7,7 @@ import { root } from '../scripts/build.mjs';
 const css = await fs.readFile(path.join(root,'public/assets/horio-premium.css'),'utf8');
 const declarations = css.replace(/\/\*[\s\S]*?\*\//g,'');
 const films = await fs.readFile(path.join(root,'public/assets/product-films.js'),'utf8');
+const site = await fs.readFile(path.join(root,'public/assets/site.js'),'utf8');
 const home = await fs.readFile(path.join(root,'dist/index.html'),'utf8');
 const en = await fs.readFile(path.join(root,'dist/en/index.html'),'utf8');
 
@@ -38,7 +39,10 @@ test('automatic media failure stays visually quiet until the visitor explicitly 
 
 test('mobile has a different composition rather than a desktop scale-down',()=>{
   assert.match(declarations,/@media\(max-width:650px\)/);
-  assert.match(declarations,/grid-template-areas:"label" "title" "stage" "desc" "actions" "foot"/);
+  assert.match(declarations,/\.hero\.container\{display:block/);
   assert.match(declarations,/width:100vw/);
   assert.match(declarations,/calc\(50% - 50vw\)/);
+  assert.match(site,/matchMedia\('\(max-width:1180px\)'\)/);
+  assert.match(site,/heroTitle\.after\(heroProof\)/);
+  assert.match(site,/heroCopy\.after\(heroProof\)/);
 });
