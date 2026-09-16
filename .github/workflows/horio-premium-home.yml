@@ -8,9 +8,12 @@ on:
       - 'public/assets/horio-premium.css'
       - 'public/assets/product-films.*'
       - 'src/site-experience.mjs'
+      - 'src/premium-film-cuts.mjs'
       - 'scripts/build*.mjs'
+      - 'scripts/prepare-media.mjs'
       - 'scripts/verify-horio-premium.py'
       - 'tests/horio-premium.test.mjs'
+      - 'tests/premium-films.test.mjs'
       - '.github/workflows/horio-premium-home.yml'
   push:
     branches: [main]
@@ -18,6 +21,8 @@ on:
       - 'public/assets/horio-premium.css'
       - 'public/assets/product-films.*'
       - 'src/site-experience.mjs'
+      - 'src/premium-film-cuts.mjs'
+      - 'scripts/prepare-media.mjs'
       - 'scripts/verify-horio-premium.py'
       - '.github/workflows/horio-premium-home.yml'
   workflow_dispatch:
@@ -26,7 +31,7 @@ permissions:
 jobs:
   visual-contract:
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 16
     env:
       CI: 'true'
       WRANGLER_SEND_METRICS: 'false'
@@ -40,7 +45,14 @@ jobs:
           python-version: '3.12'
       - name: Build and run the complete static contract
         run: npm run check
-      - name: Package the actual six product recordings
+      - name: Install ffmpeg for the real-recording site edits
+        run: |
+          if ! command -v ffmpeg >/dev/null; then
+            sudo apt-get update
+            sudo apt-get install -y ffmpeg
+          fi
+          ffmpeg -version | head -1
+      - name: Render and package the six premium product films
         run: npm run media:prepare
       - name: Install Chromium for exact viewport QA
         run: |

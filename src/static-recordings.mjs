@@ -62,6 +62,11 @@ export async function serveStaticRecording(request, assets) {
   const reply = (status, text, extra = {}) => new Response(request.method === 'HEAD' ? null : text, {
     status, headers: { 'Content-Type': 'text/plain; charset=utf-8', 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff', ...extra },
   });
+  // Generated posters are ordinary immutable static assets. Only the six known
+  // product IDs may bypass the MP4 range-serving path; arbitrary media paths
+  // remain closed instead of becoming a public file oracle.
+  const poster = /^\/media\/products\/([a-z0-9-]+)\.jpg$/.exec(url.pathname);
+  if (poster && Object.hasOwn(recordings, poster[1])) return null;
   const match = /^\/media\/products\/([a-z0-9-]+)\.mp4$/.exec(url.pathname);
   if (!match || !Object.hasOwn(recordings, match[1])) return reply(404, 'Recording not found');
   if (!['GET', 'HEAD'].includes(request.method)) return reply(405, 'Method not allowed', { Allow: 'GET, HEAD' });

@@ -8,7 +8,7 @@ permissions:
 jobs:
   built-pages:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 18
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -18,14 +18,16 @@ jobs:
         with:
           python-version: '3.12'
       - run: npm run check
-      - run: npm run media:prepare
-      - run: python -m pip install playwright==1.57.0
-      - run: python -m playwright install --with-deps chromium
-      - run: |
-          if ! command -v ffprobe >/dev/null; then
+      - name: Install ffmpeg for premium site-film rendering and verification
+        run: |
+          if ! command -v ffmpeg >/dev/null || ! command -v ffprobe >/dev/null; then
             sudo apt-get update
             sudo apt-get install -y ffmpeg
           fi
+          ffmpeg -version | head -1
+      - run: npm run media:prepare
+      - run: python -m pip install playwright==1.57.0
+      - run: python -m playwright install --with-deps chromium
       - name: Run the real worker and static binding locally
         env:
           WRANGLER_SEND_METRICS: 'false'
@@ -39,7 +41,7 @@ jobs:
         if: always()
         run: |
           if [ -f film-qa/packaged-report.json ]; then
-            printf '## Built-page and packaged-media checks\n\n```json\n' >> "$GITHUB_STEP_SUMMARY"
+            printf '## Premium site-film and built-page checks\n\n```json\n' >> "$GITHUB_STEP_SUMMARY"
             cat film-qa/packaged-report.json >> "$GITHUB_STEP_SUMMARY"
             printf '\n```\n' >> "$GITHUB_STEP_SUMMARY"
           fi

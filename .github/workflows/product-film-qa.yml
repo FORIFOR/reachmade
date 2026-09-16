@@ -6,14 +6,16 @@ on:
     paths:
       - '.github/workflows/product-film-qa.yml'
       - 'scripts/verify-product-films.py'
+      - 'scripts/prepare-media.mjs'
       - 'src/films.mjs'
+      - 'src/premium-film-cuts.mjs'
       - 'public/assets/product-films.*'
 permissions:
   contents: read
 jobs:
   playback:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 14
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -23,32 +25,31 @@ jobs:
         with:
           python-version: '3.12'
       - run: npm run check
-      - run: python -m pip install playwright==1.57.0
-      - run: python -m playwright install --with-deps chromium
-      - name: Ensure video inspection tools
+      - name: Ensure video render and inspection tools
         run: |
           if ! command -v ffprobe >/dev/null || ! command -v ffmpeg >/dev/null; then
             sudo apt-get update
             sudo apt-get install -y ffmpeg
           fi
-      - name: Verify real recordings and built pages
+      - name: Render the six website masters from the real recordings
+        run: npm run media:prepare
+      - run: python -m pip install playwright==1.57.0
+      - run: python -m playwright install --with-deps chromium
+      - name: Verify rendered recordings and built product pages
         run: python scripts/verify-product-films.py
       - name: Put verification results in the job summary
         if: always()
         run: |
           if [ -f film-qa/report.json ]; then
-            printf '## Product film verification\n\nBuilt pages, not production or Safari.\n\n```json\n' >> "$GITHUB_STEP_SUMMARY"
+            printf '## Premium product film verification\n\nRendered real-recording edits, locally built pages; not production or Safari.\n\n```json\n' >> "$GITHUB_STEP_SUMMARY"
             cat film-qa/report.json >> "$GITHUB_STEP_SUMMARY"
             printf '\n```\n' >> "$GITHUB_STEP_SUMMARY"
           fi
-      # The account hit its existing artifact-storage quota on 2026-09-15.
-      # Do not change billing or delete unrelated artifacts. Playback failures
-      # remain blocking; optional screenshot archival is a separate concern.
       - name: Archive screenshots when explicitly enabled
         uses: actions/upload-artifact@v4
         if: ${{ always() && vars.REACHMADE_QA_UPLOAD_ARTIFACTS == 'true' }}
         continue-on-error: true
         with:
-          name: product-film-qa
+          name: premium-product-film-qa
           path: film-qa/
           retention-days: 7
