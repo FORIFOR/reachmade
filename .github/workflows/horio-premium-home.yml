@@ -1,0 +1,76 @@
+name: Horio Premium homepage
+on:
+  pull_request:
+    paths:
+      - 'public/assets/site.css'
+      - 'public/assets/site.js'
+      - 'public/assets/quiet-cinema.css'
+      - 'public/assets/horio-premium.css'
+      - 'public/assets/product-films.*'
+      - 'src/site-experience.mjs'
+      - 'scripts/build*.mjs'
+      - 'scripts/verify-horio-premium.py'
+      - 'tests/horio-premium.test.mjs'
+      - '.github/workflows/horio-premium-home.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'public/assets/horio-premium.css'
+      - 'public/assets/product-films.*'
+      - 'src/site-experience.mjs'
+      - 'scripts/verify-horio-premium.py'
+      - '.github/workflows/horio-premium-home.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  visual-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      CI: 'true'
+      WRANGLER_SEND_METRICS: 'false'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Build and run the complete static contract
+        run: npm run check
+      - name: Package the actual six product recordings
+        run: npm run media:prepare
+      - name: Install Chromium for exact viewport QA
+        run: |
+          python -m pip install playwright==1.57.0
+          python -m playwright install --with-deps chromium
+      - name: Run Logo Swap, Screenshot, first-view, product-primary and stillness tests
+        run: |
+          npx wrangler@4 dev --local --ip 127.0.0.1 --port 8787 >/tmp/horio-premium-worker.log 2>&1 &
+          PID=$!
+          trap 'kill "$PID" || true' EXIT
+          python scripts/verify-horio-premium.py
+      - name: Preserve the measured release-gate report
+        if: always()
+        run: |
+          if [ -f film-qa/horio-premium/report.json ]; then
+            printf '## Horio Premium Web — exact Chromium QA\n\n```json\n' >> "$GITHUB_STEP_SUMMARY"
+            cat film-qa/horio-premium/report.json >> "$GITHUB_STEP_SUMMARY"
+            printf '\n```\n' >> "$GITHUB_STEP_SUMMARY"
+          else
+            printf 'No Horio Premium report was produced. Earlier steps must be checked.\n' >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - name: Archive screenshots when storage is available
+        id: screenshots
+        if: always()
+        continue-on-error: true
+        uses: actions/upload-artifact@v4
+        with:
+          name: horio-premium-home-review
+          path: film-qa/horio-premium/
+          retention-days: 2
+      - name: Disclose unavailable screenshot artifact
+        if: always() && steps.screenshots.outcome == 'failure'
+        run: echo '::warning::Screenshot archival failed. Browser checks are still required and the JSON report remains in the job summary; no manual image review is claimed.'
