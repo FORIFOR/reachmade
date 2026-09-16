@@ -33,9 +33,27 @@ jobs:
           PID=$!
           trap 'kill "$PID" || true' EXIT
           python scripts/verify-product-landings.py
-      - uses: actions/upload-artifact@v4
+      - name: Preserve the actual check report in the job summary
         if: always()
+        run: |
+          if [ -f film-qa/product-landings/report.json ]; then
+            printf '## Local Chromium checks (not production or Safari)\n\n```json\n' >> "$GITHUB_STEP_SUMMARY"
+            cat film-qa/product-landings/report.json >> "$GITHUB_STEP_SUMMARY"
+            printf '\n```\n' >> "$GITHUB_STEP_SUMMARY"
+          else
+            printf 'No browser report was produced; earlier steps must be checked.\n' >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - name: Preserve optional screenshots when artifact storage is available
+        id: screenshots
+        uses: actions/upload-artifact@v4
+        if: always()
+        continue-on-error: true
         with:
           name: owned-product-pages-review
           path: film-qa/product-landings/
-          retention-days: 7
+          retention-days: 1
+      - name: Disclose unavailable review images
+        if: always() && steps.screenshots.outcome == 'failure'
+        run: |
+          echo '::warning::Screenshots could not be archived. The browser test remains required; its report is in the log and job summary. No visual review of the missing artifact is claimed.'
+          printf '\n**Screenshot archival failed.** The tests above remain required. Images are unavailable for visual review; no billing or existing artifact data was changed.\n' >> "$GITHUB_STEP_SUMMARY"
