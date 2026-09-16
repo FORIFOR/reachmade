@@ -165,20 +165,20 @@
   .owned-product--agent-team .owned-action-note{margin-top:24px!important}
 }
 
-/* 06 — Launchloom: launch promise and output action frame a poster-sized real recording. */
+/* 06 — Launchloom: output wall. Action and promise split before a full-width launch reel. */
 .owned-product--launchloom{--art-accent:#8c3d49;--accent:#8c3d49}
 @media(min-width:1101px){
   .owned-product--launchloom .owned-hero-grid{
     min-height:calc(100svh - 82px);
     grid-template-columns:minmax(0,1.08fr) minmax(320px,.92fr)!important;
-    grid-template-areas:"kicker kicker" "title try" "title actions" "film film" "lead note" "requirements requirements"!important;
+    grid-template-areas:"kicker kicker" "title try" "actions try" "film film" "lead note" "requirements requirements"!important;
     column-gap:70px!important;
     padding-block:42px 72px!important;
   }
-  .owned-product--launchloom .owned-hero-grid h1{max-width:12ch;font-size:clamp(50px,5.3vw,74px)!important;line-height:1.03!important;margin-bottom:24px!important;align-self:center}
+  .owned-product--launchloom .owned-hero-grid h1{max-width:12ch;font-size:clamp(50px,5.3vw,74px)!important;line-height:1.03!important;margin-bottom:10px!important;align-self:end}
   .owned-product--launchloom .owned-film--hero{width:min(100%,1040px);justify-self:center;border-radius:0!important;border-inline:0!important}
-  .owned-product--launchloom .owned-try-now{border-top:3px solid var(--art-accent)!important;padding-top:13px!important;margin-top:0!important;align-self:end}
-  .owned-product--launchloom .owned-actions{margin-top:10px!important;align-self:start}
+  .owned-product--launchloom .owned-try-now{border-top:3px solid var(--art-accent)!important;padding-top:13px!important;margin-top:0!important;align-self:center}
+  .owned-product--launchloom .owned-actions{justify-content:flex-start!important;margin-top:0!important;align-self:start}
   .owned-product--launchloom .owned-lead{max-width:44em!important}
   .owned-product--launchloom .owned-action-note{margin-top:18px!important}
 }
