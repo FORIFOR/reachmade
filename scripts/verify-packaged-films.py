@@ -58,7 +58,12 @@ def main():
                             assert page.locator('.rm-film-preview').count() == 6
                             assert page.locator('.rm-film-preview[src]').count() == 0
                         if sub == 'contact/':
-                            assert page.locator('.optional-brief').get_attribute('open') is None
+                            assert page.locator('#reachmade-inquiry').count() == 1
+                            assert not page.locator('input[name="consent"]').is_checked()
+                            # The local server is not an approved production origin.
+                            # The direct form must remain disabled, never fake success.
+                            assert page.locator('#inquiry-submit').is_disabled()
+                            assert not page.locator('#inquiry-result').get_attribute('data-receipt')
                         report['pages'].append({'route': route, 'width': width, 'overflow': False})
                     except Exception as error: report['errors'].append(route + ': ' + str(error))
             context.close()
@@ -66,7 +71,6 @@ def main():
         page = context.new_page(); page.set_default_timeout(20000)
         for item in manifest['recordings']:
             try:
-                # Each recording is independent; a previous failure must not leave a modal over it.
                 page.goto(BASE + '/products/', wait_until='networkidle')
                 frame = page.locator('[data-product-film="' + item['id'] + '"]')
                 frame.scroll_into_view_if_needed(); frame.locator('.rm-film-toggle').click()
