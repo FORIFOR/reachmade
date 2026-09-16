@@ -43,6 +43,9 @@ def main():
         except Exception as error: report['errors'].append(item['id'] + ': ' + str(error))
     with sync_playwright() as pw:
         browser = pw.chromium.launch()
+        # Reduced motion makes the built-page sweep deterministic and verifies that
+        # no page depends on autoplay. The separate Horio Premium job verifies the
+        # one allowed wide-desktop Signature Moment with normal motion enabled.
         for width in [390, 1440]:
             context = browser.new_context(viewport={'width': width, 'height': 1000}, reduced_motion='reduce')
             page = context.new_page(); page.set_default_timeout(20000)
@@ -54,7 +57,18 @@ def main():
                         page.goto(BASE + route, wait_until='networkidle')
                         assert page.locator('h1').count() == 1
                         assert page.evaluate('document.documentElement.scrollWidth <= innerWidth'), route
-                        if sub in ['', 'products/']:
+                        if sub == '':
+                            # Homepage intentionally has one hero proof plus only the
+                            # featured product proofs. Compact products are an editorial
+                            # index and must not regress back into a six-video wall.
+                            assert page.locator('.hero .rm-film-preview').count() == 1
+                            assert page.locator('.hero [data-product-film="genie"]').count() == 1
+                            assert page.locator('.compact-products .rm-film-preview').count() == 0
+                            assert page.locator('.rm-film-preview[src]').count() == 0
+                            assert page.locator('.hero .rm-film-preview').evaluate('(v)=>v.paused')
+                        elif sub == 'products/':
+                            # The complete product directory remains the exhaustive six-film
+                            # manual test surface. Nothing loads before visitor intent.
                             assert page.locator('.rm-film-preview').count() == 6
                             assert page.locator('.rm-film-preview[src]').count() == 0
                         if sub == 'contact/':
@@ -67,6 +81,8 @@ def main():
                         report['pages'].append({'route': route, 'width': width, 'overflow': False})
                     except Exception as error: report['errors'].append(route + ': ' + str(error))
             context.close()
+        # Keep the original exhaustive interaction test on the product directory:
+        # every packaged recording must play, pause, expand, seek and close.
         context = browser.new_context(viewport={'width': 1440, 'height': 1000}, reduced_motion='reduce')
         page = context.new_page(); page.set_default_timeout(20000)
         for item in manifest['recordings']:
