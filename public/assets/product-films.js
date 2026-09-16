@@ -1,6 +1,6 @@
 /* Reachmade product films. Progressive enhancement; no tracking or persistence.
- * Only a visible film plays. Media is served through a fixed, same-origin allowlist.
- * The clips are excerpts of existing recordings, not new live demonstrations.
+ * The homepage has one automatic signature moment: the real hero recording.
+ * Other recordings are manual. Media is served through a fixed, same-origin allowlist.
  */
 (() => {
   'use strict';
@@ -12,12 +12,14 @@
     error:'動画を読み込めませんでした。', original:'製品サイトで実演を見る',
     hint:'画面内の動画だけを無音再生します。停止・拡大できます。',
     motion:'自動再生はオフです。再生ボタンからご覧ください。',
+    homeAuto:'最初の実演1本だけを無音再生します。ほかの動画は再生ボタンからご覧ください。',
   } : {
     play:'Play', pause:'Pause', loading:'Loading', expand:'Watch the full film', close:'Close',
     preview:'Silent preview', recorded:'From the published recording',
     error:'The film could not be loaded.', original:'View the original demonstration',
     hint:'Only the film in view plays, without sound. Pause or open the full recording.',
     motion:'Autoplay is off. Use Play to watch a film.',
+    homeAuto:'Only the first real product recording plays automatically. Use Play for the remaining films.',
   };
   const films = [
     {id:'genie',name:'Genie',repo:'genie',start:0,end:14,
@@ -39,16 +41,19 @@
       demo:'https://forifor.github.io/Launchloom/',
       note:ja?'実録画からLaunchloomで作成した紹介映像。外部SNSへの投稿実演ではありません。':'A product film made by Launchloom from real footage; not a live social-publishing demo.'},
   ];
+  const isHome = !!document.querySelector('.hero') && !!document.querySelector('.selected-work');
   const targets = [];
   for (const film of films) {
     const row = document.getElementById(film.id);
     const visual = row?.querySelector('.project-visual');
     if (visual) { row.classList.add('rm-film-row'); targets.push({film,host:visual}); }
-    for (const card of document.querySelectorAll('.compact-product')) {
-      if ([...card.querySelectorAll('a[href]')].some(a => a.href === `https://github.com/FORIFOR/${film.repo}`)) {
-        card.classList.add('rm-film-card');
-        const host = document.createElement('div'); host.className='rm-film-card-visual';
-        card.prepend(host); targets.push({film,host});
+    if (!isHome) {
+      for (const card of document.querySelectorAll('.compact-product')) {
+        if ([...card.querySelectorAll('a[href]')].some(a => a.href === `https://github.com/FORIFOR/${film.repo}`)) {
+          card.classList.add('rm-film-card');
+          const host = document.createElement('div'); host.className='rm-film-card-visual';
+          card.prepend(host); targets.push({film,host});
+        }
       }
     }
     const hero = document.querySelector(`.hero-proof-image img[src$="/${film.id}.jpg"]`);
@@ -57,10 +62,11 @@
   if (!targets.length) return;
   window.__reachmadeFilms = true;
   const style = document.createElement('link');
-  style.rel='stylesheet'; style.href='/assets/product-films.css?v=20260915-1'; document.head.append(style);
+  style.rel='stylesheet'; style.href='/assets/product-films.css?v=20260916-premium1'; document.head.append(style);
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const wide = window.matchMedia('(min-width: 1181px)');
   const connection = navigator.connection;
-  const canAuto = () => !reduced.matches && !connection?.saveData && 'IntersectionObserver' in window;
+  const canAuto = () => wide.matches && !reduced.matches && !connection?.saveData && 'IntersectionObserver' in window;
   const states = [];
   let active=null, opened=false, opener=null, sequence=0;
   const el = (tag,cls,text) => {const n=document.createElement(tag);if(cls)n.className=cls;if(text)n.textContent=text;return n;};
@@ -87,7 +93,13 @@
   };
   function stop(s) {s.want=false;s.video.pause();setLabel(s);}
   function stopAll() {for(const s of states)stop(s);active=null;}
-  function fail(s) {s.failed=true;s.starting=false;s.manual=false;stop(s);s.error.hidden=false;s.fallback.hidden=false;if(active===s)active=null;}
+  function fail(s) {
+    const disclose = s.manual === true;
+    s.failed=true;s.starting=false;s.want=false;s.video.pause();
+    if (!disclose) {s.video.removeAttribute('src');s.video.load();}
+    s.error.hidden=!disclose;s.fallback.hidden=!disclose;setLabel(s);
+    if(active===s)active=null;
+  }
   function start(s) {
     if(s.failed||s.want||s.starting)return;
     s.want=true;s.starting=true;setLabel(s);
@@ -98,14 +110,13 @@
       s.starting=false;if(!s.want)s.video.pause();setLabel(s);
     }).catch(error=>{
       s.starting=false;s.want=false;setLabel(s);
-      // Autoplay denial is not a missing/broken video. Keep a manual Play button.
       if(error.name==='NotAllowedError')s.manual=false;
       else if(error.name!=='AbortError')fail(s);
     });
   }
   function choose() {
     if(document.hidden||opened){stopAll();return;}
-    const eligible=states.filter(s=>!s.failed&&s.manual!==false&&isVisible(s)&&(canAuto()||s.manual===true));
+    const eligible=states.filter(s=>!s.failed&&isVisible(s)&&(s.manual===true||(s.autoEligible&&s.manual!==false&&canAuto())));
     eligible.sort((a,b)=>(b.manual===true?1:0)-(a.manual===true?1:0)||(b.manualOrder-a.manualOrder)||(b.ratio-a.ratio));
     const next=eligible[0]||null;
     for(const s of states)if(s!==next&&s.want)stop(s);
@@ -140,7 +151,7 @@
     const error=el('p','rm-film-error',words.error);error.hidden=true;error.setAttribute('role','status');
     const fallback=el('a','rm-film-original',words.original);fallback.href=film.demo;fallback.target='_blank';fallback.rel='noopener noreferrer';fallback.hidden=true;
     frame.append(stage,toolbar,note,error,fallback);host.replaceChildren(frame);
-    const s={film,host,frame,stage,video,progress,toggle,status,error,fallback,poster,ratio:0,manual:null,manualOrder:0,want:false,starting:false,failed:false};
+    const s={film,host,frame,stage,video,progress,toggle,status,error,fallback,poster,ratio:0,manual:null,manualOrder:0,want:false,starting:false,failed:false,autoEligible:!!host.closest('.hero')};
     states.push(s);setLabel(s);
     video.addEventListener('loadedmetadata',()=>{if(Number.isFinite(video.duration)&&video.duration>film.start+1)video.currentTime=film.start;});
     video.addEventListener('timeupdate',()=>{
@@ -165,7 +176,7 @@
   }
   const intro=document.querySelector('.selected-work .section-title')||document.querySelector('.page-intro');
   const hint=el('p','rm-film-hint');
-  const explain=()=>{hint.textContent=canAuto()?words.hint:words.motion;};explain();intro?.append(hint);
+  const explain=()=>{hint.textContent=isHome?(canAuto()?words.homeAuto:words.motion):(canAuto()?words.hint:words.motion);};explain();intro?.append(hint);
   if ('IntersectionObserver' in window) {
     const observer=new IntersectionObserver(entries=>{
       for(const entry of entries){const s=states.find(x=>x.stage===entry.target);if(s)s.ratio=entry.isIntersecting?entry.intersectionRatio:0;}
@@ -174,6 +185,7 @@
     for(const s of states)observer.observe(s.stage);
   }
   reduced.addEventListener?.('change',()=>{explain();choose();});
+  wide.addEventListener?.('change',()=>{explain();choose();});
   connection?.addEventListener?.('change',()=>{explain();choose();});
   document.addEventListener('visibilitychange',choose);
   window.addEventListener('pagehide',stopAll);
