@@ -41,7 +41,9 @@ test('filter uses hard chronological cuts, containment and dark letterboxing wit
   assert.match(filter,/pad=1280:720/);
   assert.match(filter,/color=0x171A17/i);
   assert.match(filter,/tpad=start_mode=clone/);
-  assert.doesNotMatch(filter,/drawtext|overlay|xfade|setpts=.*\*|setpts=.*\//i);
+  assert.equal((filter.match(/setpts=PTS-STARTPTS/g)||[]).length,2);
+  assert.doesNotMatch(filter.replaceAll('setpts=PTS-STARTPTS',''),/setpts=/i);
+  assert.doesNotMatch(filter,/drawtext|overlay|xfade|zoompan/i);
 });
 
 test('ffmpeg command strips audio, preserves normal speed and optimizes MP4 for the web',()=>{
@@ -53,7 +55,9 @@ test('ffmpeg command strips audio, preserves normal speed and optimizes MP4 for 
   assert.match(joined,/-crf 18/);
   assert.match(joined,/\+faststart/);
   assert.match(joined,/yuv420p/);
-  assert.doesNotMatch(joined,/-filter:a|-af |atempo|setpts=.*0\.|setpts=.*1\./i);
+  assert.equal((joined.match(/setpts=PTS-STARTPTS/g)||[]).length,2);
+  assert.doesNotMatch(joined.replaceAll('setpts=PTS-STARTPTS',''),/setpts=/i);
+  assert.doesNotMatch(joined,/-filter:a|-af |atempo|drawtext|overlay|xfade|zoompan/i);
 });
 
 test('product film UI discloses the edit instead of implying a continuous full recording',async()=>{
