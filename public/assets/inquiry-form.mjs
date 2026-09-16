@@ -12,7 +12,7 @@ if (form) {
       const r=await fetch('/api/inquiries/status',{credentials:'omit',cache:'no-store',signal:AbortSignal.timeout(15000)});
       const data=await r.json();available=r.ok&&data.available===true&&typeof crypto.randomUUID==='function';
     }catch{available=false;}
-    readiness.textContent=available?t('受付に接続できます。まだ送信していません。','Connected. Nothing has been sent.'):t('現在、受付に接続できません。入力を保ったまま再確認するか、既存の窓口をご利用ください。','The inquiry service is unavailable. Your input is retained; check again or use the existing form.');
+    readiness.textContent=available?t('受付に接続できます。入力内容は送信ボタンを押すまで送信しません。','Connected. Form contents are transmitted only when you press Send.'):t('現在、受付に接続できません。入力を保ったまま再確認するか、既存の窓口をご利用ください。','The inquiry service is unavailable. Your input is retained; check again or use the existing form.');
     checking=false;reconnect.disabled=false;submit.disabled=!available;
   }
   reconnect.addEventListener('click',check);
@@ -25,6 +25,7 @@ if (form) {
     const fingerprint=JSON.stringify(content);
     if(!previous||previous.fingerprint!==fingerprint)previous={fingerprint,requestId:crypto.randomUUID()};
     const requestId=previous.requestId;
+    delete result.dataset.receipt;
     busy=true;fields.disabled=true;submit.disabled=true;reconnect.disabled=true;form.setAttribute('aria-busy','true');
     result.textContent=t('送信しています。受付番号が出るまで、このページを閉じないでください。','Sending. Keep this page open until a receipt appears.');
     try {
