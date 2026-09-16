@@ -5,7 +5,8 @@ import path from 'node:path';
 import { root } from '../scripts/build.mjs';
 
 const css = await fs.readFile(path.join(root,'public/assets/horio-premium.css'),'utf8');
-const declarations = css.replace(/\/\*[\s\S]*?\*\//g,'');
+const precision = await fs.readFile(path.join(root,'public/assets/precision-polish.css'),'utf8');
+const declarations = (css+'\n'+precision).replace(/\/\*[\s\S]*?\*\//g,'');
 const entryCss = await fs.readFile(path.join(root,'public/assets/site.css'),'utf8');
 const films = await fs.readFile(path.join(root,'public/assets/product-films.js'),'utf8');
 const site = await fs.readFile(path.join(root,'public/assets/site.js'),'utf8');
@@ -26,20 +27,27 @@ test('all design layers are imported before any CSS declarations',()=>{
     '@import url("./site-refinement.css");',
     '@import url("./quiet-cinema.css");',
     '@import url("./horio-premium.css");',
+    '@import url("./precision-polish.css");',
   ]);
 });
 
 test('home leads with a real product surface before any JavaScript enhancement',()=>{
   assert.match(home,/6 INDEPENDENT AI PRODUCTS \/ REAL SCREENS/);
-  assert.match(home,/会話をタスクに/);
+  assert.match(home,/仕事も、会話も、調査も/);
   assert.match(home,/src="\/assets\/products\/genie\.jpg"/);
   assert.match(home,/WORKING PREVIEW \/ Genie/);
   assert.match(en,/6 INDEPENDENT AI PRODUCTS \/ REAL SCREENS/);
+  assert.match(en,/AI, built into real products/);
 });
 
-test('the homepage has one automatic signature moment and manual lower films',()=>{
-  assert.match(films,/autoEligible:!!host\.closest\('\.hero'\)/);
-  assert.match(films,/min-width: 1181px/);
+test('the homepage has one six-product automatic signature moment and manual lower films',()=>{
+  assert.match(site,/SIGNATURE FILM \/ 6 REAL PRODUCTS/);
+  assert.match(site,/reachmade-signature\.mp4/);
+  assert.match(site,/reachmade-signature\.jpg/);
+  assert.match(site,/\(min-width:1181px\)/);
+  assert.match(site,/prefers-reduced-motion: reduce/);
+  assert.match(site,/connection\?\.saveData/);
+  assert.match(site,/Two real seconds from each product/);
   assert.match(films,/if \(!isHome\)/);
   assert.match(films,/s\.manual===true\|\|\(s\.autoEligible/);
 });
@@ -57,4 +65,12 @@ test('mobile has a different composition rather than a desktop scale-down',()=>{
   assert.match(site,/matchMedia\('\(max-width:1180px\)'\)/);
   assert.match(site,/heroTitle\.after\(heroProof\)/);
   assert.match(site,/heroCopy\.after\(heroProof\)/);
+});
+
+test('English product typography is optically tuned and tablet film density is reduced',()=>{
+  assert.match(precision,/html\[lang="en"\] \.owned-product \.owned-hero-grid h1/);
+  assert.match(precision,/owned-product--aisecure/);
+  assert.match(precision,/owned-product--agent-team/);
+  assert.match(precision,/max-width:1100px/);
+  assert.match(precision,/760px!important/);
 });
