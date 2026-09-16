@@ -24,6 +24,18 @@ html[lang="en"] .owned-product--agent-team .owned-hero-grid h1{
     margin-inline:auto!important;
     justify-self:center;
   }
+  /* English captions and action copy are longer. Compress only their vertical rhythm,
+     preserving font size, tap targets, film size and the 390px mobile composition. */
+  html[lang="en"] .owned-product .owned-film--hero{
+    margin-top:18px!important;
+  }
+  html[lang="en"] .owned-product .owned-film figcaption{
+    padding-block:9px 11px;
+  }
+  html[lang="en"] .owned-product .owned-try-now{
+    margin-top:14px;
+    padding-top:12px;
+  }
 }
 
 /* Reachmade's single signature moment is one calm reel made only from the six real recordings. */
