@@ -20,15 +20,19 @@ for(const language of ['ja','en']) {
   assert.match(html,/purpose-index/);
   assert.doesNotMatch(html,/href="https:\/\/ai-meeting\.reachmade\.com\/"/);
  });
- test(`${language}: contact uses the matching language and an optional closed draft`,async()=>{
+ test(`${language}: inquiry is on-page, consented and has a localized fallback`,async()=>{
   const html=await read(prefix+'contact/index.html');
   assert.ok(html.includes(escape(contactDestination(config,language))));
-  assert.match(html,/<details class="optional-brief">/);
-  assert.doesNotMatch(html,/<form\b|<details class="optional-brief" open/);
+  assert.match(html,/id="reachmade-inquiry"/);
+  assert.match(html,new RegExp(`data-language="${language}"`));
+  assert.match(html,/action="\/api\/inquiries"/);
+  assert.match(html,/id="inquiry-result" role="status"/);
+  assert.doesNotMatch(html,/name="consent"[^>]*checked/);
  });
- test(`${language}: privacy describes embedded same-origin media`,async()=>{
+ test(`${language}: privacy describes embedded same-origin media and intake storage`,async()=>{
   const html=await read(prefix+'privacy/index.html');
   assert.match(html,language==='ja'?/同じドメイン/:/own domain/);
+  assert.match(html,/Google Cloud/);
   assert.doesNotMatch(html,/動画埋め込みを入れていません|no advertising or analytics tags, external fonts, or embedded video/);
  });
  test(`${language}: examples and profile are generated with their limitations`,async()=>{

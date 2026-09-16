@@ -1,0 +1,42 @@
+name: Direct inquiry acceptance
+on:
+  pull_request:
+    paths: ['src/**', 'public/assets/inquiry-*', 'scripts/build.mjs', 'scripts/verify-inquiry-form.py', 'worker.js', 'tests/**', '.github/workflows/inquiry-qa.yml']
+  push:
+    branches: [main]
+    paths: ['src/inquir*', 'public/assets/inquiry-*', 'scripts/verify-inquiry-form.py', 'worker.js', '.github/workflows/inquiry-qa.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  form:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      CI: 'true'
+      WRANGLER_SEND_METRICS: 'false'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: npm run check
+      - run: python -m pip install playwright==1.57.0
+      - run: python -m playwright install --with-deps chromium
+      - name: Real form and Worker, isolated synthetic intake responses
+        run: |
+          npx wrangler@4 dev --local --ip 127.0.0.1 --port 8787 >/tmp/inquiry-worker.log 2>&1 &
+          PID=$!
+          trap 'kill "$PID" || true' EXIT
+          python scripts/verify-inquiry-form.py
+      - name: Preserve the measured report
+        if: always()
+        run: |
+          if [ -f film-qa/inquiries/report.json ]; then
+            printf '## Inquiry UI (mocked intake; no live submissions)\n\n```json\n' >> "$GITHUB_STEP_SUMMARY"
+            cat film-qa/inquiries/report.json >> "$GITHUB_STEP_SUMMARY"
+            printf '\n```\n' >> "$GITHUB_STEP_SUMMARY"
+          fi

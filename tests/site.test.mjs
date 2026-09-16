@@ -14,7 +14,6 @@ for (const r of routes) htmlByPath.set(r.route,await fs.readFile(path.join(dist,
 const clone=()=>structuredClone(config);
 const attr=(html,key)=>[...html.matchAll(new RegExp(`(?:^|\\s)${key}="([^"]*)"`,'g'))].map(m=>m[1]);
 const decode=s=>s.replaceAll('&amp;','&').replaceAll('&quot;','"').replaceAll('&#39;',"'").replaceAll('&lt;','<').replaceAll('&gt;','>');
-
 test('configuration is valid',()=>assert.equal(validateConfig(config),config));
 test('HTML escaping includes attributes',()=>assert.equal(escapeHTML('<&"\'>'), '&lt;&amp;&quot;&#39;&gt;'));
 for(const value of ['http://reachmade.com','https://reachmade.com/path','https://user:pw@reachmade.com','https://reachmade.com/?a=1','https://reachmade.com/#x']) {
@@ -22,7 +21,7 @@ for(const value of ['http://reachmade.com','https://reachmade.com/path','https:/
 }
 test('contact must use a known mode',()=>{const c=clone();c.contact.mode='form';assert.throws(()=>validateConfig(c));});
 test('rejects non-HTTPS contact',()=>{const c=clone();c.contact.url='javascript:alert(1)';assert.throws(()=>validateConfig(c));});
-test('email mode rejects an absent address',()=>{const c=clone();c.contact.mode='email';c.contact.email=null;assert.throws(()=>validateConfig(c));});
+test('email mode rejects an absent address',()=>{const c=clone();c.contact.email=null;assert.throws(()=>{c.contact.mode='email';validateConfig(c);});});
 test('email mode supports an owner-configured address',()=>{const c=clone();c.contact.mode='email';c.contact.email='owner@example.org';assert.doesNotThrow(()=>validateConfig(c));});
 test('18 routes represent 7 portfolio and 2 product pages per language',()=>{
  assert.equal(routes.length,18);for(const lang of ['ja','en'])assert.equal(routes.filter(r=>r.lang===lang).length,9);
@@ -46,7 +45,13 @@ for(const r of routes){
   assert.match(html,/og:image/);assert.match(html,/name="description"/);
   const ids=attr(html,'id');assert.equal(new Set(ids).size,ids.length,'duplicate IDs');
   assert.equal((html.match(/<script\b/g)||[]).length,1);
-  assert.ok(!/<iframe|<form\b|\bonclick=|\bonload=/.test(html),'No silent form, inline scripts or embeds');
+  assert.ok(!/<iframe|\bonclick=|\bonload=/.test(html),'No inline scripts or external embeds');
+  if(r.page==='contact'){
+   assert.equal((html.match(/<form\b/g)||[]).length,1);
+   assert.match(html,/method="post" action="\/api\/inquiries"/);
+   assert.match(html,/name="consent" type="checkbox" required/);
+   assert.match(html,/id="inquiry-submit"[^>]*disabled/);
+  }else assert.doesNotMatch(html,/<form\b/,'Only contact pages can contain a form');
   assert.ok(!/mailto:/.test(html),'No unconfigured business mailbox');
   for(const m of html.matchAll(/<a\b[^>]*target="_blank"[^>]*>/g))assert.match(m[0],/rel="noopener noreferrer"/);
   for(const value of attr(html,'href').concat(attr(html,'src'))){
@@ -96,17 +101,19 @@ test('product previews use real local project assets',async()=>{
  assert.equal((html.match(/class="product-preview/g)||[]).length,products.length);
  for(const p of products){assert.ok(p.preview);await fs.access(path.join(root,'public',p.preview));assert.match(html,new RegExp(`src="${p.preview.replaceAll('/','\\/') }"`));}
 });
-test('private inquiry is localized, external, optional to draft and never silently submitted',()=>{
+test('private inquiry is localized, explicit and retains the existing fallback',()=>{
  const html=htmlByPath.get('/contact/');assert.ok(html.includes(contactDestination(config,'ja').replaceAll('&','&amp;')));
- assert.match(html,/このページで下書きを作る必要はありません/);
- assert.match(html,/<details class="optional-brief">/);
- assert.match(html,/送信済みにはなりません/);
- assert.match(html,/type="button" id="copy-brief"/);
+ assert.match(html,/送信ボタンを押すまで/);assert.match(html,/保存が完了した後/);
+ assert.match(html,/name="consent" type="checkbox" required/);
+ assert.doesNotMatch(html,/name="consent"[^>]*checked|id="copy-brief"/);
 });
-test('no third-party executable code or storage APIs are shipped',async()=>{
+test('general pages keep their no-telemetry script and inquiry requests stay separate',async()=>{
  const js=await fs.readFile(path.join(dist,'assets/site.js'),'utf8');
  assert.doesNotMatch(js,/\bfetch\s*\(|XMLHttpRequest|sendBeacon|localStorage|sessionStorage|indexedDB|document\.cookie/);
  assert.match(js,/clipboard\.writeText/);assert.match(js,/Automatic copying is unavailable/);
+ const form=await fs.readFile(path.join(dist,'assets/inquiry-form.mjs'),'utf8');
+ assert.doesNotMatch(form,/sendBeacon|localStorage|sessionStorage|indexedDB|document\.cookie|https:\/\//);
+ assert.match(form,/fetch\('\/api\/inquiries'/);assert.match(form,/r\.status===201/);
 });
 test('custom 404 is noindex rather than soft-success',async()=>{
  const html=await fs.readFile(path.join(dist,'404.html'),'utf8');assert.match(html,/name="robots" content="noindex"/);
@@ -118,7 +125,7 @@ test('sitemap has every published route once and excludes 404',async()=>{
 test('OG image is an actual 1200 by 630 PNG',async()=>{
  const b=await fs.readFile(path.join(dist,'assets/og.png'));assert.equal(b.toString('hex',0,8),'89504e470d0a1a0a');assert.equal(b.readUInt32BE(16),1200);assert.equal(b.readUInt32BE(20),630);
 });
-test('Cloudflare security headers and apex redirection are included',async()=>{
+test('Cloudflare global security headers and apex redirection are included',async()=>{
  const h=await fs.readFile(path.join(dist,'_headers'),'utf8');assert.match(h,/connect-src 'none'/);assert.match(h,/frame-ancestors 'none'/);assert.match(h,/form-action 'none'/);
  const r=await fs.readFile(path.join(dist,'_redirects'),'utf8');assert.match(r,/^\/ja\/ \/ 301/m);const w=await fs.readFile(path.join(root,'worker.js'),'utf8');assert.match(w,/www\.reachmade\.com/);assert.match(w,/reachmade\.com/);
 });
