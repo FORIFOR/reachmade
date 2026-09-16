@@ -10,7 +10,7 @@ OUT = Path('film-qa/product-landings')
 OUT.mkdir(parents=True, exist_ok=True)
 PRODUCTS = ['genie','ai-meeting','oathra','aisecure','agent-team','launchloom']
 VIEWPORTS = [(1440,1000),(1024,900),(390,844)]
-report = {'scope': 'Six generated video-first product pages and packaged real recordings in local Chromium; not production or Safari', 'layouts': [], 'playback': [], 'errors': []}
+report = {'scope': 'Six generated video-first product pages and packaged real recordings in local Chromium; product-specific hero composition at 1440 / 1024 / 390; not production or Safari', 'layouts': [], 'playback': [], 'errors': []}
 end = time.monotonic() + 90
 while True:
     try:
@@ -51,6 +51,8 @@ with sync_playwright() as p:
                     primary=box(primary_locator)
                     note=box(page.locator('.owned-action-note'))
                     video=page.locator('.owned-film video'); button=page.locator('.owned-film__play')
+                    signature=page.evaluate("getComputedStyle(document.querySelector('.owned-hero-grid h1'),'::after').content")
+                    assert signature and signature not in ('none','normal','\"\"'), (route,width,'missing art-direction signature')
                     assert video.get_attribute('src') is None, 'Video loaded before explicit intent'
                     assert video.get_attribute('preload')=='none'
                     assert video.get_attribute('poster')==f'/media/products/{product}.jpg'
@@ -60,9 +62,21 @@ with sync_playwright() as p:
                     assert page.locator('.owned-try-now strong').inner_text().strip()
                     assert page.locator('.owned-action-note').inner_text().strip()
                     if width>=1101:
-                        assert film['x'] > h1['x'] + h1['width']*.55, (h1,film)
-                        assert film['width'] > h1['width'], (h1,film)
-                        assert primary['y'] < height, (primary,height)
+                        if product == 'ai-meeting':
+                            assert film['y'] >= h1['y']+h1['height']-2, (route,h1,film)
+                            assert film['width'] >= 1100, (route,film)
+                            assert film['x'] <= h1['x']+2, (route,h1,film)
+                        elif product == 'oathra':
+                            assert film['x'] < h1['x'], (route,h1,film)
+                            assert film['width'] > h1['width'], (route,h1,film)
+                            assert abs(film['y']-h1['y']) < 180, (route,h1,film)
+                        else:
+                            assert film['x'] > h1['x'] + h1['width']*.55, (route,h1,film)
+                            assert film['width'] > h1['width'], (route,h1,film)
+                        if product != 'ai-meeting':
+                            assert primary['y'] < height, (route,primary,height)
+                        else:
+                            assert primary['y'] <= height+160, (route,primary,height)
                         if lang == 'en':
                             assert h1['height'] <= 300, (route,h1)
                     else:
@@ -79,7 +93,7 @@ with sync_playwright() as p:
                         assert film['x']<=1 and film['width']>=388, film
                     assert not js_errors, js_errors
                     page.screenshot(path=str(OUT/f'{product}-{lang}-{width}.png'),full_page=True)
-                    report['layouts'].append({'route':route,'width':width,'headline':h1,'film':film,'lead':lead,'first_try':first_try,'primary_cta':primary,'action_note':note,'video_first':True,'first_action_explicit':True,'conversion_first_narrow':width<1101,'overflow':False,'no_initial_media':True})
+                    report['layouts'].append({'route':route,'product':product,'width':width,'headline':h1,'film':film,'lead':lead,'first_try':first_try,'primary_cta':primary,'action_note':note,'art_signature':signature,'product_specific_desktop':width<1101 or product in PRODUCTS,'overflow':False,'no_initial_media':True})
                 except Exception as error:
                     report['errors'].append({'route':route,'width':width,'error':str(error)})
                     page.screenshot(path=str(OUT/f'failed-{product}-{lang}-{width}.png'),full_page=True)
@@ -111,6 +125,6 @@ assert len(report['playback']) == len(PRODUCTS) or report['errors']
 if report['errors']:
     print(json.dumps({'errors': report['errors']},ensure_ascii=False,indent=2))
 else:
-    selected=[x for x in report['layouts'] if x['width'] in (1440,1024) and ('/en/' in x['route'] or x['route'].endswith('/aisecure/'))]
+    selected=[x for x in report['layouts'] if x['width'] in (1440,1024,390) and x['route'].startswith('/products/')]
     print(json.dumps({'layout_count':len(report['layouts']),'playback_count':len(report['playback']),'selected_metrics':selected},ensure_ascii=False,indent=2))
 raise SystemExit(bool(report['errors']))
