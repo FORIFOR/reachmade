@@ -27,6 +27,10 @@ export function validateMp4(bytes) {
   if (offset !== bytes.length || !['ftyp', 'moov', 'mdat'].every(x => boxes.has(x))) throw new Error('Not a complete MP4 file');
 }
 
+export function validateJpeg(bytes) {
+  if (!Buffer.isBuffer(bytes) || bytes.length < 1024 || bytes[0] !== 0xff || bytes[1] !== 0xd8 || bytes.at(-2) !== 0xff || bytes.at(-1) !== 0xd9) throw new Error('Generated poster is not a complete JPEG');
+}
+
 export async function downloadRecording(url, fetcher = fetch) {
   const parsed = new URL(url);
   if (parsed.protocol !== 'https:' || parsed.username || parsed.password) throw new Error('Invalid recording URL');
@@ -80,13 +84,9 @@ async function run(command, args) {
 export async function renderPremiumFilm({ input, output, poster, plan, ffmpeg = process.env.FFMPEG_BIN || 'ffmpeg' }) {
   await run(ffmpeg, ffmpegArgs(input, output, plan));
   await run(ffmpeg, ['-hide_banner','-loglevel','error','-y','-ss',String(premiumFilmPolicy.startHold),'-i',output,'-frames:v','1','-q:v','2',poster]);
-  const bytes = await fs.readFile(output); validateMp4(bytes);
-  const jpg = await fs.readFile(poster);
-  if (jpg.length < 1024 || jpg[0] !== 0xff || jpg[1] !== 0xd8 || jpg.at(-2) !== 0xff || jpg.at(-1) !== 0xd9) throw new Error('Generated poster is not a complete JPEG');
-  return { bytes, posterBytes: jpg.length };
 }
 
-export async function prepareMedia({ dist = path.join(root, 'dist'), fetcher = fetch, ffmpeg = process.env.FFMPEG_BIN || 'ffmpeg' } = {}) {
+export async function prepareMedia({ dist = path.join(root, 'dist'), fetcher = fetch, ffmpeg = process.env.FFMPEG_BIN || 'ffmpeg', renderer = renderPremiumFilm } = {}) {
   await fs.access(path.join(dist, 'index.html'));
   validatePremiumFilmCuts();
   const recordingIds = Object.keys(recordings).sort();
@@ -110,8 +110,9 @@ export async function prepareMedia({ dist = path.join(root, 'dist'), fetcher = f
       const outputPath = path.join(stage, `${id}.mp4`);
       const posterPath = path.join(stage, `${id}.jpg`);
       await fs.writeFile(rawPath, sourceBytes);
-      const rendered = await renderPremiumFilm({ input: rawPath, output: outputPath, poster: posterPath, plan: premiumFilmCuts[id], ffmpeg });
-      const outputBytes = rendered.bytes;
+      await renderer({ input: rawPath, output: outputPath, poster: posterPath, plan: premiumFilmCuts[id], ffmpeg, id });
+      const outputBytes = await fs.readFile(outputPath); validateMp4(outputBytes);
+      const posterBytes = await fs.readFile(posterPath); validateJpeg(posterBytes);
       manifest.recordings.push({
         id, source, sourceBytes: sourceBytes.length, sourceSha256,
         path: `/media/products/${id}.mp4`, poster: `/media/products/${id}.jpg`,
