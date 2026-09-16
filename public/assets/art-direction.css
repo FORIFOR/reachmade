@@ -88,15 +88,15 @@
 .owned-product--launchloom .owned-film__screen{border:0;aspect-ratio:1.9/1}
 
 @media(max-width:1100px){
-  .owned-product .owned-hero-grid{padding-top:34px}
-  .owned-product .owned-hero-grid h1::after{margin-top:12px}
-  .owned-product .owned-film--hero{margin-top:14px}
-  .owned-product .owned-try-now{margin-top:16px}
+  .owned-product .owned-hero-grid{padding-top:24px}
+  .owned-product .owned-hero-grid h1::after{margin-top:8px}
+  .owned-product .owned-film--hero{margin-top:8px}
+  .owned-product .owned-try-now{margin-top:10px}
   .owned-product--genie .owned-hero-grid,.owned-product--ai-meeting .owned-hero-grid,.owned-product--oathra .owned-hero-grid,.owned-product--aisecure .owned-hero-grid,.owned-product--agent-team .owned-hero-grid,.owned-product--launchloom .owned-hero-grid{
     grid-template-columns:1fr;grid-template-areas:"kicker" "title" "film" "try" "actions" "note" "lead" "requirements";
   }
   .owned-product--ai-meeting .owned-actions{margin-top:18px}
-  .owned-product--oathra .owned-film--hero,.owned-product--launchloom .owned-film--hero{margin-top:14px}
+  .owned-product--oathra .owned-film--hero,.owned-product--launchloom .owned-film--hero{margin-top:8px}
   .owned-product--oathra .owned-film--hero{grid-area:film}
 }
 
