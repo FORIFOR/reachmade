@@ -30,10 +30,11 @@ test('failed premium batches preserve the prior packaged files',async()=>{
   assert.deepEqual(await fs.readdir(path.join(dir,'media')),['products']);
  }finally{await fs.rm(dir,{recursive:true,force:true});}
 });
-test('static serving rejects unknown IDs and write methods',async()=>{
+test('static serving rejects unknown IDs and write methods while known generated posters use normal ASSETS',async()=>{
  const no={fetch:()=>{throw Error('must not call')}};
  assert.equal(await serveStaticRecording(request('/products/'),no),null);
- for(const s of ['unknown.mp4','constructor.mp4'])assert.equal((await serveStaticRecording(request('/media/products/'+s),no)).status,404);
+ assert.equal(await serveStaticRecording(request('/media/products/genie.jpg'),no),null);
+ for(const s of ['unknown.mp4','constructor.mp4','unknown.jpg','constructor.jpg'])assert.equal((await serveStaticRecording(request('/media/products/'+s),no)).status,404);
  assert.equal((await serveStaticRecording(request('/media/products/genie.mp4',{method:'POST'}),no)).status,405);
  assert.equal((await serveStaticRecording(request('/media/products/genie.mp4',{headers:{Range:'bytes=0-1,2-3'}}),no)).status,416);
 });
