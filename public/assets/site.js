@@ -20,6 +20,25 @@
   document.addEventListener('click', event => {if(toggle && !event.target.closest('.site-header')) closeNav();});
   window.matchMedia('(min-width:901px)').addEventListener('change', closeNav);
 
+  /* Horio Premium responsive composition: the same real proof is moved, never cloned.
+   * Wide desktop = copy beside product. Narrow = promise, real product, explanation.
+   */
+  const hero = document.querySelector('.hero');
+  const heroCopy = hero?.querySelector('.hero-copy');
+  const heroProof = hero?.querySelector('.hero-proof');
+  const heroTitle = heroCopy?.querySelector('h1');
+  const narrowHero = window.matchMedia('(max-width:1180px)');
+  const placeHeroProof = () => {
+    if (!hero || !heroCopy || !heroProof || !heroTitle) return;
+    if (narrowHero.matches) {
+      if (heroProof.parentElement !== heroCopy || heroProof.previousElementSibling !== heroTitle) heroTitle.after(heroProof);
+    } else if (heroProof.parentElement !== hero || heroProof.previousElementSibling !== heroCopy) {
+      heroCopy.after(heroProof);
+    }
+  };
+  placeHeroProof();
+  narrowHero.addEventListener?.('change', placeHeroProof);
+
   const filters = [...document.querySelectorAll('[data-filter]')];
   const cards = [...document.querySelectorAll('.product-directory [data-category]')];
   const count = document.querySelector('.filter-count');
