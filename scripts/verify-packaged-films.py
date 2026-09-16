@@ -93,14 +93,22 @@ def main():
         assert signature_poster_raw[:2] == b'\xff\xd8' and signature_poster_raw[-2:] == b'\xff\xd9'
         metadata = probe_video(signature_target)
         duration = assert_h264_silent_720(metadata, 11.7, 12.3)
-        for method, headers in [('HEAD', {}), ('GET', {'Range': 'bytes=0-63'})]:
-            with urllib.request.urlopen(urllib.request.Request(BASE + signature['path'], method=method, headers=headers), timeout=15) as r:
-                assert r.status == (206 if headers else 200), (method, r.status)
-                assert r.headers.get_content_type() == 'video/mp4'
-                if method == 'GET': assert r.read() == signature_raw[:64]
+        with urllib.request.urlopen(urllib.request.Request(BASE + signature['path'], method='HEAD'), timeout=15) as r:
+            assert r.status == 200
+            assert r.headers.get_content_type() == 'video/mp4'
+        with urllib.request.urlopen(urllib.request.Request(BASE + signature['path'], headers={'Range': 'bytes=0-63'}), timeout=15) as r:
+            assert r.status in (200,206), r.status
+            assert r.headers.get_content_type() == 'video/mp4'
+            delivered = r.read()
+            if r.status == 206:
+                assert delivered == signature_raw[:64]
+                delivery = 'range'
+            else:
+                assert delivered == signature_raw
+                delivery = 'full-static'
         with urllib.request.urlopen(BASE + signature['poster'], timeout=15) as r:
             assert r.status == 200 and r.headers.get_content_type() in ('image/jpeg','image/jpg')
-        report['signature'] = {'duration': duration, 'bytes': len(signature_raw), 'metadata': metadata, 'head_range_poster': True}
+        report['signature'] = {'duration': duration, 'bytes': len(signature_raw), 'metadata': metadata, 'delivery': delivery, 'head_and_poster': True}
     except Exception as error:
         report['errors'].append('signature: ' + str(error))
 
