@@ -1,4 +1,4 @@
-"""Check built pages and packaged recordings via local Wrangler; never deploy."""
+"""Check premium built pages and packaged recordings via local Wrangler; never deploy."""
 from pathlib import Path
 import hashlib
 import json
@@ -13,8 +13,13 @@ BASE = 'http://127.0.0.1:8787'
 def main():
     out = ROOT / 'film-qa'; out.mkdir(exist_ok=True)
     manifest = json.loads((ROOT / 'dist/media/products/manifest.json').read_text())
-    report = {'scope': 'Packaged media and built pages through local Wrangler, not production or Safari', 'media': [], 'pages': [], 'errors': []}
+    report = {'scope': 'Premium website edits, posters and built pages through local Wrangler; not production or Safari', 'media': [], 'pages': [], 'errors': []}
     by_id = {}
+    assert manifest['schema'] == 2
+    assert manifest['mode'] == 'premium-site-edits'
+    assert manifest['policy']['speed'] == 1
+    assert manifest['policy']['audio'] is False
+    assert len(manifest['recordings']) == 6
     for attempt in range(60):
         try:
             with urllib.request.urlopen(BASE, timeout=2) as response:
@@ -23,29 +28,39 @@ def main():
             if attempt == 59: raise
             time.sleep(1)
     for item in manifest['recordings']:
-        result = {'id': item['id'], 'sha256': item['sha256']}
+        result = {'id': item['id'], 'sha256': item['sha256'], 'source_sha256': item['sourceSha256']}
         report['media'].append(result); by_id[item['id']] = result
         try:
+            assert item['edit']['speed'] == 1 and item['edit']['audio'] is False
+            assert len(item['edit']['clips']) == 2
             target = ROOT / 'dist' / item['path'].lstrip('/')
             raw = target.read_bytes()
             assert hashlib.sha256(raw).hexdigest() == item['sha256']
             assert len(raw) == item['bytes'] < 25 * 1024 * 1024
-            metadata = json.loads(subprocess.check_output(['ffprobe', '-v', 'error', '-show_entries', 'format=duration:stream=codec_type,codec_name,width,height', '-of', 'json', str(target)], text=True, timeout=30))
-            assert any(s.get('codec_type') == 'video' for s in metadata['streams'])
-            assert float(metadata['format']['duration']) > 1
-            result.update(bytes=len(raw), metadata=metadata)
+            poster = ROOT / 'dist' / item['poster'].lstrip('/')
+            poster_raw = poster.read_bytes()
+            assert poster_raw[:2] == b'\xff\xd8' and poster_raw[-2:] == b'\xff\xd9'
+            assert (ROOT / 'dist/assets/products' / f"{item['id']}.jpg").read_bytes() == poster_raw
+            metadata = json.loads(subprocess.check_output(['ffprobe', '-v', 'error', '-show_entries', 'format=duration:stream=codec_type,codec_name,width,height,avg_frame_rate', '-of', 'json', str(target)], text=True, timeout=30))
+            video = [s for s in metadata['streams'] if s.get('codec_type') == 'video']
+            audio = [s for s in metadata['streams'] if s.get('codec_type') == 'audio']
+            assert len(video) == 1 and not audio
+            assert video[0].get('codec_name') == 'h264'
+            assert video[0].get('width') == 1280 and video[0].get('height') == 720
+            duration = float(metadata['format']['duration'])
+            assert 12.5 <= duration <= 13.5, (item['id'], duration)
+            result.update(bytes=len(raw), poster_bytes=len(poster_raw), duration=duration, metadata=metadata)
             for method, headers in [('HEAD', {}), ('GET', {'Range': 'bytes=0-63'})]:
                 with urllib.request.urlopen(urllib.request.Request(BASE + item['path'], method=method, headers=headers), timeout=15) as r:
                     assert r.status == (206 if headers else 200), (item['id'], method, r.status)
                     assert r.headers.get_content_type() == 'video/mp4'
                     if method == 'GET': assert r.read() == raw[:64]
-            result['head_and_range'] = True
+            with urllib.request.urlopen(BASE + item['poster'], timeout=15) as r:
+                assert r.status == 200 and r.headers.get_content_type() in ('image/jpeg','image/jpg')
+            result['head_range_poster'] = True
         except Exception as error: report['errors'].append(item['id'] + ': ' + str(error))
     with sync_playwright() as pw:
         browser = pw.chromium.launch()
-        # Reduced motion makes the built-page sweep deterministic and verifies that
-        # no page depends on autoplay. The separate Horio Premium job verifies the
-        # one allowed wide-desktop Signature Moment with normal motion enabled.
         for width in [390, 1440]:
             context = browser.new_context(viewport={'width': width, 'height': 1000}, reduced_motion='reduce')
             page = context.new_page(); page.set_default_timeout(20000)
@@ -58,31 +73,25 @@ def main():
                         assert page.locator('h1').count() == 1
                         assert page.evaluate('document.documentElement.scrollWidth <= innerWidth'), route
                         if sub == '':
-                            # Homepage intentionally has one hero proof plus only the
-                            # featured product proofs. Compact products are an editorial
-                            # index and must not regress back into a six-video wall.
                             assert page.locator('.hero .rm-film-preview').count() == 1
                             assert page.locator('.hero [data-product-film="genie"]').count() == 1
                             assert page.locator('.compact-products .rm-film-preview').count() == 0
                             assert page.locator('.rm-film-preview[src]').count() == 0
                             assert page.locator('.hero .rm-film-preview').evaluate('(v)=>v.paused')
+                            assert page.locator('.hero .rm-film-preview').get_attribute('poster') == '/media/products/genie.jpg'
                         elif sub == 'products/':
-                            # The complete product directory remains the exhaustive six-film
-                            # manual test surface. Nothing loads before visitor intent.
                             assert page.locator('.rm-film-preview').count() == 6
                             assert page.locator('.rm-film-preview[src]').count() == 0
+                            for item in manifest['recordings']:
+                                assert page.locator(f'[data-product-film="{item["id"]}"] video').get_attribute('poster') == item['poster']
                         if sub == 'contact/':
                             assert page.locator('#reachmade-inquiry').count() == 1
                             assert not page.locator('input[name="consent"]').is_checked()
-                            # The local server is not an approved production origin.
-                            # The direct form must remain disabled, never fake success.
                             assert page.locator('#inquiry-submit').is_disabled()
                             assert not page.locator('#inquiry-result').get_attribute('data-receipt')
                         report['pages'].append({'route': route, 'width': width, 'overflow': False})
                     except Exception as error: report['errors'].append(route + ': ' + str(error))
             context.close()
-        # Keep the original exhaustive interaction test on the product directory:
-        # every packaged recording must play, pause, expand, seek and close.
         context = browser.new_context(viewport={'width': 1440, 'height': 1000}, reduced_motion='reduce')
         page = context.new_page(); page.set_default_timeout(20000)
         for item in manifest['recordings']:
