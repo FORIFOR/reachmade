@@ -103,8 +103,8 @@ html[lang=en] .hero.container h1{font-size:clamp(46px,4.7vw,70px);line-height:1.
   .hero-proof .study-head,.hero-proof figcaption{padding-inline:20px}
   .hero-proof .study-head{padding-top:12px;padding-bottom:10px}
   .hero-proof figcaption{flex-direction:column;gap:3px;padding-top:10px;padding-bottom:4px}
-  .hero-proof-image.rm-film-hero{padding:0!important}
-  .hero .rm-film-stage{border-radius:0!important;border-inline:0!important;box-shadow:none}
+  .hero-proof-image.rm-film-hero{padding:0!important;overflow:visible!important}
+  .hero .rm-film-stage{width:100vw!important;margin-left:calc(50% - 50vw)!important;border-radius:0!important;border-inline:0!important;box-shadow:none}
   .hero .rm-film-preview{object-fit:contain!important}
   .hero .rm-film-toolbar,.hero .rm-film-note,.hero .rm-film-error,.hero .rm-film-original{margin-inline:20px}
   .hero .rm-film-toolbar{padding-top:9px}
