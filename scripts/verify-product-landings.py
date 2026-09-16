@@ -63,6 +63,9 @@ with sync_playwright() as p:
                         assert film['x'] > h1['x'] + h1['width']*.55, (h1,film)
                         assert film['width'] > h1['width'], (h1,film)
                         assert primary['y'] < height, (primary,height)
+                        if lang == 'en':
+                            # Long English promises must remain editorial headlines, not tall text columns.
+                            assert h1['height'] <= 300, (route,h1)
                     else:
                         # Narrow screens prioritize the decision path: headline → real film → first task → CTA → click expectation → supporting copy.
                         assert film['y'] >= h1['y']+h1['height']-2, (h1,film)
@@ -71,6 +74,9 @@ with sync_playwright() as p:
                         assert note['y'] >= primary['y']+primary['height']-2, (note,primary)
                         assert lead['y'] >= note['y']+note['height']-2, (lead,note)
                         assert primary['y'] <= height+120, (primary,height)
+                        if width == 1024:
+                            assert 755 <= film['width'] <= 765, (route,film)
+                            assert primary['y'] <= height+40, (route,primary,height)
                     if width==390:
                         assert film['x']<=1 and film['width']>=388, film
                     assert not js_errors, js_errors
