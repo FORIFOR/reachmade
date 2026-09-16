@@ -12,7 +12,7 @@ BASE = 'http://127.0.0.1:8787'
 OUT = Path('film-qa/horio-premium')
 OUT.mkdir(parents=True, exist_ok=True)
 report = {
-    'scope': 'Actual generated Reachmade pages and packaged real recordings in local Chromium; not production Safari',
+    'scope': 'Actual generated Reachmade pages and premium edits of real recordings in local Chromium; not production Safari',
     'viewports': [], 'gates': {}, 'errors': []
 }
 
@@ -64,21 +64,16 @@ with sync_playwright() as pw:
                 hb, sb = ensure_first_view(page, height)
                 desc = box(page.locator('.hero-description'))
                 if width >= 1181:
-                    # Desktop is a spread: product and promise coexist horizontally.
                     assert sb['x'] > hb['x'] + hb['width'] * 0.55, (hb, sb)
                     assert abs(sb['y'] - hb['y']) < 240, (hb, sb)
                 else:
-                    # Tablet/mobile is intentionally recomposed: headline -> product -> explanation.
                     assert sb['y'] >= hb['y'] + hb['height'] - 2, (hb, sb)
                     assert desc['y'] >= sb['y'] + sb['height'] - 2, (desc, sb)
                 if width == 390:
-                    # Product stage intentionally breaks out of the text measure on mobile.
                     assert sb['x'] <= 1 and sb['width'] >= 388, sb
-                # Product is the strongest visual object by area in the first viewport.
                 h_area = hb['width'] * hb['height']
                 s_area = min(sb['width'] * sb['height'], sb['width'] * max(1, height - sb['y']))
                 assert s_area > h_area, (h_area, s_area)
-                # Signature Moment: auto only on wide desktop.
                 video = page.locator('.hero .rm-film-preview')
                 if width >= 1181:
                     page.wait_for_function("() => { const v=document.querySelector('.hero .rm-film-preview'); return v && v.currentTime > .20 && !v.paused; }")
@@ -105,7 +100,6 @@ with sync_playwright() as pw:
             finally:
                 context.close()
 
-    # Logo Swap Test: generic branding cannot erase product identity.
     context = browser.new_context(viewport={'width': 1440, 'height': 1000}, reduced_motion='reduce')
     page = context.new_page(); page.set_default_timeout(30000)
     try:
@@ -121,7 +115,7 @@ with sync_playwright() as pw:
     finally:
         context.close()
 
-    # Stillness test: reduced motion keeps a complete, beautiful real-product poster and no autoplay.
+    # Stillness is now the poster generated from the exact same edited film, not a separate old screenshot.
     context = browser.new_context(viewport={'width': 1440, 'height': 1000}, reduced_motion='reduce')
     page = context.new_page(); page.set_default_timeout(30000)
     try:
@@ -130,7 +124,7 @@ with sync_playwright() as pw:
         video = page.locator('.hero .rm-film-preview')
         assert video.get_attribute('src') is None
         assert video.evaluate('(v)=>v.paused')
-        assert video.get_attribute('poster') == '/assets/products/genie.jpg'
+        assert video.get_attribute('poster') == '/media/products/genie.jpg'
         assert not page.locator('.hero .rm-film-error').is_visible()
         page.screenshot(path=str(OUT / 'stillness-reduced-motion-1440.png'), full_page=False)
         report['gates']['stillness_test'] = True
@@ -139,14 +133,14 @@ with sync_playwright() as pw:
     finally:
         context.close()
 
-    # Automatic media failure must leave the real poster clean; explicit playback discloses the error.
+    # If automatic playback fails, the generated poster stays clean. A manual retry must disclose the error.
     context = browser.new_context(viewport={'width': 1440, 'height': 1000})
     context.route('**/media/products/genie.mp4', lambda route: route.abort())
     page = context.new_page(); page.set_default_timeout(30000)
     try:
         page.goto(BASE + '/', wait_until='networkidle'); page.wait_for_function('() => window.__reachmadeFilms === true')
         page.wait_for_timeout(1000)
-        assert page.locator('.hero .rm-film-preview').get_attribute('poster') == '/assets/products/genie.jpg'
+        assert page.locator('.hero .rm-film-preview').get_attribute('poster') == '/media/products/genie.jpg'
         assert not page.locator('.hero .rm-film-error').is_visible(), 'automatic failure leaked error into first view'
         page.locator('.hero .rm-film-toggle').click()
         page.wait_for_function("() => { const e=document.querySelector('.hero .rm-film-error'); return e && !e.hidden; }")
