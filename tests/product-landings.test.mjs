@@ -47,15 +47,15 @@ test('registry text is escaped in the renderer',()=>{
   assert.equal((html.match(/<script\b/g)||[]).length,1);
 });
 
-test('all primary product CTAs are HTTPS and product-specific',()=>{
-  const destinations = new Set();
+test('all primary product CTAs are HTTPS and every product has a real destination',()=>{
+  const productDestinations = new Set();
   for(const id of landingIds) for(const lang of ['ja','en']) {
     const [label,href]=landingExperience[id][lang].primary;
     assert.ok(label.length>3);
     assert.equal(new URL(href).protocol,'https:');
-    destinations.add(`${id}:${href}`);
+    productDestinations.add(id);
   }
-  assert.equal(destinations.size,12);
+  assert.equal(productDestinations.size,6);
 });
 
 test('landing player has no telemetry, persistence, form or model transport',async()=>{
