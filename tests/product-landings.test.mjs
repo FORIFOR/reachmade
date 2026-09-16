@@ -15,7 +15,7 @@ test('owned landings cover exactly the six Reachmade products',()=>{
 });
 
 for (const id of landingIds) for (const lang of ['ja','en']) {
-  test(`${id}/${lang}: product page leads with its real film and honest boundaries`, async () => {
+  test(`${id}/${lang}: product page leads with its real film, first action and honest boundaries`, async () => {
     const p = products.find(p=>p.id===id), route = landingRoute(id,lang), x = landingExperience[id][lang];
     const html = await fs.readFile(path.join(root,'dist',route,'index.html'),'utf8');
     assert.match(html,new RegExp(`data-product-id="${id}"`));
@@ -24,9 +24,14 @@ for (const id of landingIds) for (const lang of ['ja','en']) {
     assert.doesNotMatch(html,/<video[^>]*\ssrc=|<video[^>]*\bautoplay\b|<iframe|<form\b/);
     assert.match(html,/preload="none"/);
     assert.equal((html.match(/class="owned-step-index"/g)||[]).length,3);
+    assert.equal((html.match(/class="owned-try-now"/g)||[]).length,1);
+    assert.equal((html.match(/class="owned-action-note"/g)||[]).length,1);
     assert.ok(html.includes(escaped(p[lang].scope)));
     assert.ok(html.includes(escaped(p[lang].proof)));
+    assert.ok(html.includes(escaped(x.tryNow)));
+    assert.ok(html.includes(escaped(x.actionNote)));
     assert.ok(html.includes(escaped(x.primary[0])));
+    assert.match(html,lang==='ja'?/13秒で実演を見る/:/See it in 13 seconds/);
     assert.match(html,lang==='ja'?/約13秒.*再生速度は変えていません/:/about 13 seconds; playback speed is unchanged/);
     assert.match(html,lang==='ja'?/現行製品の実演や、新UIの実装完了を示すものではありません/:/not a demonstration of the current product/);
     assert.equal(productNavigation(p,lang).site,config.origin+route);
@@ -47,12 +52,16 @@ test('registry text is escaped in the renderer',()=>{
   assert.equal((html.match(/<script\b/g)||[]).length,1);
 });
 
-test('all primary product CTAs are HTTPS and every product has a real destination',()=>{
+test('every product CTA states a concrete action and sets click expectations',()=>{
   const productDestinations = new Set();
   for(const id of landingIds) for(const lang of ['ja','en']) {
-    const [label,href]=landingExperience[id][lang].primary;
-    assert.ok(label.length>3);
+    const x=landingExperience[id][lang];
+    const [label,href]=x.primary;
+    assert.ok(label.length>=8,`${id}/${lang} primary CTA too vague`);
     assert.equal(new URL(href).protocol,'https:');
+    assert.ok(x.tryNow.length>=18,`${id}/${lang} missing first-task description`);
+    assert.ok(x.actionNote.length>=24,`${id}/${lang} missing post-click expectation`);
+    assert.doesNotMatch(label,/^(見る|開く|詳しく見る|Learn more|Open|View)$/i);
     productDestinations.add(id);
   }
   assert.equal(productDestinations.size,6);
