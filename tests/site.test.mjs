@@ -23,9 +23,9 @@ test('contact must use a known mode',()=>{const c=clone();c.contact.mode='form';
 test('rejects non-HTTPS contact',()=>{const c=clone();c.contact.url='javascript:alert(1)';assert.throws(()=>validateConfig(c));});
 test('email mode rejects an absent address',()=>{const c=clone();c.contact.email=null;assert.throws(()=>{c.contact.mode='email';validateConfig(c);});});
 test('email mode supports an owner-configured address',()=>{const c=clone();c.contact.mode='email';c.contact.email='owner@example.org';assert.doesNotThrow(()=>validateConfig(c));});
-test('18 routes represent 7 portfolio and 2 product pages per language',()=>{
- assert.equal(routes.length,18);for(const lang of ['ja','en'])assert.equal(routes.filter(r=>r.lang===lang).length,9);
- assert.equal(routes.filter(r=>r.page.startsWith('product-')).length,4);
+test('26 routes represent 7 portfolio and 6 product pages per language',()=>{
+ assert.equal(routes.length,26);for(const lang of ['ja','en'])assert.equal(routes.filter(r=>r.lang===lang).length,13);
+ assert.equal(routes.filter(r=>r.page.startsWith('product-')).length,12);
 });
 test('attribute checks do not mistake lazy data-src attributes for active sources',()=>{
  assert.deepEqual(attr('<video data-recording-src="/later.mp4" src="/now.mp4">','src'),['/now.mp4']);
