@@ -1,0 +1,148 @@
+/* Horio Premium Web — product-first composition, one signature moment, no generic AI decoration. */
+:root{
+  --hp-paper:#f6f5f0;
+  --hp-ink:#20251f;
+  --hp-muted:#61675f;
+  --hp-stage:#171a17;
+  --hp-stage-line:#30342f;
+  --hp-accent:#a83b2f;
+  --hp-measure:66ch;
+}
+
+/* The homepage is an editorial spread: message and real product share the first viewport. */
+.hero.container{
+  display:grid;
+  grid-template-columns:minmax(280px,.66fr) minmax(0,1.34fr);
+  grid-template-areas:
+    "label stage"
+    "title stage"
+    "desc stage"
+    "actions stage"
+    "foot stage";
+  column-gap:clamp(44px,5vw,86px);
+  row-gap:0;
+  align-items:start;
+  padding-block:clamp(72px,7vw,108px) clamp(86px,8vw,126px);
+}
+.hero-copy{display:contents}
+.hero-copy>.eyebrow{grid-area:label;align-self:end;margin:0 0 18px}
+.hero.container h1{
+  grid-area:title;
+  max-width:11.5ch;
+  margin:0;
+  font-size:clamp(44px,4.25vw,66px);
+  line-height:1.22;
+  letter-spacing:-.055em;
+  font-weight:560;
+}
+html[lang=en] .hero.container h1{font-size:clamp(46px,4.7vw,70px);line-height:1.04;max-width:12ch}
+.hero-description{grid-area:desc;max-width:36em;margin:27px 0 0;font-size:17px;line-height:1.92}
+.hero-actions{grid-area:actions;margin:28px 0 0;display:flex;align-items:center;gap:12px 22px;flex-wrap:wrap}
+.hero-footnote{grid-area:foot;margin:38px 0 0}
+.hero-proof{grid-area:stage;align-self:center;width:100%;margin:0;min-width:0}
+.hero-proof .study-head{font-size:10px;letter-spacing:.08em;margin:0;padding:0 2px 13px}
+.hero-proof figcaption{display:flex;justify-content:space-between;gap:20px;align-items:start;padding:13px 2px 0;font-size:12px;line-height:1.7}
+.hero-proof figcaption>span{max-width:52ch}
+.hero .rm-film-stage{border-radius:16px;box-shadow:0 30px 70px -48px #0008}
+.hero .rm-film-toolbar{padding-top:12px}
+.hero .rm-film-note{max-width:70ch}
+
+/* Product proof is large and calm. Copy has room to breathe; no bento wall. */
+.selected-work{padding-bottom:112px}
+.selected-work>.section-title{padding-top:50px;margin-bottom:18px;align-items:start}
+.selected-work>.section-title h2{font-size:clamp(34px,3.5vw,48px);line-height:1.28;letter-spacing:-.045em}
+.selected-work>.section-title>p{max-width:38em;font-size:16px;line-height:1.9}
+.selected-work .project-row{grid-template-columns:minmax(0,1.32fr) minmax(300px,.68fr);gap:clamp(42px,5vw,78px);padding-block:58px 72px}
+.selected-work .project-row:nth-of-type(even){grid-template-columns:minmax(300px,.68fr) minmax(0,1.32fr)}
+.selected-work .project-content h3{font-size:clamp(28px,2.65vw,40px);max-width:14ch;line-height:1.38;margin-top:22px}
+.selected-work .project-content>p{font-size:16px;line-height:1.92}
+.selected-work .project-scope{max-width:44em}
+
+/* The remaining products become an editorial index, not repeated cards/mini-demos. */
+.compact-products{display:block!important;margin-top:56px;border-top:1px solid var(--line)}
+.compact-products-heading{display:flex;justify-content:space-between;align-items:center;gap:24px;padding:24px 0 20px}
+.compact-products-heading h3{font-size:14px;letter-spacing:.02em;font-weight:600}
+.compact-product{
+  display:grid!important;
+  grid-template-columns:minmax(155px,.45fr) minmax(220px,.8fr) minmax(0,1.2fr) auto!important;
+  gap:22px 36px!important;
+  align-items:start!important;
+  padding:27px 0!important;
+  margin:0!important;
+  border:0!important;
+  border-top:1px solid var(--line)!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+.compact-product-meta{grid-column:1;display:flex;flex-direction:column;align-items:flex-start;gap:8px}
+.compact-product h3{grid-column:2;font-size:20px;line-height:1.48;margin:0}
+.compact-product>p{grid-column:3;font-size:14px;line-height:1.82;margin:0;color:var(--muted)}
+.compact-product-actions{grid-column:4;display:flex;flex-direction:column;align-items:flex-end;gap:4px;white-space:nowrap}
+
+/* Premium means stillness outside the one real hero film. */
+.project-row .rm-film-stage,.product-directory .rm-film-stage{box-shadow:none}
+.rm-film-row .rm-film-toolbar,.product-directory .rm-film-toolbar{min-height:50px}
+
+/* 1024-class layouts become a deliberate editorial stack instead of squeezed desktop columns. */
+@media(max-width:1180px){
+  .hero.container{
+    grid-template-columns:minmax(0,1fr);
+    grid-template-areas:"label" "title" "stage" "desc" "actions" "foot";
+    gap:0;
+    padding-block:58px 78px;
+  }
+  .hero-copy>.eyebrow{margin-bottom:18px}
+  .hero.container h1{max-width:15ch;font-size:clamp(44px,6vw,62px)}
+  html[lang=en] .hero.container h1{max-width:15ch;font-size:clamp(46px,6.2vw,64px)}
+  .hero-proof{margin-top:34px}
+  .hero-description{max-width:52em;margin-top:28px}
+  .hero-actions{margin-top:24px}
+  .hero-footnote{margin-top:30px}
+  .selected-work .project-row,.selected-work .project-row:nth-of-type(even){grid-template-columns:minmax(0,1.15fr) minmax(280px,.85fr);gap:38px}
+  .selected-work .project-row:nth-of-type(even) .project-visual{order:0}
+  .compact-product{grid-template-columns:150px minmax(180px,.75fr) minmax(0,1.1fr)!important}
+  .compact-product-actions{grid-column:2/4;grid-row:2;align-items:flex-start;flex-direction:row;gap:18px}
+}
+
+/* Mobile composition: promise, full-bleed real product, then explanation and actions. */
+@media(max-width:650px){
+  .hero.container{
+    grid-template-areas:"label" "title" "stage" "desc" "actions" "foot";
+    padding-block:34px 62px;
+  }
+  .hero-copy>.eyebrow{margin-bottom:13px;font-size:9px;letter-spacing:.11em}
+  .hero.container h1{font-size:clamp(32px,10vw,42px);line-height:1.25;letter-spacing:-.048em;max-width:11ch}
+  html[lang=en] .hero.container h1{font-size:clamp(37px,11vw,48px);line-height:1.02;max-width:10ch}
+  .hero-proof{width:100vw;margin:27px 0 0 calc(50% - 50vw)}
+  .hero-proof .study-head,.hero-proof figcaption{padding-inline:20px}
+  .hero-proof .study-head{padding-bottom:10px}
+  .hero-proof figcaption{flex-direction:column;gap:3px;padding-top:10px}
+  .hero-proof-image.rm-film-hero{padding:0!important}
+  .hero .rm-film-stage{border-radius:0!important;border-inline:0!important;box-shadow:none}
+  .hero .rm-film-preview{object-fit:contain!important}
+  .hero .rm-film-toolbar,.hero .rm-film-note,.hero .rm-film-error,.hero .rm-film-original{margin-inline:20px}
+  .hero .rm-film-toolbar{padding-top:9px}
+  .hero-description{margin-top:25px;font-size:16px;line-height:1.85;max-width:32em}
+  .hero-actions{align-items:stretch;gap:7px;margin-top:22px}
+  .hero-actions .button,.hero-actions .text-link{width:100%;justify-content:space-between;min-height:50px}
+  .hero-footnote{margin-top:23px;font-size:8px;gap:10px}
+  .selected-work{padding-bottom:72px}
+  .selected-work>.section-title{display:block;padding-top:34px;margin-bottom:12px}
+  .selected-work>.section-title h2{font-size:32px;margin-bottom:16px}
+  .selected-work>.section-title>p{font-size:15px}
+  .selected-work .project-row,.selected-work .project-row:nth-of-type(even){display:grid;grid-template-columns:1fr;gap:22px;padding-block:38px 48px}
+  .selected-work .project-row:nth-of-type(even) .project-visual{order:0}
+  .selected-work .project-content h3{font-size:29px;max-width:14ch}
+  .compact-products{margin-top:36px}
+  .compact-products-heading{align-items:flex-start;padding-block:20px 14px}
+  .compact-product{grid-template-columns:1fr!important;gap:10px!important;padding:23px 0!important}
+  .compact-product-meta,.compact-product h3,.compact-product>p,.compact-product-actions{grid-column:1!important;grid-row:auto!important}
+  .compact-product-meta{flex-direction:row;justify-content:space-between;align-items:center}
+  .compact-product h3{font-size:20px}
+  .compact-product-actions{flex-direction:row;align-items:center;gap:18px;flex-wrap:wrap}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .hero .rm-film-progress{display:none}
+}
