@@ -6,7 +6,9 @@ import { root } from '../scripts/build.mjs';
 
 const css = await fs.readFile(path.join(root,'public/assets/horio-premium.css'),'utf8');
 const precision = await fs.readFile(path.join(root,'public/assets/precision-polish.css'),'utf8');
+const art = await fs.readFile(path.join(root,'public/assets/reachmade-art-direction.css'),'utf8');
 const declarations = (css+'\n'+precision).replace(/\/\*[\s\S]*?\*\//g,'');
+const artDeclarations = art.replace(/\/\*[\s\S]*?\*\//g,'');
 const entryCss = await fs.readFile(path.join(root,'public/assets/site.css'),'utf8');
 const films = await fs.readFile(path.join(root,'public/assets/product-films.js'),'utf8');
 const site = await fs.readFile(path.join(root,'public/assets/site.js'),'utf8');
@@ -15,6 +17,7 @@ const en = await fs.readFile(path.join(root,'dist/en/index.html'),'utf8');
 
 test('Horio Premium avoids generic AI visual shortcuts',()=>{
   assert.doesNotMatch(declarations,/linear-gradient|radial-gradient|conic-gradient|backdrop-filter|glassmorphism|particles?|bento/i);
+  assert.doesNotMatch(artDeclarations,/linear-gradient|radial-gradient|conic-gradient|backdrop-filter|filter\s*:\s*blur|glassmorphism|particles?|bento/i);
   assert.match(declarations,/--hp-stage:#171a17/);
   assert.match(declarations,/font-size:clamp\(44px/);
 });
@@ -54,6 +57,13 @@ test('the homepage has one six-product automatic signature moment and manual low
   assert.match(films,/s\.manual===true\|\|\(s\.autoEligible/);
 });
 
+test('all six product heroes have distinct static visual ownership without invented proof',()=>{
+  for(const id of ['genie','ai-meeting','oathra','aisecure','agent-team','launchloom']) assert.match(art,new RegExp(`owned-product--${id.replace('-','\\-')}`));
+  assert.match(art,/CLAIM\s+→\s+PROOF/);
+  assert.match(art,/INPUT\s+→\s+CHECK/);
+  assert.doesNotMatch(art,/users|customers|revenue|trusted by/i);
+});
+
 test('automatic media failure stays visually quiet until the visitor explicitly tries playback',()=>{
   assert.match(films,/const disclose = s\.manual === true/);
   assert.match(films,/s\.error\.hidden=!disclose/);
@@ -67,6 +77,7 @@ test('mobile has a different composition rather than a desktop scale-down',()=>{
   assert.match(site,/matchMedia\('\(max-width:1180px\)'\)/);
   assert.match(site,/heroTitle\.after\(heroProof\)/);
   assert.match(site,/heroCopy\.after\(heroProof\)/);
+  assert.match(artDeclarations,/@media\(max-width:460px\)/);
 });
 
 test('English product typography is optically tuned and tablet film density is reduced',()=>{
