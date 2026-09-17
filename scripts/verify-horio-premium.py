@@ -111,8 +111,9 @@ with sync_playwright() as pw:
         page.goto(BASE + '/', wait_until='networkidle'); page.wait_for_function('() => window.__reachmadeFilms === true')
         page.evaluate("""() => { const s=document.querySelector('.site-header .brand > span'); if(s) s.textContent='Sample Studio'; }""")
         hero = page.locator('.hero').inner_text()
+        signature = page.locator('.hero h1').evaluate("el => getComputedStyle(el, '::after').content")
         assert 'AIを、' in hero and 'Genie' in hero and 'Launchloom' in hero
-        assert 'REACHMADE / 6 WORKING AI PRODUCTS' in hero and 'CLAIM  →  PROOF' in hero
+        assert 'REACHMADE / 6 WORKING AI PRODUCTS' in hero and 'CLAIM' in signature and 'PROOF' in signature
         assert page.locator('.hero .rm-signature-stage').is_visible()
         page.screenshot(path=str(OUT / 'logo-swap-1440.png'), full_page=False)
         report['gates']['logo_swap_test'] = True
