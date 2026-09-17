@@ -6,6 +6,7 @@ import { root } from '../scripts/build.mjs';
 
 const css = await fs.readFile(path.join(root,'public/assets/horio-premium.css'),'utf8');
 const precision = await fs.readFile(path.join(root,'public/assets/precision-polish.css'),'utf8');
+const rhythm = await fs.readFile(path.join(root,'public/assets/brand-rhythm.css'),'utf8');
 const declarations = (css+'\n'+precision).replace(/\/\*[\s\S]*?\*\//g,'');
 const entryCss = await fs.readFile(path.join(root,'public/assets/site.css'),'utf8');
 const films = await fs.readFile(path.join(root,'public/assets/product-films.js'),'utf8');
@@ -35,15 +36,16 @@ test('all design layers are imported before any CSS declarations',()=>{
   ]);
 });
 
-test('home leads with a real product surface before any JavaScript enhancement',()=>{
-  assert.match(home,/6 INDEPENDENT AI PRODUCTS \/ REAL SCREENS/);
-  assert.match(home,/CLAIM →<br>PROOF/);
-  assert.match(home,/仕事も、会話も、調査も/);
+test('home leads with a clear product promise and a real product surface before JavaScript enhancement',()=>{
+  assert.match(home,/REACHMADE \/ 6 WORKING AI PRODUCTS/);
+  assert.match(home,/AIを、<br>動く製品に。/);
+  assert.match(home,/6つの自主開発プロダクト/);
   assert.match(home,/src="\/assets\/products\/genie\.jpg"/);
   assert.match(home,/WORKING PREVIEW \/ Genie/);
-  assert.match(en,/6 INDEPENDENT AI PRODUCTS \/ REAL SCREENS/);
-  assert.match(en,/CLAIM →<br>PROOF/);
-  assert.match(en,/AI, built into real products/);
+  assert.match(en,/REACHMADE \/ 6 WORKING AI PRODUCTS/);
+  assert.match(en,/AI, built into<br>working products\./);
+  assert.match(en,/Six independently built products/);
+  assert.match(rhythm,/CLAIM  →  PROOF/);
 });
 
 test('the homepage has one six-product automatic signature moment and manual lower films',()=>{
