@@ -5,18 +5,18 @@ export { contactDestination, productIndex, caseStudies, serviceExamples, profile
 export function improveCopy(original) {
   const copy = originalCopy(original);
   Object.assign(copy.ja, {
-    heroLabel: '6 INDEPENDENT AI PRODUCTS / REAL SCREENS',
-    tagline: 'CLAIM →<br>PROOF',
-    heroText: '仕事も、会話も、調査も。実際に動く6つの製品。<br>実画面・できること・残る限界を、そのまま見る。',
-    heroPrimary: '6つの実製品を見る',
+    heroLabel: 'REACHMADE / 6 WORKING AI PRODUCTS',
+    tagline: 'AIを、<br>動く製品に。',
+    heroText: '会話、電話、調査、制作。6つの自主開発プロダクトを、実画面と検証記録で公開しています。<br>できることと、まだできないことを同じ場所で確認できます。',
+    heroPrimary: '実製品を見る',
     selectedTitle: '実物から、選ぶ。',
     selectedText: '代表的な製品は、実際の画面記録と一緒に紹介します。機能・利用条件・残る制約を分けて確認できます。',
   });
   Object.assign(copy.en, {
-    heroLabel: '6 INDEPENDENT AI PRODUCTS / REAL SCREENS',
-    tagline: 'CLAIM →<br>PROOF',
-    heroText: 'AI, built into real products. Six products that actually run.<br>Real screens, current capability, and remaining limits.',
-    heroPrimary: 'See all six products',
+    heroLabel: 'REACHMADE / 6 WORKING AI PRODUCTS',
+    tagline: 'AI, built into<br>working products.',
+    heroText: 'Six independently built products for conversations, calls, investigation and creation.<br>See the real screens, evidence, and current limits in one place.',
+    heroPrimary: 'See the real products',
     selectedTitle: 'Choose from the real work.',
     selectedText: 'Representative products are shown with recorded interfaces. Capabilities, access requirements and remaining limitations stay separate.',
   });

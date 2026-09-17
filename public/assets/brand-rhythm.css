@@ -1,7 +1,8 @@
 /* Final brand/rhythm layer: less homepage copy, more product-specific pacing. */
-.hero-copy h1::after,.hero-description::before{content:none!important;display:none!important}
-.hero-copy h1{margin-bottom:26px!important;max-width:7ch!important;font-size:clamp(52px,6.2vw,88px)!important;line-height:.9!important;letter-spacing:-.075em!important}
-.hero-description{max-width:31em!important;font-size:clamp(16px,1.35vw,19px)!important;line-height:1.68!important}
+.hero-copy h1::after{content:"CLAIM  →  PROOF"!important;display:block!important;margin-top:clamp(26px,3.6vw,48px);padding-top:12px;border-top:1px solid currentColor;color:var(--rm-proof-red,#a83b2f);font-size:11px;line-height:1.2;letter-spacing:.18em;font-weight:760;white-space:nowrap}
+.hero-description::before{content:none!important;display:none!important}
+.hero-copy h1{margin-bottom:22px!important;max-width:9ch!important;font-size:clamp(58px,6.8vw,100px)!important;line-height:.92!important;letter-spacing:-.072em!important}
+.hero-description{max-width:34em!important;font-size:clamp(16px,1.35vw,19px)!important;line-height:1.68!important}
 .hero-actions{margin-top:26px!important}.hero-actions .text-link,.hero-footnote{display:none!important}
 .hero .eyebrow{margin-bottom:20px!important;letter-spacing:.14em!important}
 
@@ -55,4 +56,4 @@
 .owned-product--launchloom .owned-start{background:transparent!important;border:0!important;border-top:1px solid var(--line)!important;border-bottom:1px solid var(--line)!important;border-radius:0!important;padding-inline:0!important}
 }
 
-@media(max-width:650px){.hero-copy h1{font-size:clamp(50px,15vw,64px)!important;line-height:.92!important;margin-bottom:20px!important}.hero-description{font-size:16px!important;line-height:1.65!important}.hero-actions{margin-top:22px!important}}
+@media(max-width:650px){.hero-copy h1{font-size:clamp(50px,15vw,68px)!important;line-height:.94!important;margin-bottom:18px!important}.hero-copy h1::after{margin-top:24px;font-size:9px;letter-spacing:.14em;white-space:normal}.hero-description{font-size:16px!important;line-height:1.65!important}.hero-actions{margin-top:22px!important}}

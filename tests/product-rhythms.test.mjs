@@ -5,11 +5,12 @@ import fs from 'node:fs/promises';
 const css = await fs.readFile(new URL('../public/assets/brand-rhythm.css', import.meta.url), 'utf8');
 const ids = ['genie','ai-meeting','oathra','aisecure','agent-team','launchloom'];
 
-test('homepage hero is reduced to one visual statement and one primary action', () => {
+test('homepage hero keeps one clear product promise, one signature and one primary action', () => {
   assert.match(css,/hero-copy h1::after/);
-  assert.match(css,/content:none!important/);
+  assert.match(css,/CLAIM  →  PROOF/);
+  assert.match(css,/hero-description::before\{content:none!important/);
   assert.match(css,/hero-actions \.text-link,\.hero-footnote\{display:none!important\}/);
-  assert.match(css,/max-width:7ch/);
+  assert.match(css,/max-width:9ch/);
 });
 
 test('all six products change rhythm beyond the hero', () => {
