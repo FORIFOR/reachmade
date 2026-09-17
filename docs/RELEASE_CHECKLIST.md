@@ -2,6 +2,23 @@
 
 公開前に所有者が確認する項目です。チェック済みを装うための一覧ではありません。
 
+## Product experience / OSS first proof
+
+各製品は、ホームページより先に「最初の実行」を完成させる。
+
+- [ ] 初見の利用者がREADMEまたは通常のCLIヘルプから**最初に試す経路**を迷わず見つけられる。
+- [ ] 可能な製品では、課金・本番資格情報・外部公開を使わずにFirst Proofを実行できる。できない場合は、その理由と発生する外部通信・費用を実行前に表示する。
+- [ ] First Proofは別物の飾りデモではなく、実製品のUI・Store・Pipeline・Rendererなど本番と共通する主要経路を使う。
+- [ ] 合成入力・fixture・recorded demoは明示し、実利用・顧客実績・本番成功として扱わない。
+- [ ] First Proofで「何が成功したか」を、artifact / event / saved state / verification reportなど確認可能な成果として残す。
+- [ ] `doctor`または同等の診断経路が、失敗した前提条件と**次に行う具体的な操作**を返す。
+- [ ] readinessとtask success、transcript evidenceとexternal system confirmationなど、異なる証拠を同一視しない。
+- [ ] First Proofからpaid provider、live publish、real phone call、production remediationへ暗黙fallbackしない。
+- [ ] 再実行時の重複、途中失敗、再起動、権限不足、依存不足の少なくとも主要ケースをテストする。
+- [ ] First Proof / Doctorの経路をCIで固定し、READMEだけ先に進んで実装が壊れる状態を防ぐ。
+
+## Reachmade site / release
+
 - [x] リポジトリ`FORIFOR/reachmade`の作成とソース配置を確認。
 - [ ] 支援内容と事業者表示を本人が確認。
 - [ ] コードの公開範囲・再利用ライセンスを決定。
