@@ -24,10 +24,11 @@ test('all six owned product pages have distinct art-direction selectors', async 
     'REQUEST\\A\\AWORK\\A\\AARTIFACT',
     'LIVE CONVERSATION',
     'CLAIM\\A   ↓\\AEVIDENCE',
-    'SIGNALS  →  ONE INCIDENT',
+    'INPUT  →  CHECK  →  BLOCK',
     'DRAFT   →   REVIEW   →   REVISE',
     '16:9\\A\\A9:16\\A\\ALP\\A\\APOST'
   ]) assert.ok(art.includes(signature), `missing product signature: ${signature}`);
+  assert.ok(art.includes('not_executed'), 'AISecure must show that a blocked send was not executed');
 });
 
 test('art direction frames the existing real recording rather than replacing evidence', async () => {
