@@ -1,0 +1,58 @@
+/* Final brand/rhythm layer: less homepage copy, more product-specific pacing. */
+.hero-copy h1::after,.hero-description::before{content:none!important;display:none!important}
+.hero-copy h1{margin-bottom:26px!important;max-width:7ch!important;font-size:clamp(52px,6.2vw,88px)!important;line-height:.9!important;letter-spacing:-.075em!important}
+.hero-description{max-width:31em!important;font-size:clamp(16px,1.35vw,19px)!important;line-height:1.68!important}
+.hero-actions{margin-top:26px!important}.hero-actions .text-link,.hero-footnote{display:none!important}
+.hero .eyebrow{margin-bottom:20px!important;letter-spacing:.14em!important}
+
+@media(min-width:1101px){
+/* Genie — editorial work ledger. */
+.owned-product--genie .owned-flow{max-width:980px;padding-block:110px 90px}
+.owned-product--genie .owned-flow ol{grid-template-columns:1fr!important;border-top:0!important;margin-top:44px!important}
+.owned-product--genie .owned-flow li{display:grid!important;grid-template-columns:72px 220px 1fr;gap:24px;padding:22px 0!important;border-top:1px solid var(--line)!important}
+.owned-product--genie .owned-flow li+li{border-left:0!important}
+.owned-product--genie .owned-outcome{max-width:820px;margin-left:auto;padding-block:120px!important}
+.owned-product--genie .owned-start{max-width:1040px;background:transparent!important;border:0!important;border-left:6px solid var(--accent)!important;border-radius:0!important}
+
+/* AI Meeting — conversation field, then a quiet centered conclusion. */
+.owned-product--ai-meeting .owned-flow{background:#121815;color:#f6f5f0;box-shadow:0 0 0 100vmax #121815;clip-path:inset(0 -100vmax);padding-block:92px}
+.owned-product--ai-meeting .owned-flow .owned-kicker,.owned-product--ai-meeting .owned-flow li p{color:#b9c1ba!important}
+.owned-product--ai-meeting .owned-flow ol{grid-template-columns:1fr!important;border-top:1px solid #3d4740!important}
+.owned-product--ai-meeting .owned-flow li{display:grid!important;grid-template-columns:80px 260px 1fr;gap:24px;padding:24px 0!important;border-bottom:1px solid #3d4740!important}
+.owned-product--ai-meeting .owned-flow li+li{border-left:0!important}
+.owned-product--ai-meeting .owned-outcome{display:block!important;max-width:900px;text-align:center;padding-block:120px!important}
+.owned-product--ai-meeting .owned-outcome h2,.owned-product--ai-meeting .owned-outcome>p:last-child{max-width:760px;margin-inline:auto}
+.owned-product--ai-meeting .owned-start{background:transparent!important;border-inline:0!important;border-radius:0!important;padding-inline:0!important}
+
+/* Oathra — evidence ledger, then explicit current/proposed separation. */
+.owned-product--oathra .owned-flow{max-width:900px;margin-right:auto;padding-block:104px 90px}
+.owned-product--oathra .owned-flow ol{grid-template-columns:1fr!important;border-top:3px solid var(--accent)!important}
+.owned-product--oathra .owned-flow li{display:grid!important;grid-template-columns:64px minmax(180px,.6fr) minmax(0,1.4fr);gap:22px;padding:24px 0!important;border-bottom:1px solid var(--line)!important}
+.owned-product--oathra .owned-flow li+li{border-left:0!important}
+.owned-product--oathra .owned-outcome{max-width:1060px;border-left:6px solid var(--accent);padding-left:48px!important}
+.owned-product--oathra .owned-boundaries__grid{grid-template-columns:.75fr 1.25fr!important;gap:72px!important}
+.owned-product--oathra .owned-boundaries article:nth-child(2){background:#171a17;color:#f6f5f0;padding:30px 34px!important}
+.owned-product--oathra .owned-boundaries article:nth-child(2) p{color:#b5bbb4!important}.owned-product--oathra .owned-boundaries article:nth-child(2) a{color:#f6f5f0!important}
+
+/* AI Secure — one dark investigation band, then the action surface. */
+.owned-product--aisecure .owned-flow,.owned-product--aisecure .owned-outcome{background:#101514;color:#f6f5f0;box-shadow:0 0 0 100vmax #101514;clip-path:inset(0 -100vmax)}
+.owned-product--aisecure .owned-flow{padding-block:94px 74px}.owned-product--aisecure .owned-outcome{padding-block:40px 110px!important;border-top-color:#39403c!important}
+.owned-product--aisecure .owned-flow .owned-kicker,.owned-product--aisecure .owned-flow li p,.owned-product--aisecure .owned-outcome .owned-kicker,.owned-product--aisecure .owned-outcome>p:last-child{color:#b7beb8!important}
+.owned-product--aisecure .owned-flow ol{border-top-color:#39403c!important}.owned-product--aisecure .owned-flow li+li{border-left-color:#39403c!important}
+.owned-product--aisecure .owned-start{margin-top:100px}
+
+/* Agent Team — staged handoff instead of a flat three-card row. */
+.owned-product--agent-team .owned-flow{padding-block:104px 138px}.owned-product--agent-team .owned-flow ol{border-top:0!important;align-items:start}
+.owned-product--agent-team .owned-flow li{border-top:3px solid #5d5a36!important;padding-top:22px!important}.owned-product--agent-team .owned-flow li+li{border-left:0!important}
+.owned-product--agent-team .owned-flow li:nth-child(2){margin-top:56px}.owned-product--agent-team .owned-flow li:nth-child(3){margin-top:112px}
+.owned-product--agent-team .owned-outcome{max-width:880px;margin-left:auto}.owned-product--agent-team .owned-start{max-width:980px;margin-inline:auto}
+
+/* Launchloom — output wall, then one cinematic result statement. */
+.owned-product--launchloom .owned-flow{padding-block:112px}.owned-product--launchloom .owned-flow ol{border-top:0!important;gap:34px!important}
+.owned-product--launchloom .owned-flow li{border-top:1px solid #20251f!important;padding-top:18px!important}.owned-product--launchloom .owned-flow li+li{border-left:0!important}
+.owned-product--launchloom .owned-outcome{display:block!important;background:#0d0f0e;color:#f6f5f0;box-shadow:0 0 0 100vmax #0d0f0e;clip-path:inset(0 -100vmax);padding-block:132px!important}
+.owned-product--launchloom .owned-outcome .owned-kicker,.owned-product--launchloom .owned-outcome>p:last-child{color:#b6bbb6!important}.owned-product--launchloom .owned-outcome h2{font-size:clamp(56px,6vw,92px)!important;max-width:10ch}
+.owned-product--launchloom .owned-start{background:transparent!important;border:0!important;border-top:1px solid var(--line)!important;border-bottom:1px solid var(--line)!important;border-radius:0!important;padding-inline:0!important}
+}
+
+@media(max-width:650px){.hero-copy h1{font-size:clamp(50px,15vw,64px)!important;line-height:.92!important;margin-bottom:20px!important}.hero-description{font-size:16px!important;line-height:1.65!important}.hero-actions{margin-top:22px!important}}

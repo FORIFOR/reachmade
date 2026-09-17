@@ -31,15 +31,18 @@ test('all design layers are imported before any CSS declarations',()=>{
     '@import url("./reachmade-art-direction.css");',
     '@import url("./visual-ownership-responsive.css");',
     '@import url("./hero-layouts.css");',
+    '@import url("./brand-rhythm.css");',
   ]);
 });
 
 test('home leads with a real product surface before any JavaScript enhancement',()=>{
   assert.match(home,/6 INDEPENDENT AI PRODUCTS \/ REAL SCREENS/);
+  assert.match(home,/CLAIM →<br>PROOF/);
   assert.match(home,/仕事も、会話も、調査も/);
   assert.match(home,/src="\/assets\/products\/genie\.jpg"/);
   assert.match(home,/WORKING PREVIEW \/ Genie/);
   assert.match(en,/6 INDEPENDENT AI PRODUCTS \/ REAL SCREENS/);
+  assert.match(en,/CLAIM →<br>PROOF/);
   assert.match(en,/AI, built into real products/);
 });
 
