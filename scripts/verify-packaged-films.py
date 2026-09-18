@@ -1,7 +1,7 @@
 """Check packaged-media integrity, delivery and unchanged catalogue playback.
 
-The homepage now uses manual selection; the legacy signature remains a valid
-packaged asset but is no longer asserted to be an autoplaying homepage hero.
+The homepage defaults to an illustrative UI story with an explicit recording
+mode; the legacy signature remains a validated packaged asset, not autoplay.
 """
 from pathlib import Path
 import hashlib
@@ -99,9 +99,20 @@ def main():
                         if sub=='':
                             assert page.locator('.studio-player').count()==1
                             assert page.locator('[role=tab]').count()==6
-                            assert page.locator('.studio-player-screen>img').is_visible()
+                            page.wait_for_selector('.rm-live-demo')
+                            assert page.locator('.rm-live-demo').get_attribute('data-phase')=='4', 'Reduced motion shows the completed story'
+                            assert page.locator('.rm-demo-disclosure').inner_text().strip(), 'Illustration must be disclosed'
+                            assert not page.locator('.studio-player-screen>img').is_visible(), 'Poster must not overlap the UI story'
                             assert page.locator('.studio-player video').get_attribute('src') is None
                             assert page.locator('.studio-player video').evaluate('(v)=>v.paused')
+                            page.locator('[data-mode="recording"]').click()
+                            assert not page.locator('.rm-live-demo').is_visible()
+                            assert page.locator('.studio-player-screen>img').is_visible(), 'Recording mode retains the actual product poster'
+                            assert page.locator('.studio-player video').get_attribute('src') is None, 'Mode switching must not download a recording'
+                            assert page.locator('.studio-player video').evaluate('(v)=>v.paused'), 'Mode switching must not autoplay'
+                            assert page.locator('[data-studio-link]').is_visible(), 'Recording source and product route remain accessible'
+                            page.locator('[data-mode="story"]').click()
+                            assert page.locator('.rm-live-demo').is_visible(), 'Visitors can return to the UI story'
                         elif sub=='products/':
                             assert page.locator('.rm-film-preview').count()==6
                             assert page.locator('.rm-film-preview[src]').count()==0
