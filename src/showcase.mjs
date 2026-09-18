@@ -49,8 +49,8 @@ function decorate(html){
  if(html.includes('data-showcase="20260918"'))return html;
  return html.replace(/<link rel="stylesheet" href="\/assets\/(?:site|site-experience|product-landings)\.css">/g,'')
  .replace(/<script src="\/assets\/(?:site|product-landings)\.js" defer><\/script>/,'<script type="module" src="/assets/showcase.mjs"></script>')
- .replace('</head>','<link rel="stylesheet" href="/assets/showcase.css"></head>')
- .replace('<body ','<body data-showcase="20260918" ');
+ .replace('</head>','<link rel="stylesheet" href="/assets/showcase.css"><link rel="stylesheet" href="/assets/animated-demos.css"></head>')
+ .replace('<body ','<body data-showcase="20260918" ').replace('</body>','<script type="module" src="/assets/animated-demos.mjs"></script></body>');
 }
 export function refineProductPage(html,product,lang){
  const ja=lang==='ja',id=product.id;
