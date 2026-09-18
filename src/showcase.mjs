@@ -1,13 +1,14 @@
 /** Product-led presentation. Build-time HTML, no network, no invented proof. */
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import { artDirectProductHero, writeArtDirectionStyles } from './product-art-direction.mjs';
 const e = s => String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 export const showcase = Object.freeze({
   genie:{ja:['考えを形に','メモから、使える下書きへ。','メモ・計画・HTML'],en:['Make an idea tangible','From a rough note to a useful draft.','Notes · plans · HTML'],theme:'workspace'},
-  'ai-meeting':{ja:['話して整理','会話の先に、次の行動。','会話・確認・タスク'],en:['Think out loud','A conversation with a next step.','Conversation · review · tasks'],theme:'conversation'},
+  'ai-meeting':{ja:['話して整理','話して決めたTODOが、残る。','会話・確認・タスク'],en:['Think out loud','A conversation with a next step.','Conversation · review · tasks'],theme:'conversation'},
   oathra:{ja:['電話を確かめる','電話の結果を、発言まで辿る。','通話・発言・結果'],en:['Check the call','A result you can trace to the conversation.','Call · evidence · result'],theme:'evidence'},
-  aisecure:{ja:['根拠を調べる','散らばったログを、一つの調査に。','観測・仮説・不明点'],en:['Follow the evidence','Scattered logs. One reviewable case.','Observations · hypotheses · unknowns'],theme:'investigation'},
-  'agent-team':{ja:['チームで作る','作る人、確かめる人、直す人。','作成・レビュー・修正'],en:['Share the work','Draft it. Review it. Revise it.','Draft · review · revision'],theme:'editorial'},
+  aisecure:{ja:['送る前に確かめる','AIへの送信前確認と、根拠を辿る調査。','送信前確認・調査'],en:['Check before sending','Preflight checks. Evidence-led investigation.','Preflight · investigation'],theme:'investigation'},
+  'agent-team':{ja:['言葉で依頼する','依頼から、開いて使える成果物へ。','Multibot · 作成・レビュー・修正'],en:['Describe the work','From a request to an artifact.','Multibot · draft · review · revise'],theme:'editorial'},
   launchloom:{ja:['作ったものを届ける','ひとつの録画から、伝える素材へ。','動画・LP・投稿案'],en:['Show what you built','One recording. Material for a launch.','Film · page · social drafts'],theme:'cinema'}
 });
 const route=(id,lang)=>`${lang==='en'?'/en':''}/products/${id}/`;
@@ -39,7 +40,7 @@ export function renderStudioHome(products,lang){
  if(!['ja','en'].includes(lang)||products.some(p=>!Object.hasOwn(showcase,p.id)))throw new TypeError('Unknown showcase locale or product');
  const ja=lang==='ja',base=root(lang),featured=products.filter(p=>p.featured).slice(0,2),other=products.filter(p=>!p.featured&&!p.hero);
  const oathra=products.find(p=>p.id==='oathra');
- return `<section class="hero container"><div class="hero-copy"><p class="eyebrow">REACHMADE / 6 WORKING AI PRODUCTS</p><h1>${ja?'AIを、<br>動く製品に。':'AI, built into<br>working products.'}</h1></div><div class="studio-intro"><p class="hero-description">${ja?'考える。話す。つくる。<br>その先の仕事まで、ひとつずつ。':'Think. Talk. Make.<br>Tools for the work that comes next.'}</p><p class="studio-intro-note">${ja?'6つの自主開発プロダクト。実際の画面から、あなたの仕事に合うものを。':'Six independently built products. Find the one that fits your work, starting with the actual screen.'}</p><div class="hero-actions"><a class="button" href="${base}products/">${ja?'プロダクトを選ぶ':'Explore products'}${arrow}</a><a class="text-link" href="${base}contact/">${ja?'開発を相談する':'Discuss a project'}${arrow}</a></div></div>${picker(products,lang)}</section>
+ return `<section class="hero container"><div class="hero-copy"><p class="eyebrow">REACHMADE / 6 WORKING AI PRODUCTS</p><h1>${ja?'AIを、<br>動く製品に。':'AI, built into<br>working products.'}</h1></div><div class="studio-intro"><p class="hero-description">${ja?'会話を、次のタスクに。<br>メモを、使える成果物に。<br>操作録画を、伝わる紹介素材に。':'Turn conversations into tasks.<br>Notes into useful artifacts.<br>Recordings into launch material.'}</p><p class="studio-intro-note">${ja?'6つの自主開発プロダクト。実際の画面から、あなたの仕事に合うものを。':'Six independently built products. Find the one that fits your work, starting with the actual screen.'}</p><div class="hero-actions"><a class="button" href="${base}products/">${ja?'プロダクトを選ぶ':'Explore products'}${arrow}</a><a class="text-link" href="${base}contact/">${ja?'開発を相談する':'Discuss a project'}${arrow}</a></div></div>${picker(products,lang)}</section>
  <section class="selected-work container" id="products"><div class="section-title"><div><p class="eyebrow">SELECTED PRODUCTS / 01—06</p><h2>${ja?'あなたの仕事に、<br>ちょうどいい一つを。':'Find a tool.<br>Make it your own.'}</h2></div><p>${ja?'会話、電話、調査、制作。<br>それぞれの仕事に、それぞれの道具。':'Conversation, calls, investigation, creation.<br>Different work deserves different tools.'}</p></div>${featured.map(p=>feature(p,lang)).join('')}<div class="compact-products"><div class="compact-products-heading"><h3>${ja?'調べる。協働する。届ける。':'Investigate. Collaborate. Launch.'}</h3><a class="text-link" href="${base}products/">${ja?'すべてを見る':'See all products'}${arrow}</a></div><div class="studio-product-grid">${other.map(p=>compact(p,lang)).join('')}</div></div></section>
  <section class="service-preview"><div class="container service-preview-grid"><div><p class="eyebrow">BUILT HERE. BUILT WITH YOU.</p><h2>${ja?'次は、あなたの<br>仕事のために。':'Next, build something<br>for your work.'}</h2><p>${ja?'自主開発で培った実装を、実際の業務へ。小さく試し、確かめながら、使える形を一緒につくります。':'Bring the engineering behind these products to a real workflow. Start small, evaluate it, and build something useful together.'}</p><a class="button button-light" href="${base}services/">${ja?'支援内容を見る':'How we work'}${arrow}</a></div><div class="service-preview-list">${(ja?['業務AI・エージェント実装','音声・電話AIの開発','新しいAIプロダクトの試作']:['Applied AI & agent workflows','Voice & phone AI','New product prototyping']).map((text,i)=>`<a href="${base}services/#service-0${i+1}"><span>0${i+1}</span><h3>${e(text)}</h3>${arrow}</a>`).join('')}</div></div></section>
  <section class="build-note container"><div><p class="eyebrow">INSIDE THE PRODUCT / OATHRA</p><h2>${ja?'「できました」の、<br>その先をつくる。':'Build beyond<br>“Done.”'}</h2><p>${ja?'電話の相手は、何と言ったのか。外部のシステムには、何が残ったのか。Oathraでは、会話の合意と実際の登録を分けて扱います。':'What did the other party actually say? What exists in the external system? Oathra keeps spoken agreement separate from a recorded booking.'}</p>${external(oathra.evidence,ja?'設計と開発記録を読む':'Read the engineering notes')}</div><div class="studio-principles"><article><span>01</span><h3>${ja?'実物で話す。':'Show the actual work.'}</h3><p>${ja?'実画面とコードを公開。説明と実装を切り離しません。':'Screens and source code, alongside the explanation.'}</p></article><article><span>02</span><h3>${ja?'結果を確かめる。':'Check the result.'}</h3><p>${ja?'AIの返答と、確認できた事実を分けます。':'An AI response is not the same as a verified result.'}</p></article><article><span>03</span><h3>${ja?'決定権は、使う人に。':'Keep people in control.'}</h3><p>${ja?'送信、費用、権限。判断が必要な境界を明確に。':'Clear boundaries for sending, cost and permissions.'}</p></article></div></section>
@@ -64,7 +65,7 @@ export function refineProductPage(html,product,lang){
  html=html.replace(/<section class="container owned-outcome">[\s\S]*?<\/section>/,'');
  const next=Object.keys(showcase).filter(key=>key!==id).slice(0,3);
  const links=`<section class="container studio-related"><p class="owned-kicker">${ja?'ほかの仕事にも、別の道具を。':'DIFFERENT WORK. DIFFERENT TOOLS.'}</p><nav aria-label="${ja?'関連する製品':'More products'}">${next.map(key=>`<a href="${route(key,lang)}"><span>${e(showcase[key][lang][0])}</span><strong>${e(key==='ai-meeting'?'AI Meeting':key==='agent-team'?'Agent Team':key==='aisecure'?'AI Secure':key==='genie'?'Genie':key==='oathra'?'Oathra':'Launchloom')}</strong>${arrow}</a>`).join('')}</nav></section>`;
- return html.replace('<footer class="container owned-footer">',links+'<footer class="container owned-footer">');
+ return artDirectProductHero(html.replace('<footer class="container owned-footer">',links+'<footer class="container owned-footer">'),product,lang);
 }
 export async function writeShowcase(dist,products){
  for(const lang of ['ja','en']){
@@ -78,4 +79,5 @@ export async function writeShowcase(dist,products){
    await fs.writeFile(file,refineProductPage(await fs.readFile(file,'utf8'),p,lang));
   }
  }
+ await writeArtDirectionStyles(dist);
 }
