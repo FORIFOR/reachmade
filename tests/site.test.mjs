@@ -96,6 +96,14 @@ test('Oathra does not conflate speech with system registration',()=>{
 test('AI Secure does not claim production enforcement',()=>{
  const p=products.find(p=>p.id==='aisecure');assert.match(p.ja.scope,/監視/);assert.match(p.ja.scope,/遮断/);
 });
+test('product messaging stays concrete and product-specific',()=>{
+ assert.match(products.find(p=>p.id==='genie').ja.headline,/成果物/);
+ assert.match(products.find(p=>p.id==='ai-meeting').ja.headline,/TODO/);
+ assert.match(products.find(p=>p.id==='oathra').ja.headline,/電話/);
+ const secure=products.find(p=>p.id==='aisecure');assert.match(secure.ja.description,/送る前/);assert.match(secure.ja.description,/特権ログイン/);
+ assert.match(products.find(p=>p.id==='agent-team').ja.headline,/いつもの言葉/);
+ assert.match(products.find(p=>p.id==='launchloom').ja.headline,/動画・LP・投稿案/);
+});
 test('product previews use real local project assets',async()=>{
  const html=htmlByPath.get('/products/');
  assert.equal((html.match(/class="product-preview/g)||[]).length,products.length);
