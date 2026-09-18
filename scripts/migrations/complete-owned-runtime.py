@@ -8,9 +8,7 @@ if "import { serveOwnedRecording }" not in s:
  s="import { serveOwnedRecording } from './src/owned-recording-response.mjs';\n"+s
  s=s.replace('    const recording = await serveStaticRecording(request, env.ASSETS);','    const ownedRecording = await serveOwnedRecording(request, env.ASSETS);\n    if (ownedRecording) return ownedRecording;\n    const recording = await serveStaticRecording(request, env.ASSETS);')
 p.write_text(s)
-# The owner's generated, standalone HTML uses inline code. Externalize fixed
-# source blocks rather than granting unsafe-inline to the main site.
-artifact=ROOT/'public/media/originals/genie/orbit.html';text=artifact.read_text();generated=[]
+artifact=ROOT/'public/media/originals/genie/orbit.html';text=artifact.read_text();generated=[];excluded=[]
 if re.search(r'<script\b[^>]*\bsrc\s*=\s*[\"\']https?://',text,re.I):
  raise RuntimeError('Orbit contains external script dependencies requiring explicit review')
 if re.search(r'\son[a-z]+\s*=',text,re.I):
@@ -18,13 +16,20 @@ if re.search(r'\son[a-z]+\s*=',text,re.I):
 for tag,ext,kind in [('style','css','style'),('script','js','script')]:
  pattern=re.compile(r'<'+tag+r'(?P<attrs>[^>]*)>(?P<body>[\s\S]*?)</'+tag+r'>',re.I)
  def externalize(m):
-  attrs=m.group('attrs')
-  if tag=='script' and ('src=' in attrs or ('type=' in attrs and 'javascript' not in attrs)):return m.group(0)
-  body=m.group('body');name=f'orbit-{kind}-{len(generated)}.{ext}';dest=artifact.parent/name
+  attrs=m.group('attrs');body=m.group('body')
+  if tag=='script':
+   type_match=re.search(r'\btype\s*=\s*[\"\']([^\"\']+)',attrs,re.I)
+   script_type=type_match.group(1).lower() if type_match else ''
+   # Speculative navigation and the old host's challenge loader are hosting
+   # infrastructure, not part of the generated planet demonstration.
+   if script_type=='speculationrules' or ('__CF$cv$params' in body and '/cdn-cgi/challenge-platform/' in body):
+    excluded.append({'type':script_type or 'legacy-host-challenge','sha256':hashlib.sha256(body.encode()).hexdigest()});return ''
+   if re.search(r'\bsrc\s*=',attrs) or script_type in {'application/json','application/ld+json'}:return m.group(0)
+   if script_type not in {'','module','text/javascript','application/javascript'}:raise RuntimeError('Review unknown script type: '+script_type)
+  name=f'orbit-{kind}-{len(generated)}.{ext}';dest=artifact.parent/name
   dest.write_text(body);generated.append(dest)
-  return f'<link rel="stylesheet" href="./{name}">' if tag=='style' else f'<script src="./{name}"></script>'
+  return f'<link rel="stylesheet" href="/media/originals/genie/{name}">' if tag=='style' else f'<script{attrs} src="/media/originals/genie/{name}"></script>'
  text=pattern.sub(externalize,text)
-# Inline style attributes are converted into fixed classes; preserve other attrs.
 from html.parser import HTMLParser
 from html import escape
 class StyledTags(HTMLParser):
@@ -45,7 +50,8 @@ class StyledTags(HTMLParser):
 parser=StyledTags();parser.feed(text);text=''.join(parser.parts)
 if parser.rules:
  dest=artifact.parent/'orbit-inline-styles.css';dest.write_text('\n'.join(parser.rules)+'\n');generated.append(dest)
- text=text.replace('</head>','<link rel="stylesheet" href="./orbit-inline-styles.css"></head>')
+ text=text.replace('</head>','<link rel="stylesheet" href="/media/originals/genie/orbit-inline-styles.css"></head>')
+if 'rel="icon"' not in text:text=text.replace('</head>','<link rel="icon" href="/assets/mark.svg"></head>')
 artifact.write_text(text)
 inventory=ROOT/'public/media/originals/manifest.json';manifest=json.loads(inventory.read_text())
 for f in [artifact,*generated]:
@@ -54,7 +60,7 @@ for f in [artifact,*generated]:
  if previous:previous.update(record)
  else:manifest['files'].append(record)
 inventory.write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n')
+(ROOT/'docs/owned-artifact-migration.json').write_text(json.dumps({'externalized':[str(f.relative_to(ROOT/'public')) for f in generated],'excluded_host_infrastructure':excluded,'site_csp_unchanged':True},indent=2)+'\n')
 print('ORBIT_STATIC_DEPENDENCIES',json.dumps([str(f.relative_to(ROOT/'public')) for f in generated]))
-# Show enough evidence to choose an actual interaction assertion if the artifact
-# layout changes. Do not call a service or submit a form here.
+print('ORBIT_EXCLUDED_HOST_INFRASTRUCTURE',json.dumps(excluded))
 print('ORBIT_CONTROLS',re.findall(r'<(?:button|canvas)\b[^>]*>',text))
