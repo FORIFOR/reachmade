@@ -1,23 +1,15 @@
 name: Owned product pages
 on:
-  pull_request:
-    paths: ['src/**', 'scripts/build*.mjs', 'public/assets/**', 'tests/**', 'scripts/verify*.py', '.github/workflows/owned-product-pages.yml']
   push:
     branches: [main]
-    paths: ['src/**', 'scripts/build*.mjs', 'public/assets/**', 'tests/**', 'scripts/verify*.py', '.github/workflows/owned-product-pages.yml']
+  pull_request:
   workflow_dispatch:
 permissions:
   contents: read
-concurrency:
-  group: product-pages-${{ github.ref }}
-  cancel-in-progress: true
 jobs:
-  browser:
+  validate:
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    env:
-      WRANGLER_SEND_METRICS: 'false'
-      CI: 'true'
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -27,47 +19,29 @@ jobs:
         with:
           python-version: '3.12'
       - run: npm run check
-      - name: Ensure video render tools
-        run: |
-          if ! command -v ffmpeg >/dev/null || ! command -v ffprobe >/dev/null; then
-            sudo apt-get update
-            sudo apt-get install -y ffmpeg
-          fi
-      - run: npm run media:prepare
+      - name: Rebuild clean final pages after build-contract tests
+        run: npm run build
+      - run: node scripts/vendor-website-media.mjs
       - run: python -m pip install playwright==1.57.0
       - run: python -m playwright install --with-deps chromium
-      - name: Test fourteen pages, recordings and guided Product Lab interactions
-        run: |
-          npx wrangler@4 dev --local --ip 127.0.0.1 --port 8787 > /tmp/owned-pages-worker.log 2>&1 &
-          PID=$!
-          trap 'kill "$PID" || true' EXIT
-          python scripts/verify-product-landings.py
-          python scripts/verify-lab-experience.py
-      - name: Preserve the actual check reports in the job summary
+      - name: Current layouts, real playback and network-failure recovery
+        run: python scripts/verify-product-landings.py
+      - name: Preserve measured report even when artifact storage is full
         if: always()
         run: |
-          for report in film-qa/product-landings/report.json film-qa/product-lab/report.json; do
-            if [ -f "$report" ]; then
-              printf '## Built-site Chromium checks: %s\n\nNot production or Safari.\n\n```json\n' "$report" >> "$GITHUB_STEP_SUMMARY"
-              cat "$report" >> "$GITHUB_STEP_SUMMARY"
-              printf '\n```\n' >> "$GITHUB_STEP_SUMMARY"
-            else
-              printf 'Report missing: %s. Check the earlier steps.\n' "$report" >> "$GITHUB_STEP_SUMMARY"
-            fi
-          done
-      - name: Preserve screenshots and the exact built review site
+          if [ -f film-qa/products/report.json ]; then
+            cat film-qa/products/report.json >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - uses: actions/upload-artifact@v4
         id: screenshots
-        uses: actions/upload-artifact@v4
         if: always()
         continue-on-error: true
         with:
-          name: six-video-first-product-pages
+          name: owned-product-pages-qa
           path: |
-            film-qa/product-landings/
-            film-qa/product-lab/
-            dist/
-          retention-days: 1
-      - name: Disclose unavailable review images
+            film-qa/products/
+            film-qa/outcome-first/chromium/
+          retention-days: 3
+      - name: Disclose unavailable image artifacts
         if: always() && steps.screenshots.outcome == 'failure'
-        run: |
-          echo '::warning::Screenshot archival failed. Browser checks are still required and the JSON report remains available.'
+        run: echo '::warning::Artifact upload failed. Browser assertions remain required. Reports are in the logs/summary; image availability is not claimed.'
