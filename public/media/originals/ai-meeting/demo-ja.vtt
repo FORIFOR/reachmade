@@ -1,0 +1,44 @@
+WEBVTT
+
+NOTE
+Source: 778d922f-92e9-4ed3-a8c9-7f20627499f9.json.
+Timed from real runtime events; captions may precede audio playback.
+First AI cue quotes the on-screen caption; speech was interrupted.
+Input is synthetic. Proposal confirmation is scripted and disclosed.
+No shortened waits, invented responses, or manual task-state edits.
+
+1
+00:00:00.000 --> 00:00:10.587 line:0 position:50% align:center
+録画用レイアウト／入力は合成音声／応答は実API
+
+2
+00:00:00.501 --> 00:00:10.587
+合成音声: 今日のタスクを二つ記録してください。タスク名は、資料確認とメール返信です。どちらも期限は今日です。二つを記録して、短く確認してください。
+
+3
+00:00:13.003 --> 00:00:14.333
+AIの画面字幕（発話途中で割り込み）: OK、資料確認とメール返信、どっちも今日が期限で登録したよ。他に何かある?
+
+4
+00:00:14.535 --> 00:00:22.363
+合成音声: 変更です。資料確認は完了しました。メール返信は明日に延期してください。今の状態を短く教えてください。
+
+5
+00:00:25.240 --> 00:00:27.042 line:0 position:50% align:center
+画面: 変更案を確認中（未反映）
+
+6
+00:00:25.890 --> 00:00:31.491
+AI: 変更案を用意したよ。内容が合っていたら「この変更を反映」を押してね。
+
+7
+00:00:27.042 --> 00:00:31.491 line:0 position:50% align:center
+録画シナリオ: 台本と一致する提案を確認して反映
+
+8
+00:00:31.491 --> 00:00:35.673
+合成音声: 今の記録を読んで、二つのタスクの状態を短く教えてください。
+
+9
+00:00:37.682 --> 00:00:45.090
+AI: 資料確認は完了、メール返信は明日に延期だよ。

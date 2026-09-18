@@ -19,7 +19,7 @@ Reachmade Lab の親サイトはすでに作成・公開されています。
 
 | 製品 | Reachmade入口（設計） | 現在の本体URL | 入口の実測（04:11 JST） | GitHub |
 |---|---|---|---|---|
-| Genie | `https://genie.reachmade.com/` | `https://genie-forifor.forifor.chatgpt.site/` | 1.1.1.1で解決。Cloudflare Worker 302 → 本体 | [FORIFOR/genie](https://github.com/FORIFOR/genie)（200） |
+| Genie | `https://genie.reachmade.com/` | `https://reachmade.com/products/genie/` | 1.1.1.1で解決。Cloudflare Worker 302 → 本体 | [FORIFOR/genie](https://github.com/FORIFOR/genie)（200） |
 | AI Meeting | `https://ai-meeting.reachmade.com/` | `https://ai-meeting.web.app/` | 1.1.1.1で解決。Cloudflare Worker 302 → 本体 | [FORIFOR/AI-meeting](https://github.com/FORIFOR/AI-meeting)（200） |
 | Oathra | `https://oathra.reachmade.com/` | `https://forifor.github.io/oathra/` | 302 → 本体（本体200） | [FORIFOR/oathra](https://github.com/FORIFOR/oathra)（200） |
 | AI Secure | `https://aisecure.reachmade.com/` | `https://forifor.github.io/AISecure/` | 1.1.1.1で解決。Cloudflare Worker 302 → 本体 | [FORIFOR/AISecure](https://github.com/FORIFOR/AISecure)（200） |

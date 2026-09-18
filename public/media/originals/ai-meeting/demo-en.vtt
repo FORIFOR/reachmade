@@ -1,0 +1,44 @@
+WEBVTT
+
+NOTE
+Source: 778d922f-92e9-4ed3-a8c9-7f20627499f9.json.
+Timed from real runtime events; captions may precede audio playback.
+First AI cue quotes the on-screen caption; speech was interrupted.
+Input is synthetic. Proposal confirmation is scripted and disclosed.
+No shortened waits, invented responses, or manual task-state edits.
+
+1
+00:00:00.000 --> 00:00:10.587 line:0 position:50% align:center
+Recording layout / Synthetic input / Live API responses
+
+2
+00:00:00.501 --> 00:00:10.587
+Synthetic input: Please record two tasks: document review and email replies. Both are due today. Record them and briefly confirm.
+
+3
+00:00:13.003 --> 00:00:14.333
+AI on-screen caption (speech interrupted): OK, document review and email replies are both recorded, due today. Anything else?
+
+4
+00:00:14.535 --> 00:00:22.363
+Synthetic input: A change: document review is complete. Postpone email replies until tomorrow. Briefly tell me the current status.
+
+5
+00:00:25.240 --> 00:00:27.042 line:0 position:50% align:center
+On screen: reviewing the proposed changes; not yet applied.
+
+6
+00:00:25.890 --> 00:00:31.491
+AI: I have prepared the proposed changes. If they look right, press “Apply this change”.
+
+7
+00:00:27.042 --> 00:00:31.491 line:0 position:50% align:center
+Recording script: confirmed and applied the proposal after matching the supplied input.
+
+8
+00:00:31.491 --> 00:00:35.673
+Synthetic input: Read the current record and briefly tell me the status of both tasks.
+
+9
+00:00:37.682 --> 00:00:45.090
+AI: Document review is complete, and email replies are postponed until tomorrow.

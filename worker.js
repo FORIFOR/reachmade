@@ -1,9 +1,13 @@
+import { serveOwnedRecording } from './src/owned-recording-response.mjs';
+import { ownedAliasTarget } from './src/owned-aliases.mjs';
 import { products } from './src/products.mjs';
 import { serveStaticRecording } from './src/static-recordings.mjs';
 import { handleInquiry } from './src/inquiries.mjs';
 
-const productSites = Object.fromEntries(products.filter(product => product.labSite && product.site).map(product => [new URL(product.labSite).hostname, product.site]));
+const productSites = Object.fromEntries(products.filter(product => product.labSite && product.site).map(product => [new URL(product.labSite).hostname, (product.appSite || product.site)]));
 function productRedirect(url) {
+  const owned = ownedAliasTarget(url);
+  if (owned) return owned;
   const origin = productSites[url.hostname];
   if (!origin) return null;
   const target = new URL(origin);
@@ -22,6 +26,8 @@ export default {
     if (productTarget) return Response.redirect(productTarget.toString(), 302);
     const inquiry = await handleInquiry(request);
     if (inquiry) return inquiry;
+    const ownedRecording = await serveOwnedRecording(request, env.ASSETS);
+    if (ownedRecording) return ownedRecording;
     const recording = await serveStaticRecording(request, env.ASSETS);
     if (recording) return recording;
     const asset = await env.ASSETS.fetch(request);

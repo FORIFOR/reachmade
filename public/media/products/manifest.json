@@ -1,0 +1,212 @@
+{
+  "schema": 3,
+  "mode": "premium-site-edits",
+  "editVersion": 1,
+  "policy": {
+    "width": 1280,
+    "height": 720,
+    "fps": 30,
+    "crf": 18,
+    "preset": "slow",
+    "paper": "#171A17",
+    "startHold": 0.35,
+    "endHold": 0.55,
+    "audio": false,
+    "speed": 1
+  },
+  "recordings": [
+    {
+      "id": "genie",
+      "source": "https://reachmade.com/media/originals/genie/assets/genie-orbit-web.mp4",
+      "sourceBytes": 2549408,
+      "sourceSha256": "4d4fb8d4fde5d1f7ead1ae738a29f64293dc8588fa305ebafac73c79c487c5c3",
+      "path": "/media/products/genie.mp4",
+      "poster": "/media/products/genie.jpg",
+      "bytes": 501507,
+      "sha256": "773d06e6980a69c7e4ba6c678adb7102288b4fcf3cb60f52ec88335e7ec88bef",
+      "edit": {
+        "version": 1,
+        "clips": [
+          [
+            0,
+            5
+          ],
+          [
+            7,
+            14
+          ]
+        ],
+        "speed": 1,
+        "audio": false,
+        "label": {
+          "ja": "依頼から成果物へ",
+          "en": "Request to artifact"
+        }
+      }
+    },
+    {
+      "id": "ai-meeting",
+      "source": "https://reachmade.com/media/originals/ai-meeting/demo.mp4",
+      "sourceBytes": 6092417,
+      "sourceSha256": "d680635192d7d100a0b5e13c8676eb89e7bf9936a91e2c1cf3b4fc9df2d307cc",
+      "path": "/media/products/ai-meeting.mp4",
+      "poster": "/media/products/ai-meeting.jpg",
+      "bytes": 1631878,
+      "sha256": "2f0ab9f245044e35b5b41ed9f0f0845da8f950dcc6cbf451abd79b1c8b211938",
+      "edit": {
+        "version": 1,
+        "clips": [
+          [
+            4,
+            9
+          ],
+          [
+            11,
+            18
+          ]
+        ],
+        "speed": 1,
+        "audio": false,
+        "label": {
+          "ja": "会話からタスクへ",
+          "en": "Conversation to task"
+        }
+      }
+    },
+    {
+      "id": "oathra",
+      "source": "https://forifor.github.io/oathra/media/oathra-battle-ja.mp4",
+      "sourceBytes": 6123820,
+      "sourceSha256": "84951d3c5541288b721afd6e328933162282b67ac97fe58fc8dc5a6f93f89dc4",
+      "path": "/media/products/oathra.mp4",
+      "poster": "/media/products/oathra.jpg",
+      "bytes": 393263,
+      "sha256": "c8c86fdeee62468d8cfe19eb72042fe6cbf6221b150a74551edda8408f8163d7",
+      "edit": {
+        "version": 1,
+        "clips": [
+          [
+            6,
+            11
+          ],
+          [
+            13,
+            20
+          ]
+        ],
+        "speed": 1,
+        "audio": false,
+        "label": {
+          "ja": "会話から証拠へ",
+          "en": "Conversation to evidence"
+        }
+      }
+    },
+    {
+      "id": "aisecure",
+      "source": "https://forifor.github.io/AISecure/media/intro.mp4",
+      "sourceBytes": 6576358,
+      "sourceSha256": "e97f09df5d2719256b7b37b5f03d316612c1b5c92fe1c7959e38f02d59d2f449",
+      "path": "/media/products/aisecure.mp4",
+      "poster": "/media/products/aisecure.jpg",
+      "bytes": 514185,
+      "sha256": "3fae4b5dc781259cad106aac166a0020615a46599b8aa26e1e7af40b363808a6",
+      "edit": {
+        "version": 1,
+        "clips": [
+          [
+            0,
+            5
+          ],
+          [
+            7,
+            14
+          ]
+        ],
+        "speed": 1,
+        "audio": false,
+        "label": {
+          "ja": "兆候から調査へ",
+          "en": "Signal to investigation"
+        }
+      }
+    },
+    {
+      "id": "agent-team",
+      "source": "https://forifor.github.io/Multibot/media/real-walkthrough-ja-silent.mp4",
+      "sourceBytes": 1957597,
+      "sourceSha256": "3898b0bd8713ae49e26bbf194a346232449c60a1e8d8a57bd8c005fb3aedc0f7",
+      "path": "/media/products/agent-team.mp4",
+      "poster": "/media/products/agent-team.jpg",
+      "bytes": 1043339,
+      "sha256": "cfd34bb20e9ef5dab482ca6d9df4c8b7f220131227a6d0398b5be5bf39e1d557",
+      "edit": {
+        "version": 1,
+        "clips": [
+          [
+            5,
+            10
+          ],
+          [
+            12,
+            19
+          ]
+        ],
+        "speed": 1,
+        "audio": false,
+        "label": {
+          "ja": "依頼から成果物へ",
+          "en": "Brief to artifact"
+        }
+      }
+    },
+    {
+      "id": "launchloom",
+      "source": "https://forifor.github.io/Launchloom/film.mp4",
+      "sourceBytes": 728094,
+      "sourceSha256": "734e8761afbdb2daf776162edd31191d15b7498559f0cfb786288c830d603dab",
+      "path": "/media/products/launchloom.mp4",
+      "poster": "/media/products/launchloom.jpg",
+      "bytes": 510510,
+      "sha256": "fae959c460a251dc4065f60980f2c6c6be6f44d116ad12b65111f9d818aa3a63",
+      "edit": {
+        "version": 1,
+        "clips": [
+          [
+            3,
+            8
+          ],
+          [
+            10,
+            17
+          ]
+        ],
+        "speed": 1,
+        "audio": false,
+        "label": {
+          "ja": "録画から公開素材へ",
+          "en": "Recording to launch assets"
+        }
+      }
+    }
+  ],
+  "signature": {
+    "order": [
+      "genie",
+      "ai-meeting",
+      "oathra",
+      "aisecure",
+      "agent-team",
+      "launchloom"
+    ],
+    "secondsPerProduct": 2,
+    "duration": 12,
+    "speed": 1,
+    "audio": false,
+    "transition": "hard-cut",
+    "path": "/assets/reachmade-signature.mp4",
+    "poster": "/assets/reachmade-signature.jpg",
+    "bytes": 1005734,
+    "sha256": "8f8593240100db2a38429e9a391d63ae1fd2270eb932a417e3a81457fe8be073"
+  }
+}

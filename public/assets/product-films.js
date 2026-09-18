@@ -23,10 +23,10 @@
   };
   const films = [
     {id:'genie',name:'Genie',repo:'genie',start:0,end:90,
-      demo:'https://genie-forifor.forifor.chatgpt.site/#demos',
+      demo:'https://reachmade.com/products/genie/demos/#prototype',
       note:ja?'実アプリ録画のサイト用編集版。2区間を時系列のままつなぎ、再生速度は変えていません。':'Website edit of the real app capture. Two chronological sections, with playback speed unchanged.'},
     {id:'ai-meeting',name:'AI Meeting',repo:'AI-meeting',start:0,end:90,
-      demo:'https://ai-meeting.forifor.chatgpt.site/#full-film',
+      demo:'https://reachmade.com/products/ai-meeting/guide/#full-film',
       note:ja?'合成した日本語入力と実際のAI応答による録画の編集版。再生速度は変えていません。':'Edited recording with synthetic Japanese input and real AI responses; playback speed is unchanged.'},
     {id:'oathra',name:'Oathra',repo:'oathra',start:0,end:90,
       demo:'https://forifor.github.io/oathra/',

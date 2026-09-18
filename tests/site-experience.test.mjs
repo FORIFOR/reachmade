@@ -20,7 +20,7 @@ for(const language of ['ja','en']) {
   assert.match(html,/purpose-index/);
   assert.doesNotMatch(html,/href="https:\/\/ai-meeting\.reachmade\.com\/"/);
  });
- test(`${language}: inquiry is on-page, consented and has a localized fallback`,async()=>{
+ test(`${language}: inquiry is on-page, consented and has a localized owned destination`,async()=>{
   const html=await read(prefix+'contact/index.html');
   assert.ok(html.includes(escape(contactDestination(config,language))));
   assert.match(html,/id="reachmade-inquiry"/);
