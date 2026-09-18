@@ -68,5 +68,85 @@
     "route": "/en/privacy/",
     "lang": "en",
     "page": "privacy"
+  },
+  {
+    "route": "/products/genie/",
+    "lang": "ja",
+    "page": "product-genie"
+  },
+  {
+    "route": "/en/products/genie/",
+    "lang": "en",
+    "page": "product-genie"
+  },
+  {
+    "route": "/products/ai-meeting/",
+    "lang": "ja",
+    "page": "product-ai-meeting"
+  },
+  {
+    "route": "/en/products/ai-meeting/",
+    "lang": "en",
+    "page": "product-ai-meeting"
+  },
+  {
+    "route": "/products/oathra/",
+    "lang": "ja",
+    "page": "product-oathra"
+  },
+  {
+    "route": "/en/products/oathra/",
+    "lang": "en",
+    "page": "product-oathra"
+  },
+  {
+    "route": "/products/aisecure/",
+    "lang": "ja",
+    "page": "product-aisecure"
+  },
+  {
+    "route": "/en/products/aisecure/",
+    "lang": "en",
+    "page": "product-aisecure"
+  },
+  {
+    "route": "/products/agent-team/",
+    "lang": "ja",
+    "page": "product-agent-team"
+  },
+  {
+    "route": "/en/products/agent-team/",
+    "lang": "en",
+    "page": "product-agent-team"
+  },
+  {
+    "route": "/products/launchloom/",
+    "lang": "ja",
+    "page": "product-launchloom"
+  },
+  {
+    "route": "/en/products/launchloom/",
+    "lang": "en",
+    "page": "product-launchloom"
+  },
+  {
+    "route": "/products/genie/demos/",
+    "lang": "ja",
+    "page": "genie-demos"
+  },
+  {
+    "route": "/products/ai-meeting/guide/",
+    "lang": "ja",
+    "page": "ai-meeting-guide"
+  },
+  {
+    "route": "/en/products/genie/demos/",
+    "lang": "en",
+    "page": "genie-demos"
+  },
+  {
+    "route": "/en/products/ai-meeting/guide/",
+    "lang": "en",
+    "page": "ai-meeting-guide"
   }
 ]

@@ -1,16 +1,23 @@
 /** Final, narrowly scoped page composition. Real proof stays intact. */
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import {renderOrbit,ORBIT_CSS,escapeHTML as esc} from '../public/assets/orbit-study.mjs';
+import {escapeHTML as esc} from '../public/assets/orbit-study.mjs';
 export const OUTCOME_VERSION='20260919-outcome-1';
 const MARK='/* REACHMADE_OUTCOME_FIRST */';
 const IDS=['genie','ai-meeting','oathra','aisecure','agent-team','launchloom'];
 const arrow='<span aria-hidden="true">↗</span>';
+export function renderRecordedResult(lang, video=true){
+ if(!['ja','en'].includes(lang))throw new TypeError('Unsupported locale');
+ const ja=lang==='ja',t=(a,b)=>ja?a:b,base=ja?'':'/en';
+ const artifact='/media/originals/genie/orbit.html',prefix='/media/originals/genie/assets/';
+ const visual=video?`<video data-outcome-real-film controls playsinline preload="none" poster="${prefix}genie-orbit-poster.jpg" width="1600" height="900" aria-label="${t('Genieで作例を作る実演録画','Recorded workflow creating an example in Genie')}"><source src="${prefix}genie-orbit-web.mp4" type="video/mp4"><track kind="captions" src="${prefix}orbit-${lang}.vtt" srclang="${lang}" label="${t('日本語','English')}" default><a href="${prefix}genie-orbit-web.mp4">${t('録画ファイルを開く','Open recording')}</a></video>`:`<a class="outcome-original-link" href="${artifact}" aria-label="${t('実演で作ったOrbitを開く','Open the recorded Orbit artifact')}"><img src="${prefix}genie-orbit-poster.jpg" width="1600" height="900" alt="${t('Genieの実演で作った惑星のHTML作例','The interactive planet artifact from the Genie demonstration')}" loading="lazy" decoding="async"></a>`;
+ return `<figure class="outcome-real-result" data-outcome-recorded-result><div class="outcome-real-meta"><span>GENIE / FROM REQUEST TO ARTIFACT</span><span>${t('実演と、保存した結果','A recording. A saved result.')}</span></div><div class="outcome-real-visual">${visual}</div><figcaption><div><p class="eyebrow">FROM A SKETCH TO A LITTLE UNIVERSE</p><h2>${t('この落書き、動きます。','That sketch? It moves.')}</h2><p>${t('作成の流れを見て、できたHTMLをそのまま操作。','Watch how it was made. Open the HTML and explore it.')}</p></div><div class="outcome-real-actions"><a class="outcome-open-artifact" href="${artifact}">${t('できたものを動かす','Play with the result')} ${arrow}</a><a href="${base}/products/genie/demos/#prototype">${t('元の実演・成果物を見る','Explore the recording and artifacts')} →</a></div><p class="outcome-real-scope">${t('実アプリの公開実演と、その保存済み作例です。架空の入力を使用し、待ち時間・操作を編集しています。ここで新しいAI生成は行いません。','An original published app demonstration and its saved example. Fictional inputs; actions and waiting are edited. This page does not run a new AI generation.')}</p></figcaption></figure>`;
+}
 export function renderOutcomeHero(lang){
  if(!['ja','en'].includes(lang))throw new TypeError('Unsupported locale');
  const ja=lang==='ja',base=ja?'':'/en',t=(a,b)=>ja?a:b;
  return `<section class="hero container lab-hero outcome-hero"><div class="outcome-opening"><div class="hero-copy"><p class="eyebrow">REACHMADE / INDEPENDENT AI STUDIO</p><h1>${t('思いついたら、<br>使えるかたちに。','From an idea.<br>To something real.')}</h1></div><div class="outcome-intro"><p>${t('メモを、計画に。会話を、タスクに。<br>録画を、伝わる紹介素材に。','Notes into plans. Conversations into tasks.<br>Recordings into launch material.')}</p><div class="hero-actions"><a class="button" href="#explore">${t('プロダクトを選ぶ','Explore six products')}${arrow}</a><a class="outcome-text-link" href="${base}/products/genie/">${t('まずはGenieから','Start with Genie')} →</a></div></div></div>
- <div class="outcome-live" id="live-example">${renderOrbit(lang,'home-orbit')}</div><div class="outcome-bridge"><span>${t('「使えるかたち」を、まずは手元で。','Something real, right in your browser.')}</span><p>${t('上の作例は自由に操作・保存できます。<br>実際のAI製品の録画と導入先は、この下へ。','Play with the example above and keep a copy.<br>Real AI product recordings and setup follow below.')}</p><a href="#explore">${t('プロダクトを見る','Meet the products')} ↓</a></div></section>`;
+ <div class="outcome-live" id="live-example">${renderRecordedResult(lang)}</div><div class="outcome-bridge"><span>${t('「使えるかたち」を、まずは手元で。','Something real, right in your browser.')}</span><p>${t('実演、保存した作例、導入手順まで。<br>6つの製品を、実物から選べます。','Recording, saved artifact, and setup.<br>Choose between six products, starting with the real work.')}</p><a href="#explore">${t('プロダクトを見る','Meet the products')} ↓</a></div></section>`;
 }
 const subtitles={
  genie:['自分のモデルで、メモを成果物に。','Your model. A note becomes an artifact.'],
@@ -21,7 +28,7 @@ const subtitles={
  launchloom:['つくったものを、伝わる素材に。','You made it. Now make it seen.']
 };
 export const DIRECT_STARTS=Object.freeze({
- genie:{url:'https://github.com/FORIFOR/genie/blob/main/docs/TESTING.ja.md',enUrl:'https://github.com/FORIFOR/genie/blob/main/docs/TESTING.md',ja:['セットアップを始める','Mac・ローカルサービス・モデル設定が必要です。'],en:['Open the setup guide','Requires a Mac, local services and a configured model.']},
+ genie:{url:'/media/originals/genie/orbit.html',enUrl:'/media/originals/genie/orbit.html',ja:['実演で作ったものを動かす','保存済みのHTMLを開きます。新しいAI実行ではありません。'],en:['Open the recorded artifact','Opens the saved Japanese HTML example, not a new AI run.']},
  'ai-meeting':{url:'https://ai-meeting.web.app/#tasks',ja:['登録なしでタスクを試す','文字入力のタスク画面。音声体験は別条件です。'],en:['Try a task without signing up','Japanese text task UI. Voice has separate access conditions.']},
  oathra:{url:'https://forifor.github.io/oathra/check.html',ja:['サンプルの根拠を照合する','公開サンプルの検証。電話は発信しません。'],en:['Inspect a sample transcript','Public sample verification. No phone call is placed.']},
  aisecure:{url:'https://forifor.github.io/AISecure/try.html',ja:['合成ログの調査を試す','合成データのデモ。実環境の監視・遮断は行いません。'],en:['Investigate a synthetic case','Synthetic-data demo. No monitoring or enforcement.']},
@@ -30,9 +37,9 @@ export const DIRECT_STARTS=Object.freeze({
 });
 export function addDirectStarts(html,lang){
  if(!['ja','en'].includes(lang))throw new TypeError('Unsupported locale');
- let count=0;
+ let count=0;const seen=new Set();
  html=html.replace(/<a\b([^>]*\bdata-studio-choice="([^"]+)"[^>]*)>/g,(tag,attrs,id)=>{
-  const d=DIRECT_STARTS[id];if(!d)throw new Error('Unknown product in explorer');count++;
+  if(!Object.hasOwn(DIRECT_STARTS,id)||seen.has(id))throw new Error('Unknown or repeated product in explorer');const d=DIRECT_STARTS[id];seen.add(id);count++;
   return `<a ${attrs} data-outcome-start="${esc(lang==='en'?(d.enUrl||d.url):d.url)}" data-outcome-label="${esc(d[lang][0])}" data-outcome-note="${esc(d[lang][1])}">`;
  });
  if(count!==6)throw new Error('The explorer must retain six product choices');
@@ -49,22 +56,23 @@ export function enhanceOutcomePage(html,id,lang){
  // Source CTA, claims, scope and proof are not changed by this presentation pass.
  const match=html.match(/<div class="ad-copy">/);
  if(!match)throw new Error('Missing product copy');
- html=html.replace('<div class="ad-copy">',`<div class="ad-copy"><p class="outcome-product-promise">${esc(subtitles[id][ja?0:1])}</p>`);
+ html=html.replace(/<p class="ad-category">[\s\S]*?<\/p>/,()=>`<p class="ad-category">${esc(subtitles[id][ja?0:1])}</p>`);
  const actionNote=html.match(/<p class="owned-action-note">[\s\S]*?<\/p>/);
  if(!actionNote)throw new Error('Missing access explanation');
  const choice=`<div class="outcome-try"><button type="button" data-outcome-sample hidden>${t('まず、操作サンプルを試す','Try the guided sample first')} <span aria-hidden="true">→</span><small>${t('サンプル内のみ。AI実行・外部送信なし。','Sample only. No AI run or external action.')}</small></button></div>`;
  html=html.replace(actionNote[0],()=>actionNote[0]+choice);
- // A secondary kept example, never relabelled as an actual Genie output.
+ // Put the original recorded output one click away; no invented output claim.
  if(id==='genie'){
   const marker='<footer class="container owned-footer">';
   if(!html.includes(marker))throw new Error('Missing product footer');
-  const sample=`<section class="container outcome-kept-example"><div class="outcome-section-heading"><p class="eyebrow">PLAY. CHANGE. KEEP.</p><h2>${t('説明を読むだけでなく、<br>動くものに触れてみる。','Not just an explanation.<br>Something you can touch.')}</h2><p>${t('操作・保存できる、手書きの作例を用意しました。Genie本体の実行は上の導入手順から。','A hand-authored example to play with and keep. Use the setup guide above for Genie itself.')}</p></div>${renderOrbit(lang,'genie-orbit')}</section>`;
+  const sample=`<section class="container outcome-kept-example"><div class="outcome-section-heading"><p class="eyebrow">SEE THE WORK. TRY THE RESULT.</p><h2>${t('録画の、その先へ。','Beyond the recording.')}</h2><p>${t('実演で保存したHTMLを、そのまま開いて操作できます。新しいAI実行は行いません。','Open and interact with the saved HTML from the recording. No new AI run is started.')}</p></div>${renderRecordedResult(lang,false)}</section>`;
   html=html.replace(marker,()=>sample+marker);
  }
  return html.replace('<body ',`<body data-outcome-first="${OUTCOME_VERSION}" `);
 }
 export async function writeOutcomeFirst(dist,products){
  if(products.length!==6||new Set(products.map(p=>p.id)).size!==6||products.some(p=>!IDS.includes(p.id)))throw new TypeError('Expected six products');
+ await Promise.all(['media/originals/genie/orbit.html','media/originals/genie/assets/genie-orbit-web.mp4','media/originals/genie/assets/genie-orbit-poster.jpg'].map(file=>fs.access(path.join(dist,file))));
  for(const lang of ['ja','en']){
   const base=lang==='ja'?'':'en';const file=path.join(dist,base,'index.html');let html=await fs.readFile(file,'utf8');
   if(!html.includes('data-lab-experience="20260919-product-lab-1"'))throw new Error('Product Lab must run before outcome finishing');
@@ -78,6 +86,6 @@ export async function writeOutcomeFirst(dist,products){
  }
  const assets=path.join(dist,'assets');
  const [css,js,finish]=await Promise.all(['showcase.css','showcase.mjs','outcome-first.css'].map(f=>fs.readFile(path.join(assets,f),'utf8')));
- await fs.writeFile(path.join(assets,'showcase.css'),css.split(MARK)[0].trimEnd()+`\n${MARK}\n${ORBIT_CSS}\n${finish}`);
+ await fs.writeFile(path.join(assets,'showcase.css'),css.split(MARK)[0].trimEnd()+`\n${MARK}\n${finish}`);
  await fs.writeFile(path.join(assets,'showcase.mjs'),js.split(MARK)[0].trimEnd()+`\n${MARK}\nimport('./outcome-controls.mjs').catch(()=>{document.documentElement.dataset.outcomeControls='unavailable';});\n`);
 }

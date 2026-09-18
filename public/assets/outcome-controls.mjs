@@ -1,7 +1,7 @@
 /** Progressive enhancement only. Existing sample and recording owners are retained. */
-import {initOrbit} from './orbit-study.mjs';
 export function initOutcome(doc=document){
- initOrbit(doc);
+ const film=doc.querySelector('[data-outcome-real-film]');
+ if(film){film.addEventListener('play',()=>doc.querySelectorAll('video').forEach(v=>{if(v!==film)v.pause();}));doc.addEventListener('visibilitychange',()=>{if(doc.hidden)film.pause();});}
  const workbench=doc.querySelector('.studio-workbench');
  if(workbench){
   const sync=()=>{
@@ -10,8 +10,7 @@ export function initOutcome(doc=document){
    const link=workbench.querySelector('[data-outcome-start-link]'),note=workbench.querySelector('[data-outcome-start-note]');
    if(!selected||!link||!note)return;
    const url=selected.dataset.outcomeStart;
-   // The destination registry is build-time only. Refuse tampered schemes.
-   if(!/^https:\/\//.test(url||''))return;
+   if(!/^(https:\/\/|\/(?!\/))/.test(url||''))return;
    link.href=url;link.textContent=selected.dataset.outcomeLabel+' ↗';note.textContent=selected.dataset.outcomeNote;
   };
   sync();new MutationObserver(sync).observe(workbench,{attributes:true,attributeFilter:['data-product']});
@@ -27,7 +26,6 @@ export function initOutcome(doc=document){
  if(!wire()){
   const observer=new MutationObserver(()=>{if(wire())observer.disconnect();});
   observer.observe(doc.body,{childList:true,subtree:true});
-  // No endless observer when a failed dependency cannot supply the sample.
   doc.defaultView.setTimeout(()=>observer.disconnect(),15000);
  }
 }

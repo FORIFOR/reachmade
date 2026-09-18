@@ -41,13 +41,18 @@ def main():
                             assert dimensions['h1']>=30,dimensions
                             page.keyboard.press('Tab');assert page.evaluate('document.activeElement.classList.contains("skip-link")')
                             if product=='home':
-                                page.wait_for_selector('[data-orbit-ready]');assert page.locator('[data-orbit-study]').get_attribute('data-orbit-motion')=='paused'
+                                video=page.locator('[data-outcome-real-film]')
+                                assert video.count()==1 and video.get_attribute('preload')=='none'
+                                assert video.evaluate('(v)=>v.paused')
+                                assert page.locator('.outcome-open-artifact').first.get_attribute('href')=='/media/originals/genie/orbit.html'
                                 if width==390:
-                                    page.locator('[data-orbit-toggle]').click();assert page.locator('[data-orbit-study]').get_attribute('data-orbit-motion')=='running'
-                                    page.locator('[data-orbit-toggle]').click()
-                                    page.locator('[data-orbit-palette="night"]').click();assert page.locator('[data-orbit-study]').get_attribute('data-orbit-theme')=='night'
-                                    with page.expect_download() as download:page.locator('[data-orbit-save]').click()
-                                    assert download.value.suggested_filename=='reachmade-orbit-study.html'
+                                    artifact=context.new_page()
+                                    artifact.goto(origin+'/media/originals/genie/orbit.html',wait_until='networkidle')
+                                    assert artifact.locator('#universe').is_visible()
+                                    assert artifact.locator('#pause').is_visible()
+                                    artifact.locator('#pause').click()
+                                    assert artifact.locator('#planetNav button').count()>0
+                                    artifact.close()
                                 page.wait_for_selector('[data-lab-try]')
                                 for identifier in IDS:
                                     choice=page.locator(f'[data-studio-choice="{identifier}"]');choice.click()
@@ -73,8 +78,8 @@ def main():
                 try:
                     page.goto(origin+('/' if lang=='ja' else '/en/'))
                     assert page.locator('.outcome-intro a[href="#explore"]').is_visible()
-                    assert page.locator('[data-orbit-study] svg').is_visible()
-                    assert page.locator('[data-orbit-controls]').is_hidden()
+                    assert page.locator('[data-outcome-real-film]').is_visible()
+                    assert page.locator('.outcome-open-artifact').first.is_visible()
                     assert page.locator('[data-outcome-start-link]').is_visible()
                     report['cases'].append({'id':f'{lang}-no-js','passed':True})
                 except Exception as exc:report['errors'].append({'id':f'{lang}-no-js','error':str(exc)})
