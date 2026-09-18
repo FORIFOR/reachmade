@@ -27,8 +27,17 @@ jobs:
       - run: python -m pip install playwright==1.57.0
       - run: python -m playwright install --with-deps chromium
       - name: Check actual built pages and real posters at four widths
-        run: python tests/product-art-direction.browser.py
+        run: |
+          set +e
+          python tests/product-art-direction.browser.py
+          RESULT=$?
+          if [ -f film-qa/art-direction/report.json ]; then
+            python -c 'import json; p=json.load(open("film-qa/art-direction/report.json")); print(json.dumps({"mode":p["mode"], "counts":{k:len(p[k]) for k in ["layout","no_javascript","failed_media"]}, "errors":p["errors"]}, ensure_ascii=False, indent=2))'
+          fi
+          exit "$RESULT"
       - name: Preserve screenshots and measured results
+        id: review-artifact
+        continue-on-error: true
         if: always()
         uses: actions/upload-artifact@v4
         with:
@@ -44,3 +53,7 @@ jobs:
             cat film-qa/art-direction/report.json >> "$GITHUB_STEP_SUMMARY"
             printf '\n```\n' >> "$GITHUB_STEP_SUMMARY"
           fi
+      - name: Disclose unavailable review artifacts
+        if: always() && steps.review-artifact.outcome == 'failure'
+        run: |
+          echo '::warning::Review artifact upload failed. No screenshots are available from this run. Browser checks remain required; their measured result is in the logs and job summary.'
