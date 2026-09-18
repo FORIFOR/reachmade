@@ -9,7 +9,7 @@ export const products = [
     demo: 'https://genie-forifor.forifor.chatgpt.site/#demo',
     sourceSha: 'b432b390dc50225743135e400afe9f7fba81ea31',
     ja: {
-      headline: '考えを、手元に残る仕事へ。', demoLabel: '録画・画面を見る', previewLabel: '実アプリのワークスペース',
+      headline: 'メモから、開いて使える成果物へ。', demoLabel: '録画・画面を見る', previewLabel: '実アプリのワークスペース',
       short: '自分のAIモデルと作る、Macのワークスペース。',
       description: 'メモから実行計画、Webコピー、小さなHTMLの試作まで。接続したモデルと作業し、結果を開き直したり、Markdownとして保存したりできます。',
       status: '開発者プレビュー', license: 'ソース公開・全体ライセンス未設定',
@@ -37,7 +37,7 @@ export const products = [
     evidence: 'https://github.com/FORIFOR/AI-meeting/blob/main/docs/validation.md',
     demo: 'https://youtu.be/qLenE6R7-nI', sourceSha: '3b269e92d9d8126f2506409ebd52d4add0781c6e',
     ja: {
-      headline: '話して整理。次の行動まで。', demoLabel: '45秒の実演を見る', previewLabel: '検証レポートの実画面',
+      headline: '話して決めたTODOが、残る。', demoLabel: '45秒の実演を見る', previewLabel: '検証レポートの実画面',
       short: '会話から生まれたタスクを、確認して残す。',
       description: 'AIキャラクターと話し、途中で方向を変え、必要なタスクを残す。聞き違いがあり得る変更は、確認を挟んでから保存します。',
       status: 'ベータ', license: 'Apache-2.0 · 素材などは別条件',
@@ -65,7 +65,7 @@ export const products = [
     evidence: 'https://github.com/FORIFOR/oathra/blob/main/docs/ENTERPRISE_READINESS.md',
     demo: 'https://forifor.github.io/oathra/check.html',
     ja: {
-      headline: '電話の結果に、確かめられる根拠を。', demoLabel: 'サンプルログを検証する', previewLabel: '完了判定の画面',
+      headline: 'AIが電話する。結果は、相手の言葉で確かめる。', demoLabel: 'サンプルログを検証する', previewLabel: '完了判定の画面',
       short: 'AIの「できました」を、完了の根拠にしない。',
       description: 'AIの電話交渉と、その結果を確認するための基盤。日時・金額・確定の根拠を、相手側の発言と結びつけます。',
       status: '開発版', license: 'Apache-2.0',
@@ -94,10 +94,10 @@ export const products = [
     demo: 'https://forifor.github.io/AISecure/try.html', sourceSha: '357abc6d30d32a317be62c738d36550febb08167',
     ja: {
       headline: '点のアラートを、調べられる一件に。', demoLabel: '合成ケースを調べる', previewLabel: '調査ケースの画面',
-      short: '判断の根拠を辿る、ローカル分析プロトタイプ。',
-      description: '公開状態、特権ログイン、ファイルアクセスを関連づけ、根拠と一緒に調べる。観測したこと、仮説、不明なことを分けて扱います。',
+      short: 'AIへの送信前チェックと、根拠を辿るローカル調査。',
+      description: 'AIへ送る前は、内容・送信先・操作を確認。起きた後は、公開状態、特権ログイン、ファイルアクセスを関連づけ、観測・仮説・不明点を分けて根拠を辿ります。',
       status: '検証用プロトタイプ', license: 'MIT',
-      outcome: 'ログ → 関連付け → 調査',
+      outcome: '送信前チェック / ログ → 関連付け → 調査',
       scope: 'スナップショット分析です。常時監視、実際の遮断、漏えいの確定は行いません。公開検証は合成データで、本番の性能保証ではありません。',
       proof: '合成データを使う操作デモと、単独ルール・相関ルールの比較手順。',
       consult: 'ログ取り込みや判断の根拠を扱う設計の試作・評価。独立した本番セキュリティ対策の代替とはしません。'
@@ -121,8 +121,8 @@ export const products = [
     evidence: 'https://github.com/FORIFOR/Multibot/blob/main/docs/evidence/readiness-2026-09-14/README.md',
     demo: 'https://forifor.github.io/Multibot/',
     ja: {
-      headline: '成果物も、そこまでの仕事も。', demoLabel: '実行記録を見る', previewLabel: 'エージェント実行記録',
-      short: '作成・レビュー・修正を、経緯と一緒に残す。',
+      headline: '作ってほしいものを、いつもの言葉で。', demoLabel: '実行記録を見る', previewLabel: 'エージェント実行記録',
+      short: '成果物を受け取り、必要なら作成・レビュー・修正まで辿れる。',
       description: '依頼に合わせてAIが役割を分担。成果物の版と、誰が何を確かめたかを結びつけ、完成した部分も未完了の部分も残します。',
       status: '開発・評価中', license: 'MIT · リポジトリ名はMultibot',
       outcome: '依頼 → 作成 → レビュー → 修正',
@@ -149,7 +149,7 @@ export const products = [
     evidence: 'https://github.com/FORIFOR/Launchloom/blob/main/docs/VERIFICATION.md',
     demo: 'https://forifor.github.io/Launchloom/', sourceSha: 'b32d110aa187d4865817411cfa011d47e668ab20',
     ja: {
-      headline: '作ったものを、伝わる素材へ。', demoLabel: 'ローンチキットを見る', previewLabel: '生成されたLP',
+      headline: 'ひとつの操作録画から、動画・LP・投稿案まで。', demoLabel: 'ローンチキットを見る', previewLabel: '生成されたLP',
       short: '実録画から、動画・LP・投稿案をひと揃い。',
       description: 'ひとつの製品説明と実際の操作録画から、横動画、縦動画、LP、SNSの投稿案を作るローカル制作基盤です。',
       status: 'アルファ', license: 'Apache-2.0 · 外部ツールは別条件',

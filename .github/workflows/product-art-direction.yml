@@ -1,0 +1,59 @@
+name: Product art direction
+on:
+  pull_request:
+    paths: ['src/**', 'scripts/build*.mjs', 'public/assets/**', 'tests/**', '.github/workflows/product-art-direction.yml']
+  push:
+    branches: [main]
+    paths: ['src/**', 'scripts/build*.mjs', 'public/assets/**', 'tests/**', '.github/workflows/product-art-direction.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: art-direction-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  composition:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: npm run check
+      - run: python -m pip install playwright==1.57.0
+      - run: python -m playwright install --with-deps chromium
+      - name: Check actual built pages and real posters at four widths
+        run: |
+          set +e
+          python tests/product-art-direction.browser.py
+          RESULT=$?
+          if [ -f film-qa/art-direction/report.json ]; then
+            python -c 'import json; p=json.load(open("film-qa/art-direction/report.json")); print(json.dumps({"mode":p["mode"], "counts":{k:len(p[k]) for k in ["layout","no_javascript","failed_media"]}, "errors":p["errors"]}, ensure_ascii=False, indent=2))'
+          fi
+          exit "$RESULT"
+      - name: Preserve screenshots and measured results
+        id: review-artifact
+        continue-on-error: true
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: product-art-direction-review
+          path: film-qa/art-direction/
+          retention-days: 7
+      - name: Publish scope of the checks
+        if: always()
+        run: |
+          printf '## Product art direction\n\nLocal Chromium, built JA/EN pages, 1440 / 1024 / 390 / 320px. No production or Safari verification. Media failure is deliberate; actual playback is tested by the existing media workflow.\n\n' >> "$GITHUB_STEP_SUMMARY"
+          if [ -f film-qa/art-direction/report.json ]; then
+            printf '```json\n' >> "$GITHUB_STEP_SUMMARY"
+            cat film-qa/art-direction/report.json >> "$GITHUB_STEP_SUMMARY"
+            printf '\n```\n' >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - name: Disclose unavailable review artifacts
+        if: always() && steps.review-artifact.outcome == 'failure'
+        run: |
+          echo '::warning::Review artifact upload failed. No screenshots are available from this run. Browser checks remain required; their measured result is in the logs and job summary.'
