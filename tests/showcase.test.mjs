@@ -7,6 +7,16 @@ import {products} from '../src/products.mjs';
 const root=path.resolve(import.meta.dirname,'..');
 const read=file=>fs.readFile(path.join(root,file),'utf8');
 const escapeHTML=value=>String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+// Class attributes contain space-separated tokens, not a single class name.
+const hasClass=(html,token)=>[...html.matchAll(/\bclass="([^"]*)"/g)].some(([,value])=>value.split(/\s+/).includes(token));
+test('class checks accept multiple tokens without accepting partial class names',()=>{
+ assert.ok(hasClass('<section class="container studio-related">','studio-related'));
+ assert.ok(hasClass('<section class="studio-related container">','studio-related'));
+ assert.ok(hasClass('<section class="container  studio-related\tvisible">','studio-related'));
+ assert.equal(hasClass('<section class="not-studio-related">','studio-related'),false);
+ assert.equal(hasClass('<section class="studio-related-extra">','studio-related'),false);
+ assert.equal(hasClass('<section class="container">','studio-related'),false);
+});
 test('each product has an explicit, different art direction',()=>{
  assert.equal(Object.keys(showcase).length,products.length);
  assert.equal(new Set(Object.values(showcase).map(x=>x.theme)).size,products.length);
@@ -33,7 +43,7 @@ for(const lang of ['ja','en']){
   assert.ok(html.includes(escapeHTML(p.evidence)));
   assert.match(html,/data-recording-src="\/media\/products\//);
   assert.match(html,/rel="canonical"/);
-  assert.match(html,/class="studio-related"/);
+  assert.ok(hasClass(html,'studio-related'),'Related-product section must exist in the generated page');
  });
 }
 test('dynamic strings are escaped, not treated as HTML',()=>{
