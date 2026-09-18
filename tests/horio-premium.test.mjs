@@ -37,14 +37,25 @@ test('all design layers are imported before any CSS declarations',()=>{
 });
 
 test('home leads with a clear product promise and a real product surface before JavaScript enhancement',()=>{
-  assert.match(home,/REACHMADE \/ 6 WORKING AI PRODUCTS/);
-  assert.match(home,/AIを、<br>動く製品に。/);
-  assert.match(home,/6つの自主開発プロダクト/);
-  assert.match(home,/src="\/assets\/products\/genie\.jpg"/);
-  assert.match(home,/WORKING PREVIEW \/ Genie/);
-  assert.match(en,/REACHMADE \/ 6 WORKING AI PRODUCTS/);
-  assert.match(en,/AI, built into<br>working products\./);
-  assert.match(en,/Six independently built products/);
+  // Check the current localized promise and actual evidence paths, not retired copy.
+  for (const html of [home,en]) {
+    assert.match(html,/REACHMADE · INDEPENDENT PRODUCT LAB/);
+    assert.match(html,/data-lab-experience="20260919-product-lab-1"/);
+    assert.equal((html.match(/<h1>/g)||[]).length,1);
+    assert.equal((html.match(/data-studio-choice=/g)||[]).length,6);
+    assert.match(html,/src="\/assets\/products\/genie\.jpg"/);
+    assert.match(html,/WORKING PREVIEW \/ Genie/);
+    assert.match(html,/data-lab-proof/);
+    assert.match(html,/data-lab-detail href="(?:\/en)?\/products\/genie\/"/);
+    assert.match(html,/data-lab-begin hidden/);
+    assert.doesNotMatch(html,/<video[^>]*\bautoplay\b/);
+  }
+  assert.match(home,/そのアイデアに、<br>次の一手を。/);
+  assert.match(home,/6つのAIプロダクト/);
+  assert.match(home,/サンプルから外部への送信・実行は行いません/);
+  assert.match(en,/An idea\.<br>A new way forward\./);
+  assert.match(en,/Six AI products/);
+  assert.match(en,/Samples do not execute workflows or send data/);
   assert.match(rhythm,/CLAIM  →  PROOF/);
 });
 
