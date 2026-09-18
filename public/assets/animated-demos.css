@@ -1,0 +1,23 @@
+/* Animated UI stories: DOM/CSS, sharp at every resolution. */
+.studio-player-screen{position:relative;overflow:hidden}
+.rm-demo-poster{opacity:.14;filter:saturate(.45);transform:scale(1.02)}
+.rm-live-demo{position:absolute;inset:clamp(12px,3vw,34px);z-index:2;border:1px solid color-mix(in srgb,var(--rule) 80%,transparent);background:color-mix(in srgb,var(--paper) 92%,transparent);backdrop-filter:blur(18px);display:grid;grid-template-rows:auto 1fr auto;box-shadow:0 24px 70px rgba(20,24,20,.10);overflow:hidden}
+.rm-demo-top{height:42px;border-bottom:1px solid var(--rule);display:flex;align-items:center;justify-content:space-between;padding:0 14px;font:600 9px/1 ui-monospace,SFMono-Regular,monospace;letter-spacing:.12em}
+.rm-demo-top button{width:34px;height:34px;border:0;background:transparent;color:inherit;cursor:pointer}
+.rm-demo-canvas{position:relative;display:grid;place-content:center;justify-items:center;gap:16px;padding:24px;text-align:center}
+.rm-demo-orb{width:44px;height:44px;border-radius:50%;border:1px solid var(--accent);position:relative}
+.rm-demo-orb:after{content:"";position:absolute;inset:8px;border-radius:50%;background:var(--accent);opacity:.16;animation:rmPulse 1.6s ease-in-out infinite}
+.rm-demo-line{font-size:clamp(13px,1.5vw,19px);letter-spacing:-.02em;max-width:34ch;min-height:1.6em;animation:rmEnter .38s cubic-bezier(.2,.8,.2,1)}
+.rm-demo-progress{width:min(260px,60%);height:2px;background:var(--rule);overflow:hidden}
+.rm-demo-progress i{display:block;width:calc(var(--p)*100%);height:100%;background:var(--accent);transition:width .5s cubic-bezier(.2,.8,.2,1)}
+.rm-demo-result{min-height:28px;font:600 11px/1.5 ui-monospace,SFMono-Regular,monospace;color:var(--accent);letter-spacing:.03em}
+.rm-live-demo>small{padding:0 13px 11px;font:8px/1 ui-monospace,SFMono-Regular,monospace;color:var(--muted);letter-spacing:.12em}
+.rm-live-demo[data-kind=voice] .rm-demo-orb{animation:rmVoice .75s ease-in-out infinite alternate}
+.rm-live-demo[data-kind=work] .rm-demo-orb{border-style:dashed;animation:rmSpin 2.2s linear infinite}
+.rm-live-demo[data-kind=result] .rm-demo-orb{background:var(--accent)}
+@keyframes rmEnter{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
+@keyframes rmPulse{50%{transform:scale(1.45);opacity:.05}}
+@keyframes rmVoice{to{transform:scale(1.12);box-shadow:0 0 0 10px color-mix(in srgb,var(--accent) 8%,transparent)}}
+@keyframes rmSpin{to{transform:rotate(360deg)}}
+@media(max-width:650px){.rm-live-demo{inset:10px}.rm-demo-top{height:34px}.rm-demo-canvas{gap:10px;padding:12px}.rm-demo-orb{width:32px;height:32px}.rm-demo-line{font-size:12px}.rm-live-demo>small{font-size:7px}}
+@media(prefers-reduced-motion:reduce){.rm-live-demo *{animation:none!important;transition:none!important}}
