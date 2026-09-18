@@ -2,7 +2,7 @@ name: Owned site migration validation
 on:
   push:
     branches: [migrate/owned-sites-20260919]
-    paths: ['.github/workflows/owned-site-migration.yml', 'scripts/migrations/owned-sites-20260919.py', 'src/owned-*.mjs', 'scripts/verify-owned-sites.py', 'tests/owned-sites.test.mjs']
+    paths: ['.github/workflows/owned-site-migration.yml', 'scripts/migrations/*.py', 'src/owned-*.mjs', 'scripts/verify-owned-sites.py', 'tests/owned-sites.test.mjs']
   workflow_dispatch:
 permissions:
   contents: write
@@ -18,21 +18,33 @@ jobs:
       WRANGLER_SEND_METRICS: 'false'
       CI: 'true'
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           ref: ${{ github.ref }}
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: '22'
       - name: Prepare validation tools
         run: |
-          if ! command -v ffmpeg >/dev/null; then sudo apt-get update && sudo apt-get install -y ffmpeg; fi
-          python -m pip install playwright==1.57.0
-          python -m playwright install --with-deps chromium
+          {
+            if ! command -v ffmpeg >/dev/null; then sudo apt-get update && sudo apt-get install -y ffmpeg; fi
+            python -m pip install playwright==1.57.0
+            python -m playwright install --with-deps chromium
+          } > /tmp/owned-tools.log 2>&1 || { tail -60 /tmp/owned-tools.log; exit 1; }
+          echo 'FFmpeg and browser tools ready'
       - name: Import owned media and migrate current links
-        run: python scripts/migrations/owned-sites-20260919.py
+        run: |
+          python scripts/migrations/finish-owned-sites.py prepare
+          python scripts/migrations/owned-sites-20260919.py
+          python scripts/migrations/finish-owned-sites.py finish
       - name: Validate source and build
-        run: npm run check
+        run: |
+          npm run check > /tmp/owned-check.log 2>&1 || {
+            grep -A32 -B2 '^not ok' /tmp/owned-check.log || true
+            tail -12 /tmp/owned-check.log
+            exit 1
+          }
+          tail -12 /tmp/owned-check.log
       - name: Build recordings without the old hosts
         run: npm run media:prepare
       - name: Browser-check pages and original recordings
@@ -43,7 +55,7 @@ jobs:
           python scripts/verify-owned-sites.py
       - name: Commit only the reviewed migration outputs to the migration branch
         run: |
-          git add src scripts/build.mjs scripts/build-core.mjs scripts/prepare-media.mjs tests public/assets public/media/originals docs README.md worker.js
+          git add src scripts/build.mjs scripts/build-core.mjs scripts/prepare-media.mjs tests public/assets public/media/originals docs README.md worker.js site.config.json
           git diff --cached --stat
           if ! git diff --cached --quiet; then
             git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Migrate Genie and AI Meeting site links and verified original recordings to Reachmade'
@@ -53,7 +65,5 @@ jobs:
       - name: Keep validation summary even when artifact storage is unavailable
         if: always()
         run: |
-          if [ -f docs/owned-site-migration-browser.json ]; then
-            cat docs/owned-site-migration-browser.json >> "$GITHUB_STEP_SUMMARY"
-          fi
-          if [ -f /tmp/owned-site-worker.log ]; then tail -50 /tmp/owned-site-worker.log; fi
+          if [ -f docs/owned-site-migration-browser.json ]; then cat docs/owned-site-migration-browser.json >> "$GITHUB_STEP_SUMMARY"; fi
+          if [ -f /tmp/owned-site-worker.log ]; then tail -40 /tmp/owned-site-worker.log; fi
