@@ -1,16 +1,17 @@
-"""Read-only, offline browser QA for the built six-product art direction.
+"""Read-only browser QA of the final built art-direction pages.
 
-Normal mode requires real local poster files from `npm run build`.
---layout-fixture explicitly uses labelled image stand-ins for isolated local tests.
-Neither mode tests the live site, Safari, or actual product execution.
+Like scripts/verify_showcase.py, render final HTML/CSS/JS in memory. Normal
+mode uses complete built styles and real local posters; --layout-fixture uses
+explicit image stand-ins. This tests neither HTTP delivery nor live production,
+Safari, physical devices, nor actual AI execution.
 """
 from __future__ import annotations
 import argparse
 import base64
-import re
 import json
 import mimetypes
 import os
+import re
 import traceback
 from pathlib import Path
 from urllib.parse import unquote, urlsplit
@@ -26,66 +27,96 @@ def main() -> None:
     parser.add_argument('--output', default='film-qa/art-direction')
     parser.add_argument('--layout-fixture', action='store_true')
     args = parser.parse_args()
-    root = Path(args.root).resolve()
-    out = Path(args.output).resolve()
+    root, out = Path(args.root).resolve(), Path(args.output).resolve()
     out.mkdir(parents=True, exist_ok=True)
-    report = {'mode': 'isolated-layout-fixture' if args.layout_fixture else 'full-built-site',
-              'browser': 'Chromium', 'live_site': False, 'safari': False,
-              'layout': [], 'no_javascript': [], 'failed_media': [], 'errors': []}
+    report = {'mode': 'isolated-layout-fixture' if args.layout_fixture else 'full-built-site-memory-render',
+              'browser': 'Chromium', 'live_site': False, 'http_delivery': False,
+              'safari': False, 'layout': [], 'no_javascript': [], 'failed_media': [], 'errors': []}
     image_mock = b'<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000"><rect width="1600" height="1000" fill="#202a2c"/><text x="800" y="490" text-anchor="middle" fill="#ecebe4" font-family="sans-serif" font-size="40">MEDIA PLACEHOLDER</text><text x="800" y="555" text-anchor="middle" fill="#b0bab8" font-family="sans-serif" font-size="26">Layout fixture only - not a product screenshot</text></svg>'
 
     def serve(route):
-        request_path = unquote(urlsplit(route.request.url).path)
-        if request_path.endswith('.mp4'):
-            route.abort('failed')  # Deliberate failure; playback is covered by the existing media suite.
+        name = unquote(urlsplit(route.request.url).path)
+        if name.endswith('.mp4'):
+            route.abort('failed')  # Explicit failure test, not playback validation.
             return
-        if args.layout_fixture and request_path.endswith(('.jpg', '.png')):
+        if args.layout_fixture and name.endswith(('.jpg', '.png')):
             route.fulfill(status=200, content_type='image/svg+xml', body=image_mock)
             return
-        target = (root / request_path.lstrip('/')).resolve()
+        target = (root / name.lstrip('/')).resolve()
         if not target.is_relative_to(root):
             route.fulfill(status=403, body='Forbidden')
-            return
-        if target.is_dir():
-            target = target / 'index.html'
-        if not target.is_file():
-            route.fulfill(status=404, body='Missing local fixture asset')
-            return
-        mime = 'text/javascript' if target.suffix == '.mjs' else (mimetypes.guess_type(str(target))[0] or 'application/octet-stream')
-        route.fulfill(status=200, content_type=mime, body=target.read_bytes())
+        elif target.is_file():
+            mime = mimetypes.guess_type(str(target))[0] or 'application/octet-stream'
+            route.fulfill(status=200, content_type=mime, body=target.read_bytes())
+        else:
+            route.fulfill(status=404, body='Missing local asset')
 
-    def diagnostic(page, key, exc):
-        entry = {'case': key, 'error': str(exc), 'trace': traceback.format_exc()}
-        try:
-            entry['dom'] = page.evaluate("""() => {
-                const info = s => {const e=document.querySelector(s); if(!e)return null;
-                    const r=e.getBoundingClientRect(),c=getComputedStyle(e);
-                    return {html:e.outerHTML.slice(0,160),x:r.x,y:r.y,width:r.width,height:r.height,
-                    display:c.display,visibility:c.visibility,font:c.fontSize,gridArea:c.gridArea};};
-                return {h1:document.querySelectorAll('h1').length,videos:document.querySelectorAll('.ad-hero video').length,
-                    sheets:[...document.styleSheets].map(s=>s.href),
-                    title:info('.ad-hero h1'),primary:info('.ad-hero .owned-primary'),film:info('.owned-film'),
-                    screen:info('.owned-film__screen'),play:info('.owned-film__play'),source:info('.owned-film figcaption a')};
-            }""")
-            page.screenshot(path=str(out / f'failure-{key}.png'), full_page=True)
-        except Exception as capture_error:
-            entry['capture_error'] = str(capture_error)
-        report['errors'].append(entry)
-
-    def load(page, url):
-        if not args.layout_fixture:
-            page.goto(url, wait_until='networkidle')
-            return
-        # Local Chromium disallows URL navigation, so render isolated fixtures in memory.
-        target = root / unquote(urlsplit(url).path).lstrip('/') / 'index.html'
-        html = target.read_text(encoding='utf-8')
+    def load(page, identifier, lang):
+        file = root / ('en' if lang == 'en' else '') / 'products' / identifier / 'index.html'
+        html = file.read_text(encoding='utf-8')
         css = (root / 'assets/showcase.css').read_text(encoding='utf-8')
         js = (root / 'assets/showcase.mjs').read_text(encoding='utf-8')
-        html = html.replace('<link rel="stylesheet" href="/assets/showcase.css">', '<style>' + css + '</style>')
-        html = html.replace('<script type="module" src="/assets/showcase.mjs"></script>', '<script type="module">' + js + '</script>')
-        uri = 'data:image/svg+xml;base64,' + base64.b64encode(image_mock).decode()
-        html = re.sub(r'(src|poster)="/(?:assets|media)/products/[^" ]+\.jpg"', lambda m: m[1] + '="' + uri + '"', html)
-        page.set_content(html, wait_until='load')
+        assert 'Product-specific compositions.' in css, 'Final art-direction CSS is missing'
+        assert '.owned-film__screen' in css and '.owned-primary' in css, 'Shared player/button CSS missing'
+        style = '<link rel="stylesheet" href="/assets/showcase.css">'
+        script = '<script type="module" src="/assets/showcase.mjs"></script>'
+        assert html.count(style) == 1 and html.count(script) == 1, 'Unexpected asset entrypoints'
+        html = html.replace(style, '<style>' + css + '</style>')
+        html = html.replace(script, '<script type="module">' + js + '</script>')
+        if args.layout_fixture:
+            uri = 'data:image/svg+xml;base64,' + base64.b64encode(image_mock).decode()
+            html = re.sub(r'(src|poster)="/(?:assets|media)/products/[^" ]+\.jpg"', lambda m: m[1] + '="' + uri + '"', html)
+        else:
+            # Do not add a base URL: fragment links must stay on this document.
+            html = re.sub(r'((?:src|poster|data-recording-src)=")(/(?:assets|media)/[^" ]+)',
+                          lambda m: m[1] + 'http://127.0.0.1:4173' + m[2], html)
+        page.set_content(html, wait_until='networkidle')
+
+    def diagnostic(page, key, exc):
+        error = {'case': key, 'error': str(exc), 'trace': traceback.format_exc()}
+        try:
+            error['dom'] = page.evaluate('''() => {
+                const box=s=>{const e=document.querySelector(s);if(!e)return null;
+                  const r=e.getBoundingClientRect(),c=getComputedStyle(e);
+                  return {x:r.x,y:r.y,width:r.width,height:r.height,font:c.fontSize,display:c.display};};
+                return {body:document.body.outerHTML.slice(0,240),title:box('.ad-hero h1'),
+                  primary:box('.ad-hero .owned-primary'),film:box('.owned-film'),screen:box('.owned-film__screen')};
+            }''')
+            page.screenshot(path=str(out / f'failure-{key}.png'), full_page=True)
+        except Exception as capture:
+            error['capture_error'] = str(capture)
+        report['errors'].append(error)
+
+    def layout(page, width):
+        assert page.locator('h1').count() == 1
+        assert page.locator('.ad-hero video').count() == 1
+        assert page.locator('.owned-film__screen>img').evaluate('(e)=>e.complete && e.naturalWidth>0'), 'Poster missing'
+        d = page.evaluate('''() => {
+            const b=s=>{const r=document.querySelector(s).getBoundingClientRect();
+              return {x:r.x,y:r.y,width:r.width,height:r.height,bottom:r.bottom,right:r.right};};
+            return {width:document.documentElement.scrollWidth,title:b('.ad-hero h1'),
+              lead:b('.ad-hero .owned-lead'),primary:b('.ad-hero .owned-primary'),film:b('.owned-film'),
+              tryNow:b('.owned-try-now'),access:b('.owned-access'),
+              font:parseFloat(getComputedStyle(document.querySelector('.ad-hero h1')).fontSize)};
+        }''')
+        assert d['width'] <= width + 1, f'Horizontal overflow: {d}'
+        assert d['font'] >= 30, f'Heading too small: {d}'
+        assert d['title']['bottom'] <= d['lead']['y'] + 2 or d['title']['right'] <= d['lead']['x'] + 2, f'Heading/body overlap: {d}'
+        assert d['tryNow']['right'] <= d['access']['x'] + 1 or d['tryNow']['bottom'] <= d['access']['y'] + 1, f'Scope overlap: {d}'
+        assert d['primary']['height'] >= 44, f'CTA target too small: {d}'
+        assert d['primary']['x'] >= 0 and d['primary']['right'] <= width + 1, f'CTA overflows: {d}'
+        assert d['film']['width'] >= min(260, width - 60), f'Film too narrow: {d}'
+        assert page.locator('.owned-film figcaption a').is_visible()
+        page.keyboard.press('Tab')
+        assert page.evaluate('document.activeElement.classList.contains("skip-link")'), 'Skip link is not first'
+        page.keyboard.press('Enter')
+        assert page.evaluate('location.hash') == '#main'
+        page.locator('.owned-access summary').focus()
+        page.keyboard.press('Enter')
+        assert page.locator('.owned-access').get_attribute('open') is not None
+        page.keyboard.press('Enter')
+        page.evaluate('document.activeElement.blur(); window.scrollTo(0,0)')
+        return d
 
     with sync_playwright() as p:
         executable = os.environ.get('PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH')
@@ -93,98 +124,50 @@ def main() -> None:
         try:
             for lang in ['ja', 'en']:
                 for identifier in IDS:
-                    url = f'http://127.0.0.1:4173/{"en/" if lang == "en" else ""}products/{identifier}/'
-                    for width, height in SIZES:
-                        key = f'{identifier}-{lang}-{width}'
-                        ctx = browser.new_context(viewport={'width': width, 'height': height}, reduced_motion='reduce')
-                        ctx.set_default_timeout(2500)
+                    cases = [('layout', w, h, True) for w, h in SIZES]
+                    cases += [('no_javascript', 390, 844, False), ('failed_media', 390, 844, True)]
+                    for kind, width, height, enabled in cases:
+                        key = f'{kind}-{identifier}-{lang}-{width}'
+                        ctx = browser.new_context(viewport={'width':width,'height':height}, java_script_enabled=enabled, reduced_motion='reduce')
+                        ctx.set_default_timeout(3000)
                         ctx.route('**/*', serve)
                         page = ctx.new_page()
                         errors, requests = [], []
-                        page.on('pageerror', lambda error: errors.append(str(error)))
+                        page.on('pageerror', lambda err: errors.append(str(err)))
                         page.on('request', lambda req: requests.append(req.url))
                         try:
-                            load(page, url)
-                            page.locator('.ad-hero').wait_for()
+                            load(page, identifier, lang)
                             assert not errors, errors
-                            assert page.locator('h1').count() == 1
-                            assert page.locator('.ad-hero video').count() == 1
-                            assert not any('.mp4' in req for req in requests), 'Video requested before consent'
-                            poster = page.locator('.owned-film__screen>img')
-                            assert poster.evaluate('(e)=>e.complete && e.naturalWidth>0'), 'Real poster missing'
-                            dimensions = page.evaluate('''() => {
-                              const b = s => { const r=document.querySelector(s).getBoundingClientRect(); return {x:r.x,y:r.y,width:r.width,height:r.height,bottom:r.bottom,right:r.right}; };
-                              return {viewport:innerWidth, width:document.documentElement.scrollWidth,
-                                title:b('.ad-hero h1'), lead:b('.ad-hero .owned-lead'), primary:b('.ad-hero .owned-primary'), film:b('.owned-film'),
-                                tryNow:b('.owned-try-now'), access:b('.owned-access'),
-                                titleFont:parseFloat(getComputedStyle(document.querySelector('.ad-hero h1')).fontSize)};
-                            }''')
-                            assert dimensions['width'] <= width + 1, f'Horizontal overflow: {dimensions}'
-                            assert dimensions['titleFont'] >= 30
-                            assert dimensions['title']['bottom'] <= dimensions['lead']['y'] + 2 or identifier == 'launchloom', 'Heading overlaps body'
-                            assert (dimensions['tryNow']['right'] <= dimensions['access']['x'] + 1 or dimensions['tryNow']['bottom'] <= dimensions['access']['y'] + 1), 'Scope sections overlap'
-                            assert dimensions['primary']['height'] >= 44
-                            assert dimensions['primary']['x'] >= 0 and dimensions['primary']['right'] <= width + 1
-                            assert dimensions['film']['width'] >= min(260, width - 60)
-                            assert page.locator('.owned-film figcaption a').is_visible()
-                            page.keyboard.press('Tab')
-                            assert page.evaluate('document.activeElement.classList.contains("skip-link")'), 'Skip link is not first'
-                            page.keyboard.press('Enter')
-                            assert page.evaluate('location.hash') == '#main'
-                            summary = page.locator('.owned-access summary')
-                            summary.focus()
-                            page.keyboard.press('Enter')
-                            assert page.locator('.owned-access').get_attribute('open') is not None
-                            page.keyboard.press('Enter')
-                            page.evaluate('document.activeElement.blur(); window.scrollTo(0,0)')
-                            if width in (1440, 390):
-                                page.screenshot(path=str(out / f'{key}.png'), full_page=True)
-                            report['layout'].append({'case': key, 'passed': True, 'geometry': dimensions})
+                            assert not any('.mp4' in req for req in requests), 'Video requested before play'
+                            entry = {'case': key, 'passed': True}
+                            if kind == 'layout':
+                                entry['geometry'] = layout(page, width)
+                                if width in (1440, 390):
+                                    page.screenshot(path=str(out / f'{key}.png'), full_page=True)
+                            elif kind == 'no_javascript':
+                                assert page.locator('.owned-primary').first.is_visible()
+                                assert page.locator('.owned-film figcaption a').is_visible()
+                                assert page.locator('.owned-film__screen>img').is_visible()
+                            else:
+                                page.locator('.owned-film__play').click()
+                                if args.layout_fixture:
+                                    page.locator('.owned-film video').evaluate('(v)=>v.dispatchEvent(new Event("error"))')
+                                page.wait_for_function('document.querySelector(".owned-film").dataset.mediaState === "unavailable"')
+                                assert page.locator('.owned-film__status').is_visible()
+                                assert page.locator('.owned-film__screen>img').is_visible()
+                                assert page.locator('.owned-film__play').is_enabled()
+                                assert page.locator('.owned-film figcaption a').is_visible()
+                            report[kind].append(entry)
                         except Exception as exc:
                             diagnostic(page, key, exc)
                         finally:
                             ctx.close()
-                    # Source links and real poster are available without the enhancement script.
-                    ctx = browser.new_context(viewport={'width':390,'height':844}, java_script_enabled=False)
-                    ctx.set_default_timeout(2500)
-                    ctx.route('**/*', serve)
-                    page = ctx.new_page()
-                    try:
-                        load(page, url)
-                        assert page.locator('.owned-primary').first.is_visible()
-                        assert page.locator('.owned-film figcaption a').is_visible()
-                        assert page.locator('.owned-film__screen>img').is_visible()
-                        report['no_javascript'].append({'case': f'{identifier}-{lang}', 'passed': True})
-                    except Exception as exc:
-                        diagnostic(page, f'no-js-{identifier}-{lang}', exc)
-                    finally:
-                        ctx.close()
-                    # A failed video must restore the poster and expose a working retry button.
-                    ctx = browser.new_context(viewport={'width':390,'height':844})
-                    ctx.set_default_timeout(2500)
-                    ctx.route('**/*', serve)
-                    page = ctx.new_page()
-                    try:
-                        load(page, url)
-                        page.locator('.owned-film__play').click()
-                        if args.layout_fixture:
-                            page.locator('.owned-film video').evaluate('(v)=>v.dispatchEvent(new Event("error"))')
-                        page.wait_for_function('document.querySelector(".owned-film").dataset.mediaState === "unavailable"')
-                        assert page.locator('.owned-film__status').is_visible()
-                        assert page.locator('.owned-film__screen>img').is_visible()
-                        assert page.locator('.owned-film__play').is_enabled()
-                        assert page.locator('.owned-film figcaption a').is_visible()
-                        report['failed_media'].append({'case': f'{identifier}-{lang}', 'passed': True})
-                    except Exception as exc:
-                        diagnostic(page, f'failed-media-{identifier}-{lang}', exc)
-                    finally:
-                        ctx.close()
         finally:
             browser.close()
-            (out / 'report.json').write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding='utf-8')
+            (out / 'report.json').write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding='utf-8')
     print(json.dumps({key:len(report[key]) for key in ['layout','no_javascript','failed_media','errors']}))
     if report['errors']:
-        raise SystemExit('Product art-direction browser QA failed; inspect report.json')
+        raise SystemExit('Art-direction browser QA failed; inspect report.json')
 
 if __name__ == '__main__':
     main()
