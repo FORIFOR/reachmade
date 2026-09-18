@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ORBIT PLAYGROUND</title>
+<link rel="stylesheet" href="/media/originals/genie/orbit-style-0.css">
+<link rel="icon" href="/assets/mark.svg"></head>
+<body>
+<canvas id="universe" aria-label="黄金の太陽と、公転する6つの惑星。惑星は画面下のボタンでも選択できます。"></canvas>
+<div class="ui">
+<header><div class="eyebrow">IDEA 003 / A TINY UNIVERSE ON MY MAC</div><h1>ORBIT PLAYGROUND</h1><p>小さな宇宙に、時間を流そう。</p></header>
+<main class="scene" id="scene"><div class="hint"><i></i>惑星に触れて、その世界へ。</div><aside class="card" id="card" aria-label="惑星の説明" hidden><button class="close" id="close" aria-label="説明を閉じる">×</button><div class="index" id="index"></div><h2 id="name"></h2><div class="jp" id="jp"></div><p class="description" id="description"></p><div class="fact"><span>太陽を一周する時間</span><strong id="period"></strong></div></aside></main>
+<footer><div class="controls"><button class="pause" id="pause" aria-label="公転を一時停止"><span id="pauseIcon" aria-hidden="true">Ⅱ</span><span id="pauseText">一時停止</span></button><label class="speed" for="speed">SPEED <input id="speed" type="range" min="0" max="3" step="0.05" value="1"><output id="speedValue" for="speed">1.00×</output></label><nav class="planet-nav" id="planetNav" aria-label="惑星を選ぶ"></nav></div><div class="colophon"><span>自分のペースで、宇宙をめぐる。</span><span>縮尺は演出 · 大きさ・距離・公転速度は実際と異なります</span></div></footer>
+</div>
+<script src="/media/originals/genie/orbit-script-1.js"></script>
+</body>
+</html>

@@ -48,7 +48,7 @@ npm run dev
 
 | プロダクト | Reachmade入口 | 現在の転送先 |
 |---|---|---|
-| Genie | https://genie.reachmade.com/ | https://genie-forifor.forifor.chatgpt.site/ |
+| Genie | https://genie.reachmade.com/ | https://reachmade.com/products/genie/ |
 | AI Meeting | https://ai-meeting.reachmade.com/ | https://ai-meeting.web.app/ |
 | Oathra | https://oathra.reachmade.com/ | https://forifor.github.io/oathra/ |
 | AI Secure | https://aisecure.reachmade.com/ | https://forifor.github.io/AISecure/ |

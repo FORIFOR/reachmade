@@ -2,11 +2,11 @@
 export const products = [
   {
     id: 'genie', name: 'Genie', index: '01', category: 'work', discipline: 'AI WORKSPACE',
-    repo: 'https://github.com/FORIFOR/genie', labSite: 'https://genie.reachmade.com/', site: 'https://genie-forifor.forifor.chatgpt.site',
+    repo: 'https://github.com/FORIFOR/genie', labSite: 'https://genie.reachmade.com/', site: 'https://reachmade.com/products/genie/',
     preview: '/assets/products/genie.jpg', previewSource: 'genie/docs/golden-screenshots/workspace-ux/home-1162-light.png', hero: true,
     source: 'https://github.com/FORIFOR/genie/blob/main/README.md',
     evidence: 'https://github.com/FORIFOR/genie/blob/main/docs/ENTERPRISE_READINESS.md',
-    demo: 'https://genie-forifor.forifor.chatgpt.site/#demo',
+    demo: 'https://reachmade.com/products/genie/demos/#prototype',
     sourceSha: 'b432b390dc50225743135e400afe9f7fba81ea31',
     ja: {
       headline: '考えを、手元に残る仕事へ。', demoLabel: '録画・画面を見る', previewLabel: '実アプリのワークスペース',
@@ -31,7 +31,7 @@ export const products = [
   },
   {
     id: 'ai-meeting', name: 'AI Meeting', index: '02', category: 'voice', discipline: 'VOICE & INTERACTION',
-    repo: 'https://github.com/FORIFOR/AI-meeting', labSite: 'https://ai-meeting.reachmade.com/', site: 'https://ai-meeting.web.app/',
+    repo: 'https://github.com/FORIFOR/AI-meeting', labSite: 'https://ai-meeting.reachmade.com/', site: 'https://reachmade.com/products/ai-meeting/', appSite: 'https://ai-meeting.web.app/',
     preview: '/assets/products/ai-meeting.jpg', previewSource: 'AI-meeting/docs/reports/img/gate7-result.png', featured: true,
     source: 'https://github.com/FORIFOR/AI-meeting/blob/main/README.md',
     evidence: 'https://github.com/FORIFOR/AI-meeting/blob/main/docs/validation.md',

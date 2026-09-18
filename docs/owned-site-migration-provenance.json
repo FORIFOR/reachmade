@@ -1,0 +1,283 @@
+{
+  "schema": 1,
+  "files": [
+    {
+      "source": "https://genie-forifor.forifor.chatgpt.site/assets/Genie-Next-Steps.md",
+      "path": "/media/originals/genie/assets/Genie-Next-Steps.md",
+      "bytes": 848,
+      "sha256": "faef3bf47a294d05318b9f80c3c00e37f04621a2ad6db1655ad3b72b01d708c1"
+    },
+    {
+      "source": "https://genie-forifor.forifor.chatgpt.site/assets/Genie-Web改善案.md",
+      "path": "/media/originals/genie/assets/Genie-Web改善案.md",
+      "bytes": 633,
+      "sha256": "38e4a4713d53b968b2d0e21f127bc209a6730a16e441cc4f3515e5bce655c6f3"
+    },
+    {
+      "source": "https://genie-forifor.forifor.chatgpt.site/assets/genie-icon.png",
+      "path": "/media/originals/genie/assets/genie-icon.png",
+      "bytes": 42378,
+      "sha256": "a29285f11afd6509a4ee9ccbdfe95886765c22f59e34dc3bd2b6e6db904b06b8"
+    },
+    {
+      "source": "https://genie-forifor.forifor.chatgpt.site/assets/genie-omni-poster.jpg",
+      "path": "/media/originals/genie/assets/genie-omni-poster.jpg",
+      "bytes": 17804,
+      "sha256": "ffac6602d32a9af0c47ac275d552fc1efc4590ae961ad37d07d5ebaaf278e39d"
+    },
+    {
+      "source": "https://genie-forifor.forifor.chatgpt.site/assets/genie-omni-preview.mp4",
+      "path": "/media/originals/genie/assets/genie-omni-preview.mp4",
+      "bytes": 1081269,
+      "sha256": "af685a16c62c8c931627c8512797119dba5ed67c411eb6d056895db7dd1665b3",
+      "duration": 10.005,
+      "streams": [
+        {
+          "codec_name": "h264",
+          "codec_type": "video",
+          "width": 1280,
+          "height": 720
+        },
+        {
+          "codec_name": "aac",
+          "codec_type": "audio"
+        }
+      ]
+    },
+    {
+      "source": "https://genie-forifor.forifor.chatgpt.site/assets/genie-orbit-poster-social.jpg",
+      "path": "/media/originals/genie/assets/genie-orbit-poster-social.jpg",
+      "bytes": 87088,
+      "sha256": "69687ff0c238148fe349a80f79d21a4940d2a86d621aad3618885fb7ebb7f699"
+    },
+    {
+      "source": "https://genie-forifor.forifor.chatgpt.site/assets/genie-orbit-poster.jpg",
+      "path": "/media/originals/genie/assets/genie-orbit-poster.jpg",
+      "bytes": 106125,
+      "sha256": "cd56630b67d4d986fdacfc6f0cad0ab8d4c53b3274349501cec152b102ee1b6e"
+    },
+    {
+      "source": "https://genie-forifor.forifor.chatgpt.site/assets/genie-orbit-social.mp4",
+      "path": "/media/originals/genie/assets/genie-orbit-social.mp4",
+      "bytes": 2743541,
+      "sha256": "a726402d5c8fbeb7816c9043619784636231dab676017fa596392e72119ceb65",
+      "duration": 33.0,
+      "streams": [
+        {
+          "codec_name": "h264",
+          "codec_type": "video",
+          "width": 1080,
+          "height": 1920
+        },
+        {
+          "codec_name": "aac",
+          "codec_type": "audio"
+        }
+      ]
+    },
+    {
+      "source": "https://genie-forifor.forifor.chatgpt.site/assets/genie-orbit-web.mp4",
+      "path": "/media/originals/genie/assets/genie-orbit-web.mp4",
+      "bytes": 2549408,
+      "sha256": "4d4fb8d4fde5d1f7ead1ae738a29f64293dc8588fa305ebafac73c79c487c5c3",
+      "duration": 33.0,
+      "streams": [
+        {
+          "codec_name": "h264",
+          "codec_type": "video",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "codec_name": "aac",
+          "codec_type": "audio"
+        }
+      ]
+    },
+    {
+      "source": "https://genie-forifor.forifor.chatgpt.site/assets/genie-product-film-social.mp4",
+      "path": "/media/originals/genie/assets/genie-product-film-social.mp4",
+      "bytes": 5741332,
+      "sha256": "a18bce64d112d902e0279102380ca494c73dc94b61097656e22280af6d8da4aa",
+      "duration": 42.0,
+      "streams": [
+        {
+          "codec_name": "h264",
+          "codec_type": "video",
+          "width": 1080,
+          "height": 1920
+        },
+        {
+          "codec_name": "aac",
+          "codec_type": "audio"
+        }
+      ]
+    },
+    {
+      "source": "https://genie-forifor.forifor.chatgpt.site/assets/genie-product-film-web.mp4",
+      "path": "/media/originals/genie/assets/genie-product-film-web.mp4",
+      "bytes": 6560761,
+      "sha256": "9dcd8445f3864eb4031ef5326a1788410c3f2873c5cec16c06c7667066e7ea40",
+      "duration": 42.0,
+      "streams": [
+        {
+          "codec_name": "h264",
+          "codec_type": "video",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "codec_name": "aac",
+          "codec_type": "audio"
+        }
+      ]
+    },
+    {
+      "source": "https://genie-forifor.forifor.chatgpt.site/assets/genie-product-poster-social.jpg",
+      "path": "/media/originals/genie/assets/genie-product-poster-social.jpg",
+      "bytes": 30697,
+      "sha256": "ee6816ebf3c7900703db6675a68ba95e808a25ad7889d02a9ef026a245c2f232"
+    },
+    {
+      "source": "https://genie-forifor.forifor.chatgpt.site/assets/genie-product-poster-web.jpg",
+      "path": "/media/originals/genie/assets/genie-product-poster-web.jpg",
+      "bytes": 29260,
+      "sha256": "60430c743b76b8e97e6ab5beb3a1e527d4d7cee4383d1ed7004ecde727834296"
+    },
+    {
+      "source": "https://genie-forifor.forifor.chatgpt.site/assets/genie-proposal-poster-social.jpg",
+      "path": "/media/originals/genie/assets/genie-proposal-poster-social.jpg",
+      "bytes": 27325,
+      "sha256": "274e27ce72412b8c1944e4fa3e34957fb13a8365b8ebd91e9e24fbb0a32a8201"
+    },
+    {
+      "source": "https://genie-forifor.forifor.chatgpt.site/assets/genie-proposal-poster.jpg",
+      "path": "/media/originals/genie/assets/genie-proposal-poster.jpg",
+      "bytes": 26577,
+      "sha256": "470fb62843cacea8a7b8e98ff2d638fdb9c7c30d566789e48662de1a3585ca51"
+    },
+    {
+      "source": "https://genie-forifor.forifor.chatgpt.site/assets/genie-web-proposal-social.mp4",
+      "path": "/media/originals/genie/assets/genie-web-proposal-social.mp4",
+      "bytes": 2376389,
+      "sha256": "4b687a37a72ea15ad32c767293aab243d118c63fd3f14dd3458f8a5e21fc36d6",
+      "duration": 30.0,
+      "streams": [
+        {
+          "codec_name": "h264",
+          "codec_type": "video",
+          "width": 1080,
+          "height": 1920
+        },
+        {
+          "codec_name": "aac",
+          "codec_type": "audio"
+        }
+      ]
+    },
+    {
+      "source": "https://genie-forifor.forifor.chatgpt.site/assets/genie-web-proposal-web.mp4",
+      "path": "/media/originals/genie/assets/genie-web-proposal-web.mp4",
+      "bytes": 2328023,
+      "sha256": "1bca09955dfb1621e8384f52cec8a8b75869f2d75db64f5a30b4688efd971484",
+      "duration": 30.0,
+      "streams": [
+        {
+          "codec_name": "h264",
+          "codec_type": "video",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "codec_name": "aac",
+          "codec_type": "audio"
+        }
+      ]
+    },
+    {
+      "source": "https://genie-forifor.forifor.chatgpt.site/assets/orbit-en.vtt",
+      "path": "/media/originals/genie/assets/orbit-en.vtt",
+      "bytes": 518,
+      "sha256": "e0c12b18ba62a31044d789ec4d8bdf68e4994a78501bea6f572d6fdacd4c39e6"
+    },
+    {
+      "source": "https://genie-forifor.forifor.chatgpt.site/assets/orbit-ja.vtt",
+      "path": "/media/originals/genie/assets/orbit-ja.vtt",
+      "bytes": 561,
+      "sha256": "e2569eb3411e1aa7ee92111853abf70ba4b1ec6a01e831a2cc92179ade6e7001"
+    },
+    {
+      "source": "https://genie-forifor.forifor.chatgpt.site/assets/product-en.vtt",
+      "path": "/media/originals/genie/assets/product-en.vtt",
+      "bytes": 893,
+      "sha256": "a84a19a1b647d7ff0babda32af9d78e06aecfbd2947b17116c2f05716f90605d"
+    },
+    {
+      "source": "https://genie-forifor.forifor.chatgpt.site/assets/product-ja.vtt",
+      "path": "/media/originals/genie/assets/product-ja.vtt",
+      "bytes": 1027,
+      "sha256": "580baa130f8c795e51485b8dab7a45b0290a2e8588c3567d5816a918f58ef500"
+    },
+    {
+      "source": "https://genie-forifor.forifor.chatgpt.site/assets/proposal-en.vtt",
+      "path": "/media/originals/genie/assets/proposal-en.vtt",
+      "bytes": 841,
+      "sha256": "ca045e77d74cc0324f582b4d1cebc2873e094f626b8b5ee01e79dfbd17cf1ac4"
+    },
+    {
+      "source": "https://genie-forifor.forifor.chatgpt.site/assets/proposal-ja.vtt",
+      "path": "/media/originals/genie/assets/proposal-ja.vtt",
+      "bytes": 923,
+      "sha256": "0260756accc45e98e77a84fe205fd5c83ab87ae251fac664ecb87e9ca290c7ce"
+    },
+    {
+      "source": "https://genie-forifor.forifor.chatgpt.site/orbit.html",
+      "path": "/media/originals/genie/orbit.html",
+      "bytes": 17058,
+      "sha256": "7a0a10cddb1b85a6eb03af2e446c46f558132f791f482ba5d88ffb8a1a42b070"
+    },
+    {
+      "source": "https://ai-meeting.forifor.chatgpt.site/avatar-room.png",
+      "path": "/media/originals/ai-meeting/avatar-room.png",
+      "bytes": 512413,
+      "sha256": "0f7b8f35a3b7e9f3629cccdf2d19ecc313415f45b162fe858d9093a1b4dadcd5"
+    },
+    {
+      "source": "https://ai-meeting.forifor.chatgpt.site/demo-en.vtt",
+      "path": "/media/originals/ai-meeting/demo-en.vtt",
+      "bytes": 1585,
+      "sha256": "b6503a74346a946079079c4de31028b1d25dbaa5bf53a7a28a6f015200715602"
+    },
+    {
+      "source": "https://ai-meeting.forifor.chatgpt.site/demo-ja.vtt",
+      "path": "/media/originals/ai-meeting/demo-ja.vtt",
+      "bytes": 1736,
+      "sha256": "83947f8c0da59c2cf4ef9d872277762383716066b98f844b26e7c515247fe679"
+    },
+    {
+      "source": "https://ai-meeting.forifor.chatgpt.site/demo-poster.jpg",
+      "path": "/media/originals/ai-meeting/demo-poster.jpg",
+      "bytes": 56750,
+      "sha256": "163ca154c20d5f334690c8e21fdfe5896dfce5561d440429b5c583328b755a5e"
+    },
+    {
+      "source": "https://ai-meeting.forifor.chatgpt.site/demo.mp4",
+      "path": "/media/originals/ai-meeting/demo.mp4",
+      "bytes": 6092417,
+      "sha256": "d680635192d7d100a0b5e13c8676eb89e7bf9936a91e2c1cf3b4fc9df2d307cc",
+      "duration": 45.09,
+      "streams": [
+        {
+          "codec_name": "h264",
+          "codec_type": "video",
+          "width": 1280,
+          "height": 720
+        },
+        {
+          "codec_name": "aac",
+          "codec_type": "audio"
+        }
+      ]
+    }
+  ]
+}

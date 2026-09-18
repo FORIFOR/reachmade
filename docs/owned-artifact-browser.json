@@ -1,0 +1,11 @@
+{
+  "url": "http://127.0.0.1:8787/media/originals/genie/orbit/",
+  "canvas_animated": true,
+  "errors": [],
+  "requests": [
+    "http://127.0.0.1:8787/media/originals/genie/orbit.html",
+    "http://127.0.0.1:8787/media/originals/genie/orbit/",
+    "http://127.0.0.1:8787/media/originals/genie/orbit-style-0.css",
+    "http://127.0.0.1:8787/media/originals/genie/orbit-script-1.js"
+  ]
+}

@@ -2,8 +2,8 @@
 // Cloudflare fetches these public files server-side. Visitor cookies, authorization,
 // IP headers and referrers are not forwarded to the product hosting providers.
 export const recordings = Object.freeze({
-  genie: 'https://genie-forifor.forifor.chatgpt.site/assets/genie-orbit-web.mp4',
-  'ai-meeting': 'https://ai-meeting.forifor.chatgpt.site/demo.mp4',
+  genie: 'https://reachmade.com/media/originals/genie/assets/genie-orbit-web.mp4',
+  'ai-meeting': 'https://reachmade.com/media/originals/ai-meeting/demo.mp4',
   oathra: 'https://forifor.github.io/oathra/media/oathra-battle-ja.mp4',
   aisecure: 'https://forifor.github.io/AISecure/media/intro.mp4',
   'agent-team': 'https://forifor.github.io/Multibot/media/real-walkthrough-ja-silent.mp4',

@@ -42,3 +42,17 @@ test('four bilingual support pages use owned media and correct app links',async(
   }
  }finally{await fs.rm(dist,{recursive:true,force:true});}
 });
+
+test('contact stays localized on the owned form without changing its submission endpoint',async()=>{
+ const {contactDestination}=await import('../src/site-content.mjs');
+ const {renderInquiry}=await import('../src/inquiry-page.mjs');
+ const config=JSON.parse(await fs.readFile(new URL('../site.config.json',import.meta.url),'utf8'));
+ for(const lang of ['ja','en']){
+  const html=renderInquiry(lang),url=contactDestination(config,lang);
+  assert.ok(html.includes(url)); assert.ok(url.startsWith('https://reachmade.com/'));
+  assert.ok(html.includes('method="post" action="/api/inquiries"'));
+  assert.ok(html.includes('name="consent" type="checkbox" required'));
+  assert.ok(!html.includes('chatgpt.site'));
+ }
+ assert.equal(decodeURIComponent(new URL('https://reachmade.com/media/Genie-Web%E6%94%B9%E5%96%84%E6%A1%88.md').pathname),'/media/Genie-Web改善案.md');
+});

@@ -1,5 +1,6 @@
 /** Download owned public recordings, cut them into concise honest website films, then package them before deployment. */
 import fs from 'node:fs/promises';
+import { readOwnedRecording } from '../src/owned-media.mjs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createHash } from 'node:crypto';
@@ -112,7 +113,7 @@ export async function renderSignatureFilm({ inputs, output, poster, ffmpeg = pro
   await run(ffmpeg, ['-hide_banner','-loglevel','error','-y','-ss','0.1','-i',output,'-frames:v','1','-q:v','2',poster]);
 }
 
-export async function prepareMedia({ dist = path.join(root, 'dist'), fetcher = fetch, ffmpeg = process.env.FFMPEG_BIN || 'ffmpeg', renderer = renderPremiumFilm, signatureRenderer = renderSignatureFilm } = {}) {
+export async function prepareMedia({ dist = path.join(root, 'dist'), fetcher = fetch, sourceReader = readOwnedRecording, ffmpeg = process.env.FFMPEG_BIN || 'ffmpeg', renderer = renderPremiumFilm, signatureRenderer = renderSignatureFilm } = {}) {
   await fs.access(path.join(dist, 'index.html'));
   validatePremiumFilmCuts();
   const recordingIds = Object.keys(recordings).sort();
@@ -128,7 +129,7 @@ export async function prepareMedia({ dist = path.join(root, 'dist'), fetcher = f
       if (!/^[a-z0-9-]+$/.test(id)) throw new Error('Invalid recording ID');
       let sourceBytes, lastError;
       for (let attempt = 0; attempt < 2; attempt++) {
-        try { sourceBytes = await downloadRecording(source, fetcher); break; }
+        try { sourceBytes = (await sourceReader(source)) ?? (await downloadRecording(source, fetcher)); break; }
         catch (error) { lastError = error; }
       }
       if (!sourceBytes) throw new Error(`${id}: ${lastError?.message}. Deployment stopped; no missing-video release will be published.`);

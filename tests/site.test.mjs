@@ -23,8 +23,8 @@ test('contact must use a known mode',()=>{const c=clone();c.contact.mode='form';
 test('rejects non-HTTPS contact',()=>{const c=clone();c.contact.url='javascript:alert(1)';assert.throws(()=>validateConfig(c));});
 test('email mode rejects an absent address',()=>{const c=clone();c.contact.email=null;assert.throws(()=>{c.contact.mode='email';validateConfig(c);});});
 test('email mode supports an owner-configured address',()=>{const c=clone();c.contact.mode='email';c.contact.email='owner@example.org';assert.doesNotThrow(()=>validateConfig(c));});
-test('26 routes represent 7 portfolio and 6 product pages per language',()=>{
- assert.equal(routes.length,26);for(const lang of ['ja','en'])assert.equal(routes.filter(r=>r.lang===lang).length,13);
+test('30 routes represent portfolio, product and owned guide pages in both languages',()=>{
+ assert.equal(routes.length,30);for(const lang of ['ja','en'])assert.equal(routes.filter(r=>r.lang===lang).length,15);
  assert.equal(routes.filter(r=>r.page.startsWith('product-')).length,12);
 });
 test('attribute checks do not mistake lazy data-src attributes for active sources',()=>{
@@ -44,7 +44,7 @@ for(const r of routes){
   assert.match(html,/hreflang="ja"/);assert.match(html,/hreflang="en"/);assert.match(html,/hreflang="x-default"/);
   assert.match(html,/og:image/);assert.match(html,/name="description"/);
   const ids=attr(html,'id');assert.equal(new Set(ids).size,ids.length,'duplicate IDs');
-  assert.equal((html.match(/<script\b/g)||[]).length,1);
+  assert.equal((html.match(/<script\b/g)||[]).length, ['genie-demos','ai-meeting-guide'].includes(r.page)?0:1);
   assert.ok(!/<iframe|\bonclick=|\bonload=/.test(html),'No inline scripts or external embeds');
   if(r.page==='contact'){
    assert.equal((html.match(/<form\b/g)||[]).length,1);
@@ -57,7 +57,7 @@ for(const r of routes){
   for(const value of attr(html,'href').concat(attr(html,'src'))){
    const u=new URL(decode(value),config.origin+r.route);
    if(u.origin!==config.origin) {assert.equal(u.protocol,'https:');continue;}
-   const dest=u.pathname;
+   const dest=decodeURIComponent(u.pathname);
    if(htmlByPath.has(dest)){
     if(u.hash)assert.ok(attr(htmlByPath.get(dest),'id').includes(decodeURIComponent(u.hash.slice(1))),`Missing fragment ${u.href}`);
    }else await fs.access(path.join(dist,dest));
@@ -101,7 +101,7 @@ test('product previews use real local project assets',async()=>{
  assert.equal((html.match(/class="product-preview/g)||[]).length,products.length);
  for(const p of products){assert.ok(p.preview);await fs.access(path.join(root,'public',p.preview));assert.match(html,new RegExp(`src="${p.preview.replaceAll('/','\\/') }"`));}
 });
-test('private inquiry is localized, explicit and retains the existing fallback',()=>{
+test('private inquiry is localized, explicit and uses the owned contact destination',()=>{
  const html=htmlByPath.get('/contact/');assert.ok(html.includes(contactDestination(config,'ja').replaceAll('&','&amp;')));
  assert.match(html,/送信ボタンを押すまで/);assert.match(html,/保存が完了した後/);
  assert.match(html,/name="consent" type="checkbox" required/);

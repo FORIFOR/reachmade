@@ -1,4 +1,5 @@
 import fs from 'node:fs/promises';
+import { writeOwnedGuides } from '../src/owned-guides.mjs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { build as buildCore, root, validateConfig } from './build-core.mjs';
@@ -18,6 +19,7 @@ export async function build() {
   await writeInquiryPages(dist);
   await writeShowcase(dist,products);
   await bundleDemoAssets(dist);
+  routes.push(...await writeOwnedGuides(dist));
   // Assert the generated files, not just the source modules. A stale or reordered
   // build must never silently ship an old page with new presentation assets.
   const showcaseRoutes = ['', 'en/', ...products.flatMap(p=>[`products/${p.id}/`,`en/products/${p.id}/`])];

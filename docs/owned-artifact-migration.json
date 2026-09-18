@@ -1,0 +1,13 @@
+{
+  "externalized": [
+    "media/originals/genie/orbit-style-0.css",
+    "media/originals/genie/orbit-script-1.js"
+  ],
+  "excluded_host_infrastructure": [
+    {
+      "type": "legacy-host-challenge",
+      "sha256": "7cd0887d1b084ac9992f9630e2142d71a41cf907b9d4bab620cc59b5f8b63547"
+    }
+  ],
+  "site_csp_unchanged": true
+}
