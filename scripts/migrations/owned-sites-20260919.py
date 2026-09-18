@@ -21,6 +21,10 @@ def read_public(url, maximum=MAX_FILE):
     if p.scheme!='https' or p.netloc not in {urlsplit(v).netloc for v in LEGACY.values()} or p.username or p.password:
         raise ValueError('Only the two fixed public source hosts are permitted')
     encoded=urlunsplit((p.scheme,p.netloc,quote(unquote(p.path),safe='/'),p.query,''))
+    # The existing public host redirects this exact artifact URL to /orbit.
+    # Resolve that verified spelling only; arbitrary redirects remain rejected.
+    if encoded == LEGACY['genie'] + '/orbit.html':
+        encoded = LEGACY['genie'] + '/orbit'
     request=Request(encoded,headers={'User-Agent':'Reachmade-owned-site-migration/1','Accept':'*/*'})
     with build_opener(NoRedirect).open(request,timeout=60) as response:
         if response.status!=200:raise RuntimeError(f'HTTP {response.status}: {url}')
