@@ -36,22 +36,25 @@ jobs:
       - run: npm run media:prepare
       - run: python -m pip install playwright==1.57.0
       - run: python -m playwright install --with-deps chromium
-      - name: Test fourteen pages, six recordings, keyboard, no-script and failed media
+      - name: Test fourteen pages, recordings and guided Product Lab interactions
         run: |
           npx wrangler@4 dev --local --ip 127.0.0.1 --port 8787 > /tmp/owned-pages-worker.log 2>&1 &
           PID=$!
           trap 'kill "$PID" || true' EXIT
           python scripts/verify-product-landings.py
-      - name: Preserve the actual check report in the job summary
+          python scripts/verify-lab-experience.py
+      - name: Preserve the actual check reports in the job summary
         if: always()
         run: |
-          if [ -f film-qa/product-landings/report.json ]; then
-            printf '## Product-led showcase — local Chromium\n\n1440 / 1024 / 390, Japanese and English. Not production or Safari.\n\n```json\n' >> "$GITHUB_STEP_SUMMARY"
-            cat film-qa/product-landings/report.json >> "$GITHUB_STEP_SUMMARY"
-            printf '\n```\n' >> "$GITHUB_STEP_SUMMARY"
-          else
-            printf 'No browser report was produced; earlier steps must be checked.\n' >> "$GITHUB_STEP_SUMMARY"
-          fi
+          for report in film-qa/product-landings/report.json film-qa/product-lab/report.json; do
+            if [ -f "$report" ]; then
+              printf '## Built-site Chromium checks: %s\n\nNot production or Safari.\n\n```json\n' "$report" >> "$GITHUB_STEP_SUMMARY"
+              cat "$report" >> "$GITHUB_STEP_SUMMARY"
+              printf '\n```\n' >> "$GITHUB_STEP_SUMMARY"
+            else
+              printf 'Report missing: %s. Check the earlier steps.\n' "$report" >> "$GITHUB_STEP_SUMMARY"
+            fi
+          done
       - name: Preserve screenshots and the exact built review site
         id: screenshots
         uses: actions/upload-artifact@v4
@@ -61,6 +64,7 @@ jobs:
           name: six-video-first-product-pages
           path: |
             film-qa/product-landings/
+            film-qa/product-lab/
             dist/
           retention-days: 1
       - name: Disclose unavailable review images

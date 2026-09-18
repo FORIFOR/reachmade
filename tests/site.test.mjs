@@ -44,7 +44,7 @@ for(const r of routes){
   assert.match(html,/hreflang="ja"/);assert.match(html,/hreflang="en"/);assert.match(html,/hreflang="x-default"/);
   assert.match(html,/og:image/);assert.match(html,/name="description"/);
   const ids=attr(html,'id');assert.equal(new Set(ids).size,ids.length,'duplicate IDs');
-  assert.equal((html.match(/<script\b/g)||[]).length, ['genie-demos','ai-meeting-guide'].includes(r.page)?0:1);
+  assert.equal((html.match(/<script\b/g)||[]).length,['genie-demos','ai-meeting-guide'].includes(r.page)?0:1);
   assert.ok(!/<iframe|\bonclick=|\bonload=/.test(html),'No inline scripts or external embeds');
   if(r.page==='contact'){
    assert.equal((html.match(/<form\b/g)||[]).length,1);
@@ -74,14 +74,17 @@ test('each product is rendered exactly once in each product directory',()=>{
   for(const p of products)assert.equal((html.match(new RegExp(`id="${p.id}"`,'g'))||[]).length,1);
  }
 });
-test('home leads with evidence and keeps the catalog data-driven',()=>{
- const html=htmlByPath.get('/');
- assert.ok(html.indexOf('class="hero container"') < html.indexOf('class="selected-work container"'));
- assert.ok(html.indexOf('class="selected-work container"') < html.indexOf('class="service-preview"'));
- assert.ok(html.indexOf('class="service-preview"') < html.indexOf('class="build-note container"'));
- assert.equal((html.match(/class="project-row"/g)||[]).length,products.filter(p=>p.featured).length);
- assert.equal((html.match(/class="compact-product"/g)||[]).length,products.filter(p=>!p.featured && !p.hero).length);
- assert.doesNotMatch(html,/class="product-ribbon"|class="manifesto/);
+test('home leads with an explorable product and retains source-aware catalogue routes',()=>{
+ for(const prefix of ['/','/en/']){
+  const html=htmlByPath.get(prefix);
+  const hero=html.indexOf('class="hero container lab-hero"'),explore=html.indexOf('id="explore"'),collection=html.indexOf('class="container lab-collection"'),proof=html.indexOf('class="lab-evidence-band"');
+  assert.ok(hero>=0&&hero<explore&&explore<collection&&collection<proof);
+  assert.equal((html.match(/class="lab-product-card"/g)||[]).length,products.length);
+  assert.equal((html.match(/data-studio-choice=/g)||[]).length,products.length);
+  for(const p of products){assert.ok(html.includes(`data-studio-choice="${p.id}"`));assert.ok(html.includes(`data-lab-select="${p.id}"`));assert.ok(html.includes(`${prefix}products/${p.id}/`));}
+  assert.match(html,/data-lab-proof/);assert.match(html,/data-lab-code/);assert.match(html,/data-lab-begin hidden/);
+  assert.doesNotMatch(html,/class="product-ribbon"|class="manifesto/);
+ }
 });
 test('Genie license and setup limits are explicit',()=>{
  const p=products.find(p=>p.id==='genie');assert.match(p.ja.license,/未設定/);assert.match(p.en.license,/no project-wide/);
