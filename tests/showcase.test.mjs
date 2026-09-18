@@ -6,6 +6,7 @@ import {showcase,renderStudioHome,refineProductPage} from '../src/showcase.mjs';
 import {products} from '../src/products.mjs';
 const root=path.resolve(import.meta.dirname,'..');
 const read=file=>fs.readFile(path.join(root,file),'utf8');
+const escapeHTML=value=>String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 test('each product has an explicit, different art direction',()=>{
  assert.equal(Object.keys(showcase).length,products.length);
  assert.equal(new Set(Object.values(showcase).map(x=>x.theme)).size,products.length);
@@ -28,8 +29,8 @@ for(const lang of ['ja','en']){
   assert.match(html,/src="\/assets\/showcase.mjs"/);
   assert.match(html,/class="owned-access"/);
   assert.match(html,/class="owned-action-note"/);
-  assert.ok(html.includes(p.preview));
-  assert.ok(html.includes(p.evidence));
+  assert.ok(html.includes(escapeHTML(p.preview)));
+  assert.ok(html.includes(escapeHTML(p.evidence)));
   assert.match(html,/data-recording-src="\/media\/products\//);
   assert.match(html,/rel="canonical"/);
   assert.match(html,/class="studio-related"/);
