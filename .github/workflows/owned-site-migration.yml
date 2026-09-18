@@ -2,22 +2,58 @@ name: Owned site migration validation
 on:
   push:
     branches: [migrate/owned-sites-20260919]
-    paths: ['.github/workflows/owned-site-migration.yml']
+    paths: ['.github/workflows/owned-site-migration.yml', 'scripts/migrations/owned-sites-20260919.py', 'src/owned-*.mjs', 'scripts/verify-owned-sites.py', 'tests/owned-sites.test.mjs']
   workflow_dispatch:
 permissions:
-  contents: read
+  contents: write
+concurrency:
+  group: owned-site-migration
+  cancel-in-progress: false
 jobs:
-  snapshot:
+  migrate-and-verify:
+    if: github.ref == 'refs/heads/migrate/owned-sites-20260919'
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 20
+    env:
+      WRANGLER_SEND_METRICS: 'false'
+      CI: 'true'
     steps:
       - uses: actions/checkout@v4
         with:
-          persist-credentials: false
-      - name: Archive tracked source for migration review
-        run: git archive --format=tar.gz HEAD > /tmp/reachmade-source.tar.gz
-      - uses: actions/upload-artifact@v4
+          ref: ${{ github.ref }}
+      - uses: actions/setup-node@v4
         with:
-          name: owned-site-migration-source
-          path: /tmp/reachmade-source.tar.gz
-          retention-days: 1
+          node-version: '22'
+      - name: Prepare validation tools
+        run: |
+          if ! command -v ffmpeg >/dev/null; then sudo apt-get update && sudo apt-get install -y ffmpeg; fi
+          python -m pip install playwright==1.57.0
+          python -m playwright install --with-deps chromium
+      - name: Import owned media and migrate current links
+        run: python scripts/migrations/owned-sites-20260919.py
+      - name: Validate source and build
+        run: npm run check
+      - name: Build recordings without the old hosts
+        run: npm run media:prepare
+      - name: Browser-check pages and original recordings
+        run: |
+          npx wrangler@4 dev --local --ip 127.0.0.1 --port 8787 > /tmp/owned-site-worker.log 2>&1 &
+          PID=$!
+          trap 'kill "$PID" || true' EXIT
+          python scripts/verify-owned-sites.py
+      - name: Commit only the reviewed migration outputs to the migration branch
+        run: |
+          git add src scripts/build.mjs scripts/build-core.mjs scripts/prepare-media.mjs tests public/assets public/media/originals docs README.md worker.js
+          git diff --cached --stat
+          if ! git diff --cached --quiet; then
+            git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Migrate Genie and AI Meeting site links and verified original recordings to Reachmade'
+            git push origin HEAD:refs/heads/migrate/owned-sites-20260919
+          fi
+          echo "MIGRATION_HEAD=$(git rev-parse HEAD)"
+      - name: Keep validation summary even when artifact storage is unavailable
+        if: always()
+        run: |
+          if [ -f docs/owned-site-migration-browser.json ]; then
+            cat docs/owned-site-migration-browser.json >> "$GITHUB_STEP_SUMMARY"
+          fi
+          if [ -f /tmp/owned-site-worker.log ]; then tail -50 /tmp/owned-site-worker.log; fi
