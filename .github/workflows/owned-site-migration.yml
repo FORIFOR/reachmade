@@ -1,0 +1,23 @@
+name: Owned site migration validation
+on:
+  push:
+    branches: [migrate/owned-sites-20260919]
+    paths: ['.github/workflows/owned-site-migration.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Archive tracked source for migration review
+        run: git archive --format=tar.gz HEAD > /tmp/reachmade-source.tar.gz
+      - uses: actions/upload-artifact@v4
+        with:
+          name: owned-site-migration-source
+          path: /tmp/reachmade-source.tar.gz
+          retention-days: 1
