@@ -1,17 +1,20 @@
 name: Owned product pages
 on:
   pull_request:
-    paths: ['src/product-landings.mjs', 'src/site-experience.mjs', 'src/site-content.mjs', 'scripts/build*.mjs', 'public/assets/product-landings.*', 'public/assets/reachmade-art-direction.css', 'public/assets/visual-ownership-responsive.css', 'public/assets/hero-layouts.css', 'tests/art-direction.test.mjs', 'tests/hero-layouts.test.mjs', 'tests/horio-premium.test.mjs', 'tests/product-landings.test.mjs', 'tests/site.test.mjs', 'scripts/verify-product-landings.py', '.github/workflows/owned-product-pages.yml']
+    paths: ['src/**', 'scripts/build*.mjs', 'public/assets/**', 'tests/**', 'scripts/verify*.py', '.github/workflows/owned-product-pages.yml']
   push:
     branches: [main]
-    paths: ['src/product-landings.mjs', 'src/site-experience.mjs', 'src/site-content.mjs', 'scripts/build*.mjs', 'public/assets/product-landings.*', 'public/assets/reachmade-art-direction.css', 'public/assets/visual-ownership-responsive.css', 'public/assets/hero-layouts.css', 'tests/art-direction.test.mjs', 'tests/hero-layouts.test.mjs', 'tests/horio-premium.test.mjs', 'tests/product-landings.test.mjs', 'tests/site.test.mjs', 'scripts/verify-product-landings.py', '.github/workflows/owned-product-pages.yml']
+    paths: ['src/**', 'scripts/build*.mjs', 'public/assets/**', 'tests/**', 'scripts/verify*.py', '.github/workflows/owned-product-pages.yml']
   workflow_dispatch:
 permissions:
   contents: read
+concurrency:
+  group: product-pages-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   browser:
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 15
     env:
       WRANGLER_SEND_METRICS: 'false'
       CI: 'true'
@@ -33,7 +36,7 @@ jobs:
       - run: npm run media:prepare
       - run: python -m pip install playwright==1.57.0
       - run: python -m playwright install --with-deps chromium
-      - name: Test all twelve pages and the six actual recordings
+      - name: Test fourteen pages, six recordings, keyboard, no-script and failed media
         run: |
           npx wrangler@4 dev --local --ip 127.0.0.1 --port 8787 > /tmp/owned-pages-worker.log 2>&1 &
           PID=$!
@@ -43,20 +46,22 @@ jobs:
         if: always()
         run: |
           if [ -f film-qa/product-landings/report.json ]; then
-            printf '## Six video-first product pages — local Chromium\n\n1440 / 1024 / 390, Japanese and English. Not production or Safari.\n\n```json\n' >> "$GITHUB_STEP_SUMMARY"
+            printf '## Product-led showcase — local Chromium\n\n1440 / 1024 / 390, Japanese and English. Not production or Safari.\n\n```json\n' >> "$GITHUB_STEP_SUMMARY"
             cat film-qa/product-landings/report.json >> "$GITHUB_STEP_SUMMARY"
             printf '\n```\n' >> "$GITHUB_STEP_SUMMARY"
           else
             printf 'No browser report was produced; earlier steps must be checked.\n' >> "$GITHUB_STEP_SUMMARY"
           fi
-      - name: Preserve optional screenshots when storage is available
+      - name: Preserve screenshots and the exact built review site
         id: screenshots
         uses: actions/upload-artifact@v4
         if: always()
         continue-on-error: true
         with:
           name: six-video-first-product-pages
-          path: film-qa/product-landings/
+          path: |
+            film-qa/product-landings/
+            dist/
           retention-days: 1
       - name: Disclose unavailable review images
         if: always() && steps.screenshots.outcome == 'failure'
