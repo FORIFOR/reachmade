@@ -1,4 +1,5 @@
 import fs from 'node:fs/promises';
+import { writeOwnedGuides } from '../src/owned-guides.mjs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { build as buildCore, root, validateConfig } from './build-core.mjs';
@@ -22,6 +23,7 @@ export async function build() {
   await bundleDemoAssets(dist);
   await writeLabExperience(dist,products);
   await writeSignature(dist,products);
+  routes.push(...await writeOwnedGuides(dist));
   // Assert the generated files, not just the source modules. A stale or reordered
   // build must never silently ship an old page with new presentation assets.
   const showcaseRoutes = ['', 'en/', ...products.flatMap(p=>[`products/${p.id}/`,`en/products/${p.id}/`])];
@@ -37,7 +39,7 @@ export async function build() {
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${routes.map(r=>`<url><loc>${config.origin}${r.route}</loc></url>`).join('\n')}\n</urlset>\n`;
   await fs.writeFile(path.join(dist,'sitemap.xml'),sitemap);
   await fs.writeFile(path.join(root,'docs/routes.json'),JSON.stringify(routes,null,2)+'\n');
-  console.log(`Built ${routes.length} localized portfolio/product pages + 404. Verified ${showcaseRoutes.length} product-led showcase pages. Existing product aliases are unchanged.`);
+  console.log(`Built ${routes.length} localized portfolio/product/guide pages + 404. Verified ${showcaseRoutes.length} product-led showcase pages.`);
   return routes;
 }
 if(process.argv[1] && path.resolve(process.argv[1])===fileURLToPath(import.meta.url)) await build();

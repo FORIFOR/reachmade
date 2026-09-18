@@ -2,8 +2,8 @@
 const escape = value => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const route = (language, page) => `${language === 'en' ? '/en' : ''}/${page}/`;
 const entries = {
-  genie: { ja: ['https://genie.reachmade.com/ja.html', 'https://genie-forifor.forifor.chatgpt.site/ja#demo', '操作動画を見る'], en: ['https://genie.reachmade.com/?lang=en', 'https://genie-forifor.forifor.chatgpt.site/?lang=en#demo', 'Watch the workflow'] },
-  'ai-meeting': { ja: ['https://ai-meeting.forifor.chatgpt.site/ja', 'https://ai-meeting.web.app/#tasks', '文字入力でタスクを試す'], en: ['https://ai-meeting.forifor.chatgpt.site/', 'https://ai-meeting.web.app/#tasks', 'Try text tasks (Japanese UI)'] },
+  genie: { ja: ['https://genie.reachmade.com/ja.html', 'https://reachmade.com/products/genie/demos/#prototype', '操作動画を見る'], en: ['https://genie.reachmade.com/?lang=en', 'https://reachmade.com/en/products/genie/demos/#prototype', 'Watch the workflow'] },
+  'ai-meeting': { ja: ['https://reachmade.com/products/ai-meeting/guide/', 'https://ai-meeting.web.app/#tasks', '文字入力でタスクを試す'], en: ['https://reachmade.com/products/ai-meeting/guide/', 'https://ai-meeting.web.app/#tasks', 'Try text tasks (Japanese UI)'] },
   oathra: { ja: ['https://oathra.reachmade.com/', 'https://oathra.reachmade.com/#sim', 'ブラウザーで判定を試す'], en: ['https://oathra.reachmade.com/en/', 'https://oathra.reachmade.com/en/#sim', 'Try the evidence engine'] },
   aisecure: { ja: ['https://aisecure.reachmade.com/index.ja.html', 'https://aisecure.reachmade.com/index.ja.html#case', 'サンプル事例を調べる'], en: ['https://aisecure.reachmade.com/', 'https://aisecure.reachmade.com/#case', 'Inspect a sample case'] },
   'agent-team': { ja: ['https://multibot.reachmade.com/ja/', 'https://multibot.reachmade.com/ja/#guide', '3ステップの使い方を見る'], en: ['https://multibot.reachmade.com/', 'https://multibot.reachmade.com/#workflow', 'See the three-step workflow'] },
@@ -15,9 +15,10 @@ export function productNavigation(product, language) {
   return { site, demo, demoLabel };
 }
 export function contactDestination(config, language) {
+  if (!['ja','en'].includes(language)) throw new TypeError('Unsupported language');
   if (config.contact.mode === 'email') return `mailto:${config.contact.email}`;
   const url = new URL(config.contact.url);
-  if (url.origin === 'https://ai-meeting.forifor.chatgpt.site' && ['/', '/ja', '/ja/'].includes(url.pathname)) url.pathname = language === 'ja' ? '/ja' : '/';
+  if (url.origin === 'https://reachmade.com' && ['/contact/', '/en/contact/'].includes(url.pathname)) url.pathname = language === 'ja' ? '/contact/' : '/en/contact/';
   return url.href;
 }
 export function improveCopy(original) {
@@ -29,7 +30,7 @@ export function improveCopy(original) {
     productsTitle: 'やりたいことから、<br>プロダクトを選ぶ。',
     productsLead: '会話、作成、電話、調査、レビュー、発信。<br>まずは用途を選び、実演と利用条件を確認してください。',
     contactPrimary: '相談フォームを開く',
-    contactNote: '開発者の既存フォーム（AI Meetingのサイト内）で、そのまま相談できます。このページで下書きを作る必要はありません。送信先は移動後の画面で確認できます。',
+    contactNote: 'このサイトの受付フォームから相談できます。送信先と情報の取り扱いを確認してから送信してください。',
     draftTitle: '送る内容を整理する（任意）',
     draftNote: '必要なときだけ使う下書きです。コピーした文章をリンク先のフォームに貼り付けられます。入力はブラウザー内だけで処理され、送信・保存しません。',
   });
@@ -40,7 +41,7 @@ export function improveCopy(original) {
     productsTitle: 'Start with what<br>you want to do.',
     productsLead: 'Conversation, drafting, calls, investigation, review and publishing.<br>Choose a task, then explore the demonstration and requirements.',
     contactPrimary: 'Open the inquiry form',
-    contactNote: 'Contact the developer directly using the existing form on the AI Meeting site. You do not need to draft or copy anything here first. Review the destination before submitting.',
+    contactNote: 'Use the inquiry form on this site. Review the stated destination and privacy information before submitting.',
     draftTitle: 'Prepare a brief (optional)',
     draftNote: 'Use this optional local draft only when helpful. Copy it into the linked form. Nothing entered here is sent to or stored on a server.',
   });

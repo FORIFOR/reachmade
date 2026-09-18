@@ -1,0 +1,113 @@
+{
+  "base": "http://127.0.0.1:8787",
+  "pages": [
+    {
+      "route": "/products/genie/",
+      "width": 390,
+      "status": 200,
+      "overflow": false
+    },
+    {
+      "route": "/products/ai-meeting/",
+      "width": 390,
+      "status": 200,
+      "overflow": false
+    },
+    {
+      "route": "/products/genie/demos/",
+      "width": 390,
+      "status": 200,
+      "overflow": false
+    },
+    {
+      "route": "/en/products/genie/demos/",
+      "width": 390,
+      "status": 200,
+      "overflow": false
+    },
+    {
+      "route": "/products/ai-meeting/guide/",
+      "width": 390,
+      "status": 200,
+      "overflow": false
+    },
+    {
+      "route": "/en/products/ai-meeting/guide/",
+      "width": 390,
+      "status": 200,
+      "overflow": false
+    },
+    {
+      "route": "/products/genie/",
+      "width": 1440,
+      "status": 200,
+      "overflow": false
+    },
+    {
+      "route": "/products/ai-meeting/",
+      "width": 1440,
+      "status": 200,
+      "overflow": false
+    },
+    {
+      "route": "/products/genie/demos/",
+      "width": 1440,
+      "status": 200,
+      "overflow": false
+    },
+    {
+      "route": "/en/products/genie/demos/",
+      "width": 1440,
+      "status": 200,
+      "overflow": false
+    },
+    {
+      "route": "/products/ai-meeting/guide/",
+      "width": 1440,
+      "status": 200,
+      "overflow": false
+    },
+    {
+      "route": "/en/products/ai-meeting/guide/",
+      "width": 1440,
+      "status": 200,
+      "overflow": false
+    }
+  ],
+  "videos": [
+    {
+      "src": "http://127.0.0.1:8787/media/originals/genie/assets/genie-orbit-web.mp4",
+      "duration": 33,
+      "time": 0.561254,
+      "width": 1920,
+      "height": 1080,
+      "error": null
+    },
+    {
+      "src": "http://127.0.0.1:8787/media/originals/genie/assets/genie-web-proposal-web.mp4",
+      "duration": 30,
+      "time": 0.559948,
+      "width": 1920,
+      "height": 1080,
+      "error": null
+    },
+    {
+      "src": "http://127.0.0.1:8787/media/originals/genie/assets/genie-product-film-web.mp4",
+      "duration": 42,
+      "time": 0.560418,
+      "width": 1920,
+      "height": 1080,
+      "error": null
+    },
+    {
+      "src": "http://127.0.0.1:8787/media/originals/ai-meeting/demo.mp4",
+      "duration": 45.09,
+      "time": 0.569618,
+      "width": 1280,
+      "height": 720,
+      "error": null
+    }
+  ],
+  "failures": [],
+  "ok": true
+}
