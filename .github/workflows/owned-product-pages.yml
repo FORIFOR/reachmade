@@ -21,7 +21,14 @@ jobs:
       - run: npm run check
       - name: Rebuild clean final pages after build-contract tests
         run: npm run build
-      - run: node scripts/vendor-website-media.mjs
+      - name: Install ffmpeg when needed
+        run: |
+          if ! command -v ffmpeg >/dev/null; then
+            sudo apt-get update
+            sudo apt-get install -y ffmpeg
+          fi
+      - name: Prepare real recordings with the current package script
+        run: npm run media:prepare
       - run: python -m pip install playwright==1.57.0
       - run: python -m playwright install --with-deps chromium
       - name: Current layouts, real playback and network-failure recovery
