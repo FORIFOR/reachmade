@@ -2,7 +2,8 @@
 
 Like scripts/verify_showcase.py, render final HTML/CSS/JS in memory. Normal
 mode uses complete built styles and real local posters; --layout-fixture uses
-explicit image stand-ins. This tests neither HTTP delivery nor live production,
+explicit image stand-ins. Media-error recovery uses an injected DOM error,
+not an HTTP failure E2E. This tests neither HTTP delivery nor live production,
 Safari, physical devices, nor actual AI execution.
 """
 from __future__ import annotations
@@ -31,13 +32,14 @@ def main() -> None:
     out.mkdir(parents=True, exist_ok=True)
     report = {'mode': 'isolated-layout-fixture' if args.layout_fixture else 'full-built-site-memory-render',
               'browser': 'Chromium', 'live_site': False, 'http_delivery': False,
+              'media_failure_method': 'injected DOM error; not network-failure E2E',
               'safari': False, 'layout': [], 'no_javascript': [], 'failed_media': [], 'errors': []}
     image_mock = b'<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000"><rect width="1600" height="1000" fill="#202a2c"/><text x="800" y="490" text-anchor="middle" fill="#ecebe4" font-family="sans-serif" font-size="40">MEDIA PLACEHOLDER</text><text x="800" y="555" text-anchor="middle" fill="#b0bab8" font-family="sans-serif" font-size="26">Layout fixture only - not a product screenshot</text></svg>'
 
     def serve(route):
         name = unquote(urlsplit(route.request.url).path)
         if name.endswith('.mp4'):
-            route.abort('failed')  # Explicit failure test, not playback validation.
+            route.abort('failed')
             return
         if args.layout_fixture and name.endswith(('.jpg', '.png')):
             route.fulfill(status=200, content_type='image/svg+xml', body=image_mock)
@@ -63,13 +65,17 @@ def main() -> None:
         assert html.count(style) == 1 and html.count(script) == 1, 'Unexpected asset entrypoints'
         html = html.replace(style, '<style>' + css + '</style>')
         html = html.replace(script, '<script type="module">' + js + '</script>')
+        recording = f'data-recording-src="/media/products/{identifier}.mp4"'
+        assert recording in html, 'Expected original recording path is missing'
         if args.layout_fixture:
             uri = 'data:image/svg+xml;base64,' + base64.b64encode(image_mock).decode()
-            html = re.sub(r'(src|poster)="/(?:assets|media)/products/[^" ]+\.jpg"', lambda m: m[1] + '="' + uri + '"', html)
+            html = re.sub(r'(?<![\w-])(src|poster)="/(?:assets|media)/products/[^" ]+\.jpg"', lambda m: m[1] + '="' + uri + '"', html)
         else:
-            # Do not add a base URL: fragment links must stay on this document.
-            html = re.sub(r'((?:src|poster|data-recording-src)=")(/(?:assets|media)/[^" ]+)',
+            # Resolve images only. Never rewrite data-recording-src: the real
+            # player's security guard deliberately accepts only relative paths.
+            html = re.sub(r'(?<![\w-])((?:src|poster)=")(/(?:assets|media)/[^" ]+)',
                           lambda m: m[1] + 'http://127.0.0.1:4173' + m[2], html)
+        assert recording in html, 'The test harness must not rewrite guarded recording paths'
         page.set_content(html, wait_until='networkidle')
 
     def diagnostic(page, key, exc):
@@ -80,7 +86,8 @@ def main() -> None:
                   const r=e.getBoundingClientRect(),c=getComputedStyle(e);
                   return {x:r.x,y:r.y,width:r.width,height:r.height,font:c.fontSize,display:c.display};};
                 return {body:document.body.outerHTML.slice(0,240),title:box('.ad-hero h1'),
-                  primary:box('.ad-hero .owned-primary'),film:box('.owned-film'),screen:box('.owned-film__screen')};
+                  primary:box('.ad-hero .owned-primary'),film:box('.owned-film'),screen:box('.owned-film__screen'),
+                  mediaState:document.querySelector('.owned-film')?.dataset.mediaState};
             }''')
             page.screenshot(path=str(out / f'failure-{key}.png'), full_page=True)
         except Exception as capture:
@@ -150,8 +157,11 @@ def main() -> None:
                                 assert page.locator('.owned-film__screen>img').is_visible()
                             else:
                                 page.locator('.owned-film__play').click()
-                                if args.layout_fixture:
-                                    page.locator('.owned-film video').evaluate('(v)=>v.dispatchEvent(new Event("error"))')
+                                video = page.locator('.owned-film video')
+                                assert video.get_attribute('src') == f'/media/products/{identifier}.mp4', 'Play did not pass the real source guard'
+                                # Exercise the unmodified native error listener. This is
+                                # deliberate event injection, not a network-failure E2E.
+                                video.evaluate('(v)=>v.dispatchEvent(new Event("error"))')
                                 page.wait_for_function('document.querySelector(".owned-film").dataset.mediaState === "unavailable"')
                                 assert page.locator('.owned-film__status').is_visible()
                                 assert page.locator('.owned-film__screen>img').is_visible()
