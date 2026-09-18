@@ -50,10 +50,10 @@ test('home leads with a clear product promise and a real product surface before 
     assert.match(html,/data-lab-begin hidden/);
     assert.doesNotMatch(html,/<video[^>]*\bautoplay\b/);
   }
-  assert.match(home,/そのアイデアに、<br>次の一手を。/);
+  assert.match(home,/AIを、<br>動く仕事に。/);
   assert.match(home,/6つのAIプロダクト/);
   assert.match(home,/サンプルから外部への送信・実行は行いません/);
-  assert.match(en,/An idea\.<br>A new way forward\./);
+  assert.match(en,/AI that moves<br>your work forward\./);
   assert.match(en,/Six AI products/);
   assert.match(en,/Samples do not execute workflows or send data/);
   assert.match(rhythm,/CLAIM  →  PROOF/);
