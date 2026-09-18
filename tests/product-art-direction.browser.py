@@ -11,6 +11,7 @@ import re
 import json
 import mimetypes
 import os
+import traceback
 from pathlib import Path
 from urllib.parse import unquote, urlsplit
 from playwright.sync_api import sync_playwright
@@ -52,6 +53,24 @@ def main() -> None:
             return
         mime = 'text/javascript' if target.suffix == '.mjs' else (mimetypes.guess_type(str(target))[0] or 'application/octet-stream')
         route.fulfill(status=200, content_type=mime, body=target.read_bytes())
+
+    def diagnostic(page, key, exc):
+        entry = {'case': key, 'error': str(exc), 'trace': traceback.format_exc()}
+        try:
+            entry['dom'] = page.evaluate("""() => {
+                const info = s => {const e=document.querySelector(s); if(!e)return null;
+                    const r=e.getBoundingClientRect(),c=getComputedStyle(e);
+                    return {html:e.outerHTML.slice(0,160),x:r.x,y:r.y,width:r.width,height:r.height,
+                    display:c.display,visibility:c.visibility,font:c.fontSize,gridArea:c.gridArea};};
+                return {h1:document.querySelectorAll('h1').length,videos:document.querySelectorAll('.ad-hero video').length,
+                    sheets:[...document.styleSheets].map(s=>s.href),
+                    title:info('.ad-hero h1'),primary:info('.ad-hero .owned-primary'),film:info('.owned-film'),
+                    screen:info('.owned-film__screen'),play:info('.owned-film__play'),source:info('.owned-film figcaption a')};
+            }""")
+            page.screenshot(path=str(out / f'failure-{key}.png'), full_page=True)
+        except Exception as capture_error:
+            entry['capture_error'] = str(capture_error)
+        report['errors'].append(entry)
 
     def load(page, url):
         if not args.layout_fixture:
@@ -122,7 +141,7 @@ def main() -> None:
                                 page.screenshot(path=str(out / f'{key}.png'), full_page=True)
                             report['layout'].append({'case': key, 'passed': True, 'geometry': dimensions})
                         except Exception as exc:
-                            report['errors'].append({'case': key, 'error': str(exc)})
+                            diagnostic(page, key, exc)
                         finally:
                             ctx.close()
                     # Source links and real poster are available without the enhancement script.
@@ -137,7 +156,7 @@ def main() -> None:
                         assert page.locator('.owned-film__screen>img').is_visible()
                         report['no_javascript'].append({'case': f'{identifier}-{lang}', 'passed': True})
                     except Exception as exc:
-                        report['errors'].append({'case': f'no-js-{identifier}-{lang}', 'error': str(exc)})
+                        diagnostic(page, f'no-js-{identifier}-{lang}', exc)
                     finally:
                         ctx.close()
                     # A failed video must restore the poster and expose a working retry button.
@@ -157,7 +176,7 @@ def main() -> None:
                         assert page.locator('.owned-film figcaption a').is_visible()
                         report['failed_media'].append({'case': f'{identifier}-{lang}', 'passed': True})
                     except Exception as exc:
-                        report['errors'].append({'case': f'failed-media-{identifier}-{lang}', 'error': str(exc)})
+                        diagnostic(page, f'failed-media-{identifier}-{lang}', exc)
                     finally:
                         ctx.close()
         finally:
