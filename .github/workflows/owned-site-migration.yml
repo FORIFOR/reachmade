@@ -2,7 +2,7 @@ name: Owned site migration validation
 on:
   push:
     branches: [migrate/owned-sites-20260919]
-    paths: ['.github/workflows/owned-site-migration.yml', 'scripts/migrations/*.py', 'src/owned-*.mjs', 'scripts/verify-owned-sites.py', 'tests/owned-sites.test.mjs']
+    paths: ['.github/workflows/owned-site-migration.yml', 'scripts/migrations/*.py', 'src/owned-*.mjs', 'scripts/verify-owned*.py', 'tests/owned*.test.mjs']
   workflow_dispatch:
 permissions:
   contents: write
@@ -37,6 +37,17 @@ jobs:
           python scripts/migrations/finish-owned-sites.py prepare
           python scripts/migrations/owned-sites-20260919.py
           python scripts/migrations/finish-owned-sites.py finish
+          python scripts/migrations/complete-owned-runtime.py
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib,json
+          p=Path('public/media/originals/genie/orbit.html')
+          p.write_text(p.read_text().replace('href="./orbit-','href="/media/originals/genie/orbit-').replace('src="./orbit-','src="/media/originals/genie/orbit-'))
+          manifest_path=Path('public/media/originals/manifest.json');manifest=json.loads(manifest_path.read_text())
+          for item in manifest['files']:
+              if item['path']=='/media/originals/genie/orbit.html':item.update(bytes=p.stat().st_size,sha256=hashlib.sha256(p.read_bytes()).hexdigest())
+          manifest_path.write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n')
+          PY
       - name: Validate source and build
         run: |
           npm run check > /tmp/owned-check.log 2>&1 || {
@@ -53,9 +64,15 @@ jobs:
           PID=$!
           trap 'kill "$PID" || true' EXIT
           python scripts/verify-owned-sites.py
+          python scripts/verify-owned-artifact.py
+      - name: Preserve checked media for Node-only Cloudflare Git builds
+        run: |
+          cp -a dist/media/. public/media/
+          npm run check > /tmp/owned-rebuild.log 2>&1 || { tail -70 /tmp/owned-rebuild.log; exit 1; }
+          tail -12 /tmp/owned-rebuild.log
       - name: Commit only the reviewed migration outputs to the migration branch
         run: |
-          git add src scripts/build.mjs scripts/build-core.mjs scripts/prepare-media.mjs tests public/assets public/media/originals docs README.md worker.js site.config.json
+          git add src scripts/build.mjs scripts/build-core.mjs scripts/prepare-media.mjs tests public/assets public/media docs README.md worker.js site.config.json
           git diff --cached --stat
           if ! git diff --cached --quiet; then
             git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Migrate Genie and AI Meeting site links and verified original recordings to Reachmade'
