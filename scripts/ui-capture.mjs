@@ -29,7 +29,26 @@ export const SHOTS = Object.freeze([
   { file: 'home-narrow.png', route: '/', width: 320, height: 900, state: 'default' },
   { file: 'home-en-desktop.png', route: '/en/', width: 1440, height: 1000, state: 'default' },
   { file: 'product-desktop.png', route: '/products/genie/', width: 1440, height: 1100, state: 'default' },
-  { file: 'product-mobile.png', route: '/products/oathra/', width: 390, height: 900, state: 'default' }
+  { file: 'product-mobile.png', route: '/products/oathra/', width: 390, height: 900, state: 'default' },
+  // Below the first view: the sections a viewport shot never reaches.
+  //
+  // These are captured with reduced motion on purpose. Entrance animations start at
+  // `opacity:.6` (lab-explorer.css `@keyframes lab-arrive`) and this browser produces
+  // no animation frames, so a default-motion capture can freeze mid-entrance and make
+  // a section look washed out that is not. Reduced motion disables those animations
+  // outright, so the colours in these files are the settled ones.
+  { file: 'home-tall-ja.png', route: '/', width: 1440, height: 8400, state: 'whole page, reduced motion', reducedMotion: true },
+  { file: 'home-tall-en.png', route: '/en/', width: 1440, height: 8400, state: 'whole page, reduced motion', reducedMotion: true },
+  { file: 'product-tall-genie.png', route: '/products/genie/', width: 1440, height: 5600, state: 'whole page, reduced motion', reducedMotion: true },
+  // Widths between the phone and the desktop shots, where layouts usually break.
+  { file: 'home-768.png', route: '/', width: 768, height: 1200, state: 'default' },
+  { file: 'home-960.png', route: '/', width: 960, height: 900, state: 'default, narrowest two-column width' },
+  { file: 'home-1024.png', route: '/', width: 1024, height: 900, state: 'default' },
+  { file: 'home-1920.png', route: '/', width: 1920, height: 1080, state: 'default' },
+  // Whole page on a phone. Anchor routes are useless here: `html{scroll-behavior:smooth}`
+  // needs animation frames, which this headless browser does not produce, so a
+  // `/#faq` capture silently returns the top of the page instead.
+  { file: 'home-mobile-tall.png', route: '/', width: 390, height: 12200, state: 'whole page, reduced motion', reducedMotion: true }
 ]);
 
 function candidates() {

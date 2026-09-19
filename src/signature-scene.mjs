@@ -80,33 +80,6 @@ export function renderMarquee(products, lang) {
   return `<section class="sig-marquee" aria-label="${esc(heading)}"><div class="sig-marquee-track"><ul class="sig-marquee-list">${items}</ul><ul class="sig-marquee-list" aria-hidden="true">${items}</ul></div></section>`;
 }
 
-/** Each product's own flow, taken from the ledger rather than written twice. */
-export function renderProductRail(product, lang) {
-  check(lang);
-  const parts = String(product[lang].outcome).split('→').map(part => part.trim()).filter(Boolean);
-  if (parts.length < 2) throw new TypeError(`Product ${product.id} has no usable flow`);
-  const ja = lang === 'ja';
-  const copy = {
-    kicker: ja ? 'この製品の流れ' : 'HOW THIS ONE MOVES',
-    note: ja ? '再現UIです。実行・保存は行いません。' : 'Illustrative UI. Nothing is executed or stored.',
-    play: ja ? '再生' : 'Play', pause: ja ? '停止' : 'Pause'
-  };
-  const steps = parts.map((part, index) => `<li class="sig-rail-step" data-step="${index}" data-step-state="${index === 0 ? 'current' : 'waiting'}"><span>${String(index + 1).padStart(2, '0')}</span><strong>${esc(part)}</strong></li>`).join('');
-  const dots = parts.map((_, index) => `<button type="button" data-scene-step="${index}" aria-pressed="false">${String(index + 1).padStart(2, '0')}</button>`).join('');
-  return `<div class="sig-rail" data-signature-scene="rail" data-scene-scroll data-state="0" role="group" aria-label="${esc(`${product.name} ${copy.kicker}`)}"><p class="sig-rail-kicker">${esc(copy.kicker)}</p><ol class="sig-rail-steps">${steps}</ol><div class="sig-controls sig-controls--rail" data-scene-controls hidden><button type="button" class="sig-toggle" data-scene-toggle data-label-play="${esc(copy.play)}" data-label-pause="${esc(copy.pause)}" aria-pressed="false">${esc(copy.play)}</button><div class="sig-dots" data-scene-dots>${dots}</div></div><p class="sig-rail-note">${esc(copy.note)}</p></div>`;
-}
-
-const ACCESS_ROW = '<div class="ad-access-row">';
-
-export function refineProduct(html, product, lang) {
-  check(lang);
-  if (html.includes(`data-signature-scene-version="${SCENE_VERSION}"`)) return html;
-  if (!html.includes(ACCESS_ROW)) throw new Error(`Unknown product hero for ${product.id}; refusing a partial rewrite`);
-  return html
-    .replace(ACCESS_ROW, () => renderProductRail(product, lang) + ACCESS_ROW)
-    .replace('<body ', `<body data-signature-scene-version="${SCENE_VERSION}" `);
-}
-
 export async function writeSignatureScenes(dist, products) {
   if (!Array.isArray(products) || products.length < 1) throw new TypeError('Expected the product ledger');
   const pages = [];
@@ -116,10 +89,6 @@ export async function writeSignatureScenes(dist, products) {
     const html = await fs.readFile(home, 'utf8');
     if (!html.includes('data-signature-scene="chain"')) throw new Error('The final home pass must compose the signature scene first');
     if (!html.includes(`data-signature-scene-version="${SCENE_VERSION}"`)) pages.push([home, html.replace('<body ', `<body data-signature-scene-version="${SCENE_VERSION}" `)]);
-    for (const product of products) {
-      const file = path.join(dist, prefix, 'products', product.id, 'index.html');
-      pages.push([file, refineProduct(await fs.readFile(file, 'utf8'), product, lang)]);
-    }
   }
   const assets = path.join(dist, 'assets');
   const [css, js, extra, client] = await Promise.all(['showcase.css', 'showcase.mjs', 'signature-scene.css', 'signature-scene.mjs'].map(file => fs.readFile(path.join(assets, file), 'utf8')));

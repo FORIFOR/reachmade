@@ -4,7 +4,7 @@ import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import {SCENE_VERSION, sceneTimeline, stateAt, scrollProgress, mountScene} from '../public/assets/signature-scene.mjs';
-import {renderChainScene, renderMarquee, renderProductRail, refineProduct, writeSignatureScenes} from '../src/signature-scene.mjs';
+import {renderChainScene, renderMarquee, writeSignatureScenes} from '../src/signature-scene.mjs';
 import {products} from '../src/products.mjs';
 
 /* A scene is only ever a sequence of DOM states, so a small stand-in for the
@@ -164,51 +164,25 @@ for (const lang of ['ja', 'en']) {
     assert.ok(html.includes(products[0][lang].outcome));
   });
 
-  test(`rail/${lang}: every product's flow comes from the ledger`, () => {
-    for (const product of products) {
-      const html = renderProductRail(product, lang);
-      const parts = product[lang].outcome.split('→').map(s => s.trim());
-      assert.equal((html.match(/data-step="/g) || []).length, parts.length);
-      for (const part of parts) assert.ok(html.includes(part), `${product.id}: ${part}`);
-      assert.match(html, /data-scene-scroll/);
-      assert.match(html, lang === 'ja' ? /実行・保存は行いません/ : /Nothing is executed or stored/);
-    }
-    assert.throws(() => renderProductRail({...products[0], [lang]: {...products[0][lang], outcome: 'single'}}, lang), TypeError);
-  });
 
-  test(`product page/${lang}: the rail is added once and never replaces the evidence`, () => {
-    const page = '<body data-art-direction="20260919"><section class="container owned-hero-grid"><figure class="owned-film">Original proof.</figure><div class="ad-access-row">Access</div></section></body>';
-    const once = refineProduct(page, products[0], lang);
-    assert.ok(once.includes('<figure class="owned-film">Original proof.</figure>'));
-    assert.ok(once.includes(`data-signature-scene-version="${SCENE_VERSION}"`));
-    assert.ok(once.indexOf('sig-rail') < once.indexOf('<div class="ad-access-row">'));
-    assert.equal(refineProduct(once, products[0], lang), once);
-  });
 }
 
 test('unsupported locales and shells fail closed', () => {
   for (const lang of ['de', 'constructor', '__proto__']) {
     assert.throws(() => renderChainScene(lang), TypeError);
     assert.throws(() => renderMarquee(products, lang), TypeError);
-    assert.throws(() => renderProductRail(products[0], lang), TypeError);
   }
   assert.throws(() => renderMarquee([], 'ja'), TypeError);
-  assert.throws(() => refineProduct('<body></body>', products[0], 'ja'), /Unknown product hero/);
 });
 
 test('build integration appends one layer, repeats cleanly and needs the scene present', async () => {
   const tmp = await fs.mkdtemp(path.join(os.tmpdir(), 'reachmade-scene-'));
   const home = lang => `<html lang="${lang}"><body data-outcome-first="x">${renderChainScene(lang)}</body></html>`;
-  const product = '<body data-art-direction="20260919"><figure class="owned-film">proof</figure><div class="ad-access-row">Access</div></body>';
   try {
     await fs.mkdir(path.join(tmp, 'assets'), {recursive: true});
     await fs.mkdir(path.join(tmp, 'en'), {recursive: true});
     for (const [prefix, lang] of [['', 'ja'], ['en', 'en']]) {
       await fs.writeFile(path.join(tmp, prefix, 'index.html'), home(lang));
-      for (const p of products) {
-        await fs.mkdir(path.join(tmp, prefix, 'products', p.id), {recursive: true});
-        await fs.writeFile(path.join(tmp, prefix, 'products', p.id, 'index.html'), product);
-      }
     }
     await fs.writeFile(path.join(tmp, 'assets/showcase.css'), '/* earlier layers */');
     await fs.writeFile(path.join(tmp, 'assets/showcase.mjs'), '// earlier layers');
@@ -220,12 +194,21 @@ test('build integration appends one layer, repeats cleanly and needs the scene p
     assert.equal(first, second);
     assert.equal((second.match(/REACHMADE_SIGNATURE_SCENE/g) || []).length, 1);
     assert.match(await fs.readFile(path.join(tmp, 'assets/showcase.mjs'), 'utf8'), /import\('\.\/signature-scene\.mjs'\)/);
-    for (const p of products) assert.match(await fs.readFile(path.join(tmp, 'products', p.id, 'index.html'), 'utf8'), /sig-rail/);
     await fs.writeFile(path.join(tmp, 'index.html'), '<html><body>no scene</body></html>');
     await assert.rejects(writeSignatureScenes(tmp, products), /must compose the signature scene/);
   } finally {
     await fs.rm(tmp, {recursive: true, force: true});
   }
+});
+
+test('the signature pass leaves product pages alone', async () => {
+  const source = await fs.readFile(new URL('../src/signature-scene.mjs', import.meta.url), 'utf8');
+  // The product hero already carries the film story and the "what this demo shows"
+  // flow. A third copy with its own play button made the page ambiguous, so this
+  // pass only composes the home.
+  assert.doesNotMatch(source, /sig-rail|refineProduct|ad-access-row/);
+  const css = await fs.readFile(new URL('../public/assets/signature-scene.css', import.meta.url), 'utf8');
+  assert.doesNotMatch(css, /sig-rail/);
 });
 
 test('the client stays dependency-free, storage-free and respects visitor settings', async () => {

@@ -18,7 +18,11 @@
   "checks": [
     {
       "name": "check",
-      "command": ["npm", "run", "check"]
+      "command": [
+        "npm",
+        "run",
+        "check"
+      ]
     }
   ],
   "requiredImages": [
@@ -28,7 +32,15 @@
     "artifacts/ui/home-narrow.png",
     "artifacts/ui/home-en-desktop.png",
     "artifacts/ui/product-desktop.png",
-    "artifacts/ui/product-mobile.png"
+    "artifacts/ui/product-mobile.png",
+    "artifacts/ui/home-tall-ja.png",
+    "artifacts/ui/home-tall-en.png",
+    "artifacts/ui/product-tall-genie.png",
+    "artifacts/ui/home-768.png",
+    "artifacts/ui/home-960.png",
+    "artifacts/ui/home-1024.png",
+    "artifacts/ui/home-1920.png",
+    "artifacts/ui/home-mobile-tall.png"
   ],
   "reviewFile": "artifacts/ui/review.json",
   "timeoutSeconds": 600,
