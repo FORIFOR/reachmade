@@ -10,6 +10,7 @@ import { writeInquiryPages } from '../src/inquiry-page.mjs';
 import { writeShowcase } from '../src/showcase.mjs';
 import { bundleDemoAssets } from '../src/animated-demo-assets.mjs';
 import { writeLabExperience } from '../src/lab-experience.mjs';
+import { writeSignature } from '../src/lab-signature.mjs';
 export { root, escapeHTML, validateConfig } from './build-core.mjs';
 
 export async function build() {
@@ -21,13 +22,14 @@ export async function build() {
   await writeShowcase(dist,products);
   await bundleDemoAssets(dist);
   await writeLabExperience(dist,products);
+  await writeSignature(dist,products);
   routes.push(...await writeOwnedGuides(dist));
   // Assert the generated files, not just the source modules. A stale or reordered
   // build must never silently ship an old page with new presentation assets.
   const showcaseRoutes = ['', 'en/', ...products.flatMap(p=>[`products/${p.id}/`,`en/products/${p.id}/`])];
   for (const route of showcaseRoutes) {
     const html = await fs.readFile(path.join(dist,route,'index.html'),'utf8');
-    if (!html.includes('data-showcase="20260918"') || !html.includes('href="/assets/showcase.css"') || !html.includes('src="/assets/showcase.mjs"') || !html.includes('data-lab-experience="20260919-product-lab-1"')) {
+    if (!html.includes('data-showcase="20260918"') || !html.includes('href="/assets/showcase.css"') || !html.includes('src="/assets/showcase.mjs"') || !html.includes('data-lab-experience="20260919-product-lab-1"') || !html.includes('data-lab-signature="20260919-request-result-1"')) {
       throw new Error(`Showcase build incomplete at /${route}`);
     }
     if (!route.includes('products/') && !html.includes('data-studio-choice="genie"')) {
