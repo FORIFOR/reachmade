@@ -1,0 +1,164 @@
+/* Final home composition. Owns the hero layout, the access table, the FAQ and the footer.
+   Scoped to [data-home-flagship] and carries enough specificity to settle the earlier
+   hero layers deterministically instead of relying on source order alone. */
+body[data-home-flagship]{--rm-line:#dbdcd2;--rm-soft:#eeede6;--rm-dim:#5d635a;--rm-mono:ui-monospace,SFMono-Regular,Consolas,monospace}
+
+/* ---- Opening ---------------------------------------------------------- */
+body[data-home-flagship] .hero.container.lab-hero{display:block;gap:0;max-width:none;text-align:left;padding:clamp(30px,3.6vw,56px) 0 clamp(26px,3vw,44px)}
+.rm-hero-grid{display:grid;grid-template-columns:minmax(0,.86fr) minmax(0,1.14fr);align-items:center;gap:clamp(30px,4vw,74px)}
+.rm-hero-copy{min-width:0}
+body[data-home-flagship] .rm-hero-copy .eyebrow{display:block;margin:0 0 clamp(16px,1.6vw,22px);font-size:10px;letter-spacing:.11em;color:#6d7569}
+body[data-home-flagship] .rm-hero-copy h1{margin:0;font-size:clamp(37px,4.35vw,63px);font-weight:600;line-height:1.24;letter-spacing:-.052em;text-wrap:balance}
+.rm-hero-lead{margin:clamp(18px,1.7vw,26px) 0 0;font-size:clamp(15px,1.15vw,17px);line-height:1.95;color:var(--rm-dim)}
+.rm-hero-actions{display:flex;align-items:center;flex-wrap:wrap;gap:12px 26px;margin-top:clamp(20px,2vw,30px)}
+.rm-primary{display:inline-flex;align-items:center;justify-content:space-between;gap:26px;min-height:52px;padding:14px 24px;background:var(--ink);color:var(--paper);font-size:13px;font-weight:600;transition:background .18s,transform .18s}
+.rm-primary:hover{background:var(--accent);transform:translateY(-1px)}
+.rm-secondary{display:inline-flex;align-items:center;gap:12px;min-height:48px;font-size:13px;font-weight:550;border-bottom:1px solid var(--rm-line);transition:color .18s,border-color .18s}
+.rm-secondary:hover{color:var(--accent);border-color:currentColor}
+.rm-hero-facts{display:flex;flex-wrap:wrap;list-style:none;margin:clamp(26px,3vw,42px) 0 0;padding:clamp(17px,1.6vw,22px) 0 0;border-top:1px solid var(--rm-line)}
+.rm-hero-facts li{margin-right:clamp(20px,2.4vw,34px);padding-right:clamp(20px,2.4vw,34px);border-right:1px solid var(--rm-line)}
+.rm-hero-facts li:last-child{margin-right:0;padding-right:0;border-right:0}
+.rm-hero-facts b{display:block;font:550 19px/1.2 var(--rm-mono);letter-spacing:-.02em}
+.rm-hero-facts span{display:block;margin-top:5px;font-size:10px;line-height:1.6;color:var(--rm-dim)}
+.rm-hero-stage{min-width:0}
+.rm-proof{margin-top:clamp(30px,3.4vw,52px)}
+.rm-proof-head{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:baseline;gap:8px clamp(20px,2.4vw,34px);margin-bottom:clamp(13px,1.3vw,18px)}
+body[data-home-flagship] .rm-proof-head .eyebrow{margin:0;font-size:10px;letter-spacing:.11em;color:#6d7569;white-space:nowrap}
+.rm-proof-head>p:last-child{margin:0;font-size:12px;line-height:1.9;color:var(--rm-dim)}
+.rm-proof .outcome-real-result{box-shadow:0 30px 64px -46px #101d1a}
+
+.rm-bridge{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:10px clamp(22px,3vw,46px);margin-top:clamp(28px,3vw,44px);padding-top:clamp(18px,1.8vw,24px);border-top:1px solid var(--rm-line)}
+.rm-bridge>span{font-size:14px;font-weight:550;letter-spacing:-.025em}
+.rm-bridge>p{margin:0;font-size:11px;line-height:1.85;color:var(--rm-dim)}
+.rm-bridge>a{display:inline-flex;align-items:center;gap:14px;min-height:44px;font-size:12px;font-weight:550;white-space:nowrap}
+.rm-bridge>a:hover{color:var(--accent)}
+
+/* ---- Shared band typography ------------------------------------------ */
+.rm-band{border-top:1px solid var(--rm-line)}
+.rm-band-head{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);align-items:end;gap:22px clamp(40px,5vw,90px);margin-bottom:clamp(28px,3vw,46px)}
+.rm-band-head h2{margin-top:14px;font-size:clamp(27px,3.1vw,42px);font-weight:560;line-height:1.42;letter-spacing:-.048em}
+.rm-band-head>p{margin:0;max-width:48ch;font-size:13px;line-height:2;color:var(--rm-dim)}
+body[data-home-flagship] :is(.rm-hero-lead,.rm-bridge>p,.rm-band-head>p,.rm-access-note,.rm-faq-intro>p,.rm-faq-item p,.rm-foot-brand p){overflow-wrap:normal;word-break:normal;word-break:auto-phrase;line-break:strict}
+.rm-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+
+/* ---- What it takes to actually try each product ----------------------- */
+.rm-access{padding-block:clamp(54px,6vw,96px)}
+.rm-access-scroll{overflow-x:auto}
+.rm-access-table{width:100%;min-width:640px;border-collapse:collapse;text-align:left;font-size:13px;line-height:1.75}
+.rm-access-table th,.rm-access-table td{padding:15px 24px 15px 0;border-bottom:1px solid var(--rm-line);vertical-align:middle}
+.rm-access-table th:last-child,.rm-access-table td:last-child{padding-right:0}
+.rm-access-table thead th{padding-bottom:11px;border-bottom:1px solid var(--ink);font:500 10px/1.6 var(--rm-mono);letter-spacing:.09em;color:var(--rm-dim);white-space:nowrap}
+.rm-access-table tbody th{font-size:16px;font-weight:600;letter-spacing:-.035em;white-space:nowrap}
+.rm-access-table tbody th a{border-bottom:1px solid transparent}
+.rm-access-table tbody th a:hover{border-color:currentColor;color:var(--accent)}
+.rm-access-index{display:block;margin-bottom:2px;font:10px/1.6 var(--rm-mono);letter-spacing:.08em;color:var(--rm-dim)}
+.rm-access-table td{color:var(--rm-dim)}
+.rm-stage-tag{display:inline-flex;align-items:center;padding:4px 11px;border:1px solid var(--rm-line);font-size:11px;line-height:1.7;color:var(--ink);white-space:nowrap}
+.rm-access-link{display:inline-flex;align-items:center;gap:12px;min-height:44px;font-size:12px;font-weight:550;color:var(--ink);white-space:nowrap}
+.rm-access-link:hover{color:var(--accent)}
+.rm-access-note{margin:22px 0 0;max-width:80ch;font-size:11px;line-height:1.95;color:var(--rm-dim)}
+
+/* ---- The questions, before they have to be asked ---------------------- */
+.rm-faq{background:var(--rm-soft);padding-block:clamp(54px,6vw,96px)}
+.rm-faq-grid{display:grid;grid-template-columns:minmax(0,.78fr) minmax(0,1.22fr);align-items:start;gap:clamp(28px,4vw,84px)}
+.rm-faq-intro h2{margin:14px 0 17px;font-size:clamp(26px,2.9vw,40px);font-weight:560;line-height:1.45;letter-spacing:-.048em}
+.rm-faq-intro>p{margin:0 0 24px;font-size:13px;line-height:2;color:var(--rm-dim)}
+.rm-faq-item{border-top:1px solid var(--rm-line)}
+.rm-faq-item:last-child{border-bottom:1px solid var(--rm-line)}
+.rm-faq-item summary{display:flex;align-items:center;gap:16px;min-height:58px;padding:18px 0;font-size:15px;font-weight:550;line-height:1.6;letter-spacing:-.025em;cursor:pointer;list-style:none}
+.rm-faq-item summary::-webkit-details-marker{display:none}
+.rm-faq-item summary>span:nth-of-type(2){flex:1}
+.rm-faq-number{font:10px/1 var(--rm-mono);letter-spacing:.08em;color:var(--rm-dim)}
+.rm-faq-item summary i{font-style:normal;font-size:20px;line-height:1;color:var(--rm-dim);transition:transform .2s}
+.rm-faq-item[open] summary i{transform:rotate(45deg)}
+.rm-faq-item summary:hover{color:var(--accent)}
+.rm-faq-item p{margin:0;padding:0 26px 24px 34px;font-size:13px;line-height:2.05;color:var(--rm-dim)}
+
+/* ---- Footer ----------------------------------------------------------- */
+body[data-home-flagship] .site-footer.rm-footer{border-top:1px solid var(--rm-line);padding:clamp(44px,4.4vw,66px) 0 0}
+.rm-foot-top{display:grid;grid-template-columns:minmax(0,.92fr) minmax(0,2.08fr);gap:clamp(30px,4vw,70px);padding-bottom:clamp(34px,3.6vw,54px)}
+.rm-foot-brand .footer-brand{font-size:21px}
+.rm-foot-brand p{margin:16px 0 0;font-size:11px;line-height:2;color:var(--rm-dim)}
+.rm-foot-cols{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:22px 28px}
+.rm-foot-col h2{margin:0 0 9px;font:500 10px/1.6 var(--rm-mono);font-weight:500;letter-spacing:.1em;color:var(--rm-dim)}
+.rm-foot-col ul{margin:0;padding:0;list-style:none}
+.rm-foot-col a{display:inline-flex;align-items:center;gap:8px;min-height:34px;font-size:12px}
+.rm-foot-col a:hover{color:var(--accent);text-decoration:underline;text-underline-offset:4px}
+.rm-foot-bottom{display:flex;align-items:center;justify-content:space-between;gap:20px;border-top:1px solid var(--rm-line);padding:15px 0 20px}
+.rm-foot-bottom small{font:10px/1.6 var(--rm-mono);color:var(--rm-dim)}
+.rm-to-top{display:inline-flex;align-items:center;gap:10px;min-height:44px;font-size:11px}
+.rm-to-top:hover{color:var(--accent)}
+
+/* ---- Responsive ------------------------------------------------------- */
+@media(max-width:1080px){
+ .rm-hero-grid{grid-template-columns:1fr;gap:clamp(26px,3vw,38px)}
+ .rm-hero-copy{max-width:34em}
+ .rm-faq-grid{grid-template-columns:1fr;gap:26px}
+ .rm-faq-intro>p{max-width:48ch}
+ .rm-foot-top{grid-template-columns:1fr;gap:34px}
+}
+@media(max-width:900px){
+ .rm-band-head{grid-template-columns:1fr;align-items:start;gap:16px}
+ .rm-band-head h2{margin-top:12px}
+ .rm-foot-cols{grid-template-columns:repeat(2,minmax(0,1fr));gap:26px 24px}
+ body[data-home-flagship] .site-header{height:auto}
+ body[data-home-flagship] .header-inner{flex-wrap:wrap;gap:0;min-height:74px}
+ body[data-home-flagship] .main-nav{flex-basis:100%;flex-wrap:wrap;justify-content:space-between;gap:6px 22px;padding:0 0 18px}
+ body[data-home-flagship] .main-nav .nav-tail{margin-left:auto}
+ html.js body[data-home-flagship] .nav-toggle{display:flex;align-items:center;justify-content:space-between;gap:18px;min-height:44px;padding:9px 0 9px 15px;border:0;background:transparent;font-size:12px}
+ html.js body[data-home-flagship] .nav-toggle>span{font-size:21px;line-height:1;color:var(--accent)}
+ html.js body[data-home-flagship] .main-nav:not(.open){display:none}
+ html.js body[data-home-flagship] .main-nav.open{display:flex}
+ .rm-bridge{grid-template-columns:minmax(0,1fr) auto}
+ .rm-bridge>p{grid-column:1;grid-row:2}
+ .rm-bridge>a{grid-column:2;grid-row:1/3}
+}
+@media(max-width:760px){
+ .rm-access-scroll{overflow-x:visible}
+ .rm-access-table{min-width:0}
+ .rm-access-table,.rm-access-table tbody,.rm-access-table tr,.rm-access-table th,.rm-access-table td{display:block}
+ .rm-access-table thead{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+ .rm-access-table tr{margin-bottom:11px;padding:15px 17px;border:1px solid var(--rm-line)}
+ .rm-access-table th,.rm-access-table td{padding:0;border:0}
+ .rm-access-table tbody th{margin-bottom:11px;font-size:18px;white-space:normal}
+ .rm-access-table td{display:grid;grid-template-columns:8.5em minmax(0,1fr);gap:14px;padding-block:8px;border-top:1px solid var(--rm-line);font-size:12px}
+ .rm-access-table td::before{content:attr(data-label);font:10px/1.9 var(--rm-mono);letter-spacing:.06em;color:var(--rm-dim)}
+ .rm-access-link{min-height:38px}
+}
+@media(max-width:650px){
+ body[data-home-flagship] .hero.container.lab-hero{padding-top:26px}
+ body[data-home-flagship] .rm-hero-copy h1{font-size:clamp(33px,8.8vw,44px);line-height:1.3;letter-spacing:-.045em}
+ .rm-hero-lead{font-size:14px;line-height:1.9}
+ .rm-hero-actions{gap:10px 20px}
+ .rm-primary{min-height:50px;padding:13px 18px;font-size:12px;gap:18px;width:100%;max-width:340px}
+ .rm-secondary{font-size:12px}
+ .rm-hero-facts{gap:14px 0;margin-top:26px}
+ .rm-hero-facts li{margin-right:18px;padding-right:18px}
+ .rm-hero-facts b{font-size:17px}
+ .rm-band-head h2,.rm-faq-intro h2{font-size:clamp(24px,7vw,30px);line-height:1.5}
+ .rm-band-head>p,.rm-faq-intro>p{font-size:12px}
+ .rm-access,.rm-faq{padding-block:46px}
+ .rm-faq-item summary{font-size:14px;gap:13px;padding:16px 0}
+ .rm-faq-item p{padding:0 0 20px 29px;font-size:12px}
+ .rm-foot-bottom{flex-direction:column;align-items:flex-start;gap:10px}
+ .rm-proof-head{grid-template-columns:1fr;gap:6px}
+ .rm-proof-head>p:last-child{font-size:11px}
+ .rm-bridge>span{font-size:12.5px;max-width:18em}
+ .rm-bridge>p{font-size:10.5px}
+ .rm-bridge>a{font-size:11px;gap:10px}
+}
+@media(max-width:380px){
+ .rm-hero-facts li{border-right:0;margin-right:0;padding-right:0;flex:0 0 100%}
+ .rm-hero-facts{gap:11px 0}
+ .rm-access-table td{grid-template-columns:1fr;gap:3px}
+ .rm-bridge{grid-template-columns:1fr}
+ .rm-bridge>a{grid-column:1;grid-row:3}
+}
+@media(prefers-reduced-motion:reduce){
+ .rm-primary,.rm-secondary,.rm-faq-item summary i{transition:none}
+ .rm-primary:hover{transform:none}
+}
+@media(forced-colors:active){
+ .rm-primary,.rm-stage-tag,.rm-access-table tr{border:1px solid ButtonText}
+ .rm-hero-facts,.rm-faq-item,.rm-foot-bottom{border-color:ButtonText}
+}

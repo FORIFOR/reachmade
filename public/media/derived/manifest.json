@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "note": "Derived from imported originals. Each entry keeps the source hash so the change stays traceable.",
+  "files": [
+    {
+      "path": "/media/derived/genie/orbit-poster-en.jpg",
+      "bytes": 78879,
+      "sha256": "e19aa6e0bb42052be3bf71493b3c1bf3a70ecaaaf2e4d6fe4b9de3ff5134dbcb",
+      "source": "/media/originals/genie/assets/genie-orbit-poster.jpg",
+      "sourceSha256": "cd56630b67d4d986fdacfc6f0cad0ab8d4c53b3274349501cec152b102ee1b6e",
+      "change": "Burned-in Japanese caption replaced with the English caption used on the English pages. The frame is otherwise unmodified.",
+      "generator": "scripts/make-poster-en.py"
+    }
+  ]
+}
