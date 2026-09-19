@@ -12,6 +12,8 @@ import { writeLabExperience } from '../src/lab-experience.mjs';
 import { writeSignature } from '../src/lab-signature.mjs';
 import { writeOwnedGuides } from '../src/owned-guides.mjs';
 import { writeOutcomeFirst } from '../src/outcome-first.mjs';
+import { writeHomeFlagship } from '../src/home-flagship.mjs';
+import { writeSignatureScenes } from '../src/signature-scene.mjs';
 export { root, escapeHTML, validateConfig } from './build-core.mjs';
 
 export async function build() {
@@ -27,6 +29,10 @@ export async function build() {
   // final user-facing hero/copy pass without removing the signature evidence.
   await writeSignature(dist,products);
   await writeOutcomeFirst(dist,products);
+  // Final composition pass: the finished home owns its hero, access table, FAQ and footer.
+  await writeHomeFlagship(dist,products);
+  // Signature scenes: composed DOM states on the home and every product hero.
+  await writeSignatureScenes(dist,products);
   routes.push(...await writeOwnedGuides(dist));
   const showcaseRoutes = ['', 'en/', ...products.flatMap(p=>[`products/${p.id}/`,`en/products/${p.id}/`])];
   for (const route of showcaseRoutes) {
