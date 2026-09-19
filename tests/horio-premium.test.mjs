@@ -37,9 +37,11 @@ test('all design layers are imported before any CSS declarations',()=>{
 });
 
 test('home leads with a clear product promise and a real product surface before JavaScript enhancement',()=>{
-  // Check the current localized promise and actual evidence paths, not retired copy.
+  // Assert the current outcome-led design, including the actual saved result.
+  // Retired copy is not a contract; evidence, accessible actions and scope are.
   for (const html of [home,en]) {
-    assert.match(html,/REACHMADE · INDEPENDENT PRODUCT LAB/);
+    assert.match(html,/REACHMADE \/ INDEPENDENT AI STUDIO/);
+    assert.match(html,/data-outcome-first="20260919-outcome-1"/);
     assert.match(html,/data-lab-experience="20260919-product-lab-1"/);
     assert.equal((html.match(/<h1>/g)||[]).length,1);
     assert.equal((html.match(/data-studio-choice=/g)||[]).length,6);
@@ -48,14 +50,19 @@ test('home leads with a clear product promise and a real product surface before 
     assert.match(html,/data-lab-proof/);
     assert.match(html,/data-lab-detail href="(?:\/en)?\/products\/genie\/"/);
     assert.match(html,/data-lab-begin hidden/);
+    assert.match(html,/<video data-outcome-real-film controls playsinline preload="none"/);
+    assert.match(html,/src="\/media\/originals\/genie\/assets\/genie-orbit-web\.mp4"/);
+    assert.match(html,/class="outcome-open-artifact" href="\/media\/originals\/genie\/orbit\.html"/);
     assert.doesNotMatch(html,/<video[^>]*\bautoplay\b/);
   }
-  assert.match(home,/AIを、<br>動く仕事に。/);
-  assert.match(home,/6つのAIプロダクト/);
+  assert.match(home,/思いついたら、<br>使えるかたちに。/);
+  assert.match(home,/6つの製品を、実物から選べます/);
   assert.match(home,/サンプルから外部への送信・実行は行いません/);
-  assert.match(en,/AI that moves<br>your work forward\./);
-  assert.match(en,/Six AI products/);
+  assert.match(home,/ここで新しいAI生成は行いません/);
+  assert.match(en,/From an idea\.<br>To something real\./);
+  assert.match(en,/Choose between six products/);
   assert.match(en,/Samples do not execute workflows or send data/);
+  assert.match(en,/does not run a new AI generation/);
   assert.match(rhythm,/CLAIM  →  PROOF/);
 });
 

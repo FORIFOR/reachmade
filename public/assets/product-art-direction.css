@@ -1,0 +1,93 @@
+/* Product-specific compositions. Concatenated into showcase.css at build time. */
+body[data-art-direction]{--measure:1280px}
+body[data-art-direction] .owned-hero-grid.ad-hero{display:block;padding-block:52px 42px}
+.ad-hero :is(.ad-copy,.ad-workspace-proof,.ad-ledger,.ad-room-screen,.ad-handoff,.ad-cinema-screen){min-width:0}
+.ad-hero .ad-copy>.owned-kicker{color:var(--muted);margin:0 0 14px;font-size:10px}
+.ad-hero .ad-category{font-size:12px;font-weight:600;letter-spacing:.025em;margin-bottom:15px;color:var(--accent)}
+body[data-art-direction] .ad-hero h1{font:550 clamp(34px,3.5vw,52px)/1.34 Inter,"Helvetica Neue","Hiragino Kaku Gothic ProN","Noto Sans CJK JP",Meiryo,sans-serif;letter-spacing:-.055em;margin:0 0 22px;max-width:19ch!important;text-wrap:balance;overflow-wrap:break-word}
+html[lang=ja] body[data-art-direction] .ad-hero h1{word-break:normal;overflow-wrap:normal;line-break:strict;max-width:13em!important}
+.ad-hero .owned-lead{font-size:15px;line-height:1.85;max-width:56ch;margin:0;color:var(--muted)}
+.ad-entry{margin-top:25px}.ad-entry .owned-actions{gap:12px 24px}.ad-entry .owned-primary{min-height:48px;font-size:13px;padding:12px 20px}.ad-entry .owned-secondary{font-size:12px}
+.ad-entry .owned-action-note{font-size:12px;line-height:1.75;margin-top:12px;max-width:55ch}
+.ad-hero .owned-film{margin:0;width:100%;max-width:none;box-shadow:none!important;border:1px solid var(--rule);align-self:start;grid-area:auto}
+.ad-hero .owned-film__screen{aspect-ratio:16/10;overflow:hidden}
+.ad-hero .owned-film__screen>img,.ad-hero .owned-film video{object-fit:contain;object-position:center}
+.ad-hero .owned-film__bar{font-size:10px;line-height:1.5;padding:12px 16px;background:var(--surface);color:var(--ink)}
+.ad-hero .owned-film figcaption{display:block;padding:13px 16px;font-size:12px;line-height:1.7;color:var(--muted);background:var(--surface)}
+.ad-hero .owned-film figcaption>a{display:inline-flex;min-height:44px;margin:2px 0 0;font-size:12px;white-space:normal}
+.ad-hero .owned-film__play{font-size:12px;min-height:44px;max-width:calc(100% - 24px)}
+.ad-label{font:500 10px/1.7 ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:.055em;color:var(--muted)}
+.ad-note{font-size:13px;line-height:1.85;color:var(--muted)}
+.ad-afterword{font-size:13px;color:var(--muted);margin-top:25px;max-width:60ch}
+.ad-access-row{display:grid;grid-template-columns:1.2fr 1fr;gap:35px;padding-top:23px;margin-top:30px;border-top:1px solid var(--rule);align-items:start}
+.ad-access-row>*{grid-area:auto}.ad-access-row .owned-try-now{margin:0}.ad-access-row .owned-try-now>strong{font-size:13px;font-weight:500}.ad-access-row .owned-access{font-size:12px}.ad-access-row summary{min-height:44px}
+.ad-hero :is(ol,ul){list-style:none;padding:0;margin:0}.ad-hero aside h2{font-size:23px;line-height:1.5;letter-spacing:-.03em}.ad-hero a:focus-visible,.ad-hero button:focus-visible,.ad-hero summary:focus-visible{outline:3px solid #5578ce;outline-offset:5px}
+/* Genie: a work spread, not a floating software dashboard. */
+body.owned-product--genie[data-art-direction]{--paper:#f5f4f0;--surface:#fff;--accent:#325277;--rule:#d7dadd;--stage:#17212b}
+.ad-workspace{display:grid;grid-template-columns:minmax(0,.82fr) minmax(0,1.3fr);gap:48px;align-items:center}
+.ad-workspace-proof{background:#e8edf1;padding:22px;border:1px solid #d5dde3}
+.ad-paper-edge{display:flex;align-items:center;justify-content:space-between;gap:15px;padding:0 0 18px}.ad-paper-edge strong{font-size:15px;font-weight:550}
+.ad-workspace-result{display:flex;align-items:center;gap:14px;padding-top:17px;font-size:12px;color:#3f5264}.ad-workspace-result strong{font-weight:600}.ad-workspace-result>span:nth-child(2){flex:1;text-align:center}
+/* AI Meeting: a calm listening room with a readable usage example. */
+body.owned-product--ai-meeting[data-art-direction]{--paper:#242423;--ink:#f5f0e7;--muted:#c5bfb4;--accent:#edb39f;--rule:#514c46;--surface:#302e2b;--stage:#191a19;color-scheme:dark}
+.ad-room-head{display:grid;grid-template-columns:1.25fr .85fr;gap:70px;align-items:center;margin-bottom:32px}
+.ad-room-head .owned-primary{background:#edb39f;color:#251d17}.ad-room-head .owned-primary:hover{background:#f3c9b7}
+.ad-utterance{border-left:1px solid #77675b;padding:20px 0 20px 32px}.ad-utterance blockquote{margin:22px 0 17px;font-size:clamp(23px,2.5vw,35px);line-height:1.7;letter-spacing:-.035em;text-wrap:balance}
+.ad-utterance ol{display:flex;gap:18px;flex-wrap:wrap;margin-top:25px}.ad-utterance li{font-size:11px}.ad-utterance li>span{display:block;font:10px/1.7 ui-monospace,monospace;color:var(--accent);margin-bottom:6px}
+.ad-room-screen{padding:25px 9%;background:#373a35;border:1px solid #4b5147}.ad-room-screen .owned-film__screen{aspect-ratio:16/8.8}
+/* Oathra: a call record and an adjacent evidence ledger. No invented success state. */
+body.owned-product--oathra[data-art-direction]{--paper:#eff1ed;--ink:#192723;--muted:#58655f;--accent:#2d5b48;--rule:#cbd5cc;--surface:#fafcf9;--stage:#14221d}
+.ad-call-head{display:grid;grid-template-columns:1.3fr .7fr;gap:70px;margin-bottom:32px;align-items:center}
+.ad-call-question{padding:25px 0 25px 30px;border-left:1px solid var(--rule)}.ad-call-question>p:nth-child(2){font-size:30px;line-height:1.5;margin:13px 0}
+.ad-ledger{display:grid;grid-template-columns:minmax(0,1fr) 270px;gap:0;border:1px solid var(--rule);background:var(--surface)}.ad-ledger .owned-film{border:0;border-right:1px solid var(--rule)}
+.ad-evidence{padding:4px 24px}.ad-evidence-list li{display:flex;gap:16px;padding:25px 0;border-bottom:1px solid var(--rule)}.ad-evidence-list li:last-child{border-bottom:0}.ad-evidence-list li>span{font:11px/1.7 ui-monospace,monospace;color:var(--accent)}.ad-evidence-list h3{font-size:19px;line-height:1.5}.ad-evidence-list p{font-size:12px;line-height:1.8;color:var(--muted);margin-top:7px}
+/* AI Secure: two unmistakably different routes; legacy investigation footage is labelled. */
+body.owned-product--aisecure[data-art-direction]{--paper:#f8faf8;--ink:#213129;--muted:#54655b;--accent:#24533d;--rule:#ccd9cf;--surface:#fff;--stage:#16261e}
+.ad-secure-head{display:grid;grid-template-columns:1.25fr .8fr;gap:70px;align-items:start}.ad-security-routes{border-top:2px solid var(--accent)}.ad-security-routes>div{padding:23px 0;border-bottom:1px solid var(--rule)}.ad-route-index{font:10px/1.6 ui-monospace,monospace;color:var(--accent)}.ad-security-routes h2{font-size:22px;margin:10px 0}.ad-security-routes a{display:inline-flex;align-items:center;gap:18px;min-height:44px;font-size:12px;text-decoration:underline;text-underline-offset:5px;margin-top:8px}
+.ad-investigation{display:grid;grid-template-columns:.5fr 1fr;gap:30px;align-items:center;margin-top:35px;border-top:1px solid var(--rule);padding-top:28px}.ad-investigation>aside{max-width:30ch}.ad-investigation h2{margin:14px 0}.ad-investigation .owned-film{border-left:1px solid var(--rule)}
+/* Agent Team: an editorial handoff. The guide is not a fake running agent UI. */
+body.owned-product--agent-team[data-art-direction]{--paper:#f5f0e7;--ink:#2d2b28;--muted:#666054;--accent:#98503d;--rule:#ded2c0;--surface:#fffdfa;--stage:#282723}
+.ad-team-head .ad-copy{max-width:870px}.ad-handoff{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(250px,.75fr);gap:38px;margin-top:34px;align-items:start}.ad-role-guide h2{margin:15px 0 20px}.ad-role-list li{display:flex;gap:16px;padding:17px 0;border-top:1px solid var(--rule)}.ad-role-list li>span{width:38px;height:38px;flex-shrink:0;display:grid;place-items:center;border:1px solid currentColor;border-radius:50%;color:#526a7d;font:12px ui-monospace,monospace}.ad-role-list li:nth-child(2)>span{color:#987329}.ad-role-list li:nth-child(3)>span{color:#537357}.ad-role-list h3{font-size:18px;line-height:1.5}.ad-role-list p{font-size:12px;line-height:1.8;margin-top:6px;color:var(--muted)}.ad-role-guide>.ad-note{margin-top:17px}
+/* Launchloom: an output-first screening room and a typographic format index. */
+body.owned-product--launchloom[data-art-direction]{--paper:#1e201e;--ink:#f8f1e4;--muted:#c7beb0;--accent:#efb86e;--rule:#514c40;--surface:#282a25;--stage:#11130f;color-scheme:dark}
+.ad-cinema-head .ad-copy{display:grid;grid-template-columns:1.12fr .88fr;gap:0 60px;align-items:start}.ad-cinema-head .owned-kicker,.ad-cinema-head .ad-category{grid-column:1/-1}.ad-cinema-head h1{grid-column:1;grid-row:3/5}.ad-cinema-head .owned-lead{grid-column:2;grid-row:3}.ad-cinema-head .ad-entry{grid-column:2;grid-row:4}
+.ad-cinema-head .owned-primary{background:var(--accent);color:#292217}.ad-cinema-head .owned-primary:hover{background:#f5ce95}.ad-cinema-screen{margin-top:28px}.ad-cinema-screen .owned-film__screen{aspect-ratio:16/8.5}.ad-output-wall{margin-top:26px}.ad-output-wall>h2{font-size:24px;margin-bottom:23px}.ad-output-index{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}.ad-output-index li{padding:20px;border-right:1px solid var(--rule)}.ad-output-index li:first-child{padding-left:0}.ad-output-index li:last-child{border-right:0}.ad-output-index li>span{font:10px/1.6 ui-monospace,monospace;color:var(--accent)}.ad-output-index h3{font-size:21px;margin-top:9px;line-height:1.5}.ad-output-index p{font-size:12px;color:var(--muted);margin-top:6px}.ad-output-wall>.ad-note{margin-top:12px;font-size:11px}
+/* Tablet is a deliberate intermediate layout, not a compressed desktop. */
+@media(max-width:1100px){
+ .ad-workspace{gap:28px;grid-template-columns:1fr 1.12fr}.ad-workspace-proof{padding:16px}
+ .ad-room-head,.ad-call-head,.ad-secure-head{gap:36px}.ad-ledger{grid-template-columns:minmax(0,1fr) 235px}.ad-evidence{padding-inline:18px}
+ .ad-handoff{gap:26px}.ad-cinema-head .ad-copy{gap:0 32px}.ad-room-screen{padding-inline:5%}
+ body[data-art-direction] .ad-hero h1{font-size:38px!important}
+}
+@media(max-width:800px){
+ body[data-art-direction] .owned-hero-grid.ad-hero{padding-block:30px 35px}
+ body[data-art-direction] .ad-hero[data-direction=conversation-room]{display:flex;flex-direction:column}
+ .ad-hero[data-direction=conversation-room] .ad-room-head{display:contents}
+ .ad-hero[data-direction=conversation-room] .ad-copy{order:0}
+ .ad-hero[data-direction=conversation-room] .ad-room-screen{order:1;margin-top:25px}
+ .ad-hero[data-direction=conversation-room] .ad-utterance{order:2;margin-top:25px}
+ .ad-hero[data-direction=conversation-room] .ad-access-row{order:3}
+ .ad-workspace,.ad-room-head,.ad-call-head,.ad-secure-head,.ad-handoff{grid-template-columns:1fr;gap:25px}
+ .ad-workspace-proof{padding:18px}.ad-entry{margin-top:21px}.ad-call-question{padding:18px 0;border:0;border-top:1px solid var(--rule)}
+ .ad-room-head{margin-bottom:25px}.ad-utterance{padding:18px 0 18px 23px}.ad-utterance blockquote{font-size:27px;margin-block:12px}.ad-utterance ol{margin-top:18px}
+ .ad-ledger{grid-template-columns:1fr}.ad-ledger .owned-film{border-right:0;border-bottom:1px solid var(--rule)}.ad-evidence-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}.ad-evidence-list li{border:0;display:block;padding:20px 0}.ad-evidence-list h3{margin-top:6px}
+ .ad-security-routes{display:grid;grid-template-columns:1fr 1fr;gap:24px}.ad-investigation{grid-template-columns:1fr;gap:20px}.ad-investigation>aside{max-width:none}.ad-investigation h2{font-size:22px}
+ .ad-role-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}.ad-role-list li{display:block}.ad-role-list h3{margin-top:13px}
+ .ad-cinema-head .ad-copy{display:block}.ad-cinema-head .owned-lead{max-width:55ch}.ad-access-row{gap:25px}
+ .ad-room-screen{padding:18px}.ad-hero .owned-film__screen,.ad-room-screen .owned-film__screen,.ad-cinema-screen .owned-film__screen{aspect-ratio:16/10}
+}
+@media(max-width:500px){
+ body[data-art-direction] .ad-hero h1{font-size:32px!important;line-height:1.45;margin-bottom:17px!important;letter-spacing:-.035em}
+ .ad-hero .ad-category{font-size:11px;line-height:1.7;margin-bottom:12px}.ad-hero .owned-lead{font-size:14px}.ad-hero .ad-copy>.owned-kicker{font-size:9px}
+ .ad-entry .owned-actions{display:grid;justify-items:start;gap:6px}.ad-entry .owned-primary{width:100%;font-size:12px;min-height:48px}.ad-entry .owned-action-note{font-size:12px;margin-top:8px}
+ .ad-workspace-proof{padding:11px}.ad-paper-edge{display:block;padding-bottom:13px}.ad-paper-edge strong{display:block;margin-top:7px}.ad-workspace-result{font-size:11px;gap:10px;padding-top:13px}
+ .ad-room-screen{padding:10px}.ad-utterance blockquote{font-size:25px}.ad-utterance ol{gap:16px}.ad-call-question>p:nth-child(2){font-size:25px}
+ .ad-hero .owned-film__bar{font-size:9px;padding:11px;gap:12px}.ad-hero .owned-film__bar>span{overflow-wrap:anywhere}.ad-hero .owned-film figcaption{font-size:12px;padding:12px;line-height:1.8}.ad-hero .owned-film figcaption>a{min-height:44px}
+ .ad-security-routes{grid-template-columns:1fr;gap:0}.ad-security-routes>div{padding:18px 0}.ad-investigation{margin-top:26px;padding-top:24px}
+ .ad-evidence{padding:0 16px}.ad-evidence-list{display:block}.ad-evidence-list li{display:flex;padding:17px 0;border-bottom:1px solid var(--rule)}.ad-evidence-list h3{margin-top:0}.ad-evidence-list li>span{padding-top:2px}
+ .ad-role-list{display:block}.ad-role-list li{display:flex;padding:16px 0}.ad-role-list h3{margin:0}.ad-handoff{margin-top:25px}
+ .ad-output-index{grid-template-columns:1fr 1fr}.ad-output-index li{padding:16px 10px!important}.ad-output-index li:nth-child(even){border-right:0}.ad-output-index li:nth-child(-n+2){border-bottom:1px solid var(--rule)}.ad-output-index h3{font-size:18px}.ad-output-wall>h2{font-size:22px}
+ .ad-access-row{grid-template-columns:1fr;gap:12px;padding-top:20px;margin-top:24px}.ad-label{font-size:10px;line-height:1.8}.ad-afterword{font-size:12px}
+}
+@media(prefers-reduced-motion:reduce){.ad-hero *{animation:none!important;transition:none!important;scroll-behavior:auto}}
+@media(forced-colors:active){.ad-hero :is(.ad-workspace-proof,.ad-room-screen,.ad-ledger,.ad-security-routes,.ad-output-index){border:1px solid CanvasText}.ad-role-list li>span{color:CanvasText}.ad-hero :is(a,button,summary):focus-visible{outline-color:Highlight}}

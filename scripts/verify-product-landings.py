@@ -1,11 +1,10 @@
-"""Keep the existing CI entrypoint; validate the current product-led presentation.
+"""Retained CI entrypoint for current product layouts and native recordings.
 
-The shared suite checks all 14 pages at three viewports, genuine native video
-playback, six distinct measured visual treatments, keyboard operation,
-no-JavaScript navigation and failed-media recovery. Packaged media integrity
-and range responses remain covered by verify-packaged-films.py.
+The active contract is data-media-state, not the retired data-user-intent.
+Shared acceptance retains real playback, network failure/retry, source links,
+UI-story controls and no-JavaScript access. Assertions are not optional.
 """
 from verify_showcase import main
 
 if __name__ == '__main__':
-    main(home_only=False, output='film-qa/product-landings')
+    main(output='film-qa/products')

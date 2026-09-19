@@ -14,6 +14,9 @@ for (const r of routes) htmlByPath.set(r.route,await fs.readFile(path.join(dist,
 const clone=()=>structuredClone(config);
 const attr=(html,key)=>[...html.matchAll(new RegExp(`(?:^|\\s)${key}="([^"]*)"`,'g'))].map(m=>m[1]);
 const decode=s=>s.replaceAll('&amp;','&').replaceAll('&quot;','"').replaceAll('&#39;',"'").replaceAll('&lt;','<').replaceAll('&gt;','>');
+// Class attributes are unordered token sets; added design modifiers must not
+// invalidate the same semantic section or accept partial class names.
+const classIndex=(html,token)=>[...html.matchAll(/<[^>]+\bclass="([^"]*)"[^>]*>/g)].find(m=>m[1].split(/\s+/).includes(token))?.index??-1;
 test('configuration is valid',()=>assert.equal(validateConfig(config),config));
 test('HTML escaping includes attributes',()=>assert.equal(escapeHTML('<&"\'>'), '&lt;&amp;&quot;&#39;&gt;'));
 for(const value of ['http://reachmade.com','https://reachmade.com/path','https://user:pw@reachmade.com','https://reachmade.com/?a=1','https://reachmade.com/#x']) {
@@ -29,6 +32,11 @@ test('30 routes represent portfolio, product and owned guide pages in both langu
 });
 test('attribute checks do not mistake lazy data-src attributes for active sources',()=>{
  assert.deepEqual(attr('<video data-recording-src="/later.mp4" src="/now.mp4">','src'),['/now.mp4']);
+});
+test('section lookup accepts modifier classes, never partial class names',()=>{
+ assert.equal(classIndex('<section class="container lab-hero outcome-hero">','lab-hero'),0);
+ assert.equal(classIndex('<section class="outcome-hero lab-hero container">','lab-hero'),0);
+ assert.equal(classIndex('<section class="lab-hero-old">','lab-hero'),-1);
 });
 test('products have unique identifiers and records',()=>{
  assert.ok(products.length>0);assert.equal(new Set(products.map(p=>p.id)).size,products.length);
@@ -77,8 +85,10 @@ test('each product is rendered exactly once in each product directory',()=>{
 test('home leads with an explorable product and retains source-aware catalogue routes',()=>{
  for(const prefix of ['/','/en/']){
   const html=htmlByPath.get(prefix);
-  const hero=html.indexOf('class="hero container lab-hero"'),explore=html.indexOf('id="explore"'),collection=html.indexOf('class="container lab-collection"'),proof=html.indexOf('class="lab-evidence-band"');
+  const hero=classIndex(html,'lab-hero'),explore=html.indexOf('id="explore"'),collection=classIndex(html,'lab-collection'),proof=classIndex(html,'lab-evidence-band');
   assert.ok(hero>=0&&hero<explore&&explore<collection&&collection<proof);
+  const actualResult=html.indexOf('data-outcome-recorded-result');
+  assert.ok(hero<actualResult&&actualResult<explore,'The original recording and output must precede the product chooser');
   assert.equal((html.match(/class="lab-product-card"/g)||[]).length,products.length);
   assert.equal((html.match(/data-studio-choice=/g)||[]).length,products.length);
   for(const p of products){assert.ok(html.includes(`data-studio-choice="${p.id}"`));assert.ok(html.includes(`data-lab-select="${p.id}"`));assert.ok(html.includes(`${prefix}products/${p.id}/`));}

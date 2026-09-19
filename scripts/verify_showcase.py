@@ -1,205 +1,148 @@
-"""Acceptance checks for the actual built site, UI stories and real recordings.
-Run after npm run check and npm run media:prepare against a local Worker.
-No production deployment or form submission. Screenshots and JSON are retained.
+"""Compatibility acceptance for the active outcome-first site.
+
+Run the current, full-build local-HTTP layout suite, then independently test
+real packaged playback, native errors/retry, UI-story stillness and no-script
+product access. No HTML/CSS/JS rewriting or substitute product images.
+This is not production, physical-device or Worker delivery acceptance; the
+separate packaged-media/Worker workflow retains that scope.
 """
+from __future__ import annotations
+from functools import partial
+from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 import json
-import os
-import time
-import urllib.request
+import subprocess
+import sys
+import threading
 from playwright.sync_api import sync_playwright
 
-BASE = os.environ.get('QA_BASE', 'http://127.0.0.1:8787')
-IDS = ['genie', 'ai-meeting', 'oathra', 'aisecure', 'agent-team', 'launchloom']
+IDS = ['genie','ai-meeting','oathra','aisecure','agent-team','launchloom']
 
-def ready():
-    for _ in range(90):
-        try:
-            with urllib.request.urlopen(BASE + '/', timeout=2) as r:
-                if r.status == 200:
-                    return
-        except Exception:
-            pass
-        time.sleep(1)
-    raise RuntimeError('Local Worker did not become ready')
-
-def geometry(page):
-    return page.evaluate('''() => ({
-      overflow: document.documentElement.scrollWidth > innerWidth + 1,
-      background: getComputedStyle(document.body).backgroundColor,
-      foreground: getComputedStyle(document.body).color,
-      columns: document.querySelector('.owned-hero-grid') ? getComputedStyle(document.querySelector('.owned-hero-grid')).gridTemplateColumns : null,
-      areas: document.querySelector('.owned-hero-grid') ? getComputedStyle(document.querySelector('.owned-hero-grid')).gridTemplateAreas : null
-    })''')
-
-def healthy(page):
-    assert page.locator('h1').count() == 1
-    assert page.locator('body').get_attribute('data-showcase') == '20260918'
-    assert not geometry(page)['overflow'], 'Horizontal overflow'
-    page.wait_for_function('''() => [...document.querySelectorAll('.studio-player-screen>img,.owned-film__screen>img')].every(i => i.complete && i.naturalWidth > 0)''')
-    assert page.locator('link[rel="canonical"]').count() == 1
-    page.wait_for_selector('.rm-live-demo')
-    assert page.locator('[data-demo-version="20260919-ui-stories-2"]').count() == 1
-    assert page.locator('.rm-chapters button').count() == 5
-    assert page.locator('.rm-demo-disclosure').inner_text().strip()
-
-def story_summary(page, id):
-    page.locator('[data-mode="story"]').click()
-    page.locator('[data-cue="4"]').click()
-    assert page.locator('.rm-live-demo').get_attribute('data-phase') == '4'
-    assert page.locator('.rm-app').get_attribute('data-product') == id
-    before = page.locator('.rm-demo-scrub input').input_value()
-    page.wait_for_timeout(160)
-    assert page.locator('.rm-demo-scrub input').input_value() == before, 'Chapter selection must pause'
-    assert page.locator('.rm-live-demo').get_attribute('data-running') == 'false'
-    assert not geometry(page)['overflow']
-
-def recording_mode(page):
-    page.locator('[data-mode="recording"]').click()
-    assert not page.locator('.rm-live-demo').is_visible()
-
-def play_recording(page, selector):
-    recording_mode(page)
-    video = page.locator(selector + ' video')
-    assert video.evaluate('(v)=>v.paused && v.currentTime===0'), 'No autoplay'
-    assert video.get_attribute('src') is None, 'No eager recording download'
-    page.locator(selector).locator('.studio-play,.owned-film__play').click()
-    page.wait_for_function('''s => {const v=document.querySelector(s+' video');return v && !v.paused && v.currentTime>.25 && v.readyState>=2 && v.getVideoPlaybackQuality().totalVideoFrames>0;}''', arg=selector)
-    info = video.evaluate('(v)=>({duration:v.duration,rate:v.playbackRate,time:v.currentTime,src:v.currentSrc,frames:v.getVideoPlaybackQuality().totalVideoFrames})')
-    assert 12.5 <= info['duration'] <= 13.5, info
-    assert info['rate'] == 1, info
-    assert info['src'].startswith(BASE + '/media/products/'), info
-    assert info['frames'] > 0
-    video.evaluate('(v)=>v.pause()')
-    return info
+class Handler(SimpleHTTPRequestHandler):
+    extensions_map = {**SimpleHTTPRequestHandler.extensions_map, '.mjs':'text/javascript'}
+    def log_message(self, *args):
+        pass
 
 def main(home_only=False, output='film-qa/product-landings'):
-    ready()
-    out=Path(output);out.mkdir(parents=True,exist_ok=True)
-    report={'scope':'Actual built site, illustrative UI stories and packaged recordings in Chromium; not production or Safari','pages':[],'playback':[],'gates':{},'errors':[]}
+    root = Path(__file__).resolve().parents[1]
+    out = root / output
+    out.mkdir(parents=True, exist_ok=True)
+    # Old first-fold selector and data-user-intent assertions described a retired
+    # page/player. Keep layout acceptance on the active, already tested renderer.
+    layout = subprocess.run([sys.executable, str(root/'scripts/verify-outcome-first.py'), '--browser', 'chromium'], cwd=root)
+    source_report = root/'film-qa/outcome-first/chromium/report.json'
+    report = {'scope':'Unmodified built assets over local HTTP; not production or physical Safari',
+              'layout_exit_code':layout.returncode, 'playback':[], 'failure_recovery':[],
+              'no_javascript':[], 'errors':[]}
+    if source_report.exists():
+        report['layout_report'] = json.loads(source_report.read_text(encoding='utf-8'))
+    if layout.returncode:
+        report['errors'].append({'case':'full-built-layout','error':'Current layout/interaction suite failed; see embedded report'})
+    server = ThreadingHTTPServer(('127.0.0.1',0), partial(Handler, directory=str(root/'dist')))
+    threading.Thread(target=server.serve_forever, daemon=True).start()
+    origin = f'http://127.0.0.1:{server.server_port}'
+
+    def enter_recording(page, selector):
+        page.locator(selector+' [data-mode="recording"]').click()
+        assert page.locator(selector+' .rm-live-demo').is_hidden()
+
+    def check_story(page, selector, product):
+        page.locator(selector+' [data-mode="story"]').click()
+        story = page.locator(selector+' .rm-live-demo')
+        assert story.is_visible()
+        assert story.locator('.rm-chapters button').count() == 5
+        assert story.locator('.rm-demo-disclosure').inner_text().strip()
+        story.locator('[data-cue="4"]').click()
+        assert story.get_attribute('data-phase') == '4'
+        assert story.get_attribute('data-running') == 'false'
+        assert story.locator('.rm-app').get_attribute('data-product') == product
+        position = story.locator('.rm-demo-scrub input').input_value()
+        page.wait_for_timeout(160)
+        assert story.locator('.rm-demo-scrub input').input_value() == position
+
     with sync_playwright() as pw:
-        browser=pw.chromium.launch()
-        for lang,prefix in [('ja','/'),('en','/en/')]:
-            routes=[(prefix,'home')]+([] if home_only else [(prefix+'products/'+id+'/',id) for id in IDS])
-            for width,height in [(1440,1000),(1024,900),(390,844)]:
-                context=browser.new_context(viewport={'width':width,'height':height})
-                for route,id in routes:
-                    page=context.new_page();page.set_default_timeout(20000)
-                    errors=[];page.on('pageerror',lambda error:errors.append(str(error)))
+        browser = pw.chromium.launch()
+        try:
+            for lang, prefix in [('ja','/'),('en','/en/')]:
+                routes = [(prefix,'home')] + ([] if home_only else [(prefix+'products/'+p+'/',p) for p in IDS])
+                for route, product in routes:
+                    selector = '.studio-player' if product=='home' else '.owned-film'
+                    key = lang+'-'+product
+                    context = browser.new_context(viewport={'width':1440,'height':1000}, reduced_motion='reduce')
+                    page = context.new_page()
+                    page.set_default_timeout(20000)
                     try:
-                        page.goto(BASE+route,wait_until='networkidle')
-                        healthy(page)
-                        if id=='home':
-                            assert page.locator('[role=tab]').count()==6
-                            assert page.locator('[aria-selected=true]').count()==1
-                            image=page.locator('.studio-player-screen>img')
-                            assert not image.is_visible(), 'Story and recording must not overlap'
-                            assert page.locator('.studio-player video').evaluate('(v)=>v.paused')
-                            assert page.locator('.studio-player video').get_attribute('src') is None
-                            stage=page.locator('.studio-workbench').bounding_box()
-                            assert stage['y'] < height, ('Product selector below first viewport',stage)
-                            if width==390:
-                                toggle=page.locator('.nav-toggle');toggle.click()
-                                assert page.locator('#main-nav').is_visible()
-                                page.keyboard.press('Escape')
-                                assert toggle.get_attribute('aria-expanded')=='false'
-                            if width==1440:
-                                first=page.locator('[role=tab]').first;first.focus()
-                                page.keyboard.press('ArrowRight')
-                                page.wait_for_function("document.querySelector('.rm-app').dataset.product==='ai-meeting'")
-                                assert page.locator('[aria-selected=true]').get_attribute('data-studio-choice')=='ai-meeting'
-                                page.keyboard.press('End')
-                                page.wait_for_function("document.querySelector('.rm-app').dataset.product==='launchloom'")
-                                assert page.locator('[aria-selected=true]').get_attribute('data-studio-choice')=='launchloom'
-                                page.keyboard.press('Home')
-                                for choice in IDS:
-                                    page.locator('[data-studio-choice="'+choice+'"]').click()
-                                    page.wait_for_function("id=>document.querySelector('.rm-app').dataset.product===id",arg=choice)
-                                    assert choice in image.get_attribute('src')
-                                    assert page.locator('[data-studio-link]').get_attribute('href').endswith('/products/'+choice+'/')
-                                first.click()
-                                page.wait_for_function("document.querySelector('.rm-app').dataset.product==='genie'")
-                        else:
-                            assert not page.locator('.owned-film__screen>img').is_visible()
-                            assert page.locator('.owned-film video').get_attribute('src') is None
-                            assert page.locator('.owned-flow li').count()==3
-                            assert page.locator('.owned-action-note').inner_text().strip()
-                            access=page.locator('.owned-access');access.locator('summary').click()
-                            assert access.locator('.owned-requirements').is_visible()
-                            access.locator('summary').click()
-                            assert page.locator('.owned-boundaries').is_visible()
-                            assert page.locator('.studio-related a').count()==3
-                        story_summary(page,'genie' if id=='home' else id)
-                        page.evaluate('window.scrollTo(0,0)')
-                        shot=out/f'{lang}-{id}-{width}.png'
-                        page.screenshot(path=str(shot),full_page=True)
-                        report['pages'].append({'route':route,'width':width,'geometry':geometry(page),'screenshot':str(shot),'story':True})
-                        if width==1440:
-                            info=play_recording(page,'.studio-player' if id=='home' else '.owned-film')
-                            report['playback'].append({'route':route,**info})
-                        assert not errors, errors
-                    except Exception as error:
-                        report['errors'].append({'route':route,'width':width,'error':str(error)})
-                        page.screenshot(path=str(out/f'FAILED-{lang}-{id}-{width}.png'),full_page=True)
+                        page.goto(origin+route, wait_until='networkidle')
+                        page.wait_for_selector(selector+' [data-mode="recording"]')
+                        check_story(page, selector, 'genie' if product=='home' else product)
+                        enter_recording(page, selector)
+                        video = page.locator(selector+' video')
+                        assert video.evaluate('(v)=>v.paused && v.currentTime===0')
+                        assert video.get_attribute('src') is None, 'A recording must not be fetched before play'
+                        page.locator(selector).locator('.studio-play,.owned-film__play').click()
+                        page.wait_for_function('s=>{const v=document.querySelector(s+" video");return !v.paused && v.currentTime>.25 && v.readyState>=2;}',arg=selector)
+                        info = video.evaluate('(v)=>({duration:v.duration,rate:v.playbackRate,time:v.currentTime,src:v.currentSrc,frames:v.getVideoPlaybackQuality().totalVideoFrames})')
+                        assert 12.5 <= info['duration'] <= 13.5, info
+                        assert info['rate'] == 1 and info['frames'] > 0, info
+                        assert info['src'].startswith(origin+'/media/products/'), info
+                        video.evaluate('(v)=>v.pause()')
+                        assert video.evaluate('(v)=>v.paused')
+                        report['playback'].append({'case':key,**info})
+                    except Exception as exc:
+                        report['errors'].append({'case':'playback-'+key,'error':str(exc)})
                     finally:
-                        page.close()
-                context.close()
-        for id in ['home','genie','launchloom']:
-            context=browser.new_context(java_script_enabled=False,viewport={'width':390,'height':844})
-            page=context.new_page()
-            try:
-                page.goto(BASE+('/' if id=='home' else '/products/'+id+'/'),wait_until='networkidle')
-                assert page.locator('h1').is_visible()
-                if id=='home':
-                    assert page.locator('.studio-picker a').count()==6
-                    assert page.locator('.studio-player-screen>img').is_visible()
-                    assert page.locator('#main-nav').is_visible()
-                    assert not page.locator('.studio-play').is_visible()
-                else:
+                        context.close()
+                    # A fresh page really aborts the HTTP media request. This is
+                    # neither a mocked video element nor an injected DOM error.
+                    context = browser.new_context(viewport={'width':390,'height':844}, reduced_motion='reduce')
+                    context.route('**/media/products/*.mp4', lambda route:route.abort('failed'))
+                    page = context.new_page()
+                    page.set_default_timeout(20000)
+                    try:
+                        page.goto(origin+route, wait_until='networkidle')
+                        page.wait_for_selector(selector+' [data-mode="recording"]')
+                        enter_recording(page, selector)
+                        button = page.locator(selector).locator('.studio-play,.owned-film__play')
+                        button.click()
+                        page.wait_for_function('s=>document.querySelector(s).dataset.mediaState==="unavailable"',arg=selector)
+                        assert page.locator(selector+' video').is_hidden()
+                        assert page.locator(selector+' .studio-player-screen>img,'+selector+' .owned-film__screen>img').is_visible()
+                        assert page.locator(selector+' .studio-media-status,'+selector+' .owned-film__status').is_visible()
+                        assert button.is_enabled() and button.is_visible()
+                        assert page.locator(selector+' figcaption a').first.is_visible()
+                        # Retry must issue the same guarded recording request,
+                        # then expose the same safe fallback when it fails.
+                        with page.expect_request('**/media/products/*.mp4'):
+                            button.click()
+                        page.wait_for_function('s=>document.querySelector(s).dataset.mediaState==="unavailable"',arg=selector)
+                        check_story(page, selector, 'genie' if product=='home' else product)
+                        report['failure_recovery'].append({'case':key,'network_aborted':True,'retry':True,'return_to_story':True})
+                    except Exception as exc:
+                        report['errors'].append({'case':'failure-'+key,'error':str(exc)})
+                    finally:
+                        context.close()
+            for product in ([] if home_only else ['genie','launchloom']):
+                context = browser.new_context(java_script_enabled=False,viewport={'width':390,'height':844})
+                page = context.new_page()
+                try:
+                    page.goto(origin+'/products/'+product+'/',wait_until='networkidle')
+                    assert page.locator('.owned-primary').first.is_visible()
                     assert page.locator('.owned-film__screen>img').is_visible()
-                    assert not page.locator('.owned-film__play').is_visible()
-                assert not geometry(page)['overflow']
-                report['gates']['no_script_'+id]=True
-            except Exception as error:
-                report['errors'].append({'no_script':id,'error':str(error)})
-            finally:
-                context.close()
-        for id in ['home','launchloom']:
-            context=browser.new_context(reduced_motion='reduce',viewport={'width':390,'height':844})
-            context.route('**/media/products/*.mp4',lambda route:route.abort())
-            page=context.new_page();page.set_default_timeout(20000)
-            try:
-                page.goto(BASE+('/' if id=='home' else '/products/'+id+'/'),wait_until='networkidle')
-                page.wait_for_selector('.rm-live-demo')
-                assert page.locator('.rm-live-demo').get_attribute('data-phase')=='4'
-                assert page.locator('[data-action="pause"]').is_disabled()
-                page.locator('[data-cue="1"]').click()
-                assert page.locator('.rm-live-demo').get_attribute('data-phase')=='1'
-                selector='.studio-player' if id=='home' else '.owned-film'
-                recording_mode(page)
-                assert page.locator(selector+' video').evaluate('(v)=>v.paused')
-                button=page.locator(selector).locator('.studio-play,.owned-film__play')
-                button.click()
-                page.wait_for_function('s=>document.querySelector(s).dataset.mediaState==="unavailable"',arg=selector)
-                assert page.locator(selector+' img').is_visible()
-                assert button.is_enabled()
-                assert page.locator(selector+' a').count()>0
-                page.locator('[data-mode="story"]').click()
-                assert page.locator('.rm-live-demo').is_visible()
-                report['gates']['reduced_motion_and_failed_media_'+id]=True
-            except Exception as error:
-                report['errors'].append({'failure_test':id,'error':str(error)})
-            finally:
-                context.close()
-        if not home_only:
-            desktop=[p for p in report['pages'] if p['width']==1440 and p['route'].startswith('/products/')]
-            signatures={json.dumps(p['geometry'],sort_keys=True) for p in desktop}
-            assert len(signatures)==6, 'Six distinct product treatments must be measured'
-            report['gates']['six_distinct_product_treatments']=True
-        browser.close()
-    (out/'report.json').write_text(json.dumps(report,ensure_ascii=False,indent=2))
+                    assert page.locator('.owned-film figcaption a').first.is_visible()
+                    assert page.locator('.owned-film__play').is_hidden()
+                    report['no_javascript'].append(product)
+                except Exception as exc:
+                    report['errors'].append({'case':'no-js-'+product,'error':str(exc)})
+                finally:
+                    context.close()
+        finally:
+            browser.close()
+            server.shutdown()
+            server.server_close()
+            (out/'report.json').write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding='utf-8')
     print(json.dumps(report,ensure_ascii=False,indent=2))
-    raise SystemExit(bool(report['errors']))
+    if report['errors']:
+        raise SystemExit(1)
 
 if __name__=='__main__':
     main()
