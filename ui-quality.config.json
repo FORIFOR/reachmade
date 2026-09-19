@@ -1,0 +1,36 @@
+{
+  "configured": true,
+  "inputs": [
+    "src",
+    "public/assets",
+    "public/media/derived",
+    "public/_headers",
+    "public/_redirects",
+    "scripts",
+    "tests",
+    "docs/design",
+    "site.config.json",
+    "worker.js",
+    "package.json",
+    "package-lock.json",
+    "CLAUDE.md"
+  ],
+  "checks": [
+    {
+      "name": "check",
+      "command": ["npm", "run", "check"]
+    }
+  ],
+  "requiredImages": [
+    "artifacts/ui/home-desktop.png",
+    "artifacts/ui/home-mobile.png",
+    "artifacts/ui/home-reduced-motion.png",
+    "artifacts/ui/home-narrow.png",
+    "artifacts/ui/home-en-desktop.png",
+    "artifacts/ui/product-desktop.png",
+    "artifacts/ui/product-mobile.png"
+  ],
+  "reviewFile": "artifacts/ui/review.json",
+  "timeoutSeconds": 600,
+  "maxReceiptAgeHours": 24
+}

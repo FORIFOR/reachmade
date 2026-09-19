@@ -148,8 +148,10 @@ body[data-home-flagship] .site-footer.rm-footer{border-top:1px solid var(--rm-li
  .rm-bridge>a{font-size:11px;gap:10px}
 }
 @media(max-width:380px){
- .rm-hero-facts li{border-right:0;margin-right:0;padding-right:0;flex:0 0 100%}
- .rm-hero-facts{gap:11px 0}
+ .rm-hero-facts{gap:0;margin-top:20px;padding-top:14px}
+ .rm-hero-facts li{margin-right:12px;padding-right:12px}
+ .rm-hero-facts b{font-size:15px}
+ .rm-hero-facts span{font-size:9px;line-height:1.5}
  .rm-access-table td{grid-template-columns:1fr;gap:3px}
  .rm-bridge{grid-template-columns:1fr}
  .rm-bridge>a{grid-column:1;grid-row:3}
