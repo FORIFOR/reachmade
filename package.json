@@ -4,13 +4,17 @@
   "private": true,
   "type": "module",
   "description": "Reachmade Lab — applied AI research, products and implementation. A dependency-free static website.",
-  "engines": {"node": ">=22"},
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "build": "node scripts/build.mjs",
     "dev": "node scripts/build.mjs && node scripts/serve.mjs",
     "preview": "node scripts/serve.mjs",
     "test": "node --test tests/*.test.mjs",
     "check": "npm run build && npm test",
+    "ui:capture": "node scripts/ui-capture.mjs",
+    "ui:gate": "node scripts/ui-quality.mjs",
     "media:prepare": "node scripts/prepare-media.mjs",
     "proof:add": "node scripts/add-proof.mjs",
     "proof:check": "node --test tests/proof-registry.test.mjs",

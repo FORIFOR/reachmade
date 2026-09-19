@@ -13,12 +13,12 @@ export function demoCopy(id, lang = 'ja') {
   if (!PRODUCTS.includes(id) || !['ja','en'].includes(lang)) throw new TypeError('Unknown demo product or locale');
   const ja = lang === 'ja';
   const data = {
-    genie: ja ? ['メモから、使える下書きへ。','このメモから、LPの下書きを作って。',['メモを渡す','依頼する','構成を作る','下書きを見る','成果物を残す'],'説明用の再現UIです。実際の利用にはMac・ローカルサービス・モデルの設定が必要です。'] : ['A note becomes a useful draft.','Turn these notes into a landing-page draft.',['Add notes','Send request','Structure','Review draft','Keep artifact'],'Illustrative UI. Actual use requires a Mac, local services and a configured model.'],
-    'ai-meeting': ja ? ['話したことを、次の行動に。','料金案を3つ比較するタスクを追加して。',['話す','文字にする','整理する','変更を確認','タスクを残す'],'説明用の再現UIです。音声を録音・送信せず、タスクも実際には保存しません。'] : ['Think out loud. Keep the next step.','Add a task to compare three pricing options.',['Speak','Transcribe','Organize','Confirm change','Keep task'],'Illustrative UI. No microphone recording, audio transmission or real task storage.'],
+    genie: ja ? ['メモから、使える下書きへ。','このメモから、LPの下書きを作って。',['メモを渡す','依頼する','構成を作る','下書きを見る','成果物を残す'],'実際の利用にはMac・ローカルサービス・モデルの設定が必要です。'] : ['A note becomes a useful draft.','Turn these notes into a landing-page draft.',['Add notes','Send request','Structure','Review draft','Keep artifact'],'Actual use requires a Mac, local services and a configured model.'],
+    'ai-meeting': ja ? ['話したことを、次の行動に。','料金案を3つ比較するタスクを追加して。',['話す','文字にする','整理する','変更を確認','タスクを残す'],'音声を録音・送信せず、タスクも実際には保存しません。'] : ['Think out loud. Keep the next step.','Add a task to compare three pricing options.',['Speak','Transcribe','Organize','Confirm change','Keep task'],'No microphone recording, audio transmission or real task storage.'],
     oathra: ja ? ['結果から、相手の発言まで。','金曜日の14時に予約をお願いします。',['依頼を見る','会話を見る','発言を拾う','根拠を照合','未確認を分ける'],'サンプル会話の説明です。実電話を発信せず、店舗システムへの登録も行いません。'] : ['A result with a traceable source.','Please book Friday at 14:00.',['Read request','Read exchange','Extract words','Match evidence','Separate unknowns'],'A fictional conversation. No live call or external booking is made.'],
     aisecure: ja ? ['ログを、調べられる一件に。','この3件のログを、一つのケースとして調査。',['ログを選ぶ','観測する','関連づける','仮説を分ける','不明点を残す'],'合成ログによる説明です。実環境の監視・遮断や安全性の保証ではありません。'] : ['Scattered logs. One reviewable case.','Investigate these three log entries together.',['Select logs','Observe','Correlate','Form hypothesis','Keep unknowns'],'Synthetic logs only. Not live monitoring, enforcement or a safety guarantee.'],
     'agent-team': ja ? ['一人で作らない。途中も残す。','新機能の発表文を作り、レビューして。',['依頼する','下書きを作る','レビューする','修正する','未完了も残す'],'説明用の再現UIと架空の作業記録です。実モデルの実行記録は実録画・製品ページで確認できます。'] : ['Shared work. A visible trail.','Draft and review a new-feature announcement.',['Request','Draft','Review','Revise','Keep open items'],'Illustrative UI and fictional work trail. See the recording and product page for real-model evidence.'],
-    launchloom: ja ? ['ひとつの録画から、届ける素材へ。','この録画から、公開前の素材セットを作る。',['録画を入れる','構成を選ぶ','用途別に作る','素材を確認','公開前に止める'],'説明用の再現UIです。動画を生成・アップロードせず、SNSにも実投稿しません。'] : ['One recording. A launch kit.','Make a pre-publish launch kit from this recording.',['Add recording','Choose story','Adapt formats','Review assets','Stop before publishing'],'Illustrative UI. No video generation, upload or real social publishing.']
+    launchloom: ja ? ['ひとつの録画から、届ける素材へ。','この録画から、公開前の素材セットを作る。',['録画を入れる','構成を選ぶ','用途別に作る','素材を確認','公開前に止める'],'動画を生成・アップロードせず、SNSにも実投稿しません。'] : ['One recording. A launch kit.','Make a pre-publish launch kit from this recording.',['Add recording','Choose story','Adapt formats','Review assets','Stop before publishing'],'No video generation, upload or real social publishing.']
   };
   const [title, prompt, steps, scope] = data[id];
   return {name:names[PRODUCTS.indexOf(id)], title, prompt, steps, scope};
@@ -117,7 +117,8 @@ export function mountDemo(figure, initialId, lang = 'ja') {
   function setProduct(nextId) {
     if (!PRODUCTS.includes(nextId)) return;
     stop(); id = nextId; copy = demoCopy(id,lang); phase = -1;
-    elapsed = reduced() ? CUES[4] : 0;
+    // Start on the first content beat: an empty opening frame reads as a broken panel.
+    elapsed = reduced() ? CUES[4] : CUES[1];
     root.setAttribute('aria-label',`${copy.name} — ${copy.title}`);
     visual.innerHTML = renderStory(id,lang);
     chapters.innerHTML = copy.steps.map((label,i) => `<button type="button" data-cue="${i}" aria-pressed="false"><span>0${i+1}</span>${esc(label)}</button>`).join('');
