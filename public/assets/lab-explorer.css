@@ -64,6 +64,7 @@ body[data-lab-experience]:not(.owned-product){--paper:var(--lab-paper);--ink:var
 [data-lab-experience] .rm-chapters button{min-height:51px;font-size:10px}
 /* Hands-on mode uses the same five scenes, and requires explicit review. */
 [data-lab-guided] .rm-demo-controls,[data-lab-guided] .rm-chapters,[data-lab-guided] .rm-demo-summary{display:none}
+[data-lab-guided] .rm-demo-visual{display:none}
 .lab-hands{padding:19px 22px 20px;border-top:1px solid var(--rule,#dce1d9);background:var(--paper,#fafbf8);color:var(--ink,#202822)}
 .lab-hands-heading{display:flex;flex-direction:column;gap:7px}
 .lab-hands-heading>span{font:10px/1.6 ui-monospace,monospace;color:var(--muted,#657067);letter-spacing:.06em}
@@ -177,3 +178,14 @@ body[data-lab-experience]:not(.owned-product){--paper:var(--lab-paper);--ink:var
 @media(forced-colors:active){.lab-explorer .studio-picker>[aria-selected=true],.lab-decisions button[aria-pressed=true]{outline:2px solid Highlight}.lab-card-art,.lab-primary,.lab-begin,.lab-output{border:1px solid CanvasText}}
 
 @media(min-width:1001px){.lab-hero .hero-copy h1 br,.lab-hero .lab-hero-lead br{display:none}.lab-hero .hero-copy h1{font-size:clamp(48px,4.6vw,66px);margin:20px 0 17px}[data-lab-experience] .hero.container.lab-hero{padding-top:32px;padding-bottom:29px}}
+.lab-hands .lab-draft-label{display:grid;gap:8px;margin:16px 0;font-size:14px}
+.lab-hands textarea{box-sizing:border-box;width:100%;min-width:0;max-width:100%;padding:12px;border:1px solid currentColor;background:#fff;color:#20231f;font:16px/1.7 system-ui,sans-serif;resize:vertical}
+.lab-hands .lab-output pre{margin:12px 0;white-space:pre-wrap;overflow-wrap:anywhere;font:14px/1.8 system-ui,sans-serif}
+.lab-hands [data-draft-status]{min-height:1.8em;overflow-wrap:anywhere}
+.lab-hands :focus-visible{outline:3px solid currentColor;outline-offset:4px}
+.lab-hands .lab-hands-actions button{min-height:44px;white-space:normal}
+.lab-hands-actions>button:not(.lab-primary){padding:10px 12px;border:1px solid var(--rule,#dce1d9);border-radius:7px;background:transparent;color:inherit;font:inherit;font-size:12px;line-height:1.6;cursor:pointer}
+.lab-hands-actions>button:not(.lab-primary):hover{border-color:var(--accent,#345b42);color:var(--accent,#345b42)}
+.lab-hands-actions>button:disabled{opacity:.6;cursor:not-allowed}
+.lab-hands [data-cancel-import][hidden]{display:none}
+.lab-hands[data-import-state=reading] [data-draft-status]{font-weight:600;color:var(--ink,#202822)}

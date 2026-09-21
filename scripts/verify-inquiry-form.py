@@ -51,9 +51,21 @@ with sync_playwright() as pw:
                 assert len(submitted)==1 and submitted[0]['consent'] is True
                 expect(page.locator('[name=message]')).to_have_value('Synthetic browser acceptance test only.')
                 assert not page.locator('#inquiry-result').get_attribute('data-receipt')
+                expect(page.locator('#reachmade-inquiry')).to_have_attribute('data-state','unconfirmed')
+                expect(page.locator('#inquiry-submit')).to_be_disabled()
+                page.locator('#inquiry-reconnect').click()
+                expect(page.locator('#inquiry-reconnect')).to_be_enabled()
+                expect(page.locator('#inquiry-submit')).to_be_disabled()
+                page.evaluate("document.querySelector('#reachmade-inquiry').dispatchEvent(new Event('submit',{cancelable:true}))")
+                assert len(submitted)==1, 'Unknown outcome was sent again'
+                # Separate page lifecycle, synthetic acceptance scenario. Reload is
+                # not a safe recovery method for a real unknown inquiry.
+                page.reload(wait_until='networkidle')
+                expect(page.locator('#inquiry-submit')).to_be_enabled()
+                fill(); page.locator('[name=consent]').check()
                 page.locator('#inquiry-submit').click()
                 expect(page.locator('#inquiry-result')).to_have_attribute('data-receipt','AM-1234ABCD')
-                assert len(submitted)==2 and submitted[0]['requestId']==submitted[1]['requestId']
+                assert len(submitted)==2 and submitted[0]['requestId']!=submitted[1]['requestId']
                 assert submitted[1]['language']==language
                 expect(page.locator('[name=message]')).to_have_value('')
                 expect(page.locator('[name=consent]')).not_to_be_checked()
@@ -69,7 +81,7 @@ with sync_playwright() as pw:
                 assert page.evaluate('document.documentElement.scrollWidth<=innerWidth+1')
                 assert not errors, errors
                 page.screenshot(path=str(OUT/f'{language}-{width}.png'),full_page=True)
-                report['checks'].append({'language':language,'width':width,'consent_gate':True,'no_input_transmission_before_submit':True,'failed_write_retains_input':True,'idempotent_retry':True,'new_inquiry_has_new_id':True,'receipt_requires_201':True,'overflow':False})
+                report['checks'].append({'language':language,'width':width,'consent_gate':True,'no_input_transmission_before_submit':True,'failed_write_retains_input':True,'unknown_outcome_blocks_resend':True,'known_rejection_reuses_id':True,'new_inquiry_has_new_id':True,'receipt_requires_201':True,'overflow':False})
             except Exception as e:
                 report['errors'].append({'language':language,'width':width,'error':str(e)})
             finally: context.close()

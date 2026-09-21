@@ -1,7 +1,7 @@
 /** Product-led lab, rendered at build time. Existing recording and no-script routes survive. */
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import {LAB_VERSION,IDS,copyFor,mark,esc} from '../public/assets/lab-explorer.mjs';
+import {LAB_VERSION,IDS,copyFor,mark,esc} from '../public/assets/lab-core.mjs';
 const marker='/* REACHMADE_LAB_EXPERIENCE */';
 const arrow='<span aria-hidden="true">↗</span>';
 const route=(id,lang)=>`${lang==='en'?'/en':''}/products/${id}/`;

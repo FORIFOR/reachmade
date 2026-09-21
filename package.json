@@ -14,11 +14,14 @@
     "test": "node --test tests/*.test.mjs",
     "check": "npm run build && npm test",
     "ui:capture": "node scripts/ui-capture.mjs",
+    "ui:probe": "node scripts/ui-probe.mjs",
     "ui:gate": "node scripts/ui-quality.mjs",
     "media:prepare": "node scripts/prepare-media.mjs",
     "proof:add": "node scripts/add-proof.mjs",
     "proof:check": "node --test tests/proof-registry.test.mjs",
     "deploy": "npm run check && npm run media:prepare && npx wrangler@4 deploy",
-    "deploy:check": "npm run check && npm run media:prepare && npx wrangler@4 deploy --dry-run"
-  }
+    "deploy:check": "npm run check && npm run media:prepare && npx wrangler@4 deploy --dry-run",
+    "qa:sample": "node scripts/verify-sample.mjs"
+  },
+  "license": "SEE LICENSE IN LICENSE"
 }

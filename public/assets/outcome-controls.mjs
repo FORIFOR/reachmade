@@ -20,7 +20,7 @@ export function initOutcome(doc=document){
   const target=doc.querySelector('.owned-film [data-lab-try]');if(!target)return false;
   if(entry.dataset.ready)return true;
   entry.dataset.ready='true';entry.hidden=false;
-  entry.addEventListener('click',()=>{target.click();target.scrollIntoView({block:'center',behavior:'auto'});target.focus({preventScroll:true});});
+  entry.addEventListener('click',()=>target.click());
   return true;
  };
  if(!wire()){

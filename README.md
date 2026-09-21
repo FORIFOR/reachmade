@@ -4,7 +4,9 @@
 
 Reachmade Labの企業向けサイトと自主開発プロダクトの案内。公開先は **https://reachmade.com**。日本語・英語の静的サイトです。
 
-> **この初版はGitHubの`FORIFOR/reachmade`からCloudflare Workers Static Assetsへデプロイし、`reachmade.com`と`www.reachmade.com`を接続済みです。現在掲載している各プロダクトにも`*.reachmade.com`の入口を用意しています。問い合わせ受信や実機表示など、個別の運用確認は別途必要です。**
+このリポジトリは**製品を試して導入判断するWebサイト**です。6製品の本体やAI実行SDKは含みません。操作サンプルは架空データ、実録画・保存済み成果物は過去の公開実演として区別しています。
+
+自作コードは[MIT](LICENSE)。名称・ロゴ・映像・外部由来素材は対象外です。[再利用範囲](NOTICE.md)を確認してください。
 
 ## ローカルで見る
 
@@ -16,6 +18,29 @@ npm run dev
 ```
 
 ターミナルに表示される `http://127.0.0.1:4173` をブラウザで開きます。HTMLを直接ダブルクリックすると、ルート相対リンクやアセットが機能しません。`npm run dev`を使用してください。
+
+## 最初の成功：サンプルを編集して持ち出す
+
+1. ローカルサイトで「まずはGenieから」→「まず、操作サンプルを試す」を開きます。直接の入口は `/products/genie/`（英語は `/en/products/genie/`）。
+2. 例文を編集し、内容を確認して、Markdownをダウンロードします。元の例文を使う練習問題はスキップできます。AI生成・登録・課金・外部送信はありません。
+3. 保存先の `.md` を開いて内容を確認します。再読み込み後も「保存したMarkdownを読み戻す」で復元できます。タブ内の文章は自動保存されません。
+
+保存が始まらない場合は、画面の全文を選択しCtrl+C / ⌘Cでコピーしてください。4,000文字まで。読み戻しにはこのサンプルのUTF-8書き出し形式を使います。読込中は取り消し可能で、不正なファイルでも編集内容は残ります。実アプリの能力確認は、同じ製品ページの実録画・保存済み作例・導入条件から進めます。
+
+## 開発者向け：小さなCoreを組み込む
+
+```sh
+node examples/sample.mjs > sample.md
+```
+
+```js
+import {createDraft, exportDraft, importDraft}
+  from './public/assets/sample-draft.mjs';
+const file = exportDraft(createDraft({product:'genie', language:'ja', text:'手動編集した評価用の文章'}));
+const restored = importDraft(file.text);
+```
+
+CoreはDOM・通信・ファイル書き込みを行いません。Nodeのstdout例とブラウザUIが同じ検証処理を使います。npm配布SDKではありません。[入出力・エラー・互換性](docs/SAMPLE_CONTRACT.md)、[貢献方法](CONTRIBUTING.md)、[セキュリティ](SECURITY.md)、[初回検証](docs/OSS_VERIFICATION_2026-09-19.md)・[キット導入後の追加検証](docs/OSS_KIT_V2_REVIEW_2026-09-19.md)を参照してください。
 
 ## 入っているもの
 
@@ -59,11 +84,11 @@ npm run dev
 
 ### 問い合わせ窓口について
 
-この初版はAI Meetingの公開READMEに掲載されている、開発者の既存の非公開窓口へリンクします。別製品のサイトへ移動することは画面に明示しています。外部フォームの現在の稼働・メール到達は今回検証していません。広告・営業に使う前に、所有者が宛先と受信を確認してください。
+`/contact/` は現在、同一オリジンの `/api/inquiries` を通じて運営者のGoogle Cloud受付へ送信するフォームです。送信先・保存への同意を実行前に示し、201応答と有効な受付番号を受け取ったときだけ受付済みと表示します。自動返信メールはありません。`npm run dev` は静的配信のみなので送信機能は使用できません。
 
-`hello@reachmade.com`などのメールボックスはこのコードでは作成しません。サイト内の下書き欄も送信フォームではなく、ブラウザ内で文章を作ってコピーするだけです。入力内容をサーバーに送信・保存せず、「送信完了」も表示しません。
+通信断などで結果が分からない場合は入力を残して、そのページからの再送信を止めます。UUIDの再利用だけで重複防止を保証しません。外部受付の保存・重複防止・受信確認は別途必要です。この作業では本番送信を行っていません。
 
-専用フォームに切り替える場合は`site.config.json`の`contact.url`を更新し、`src/copy.mjs`の案内文・プライバシー説明も実際の運用に合わせて更新してください。
+他の開発者がフォークするときは、`site.config.json` の変更だけでは不十分です。`src/inquiries.mjs` の固定オリジン・送信先、Worker、表示文章、プライバシー説明を自分の受付に合わせて変更し、認可・件数制限・永続的な重複防止と照合を検証してください。Reachmadeの受付を流用しないでください。一般ページの操作サンプルは問い合わせと独立し、入力を送信しません。
 
 ## 編集する場所
 
@@ -73,7 +98,12 @@ src/products.mjs          製品情報、根拠、現状、各種リンク
 src/copy.mjs              日本語・英語の文章
 scripts/build.mjs         共通テンプレートと静的ページ生成
 public/assets/site.css    デザイン・レスポンシブ
-public/assets/site.js     メニュー、絞り込み、相談文のコピー
+public/assets/site.js     一般ページのメニュー・絞り込み
+public/assets/lab-core.mjs サンプル台帳・判断ルール
+public/assets/sample-draft.mjs  Markdown入出力の共通Core
+public/assets/lab-explorer.mjs  サンプルの編集・復元UI
+public/assets/inquiry-form.mjs  問い合わせの送信・状態表示
+src/inquiries.mjs          固定先への問い合わせAdapter
 public/assets/og.png      SNS共有用の実画像
 public/_headers           Cloudflare配信用ヘッダー
 public/_redirects         Cloudflare配信用リダイレクト
@@ -89,7 +119,9 @@ wrangler.jsonc            Workers Static Assets設定
 npm run check
 ```
 
-静的構造とローカルHTTPのテストです。任意のブラウザテストは、別途PythonのPlaywrightとChromiumを用意して実行します。
+静的構造とローカルHTTPのテストです。新しい主要フローは `npm run qa:sample` で、インストール済みChromeを使って編集・失敗復帰・実ファイルの一致まで検証します。問い合わせ応答はローカルで差し替え、本番へ送りません。証拠は `artifacts/ui/oss/` に保存します。
+
+任意のブラウザテストは、別途PythonのPlaywrightとChromiumを用意して実行します。
 
 ```sh
 python -m pip install playwright
@@ -110,10 +142,12 @@ python tests/browser-check.py
 
 ## ライセンス
 
-初版の配布時点では、このサイト全体の再利用ライセンスは未設定です。Reachmadeのロゴ・名称・文章、リンク先の製品の権利を一括で第三者に許諾するものではありません。公開リポジトリにする場合でも、別途ライセンス方針を決めてください。
-
-フォントファイル、外部有料テンプレート、第三者の動画やモデル素材は同梱していません。
+自作コード・開発者向け文書は[MIT](LICENSE)。ブランド、宣伝文、録画、画像、外部由来HTMLや素材は別扱いです。[NOTICE.md](NOTICE.md)に対象と除外範囲を記載しています。製品本体のライセンスは各製品の正本を確認してください。
 
 ---
 
 **Applied AI research & product development.** From independent products to collaborative development. Japanese and English, built as a dependency-free static site. The production domain and current product aliases are connected; see the deployment guide for future changes.
+
+## プロジェクトの品質Skill
+
+提供されたOSS Quality Kit v2の5 Skillを `.agents/skills/` に導入しています。[配置・出所・使い方](docs/QUALITY_SKILLS.md)を参照してください。自動検出は次のターンから確認できます。Skillsの存在は製品品質の認定や本番操作の許可を意味しません。
