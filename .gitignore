@@ -9,4 +9,8 @@ dist/
 test-results/
 playwright-report/
 .ui-quality/
-artifacts/ui/
+# Local evidence: screenshots, browser reports and deploy logs. Not distributed.
+artifacts/
+# User-supplied OSS Quality Kit. NOTICE.md records that the bundle has no
+# redistribution license, so it stays local and is never published with this repo.
+.agents/

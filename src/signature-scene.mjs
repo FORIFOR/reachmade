@@ -14,7 +14,7 @@
  */
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import {esc} from '../public/assets/lab-explorer.mjs';
+import {esc} from '../public/assets/lab-core.mjs';
 
 export const SCENE_VERSION = '20260919-signature-1';
 const MARK = '/* REACHMADE_SIGNATURE_SCENE */';
@@ -26,31 +26,31 @@ const route = (lang, id) => `${base(lang)}/products/${id}/`;
 /** One request, moving through three of the six tools. Sequence, not automation. */
 const CHAIN = {
   ja: {
-    kicker: 'ONE JOB. SIX TOOLS.',
-    label: '一つの仕事が、道具を渡り歩く様子の再現',
-    note: '説明のための再現UI・架空のデータです。6つは独立した製品で、自動で連携する単一のパイプラインではありません。ここで実行・保存・投稿は行いません。',
+    kicker: '3つの道具の使い分け例',
+    label: '打ち合わせから公開用素材を作るときの、3製品の役割',
+    note: '説明のための再現UI・架空のデータです。製品ごとに準備・操作が必要です。自動で連携する単一のパイプラインではありません。ここで実行・保存・投稿は行いません。',
     play: '再生', pause: '停止',
     steps: [
-      {mark: '00', name: 'Reachmade Lab', line: '6つの道具が、待っている。', tone: 'idle'},
-      {mark: '01', name: 'あなた', line: '「打ち合わせの内容から、公開用の素材まで作りたい。」', tone: 'request'},
-      {mark: '02', name: 'AI Meeting', line: '話したことを、確認してからタスクに。', id: 'ai-meeting', tone: 'work'},
-      {mark: '03', name: 'Agent Team', line: 'つくる・たしかめる・なおすを、分けて進める。', id: 'agent-team', tone: 'work'},
-      {mark: '04', name: 'Launchloom', line: '操作録画から、映像・LP・投稿案へ。', id: 'launchloom', tone: 'work'},
-      {mark: '05', name: '手元に残るもの', line: '確認済みのタスク / 経緯の残る成果物 / 公開前の素材。', tone: 'result'}
+      {mark: '選択', name: '必要な道具を選ぶ', line: '整理・制作・紹介。目的に合う製品を選んで使います。', tone: 'idle'},
+      {mark: '目的', name: 'たとえば、こんな仕事', line: '「打ち合わせで決めた内容を形にして、紹介する素材を作りたい。」', tone: 'request'},
+      {mark: '整理', name: 'AI Meeting', line: '打ち合わせで決めたことを確認し、やることを整理する。', id: 'ai-meeting', tone: 'work'},
+      {mark: '制作', name: 'Agent Team', line: '制作・レビュー・修正を、それぞれの担当に分けて進める。', id: 'agent-team', tone: 'work'},
+      {mark: '紹介', name: 'Launchloom', line: 'アプリの操作録画から、紹介動画・紹介ページ・投稿文の案を作る。', id: 'launchloom', tone: 'work'},
+      {mark: '成果', name: 'この仕事で目指すもの', line: 'やることの一覧、制作した成果物、公開前に確認できる紹介素材。', tone: 'result'}
     ]
   },
   en: {
-    kicker: 'ONE JOB. SIX TOOLS.',
-    label: 'An illustration of one job moving between tools',
-    note: 'Illustrative UI with fictional data. The six are separate products used in sequence, not one automated pipeline. Nothing is executed, stored or published here.',
+    kicker: 'THREE TOOLS. THREE ROLES.',
+    label: 'Three product roles: from meeting decisions to launch material',
+    note: 'Illustrative UI with fictional data. Each product requires its own setup and operation; this is not one automated pipeline. Nothing is executed, stored or published here.',
     play: 'Play', pause: 'Pause',
     steps: [
-      {mark: '00', name: 'Reachmade Lab', line: 'Six tools, waiting.', tone: 'idle'},
-      {mark: '01', name: 'You', line: '“Turn what we discussed into something we can publish.”', tone: 'request'},
-      {mark: '02', name: 'AI Meeting', line: 'A conversation becomes tasks you confirmed.', id: 'ai-meeting', tone: 'work'},
-      {mark: '03', name: 'Agent Team', line: 'Draft, review and revise, kept apart.', id: 'agent-team', tone: 'work'},
-      {mark: '04', name: 'Launchloom', line: 'One recording becomes film, page and posts.', id: 'launchloom', tone: 'work'},
-      {mark: '05', name: 'What stays with you', line: 'Confirmed tasks / artifacts with a trail / launch material.', tone: 'result'}
+      {mark: 'USE', name: 'Choose the tool you need', line: 'Organize, create or introduce your work. Pick a product for your task.', tone: 'idle'},
+      {mark: 'AIM', name: 'For example', line: '“Build what we agreed in the meeting, then prepare material to introduce it.”', tone: 'request'},
+      {mark: '01', name: 'AI Meeting', line: 'Review meeting decisions and organize the tasks.', id: 'ai-meeting', tone: 'work'},
+      {mark: '02', name: 'Agent Team', line: 'Assign creation, review and revision to separate roles.', id: 'agent-team', tone: 'work'},
+      {mark: '03', name: 'Launchloom', line: 'Use an app recording to draft a video, a landing page and social posts.', id: 'launchloom', tone: 'work'},
+      {mark: 'END', name: 'What you are working toward', line: 'A task list, completed work and promotional drafts to review before publishing.', tone: 'result'}
     ]
   }
 };
@@ -83,17 +83,30 @@ export function renderMarquee(products, lang) {
 export async function writeSignatureScenes(dist, products) {
   if (!Array.isArray(products) || products.length < 1) throw new TypeError('Expected the product ledger');
   const pages = [];
+  let scene = false, marquee = false;
   for (const lang of LOCALES) {
     const prefix = lang === 'ja' ? '' : 'en';
     const home = path.join(dist, prefix, 'index.html');
     const html = await fs.readFile(home, 'utf8');
-    if (!html.includes('data-signature-scene="chain"')) throw new Error('The final home pass must compose the signature scene first');
-    if (!html.includes(`data-signature-scene-version="${SCENE_VERSION}"`)) pages.push([home, html.replace('<body ', `<body data-signature-scene-version="${SCENE_VERSION}" `)]);
+    const mounted = html.includes('data-signature-scene="chain"');
+    if (!mounted && !html.includes('data-home-task-picker')) throw new Error('The final home pass must compose the signature scene or the task picker first');
+    scene ||= mounted;
+    marquee ||= html.includes('class="sig-marquee"');
+    if (mounted && !html.includes(`data-signature-scene-version="${SCENE_VERSION}"`)) pages.push([home, html.replace('<body ', `<body data-signature-scene-version="${SCENE_VERSION}" `)]);
   }
   const assets = path.join(dist, 'assets');
-  const [css, js, extra, client] = await Promise.all(['showcase.css', 'showcase.mjs', 'signature-scene.css', 'signature-scene.mjs'].map(file => fs.readFile(path.join(assets, file), 'utf8')));
-  if (!extra.includes('.sig-scene') || !client.includes(SCENE_VERSION)) throw new Error('Signature scene assets are missing or stale');
+  const files = ['showcase.css', 'showcase.mjs', 'signature-scene.css', 'signature-marquee.css', 'signature-scene.mjs'];
+  const [css, js, sceneCss, marqueeCss, client] = await Promise.all(files.map(file => fs.readFile(path.join(assets, file), 'utf8')));
+  // Both parts are validated whichever is mounted, so a stale asset fails the build
+  // instead of waiting until something starts using it again.
+  if (!sceneCss.includes('.sig-scene') || !client.includes(SCENE_VERSION)) throw new Error('Signature scene assets are missing or stale');
+  if (!marqueeCss.includes('.sig-marquee')) throw new Error('Marquee stylesheet is missing or stale');
+  if (!scene && !marquee) throw new Error('Neither the scene nor the marquee is composed; the layer would ship unused rules');
   for (const [file, html] of pages) await fs.writeFile(file, html);
-  await fs.writeFile(path.join(assets, 'showcase.css'), css.split(MARK)[0].trimEnd() + `\n${MARK}\n${extra}`);
-  await fs.writeFile(path.join(assets, 'showcase.mjs'), js.split(MARK)[0].trimEnd() + `\n${MARK}\nimport('./signature-scene.mjs').catch(() => { document.documentElement.dataset.sceneState = 'unavailable'; });\n`);
+  // Ship only what a page actually mounts. The marquee is CSS-only, so a home built
+  // without the scene should not pay for its rules or fetch its module at all.
+  const layer = [scene ? sceneCss : '', marquee ? marqueeCss : ''].filter(Boolean).join('\n');
+  await fs.writeFile(path.join(assets, 'showcase.css'), css.split(MARK)[0].trimEnd() + `\n${MARK}\n${layer}`);
+  const mount = scene ? `\nimport('./signature-scene.mjs').catch(() => { document.documentElement.dataset.sceneState = 'unavailable'; });\n` : '\n';
+  await fs.writeFile(path.join(assets, 'showcase.mjs'), js.split(MARK)[0].trimEnd() + `\n${MARK}${mount}`);
 }

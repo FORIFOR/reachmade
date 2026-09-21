@@ -15,7 +15,8 @@
 .sig-step[data-step-state=current] .sig-mark{color:#e3b575}
 .sig-body{display:grid;gap:4px;min-width:0}
 .sig-body strong{font-size:clamp(14px,1.15vw,16px);font-weight:600;letter-spacing:-.025em}
-.sig-body strong a{display:inline-flex;align-items:center;gap:8px;border-bottom:1px solid transparent}
+.sig-body strong a{position:relative;display:inline-flex;align-items:center;gap:8px;border-bottom:1px solid transparent}
+.sig-body strong a::after{content:"";position:absolute;inset:-9px -6px}
 .sig-body strong a:hover{border-color:currentColor;color:#f0cd97}
 .sig-body>span{font-size:clamp(11px,.95vw,13px);line-height:1.85;color:#b7c4bb;overflow-wrap:normal;word-break:normal;word-break:auto-phrase}
 .sig-step[data-tone=request][data-step-state=current] .sig-body>span{color:#f2ead9}
@@ -27,24 +28,14 @@
 .sig-scene[data-state="5"] .sig-orb{transform:translate3d(-30px,90px,0) scale(1.12);opacity:.66}
 
 .sig-controls{display:flex;align-items:center;gap:clamp(12px,1.4vw,20px);margin-top:clamp(16px,1.6vw,22px);padding-top:clamp(13px,1.3vw,17px);border-top:1px solid #2c3d41}
-.sig-toggle{min-height:40px;padding:8px 15px;border:1px solid #42565a;background:transparent;color:inherit;font:inherit;font-size:11px;font-weight:550;border-radius:0}
+.sig-toggle{min-height:44px;padding:8px 15px;border:1px solid #42565a;background:transparent;color:inherit;font:inherit;font-size:11px;font-weight:550;border-radius:0}
 .sig-toggle:hover{border-color:#e3b575;color:#f0cd97}
 .sig-dots{display:flex;flex-wrap:wrap;gap:4px}
-.sig-dots button{min-width:40px;min-height:40px;padding:0 4px;border:0;background:transparent;color:#8fa79a;font:10px/1 ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:.06em}
+.sig-dots button{min-width:44px;min-height:44px;padding:0 4px;border:0;background:transparent;color:#8fa79a;font:10px/1 ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:.06em}
 .sig-dots button:hover{color:#f0cd97}
 .sig-dots button[aria-pressed=true]{color:#e3b575;text-decoration:underline;text-underline-offset:5px}
 .sig-note{margin:clamp(12px,1.2vw,16px) 0 0;font-size:10px;line-height:1.85;color:#93a399;overflow-wrap:normal;word-break:normal;word-break:auto-phrase}
 .sig-scene :is(a,button):focus-visible{outline:3px solid #ead487;outline-offset:3px}
-
-/* Marquee: the track carries two identical lists; the copy is hidden from AT. */
-.sig-marquee{overflow:hidden;border-block:1px solid var(--rule);padding-block:13px;mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
-.sig-marquee-track{display:flex;width:max-content;animation:sig-drift 46s linear infinite}
-.sig-marquee-list{display:flex;align-items:center;gap:clamp(26px,3vw,44px);margin:0;padding:0 clamp(13px,1.5vw,22px);list-style:none}
-.sig-marquee-list li{display:flex;align-items:baseline;gap:11px;white-space:nowrap}
-.sig-marquee-list b{font-size:13px;font-weight:600;letter-spacing:-.025em}
-.sig-marquee-list span{font:11px/1.7 ui-monospace,SFMono-Regular,Consolas,monospace;color:var(--muted)}
-@keyframes sig-drift{from{transform:translate3d(0,0,0)}to{transform:translate3d(-50%,0,0)}}
-.sig-marquee:hover .sig-marquee-track{animation-play-state:paused}
 
 @media(max-width:900px){
  .sig-scene{padding:19px 17px}
@@ -58,18 +49,11 @@
  .sig-body strong{font-size:13px}
  .sig-body>span{font-size:11px;line-height:1.8}
  .sig-controls{gap:10px;margin-top:14px;padding-top:12px;flex-wrap:wrap}
- .sig-dots button{min-width:34px}
- .sig-marquee-list{gap:22px}
- .sig-marquee-list b{font-size:12px}
- .sig-marquee-list span{font-size:10px}
+ .sig-dots button{min-width:40px}
 }
 @media(prefers-reduced-motion:reduce){
  .sig-step,.sig-orb{transition:none}
  .sig-scene[data-state] .sig-orb{transform:none;opacity:.3}
- .sig-marquee-track{animation:none;width:100%}
- .sig-marquee{mask-image:none}
- .sig-marquee-list{flex-wrap:wrap;gap:10px 22px}
- .sig-marquee-list+.sig-marquee-list{display:none}
  .sig-step{opacity:1;transform:none}
 }
 @media(forced-colors:active){

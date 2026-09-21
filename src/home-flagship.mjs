@@ -15,9 +15,11 @@
  */
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import {esc} from '../public/assets/lab-explorer.mjs';
+import {esc} from '../public/assets/lab-core.mjs';
 import {renderRecordedResult} from './outcome-first.mjs';
-import {renderChainScene, renderMarquee} from './signature-scene.mjs';
+import {renderMarquee} from './signature-scene.mjs';
+
+import {renderTaskPicker} from './home-task-picker.mjs';
 
 export const HOME_VERSION = '20260919-flagship-1';
 const MARK = '/* REACHMADE_HOME_FLAGSHIP */';
@@ -37,12 +39,19 @@ export function renderHero(products, lang) {
   check(lang);
   const list = ledger(products), ja = lang === 'ja', t = (a, b) => (ja ? a : b);
   const total = String(list.length).padStart(2, '0');
+  // Both lines below are already asserted elsewhere on this page: the source-check
+  // date is repeated in the access note, and the three kinds of evidence are what
+  // the proof band, the product pages and /work/ actually publish.
+  const badge = t('公開情報の確認日 2026-09-15 / 実録画と検証記録を公開', 'Sources checked 2026-09-15 / recordings and evidence published');
+  const evidence = ja
+    ? ['実アプリの録画', '保存済みの成果物', '検証記録とBLOCKED項目']
+    : ['Real app recordings', 'Saved artifacts', 'Evidence, BLOCKED items included'];
   const facts = [
     [total, t('自主開発プロダクト', 'products built here')],
     [total, t('公開リポジトリ', 'public repositories')],
     ['JA / EN', t('実演と検証資料', 'recordings & evidence')]
   ];
-  return `<section class="hero container lab-hero rm-hero"><div class="rm-hero-grid"><div class="rm-hero-copy"><p class="eyebrow">REACHMADE / INDEPENDENT AI STUDIO</p><h1>${t('思いついたら、<br>使えるかたちに。', 'From an idea.<br>To something real.')}</h1><p class="rm-hero-lead">${t('メモを、計画に。会話を、タスクに。<br>録画を、伝わる紹介素材に。', 'Notes into plans. Conversations into tasks.<br>Recordings into launch material.')}</p><div class="rm-hero-actions"><a class="rm-primary" href="#explore">${t('プロダクトを選ぶ', 'Explore the products')} <span aria-hidden="true">↓</span></a><a class="rm-secondary" href="${product(lang, 'genie')}">${t('まずはGenieから', 'Start with Genie')} <span aria-hidden="true">→</span></a></div><ul class="rm-hero-facts">${facts.map(([value, label]) => `<li><b>${esc(value)}</b><span>${esc(label)}</span></li>`).join('')}</ul></div><div class="rm-hero-stage">${renderChainScene(lang)}</div></div><div class="rm-proof"><div class="rm-proof-head"><p class="eyebrow">${t('REAL RECORDING / GENIE', 'REAL RECORDING / GENIE')}</p><p>${t('上の場面は説明のための再現UIです。こちらは実アプリの録画と、そこで保存された成果物。', 'The scene above is an illustration. This is the actual app recording and the artifact it saved.')}</p></div>${renderRecordedResult(lang)}</div><div class="rm-bridge"><span>${t('「使えるかたち」を、まずは手元で。', 'Something real, right in your browser.')}</span><p>${t('実演、保存した作例、導入手順まで。6つの製品を、実物から選べます。', 'Recording, saved artifact, and setup. Choose between six products, starting with the real work.')}</p><a href="#explore">${t('プロダクトを見る', 'Meet the products')} <span aria-hidden="true">↓</span></a></div></section>${renderMarquee(list, lang)}`;
+  return `<section class="hero container lab-hero rm-hero"><div class="rm-hero-grid"><div class="rm-hero-copy"><p class="rm-hero-badge"><span aria-hidden="true">●</span> ${esc(badge)}</p><p class="eyebrow">REACHMADE / INDEPENDENT AI STUDIO</p><h1>${t('思いついたら、<br>使えるかたちに。', 'From an idea.<br>To something real.')}</h1><p class="rm-hero-lead">${t('メモを、計画に。会話を、タスクに。<br>録画を、伝わる紹介素材に。', 'Notes into plans. Conversations into tasks.<br>Recordings into launch material.')}</p><div class="rm-hero-actions"><a class="rm-primary" href="#explore">${t('プロダクトを選ぶ', 'Explore the products')} <span aria-hidden="true">↓</span></a><a class="rm-secondary" href="${product(lang, 'genie')}">${t('まずはGenieから', 'Start with Genie')} <span aria-hidden="true">→</span></a></div><ul class="rm-hero-evidence">${evidence.map(item => `<li>${esc(item)}</li>`).join('')}</ul><ul class="rm-hero-facts">${facts.map(([value, label]) => `<li><b>${esc(value)}</b><span>${esc(label)}</span></li>`).join('')}</ul></div><div class="rm-hero-stage">${renderTaskPicker(list, lang)}</div></div><div class="rm-proof"><div class="rm-proof-head"><p class="eyebrow">${t('REAL RECORDING / GENIE', 'REAL RECORDING / GENIE')}</p><p>${t('実際に何ができるか、録画と保存された成果物で確かめてください。', 'See what the app does in a real recording, then open its saved artifact.')}</p></div>${renderRecordedResult(lang)}</div><div class="rm-bridge"><span>${t('「使えるかたち」を、まずは手元で。', 'Something real, right in your browser.')}</span><p>${t('実演、保存した作例、導入手順まで。6つの製品を、実物から選べます。', 'Recording, saved artifact, and setup. Choose between six products, starting with the real work.')}</p><a href="#explore">${t('プロダクトを見る', 'Meet the products')} <span aria-hidden="true">↓</span></a></div></section>${renderMarquee(list, lang)}`;
 }
 
 /** The access question, answered from the ledger instead of a pricing table. */
@@ -125,8 +134,10 @@ export async function writeHomeFlagship(dist, products) {
     return [file, refineHome(await fs.readFile(file, 'utf8'), list, lang)];
   }));
   const assets = path.join(dist, 'assets');
-  const [css, extra] = await Promise.all(['showcase.css', 'home-flagship.css'].map(f => fs.readFile(path.join(assets, f), 'utf8')));
-  if (!extra.includes('[data-home-flagship]')) throw new Error('Final home stylesheet incomplete');
+  const layers = ['home-flagship.css', 'home-task-picker.css', 'home-editorial.css'];
+  const [css, ...parts] = await Promise.all(['showcase.css', ...layers].map(f => fs.readFile(path.join(assets, f), 'utf8')));
+  if (!parts[0].includes('[data-home-flagship]')) throw new Error('Final home stylesheet incomplete');
+  if (!parts[2].includes('.rm-hero-badge')) throw new Error('Editorial home layer is missing or stale');
   for (const [file, html] of pages) await fs.writeFile(file, html);
-  await fs.writeFile(path.join(assets, 'showcase.css'), css.split(MARK)[0].trimEnd() + `\n${MARK}\n${extra}`);
+  await fs.writeFile(path.join(assets, 'showcase.css'), css.split(MARK)[0].trimEnd() + `\n${MARK}\n${parts.join('\n')}`);
 }

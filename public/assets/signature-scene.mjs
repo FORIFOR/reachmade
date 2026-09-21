@@ -38,7 +38,7 @@ export function mountScene(root, { win = window, doc = document } = {}) {
   const steps = [...root.querySelectorAll('[data-step]')];
   if (steps.length < 2) return null;
   const timeline = sceneTimeline(steps.length);
-  const scrollDriven = root.hasAttribute('data-scene-scroll');
+  let scrollDriven = root.hasAttribute('data-scene-scroll');
   const controls = root.querySelector('[data-scene-controls]');
   const toggle = controls?.querySelector('[data-scene-toggle]');
   const dots = controls?.querySelector('[data-scene-dots]');
@@ -99,8 +99,12 @@ export function mountScene(root, { win = window, doc = document } = {}) {
     controls.hidden = false;
     on(toggle, 'click', () => {
       manual = true;
-      if (scrollDriven) { root.removeAttribute('data-scene-scroll'); }
-      paused = running();
+      if (scrollDriven) { scrollDriven = false; root.removeAttribute('data-scene-scroll'); }
+      const wasRunning = running();
+      paused = wasRunning;
+      // Someone pressing play is looking at it. Waiting for the observer to agree
+      // leaves the button doing nothing, which is what it did at 390px.
+      if (!wasRunning) visible = true;
       reconcile();
     });
     on(dots, 'click', event => {

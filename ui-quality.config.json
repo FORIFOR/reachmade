@@ -40,7 +40,13 @@
     "artifacts/ui/home-960.png",
     "artifacts/ui/home-1024.png",
     "artifacts/ui/home-1920.png",
-    "artifacts/ui/home-mobile-tall.png"
+    "artifacts/ui/home-mobile-tall.png",
+    "artifacts/ui/home-en-mobile.png",
+    "artifacts/ui/home-en-narrow.png",
+    "artifacts/ui/home-band-lab.png",
+    "artifacts/ui/home-band-cards.png",
+    "artifacts/ui/home-band-access.png",
+    "artifacts/ui/home-band-close.png"
   ],
   "reviewFile": "artifacts/ui/review.json",
   "timeoutSeconds": 600,

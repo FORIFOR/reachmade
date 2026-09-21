@@ -1,0 +1,91 @@
+/* Editorial home layer.
+   Composition, type scale and affordances follow a reference read on 2026-09-22
+   (www.obsidianui.dev, homepage, 1440x3200, default state — recorded in
+   docs/design/references/README.md). What is taken is structural: an oversized
+   two-line claim, a factual pill above it, a dotted evidence row, a circular
+   forward affordance on each linked row and large section headers.
+   What is deliberately NOT taken: the palette (tokens.md keeps the warm paper and
+   the deep green), rounded product cards (outcome-first.css sets border-radius:0
+   on purpose and lab-signature.css owns the staggered grid), the glowing gradient
+   previews (the badge is a pill, as the existing CTA buttons already are, but no
+   surface or card is rounded), the testimonial band (CLAUDE.md forbids unmeasured
+   user claims), and
+   the giant ghost wordmark — it needs an empty hero floor, and this opening puts
+   the evidence panel and the bridge row there on purpose.
+   Scoped to body[data-home-flagship] so it settles the earlier hero layers. */
+
+/* ---- Opening ---------------------------------------------------------- */
+body[data-home-flagship] .rm-hero-grid{grid-template-columns:minmax(0,1.02fr) minmax(0,.98fr);align-items:start;gap:clamp(30px,3.6vw,64px)}
+body[data-home-flagship] .rm-hero-badge{display:inline-block;margin:0 0 clamp(14px,1.6vw,22px);padding:7px 16px 7px 13px;border:1px solid var(--rm-line);border-radius:999px;background:var(--surface);font:500 12px/1.65 var(--rm-mono);letter-spacing:.02em;color:var(--rm-dim);overflow-wrap:normal;word-break:normal;word-break:auto-phrase;line-break:strict}
+body[data-home-flagship] .rm-hero-badge>span{margin-right:5px;font-size:8px;line-height:1;vertical-align:middle;color:var(--accent)}
+body[data-home-flagship] .rm-hero-copy .eyebrow{margin-bottom:clamp(11px,1.1vw,15px)}
+body[data-home-flagship] .rm-hero-copy h1{font-size:clamp(38px,5.3vw,80px);font-weight:650;line-height:1.12;letter-spacing:-.058em}
+body[data-home-flagship] .rm-hero-lead{margin-top:clamp(17px,1.6vw,24px);max-width:44ch}
+body[data-home-flagship] .rm-hero-evidence{display:flex;flex-wrap:wrap;gap:6px 22px;margin:clamp(20px,2.1vw,28px) 0 0;padding:0;list-style:none}
+body[data-home-flagship] .rm-hero-evidence li{display:flex;align-items:center;gap:9px;font:12px/1.7 var(--rm-mono);letter-spacing:.03em;color:var(--rm-dim);overflow-wrap:normal;word-break:normal;word-break:auto-phrase}
+body[data-home-flagship] .rm-hero-evidence li::before{content:"";flex:none;width:4px;height:4px;border-radius:50%;background:var(--accent);opacity:.65}
+body[data-home-flagship] .rm-hero-facts{margin-top:clamp(19px,2vw,28px)}
+
+/* ---- Forward affordance on every linked row --------------------------- */
+body[data-home-flagship] .rm-task-link{align-items:flex-start}
+body[data-home-flagship] .rm-task-link>.rm-task-go{display:grid;place-items:center;flex:none;align-self:center;width:34px;height:34px;border:1px solid #53645a;border-radius:50%;font-size:14px;line-height:1;transition:background-color .15s,border-color .15s,color .15s}
+body[data-home-flagship] .rm-task-link:hover .rm-task-go{border-color:#245c3d;background:#245c3d;color:#edf1e9}
+body[data-home-flagship] .lab-card-actions>a{display:inline-flex;align-items:center;min-height:44px}
+/* The circle replaces this link's inline arrow instead of doubling it. */
+body[data-home-flagship] .lab-card-actions>a:last-child>span[aria-hidden]{display:none}
+body[data-home-flagship] .lab-card-actions>a:last-child::after{content:"→";display:inline-grid;place-items:center;width:30px;height:30px;margin-left:6px;border:1px solid var(--rm-dim);border-radius:50%;font-size:13px;line-height:1;transition:background-color .15s,border-color .15s,color .15s}
+body[data-home-flagship] .lab-card-actions>a:last-child:hover::after{border-color:var(--accent);background:var(--accent);color:var(--paper)}
+
+body[data-home-flagship] .rm-access-link{display:inline-flex;align-items:center;min-height:44px}
+
+/* ---- Section headers -------------------------------------------------- */
+body[data-home-flagship] .rm-band-head h2{font-size:clamp(28px,3.5vw,50px);font-weight:650;line-height:1.24;letter-spacing:-.055em}
+body[data-home-flagship] .lab-collection-heading h2{font-size:clamp(28px,3.5vw,50px);font-weight:650;line-height:1.24;letter-spacing:-.055em}
+body[data-home-flagship] .rm-faq-intro h2{font-size:clamp(27px,3.2vw,45px);font-weight:650;line-height:1.26;letter-spacing:-.055em}
+body[data-home-flagship] .lab-work-with h2{font-size:clamp(30px,3.9vw,56px);font-weight:650;line-height:1.2;letter-spacing:-.058em}
+
+/* ---- The band of six ------------------------------------------------- */
+body[data-home-flagship] .sig-marquee{padding-block:16px}
+body[data-home-flagship] .sig-marquee-list b{font-size:14px;letter-spacing:-.03em}
+
+@media(max-width:900px){
+ body[data-home-flagship] .rm-hero-grid{grid-template-columns:minmax(0,1fr)}
+}
+/* Between the two-column hero and a roomy card, the flow text and the product name
+   have no room side by side: the flow broke after a single arrow. Stack those two
+   lines for that band only; the circle stays centred on the row. */
+@media(min-width:901px) and (max-width:1180px){
+ body[data-home-flagship] .rm-task-body{display:block}
+ body[data-home-flagship] .rm-task-result{margin-top:4px}
+ body[data-home-flagship] .rm-task-product{margin-top:8px;justify-content:flex-start}
+}
+@media(max-width:700px){
+ body[data-home-flagship] .hero.container.lab-hero{padding-top:20px}
+ body[data-home-flagship] .rm-hero-badge{border-radius:13px;padding:8px 13px;margin-bottom:10px}
+ body[data-home-flagship] .rm-hero-copy .eyebrow{margin-bottom:8px}
+ body[data-home-flagship] .rm-hero-copy{display:flex;flex-direction:column}
+ body[data-home-flagship] .rm-hero-facts{order:1}
+ body[data-home-flagship] .rm-hero-evidence{order:2;gap:5px 16px;margin-top:11px}
+ /* Every step above the picker is tightened so a 390x844 fold reaches one whole
+    choice — task name, flow, product name and its circle — not just the heading. */
+ body[data-home-flagship] .rm-hero-lead{margin-top:11px;line-height:1.8}
+ body[data-home-flagship] .rm-hero-actions{margin-top:14px}
+ body[data-home-flagship] .rm-hero-facts{margin-top:14px;padding-top:13px}
+ body[data-home-flagship] .rm-hero-grid{gap:18px}
+ body[data-home-flagship] .rm-task-link>.rm-task-go{width:30px;height:30px;font-size:13px}
+}
+/* The English labels are longer, so this row wraps below ~480px and the dividers
+   then separate only some of the items. Drop them and space the row evenly. */
+@media(max-width:480px){
+ body[data-home-flagship] .rm-hero-facts{gap:13px 24px}
+ body[data-home-flagship] .rm-hero-facts li{margin-right:0;padding-right:0;border-right:0}
+}
+@media(prefers-reduced-motion:reduce){
+ body[data-home-flagship] :is(.rm-task-go,.lab-card-actions>a:last-child)::after,
+ body[data-home-flagship] .rm-task-link>.rm-task-go{transition:none}
+}
+@media(forced-colors:active){
+ body[data-home-flagship] .rm-hero-evidence li::before{background:CanvasText}
+ body[data-home-flagship] .rm-task-link>.rm-task-go,
+ body[data-home-flagship] .lab-card-actions>a:last-child::after{border-color:CanvasText}
+}

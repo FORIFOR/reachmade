@@ -1,0 +1,23 @@
+/* Marquee: the track carries two identical lists; the copy is hidden from AT.
+   Split out of signature-scene.css so a page that shows this band without the
+   scene does not carry the scene stylesheet it never uses. */
+.sig-marquee{overflow:hidden;border-block:1px solid var(--rule);padding-block:13px;mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
+.sig-marquee-track{display:flex;width:max-content;animation:sig-drift 46s linear infinite}
+.sig-marquee-list{display:flex;align-items:center;gap:clamp(26px,3vw,44px);margin:0;padding:0 clamp(13px,1.5vw,22px);list-style:none}
+.sig-marquee-list li{display:flex;align-items:baseline;gap:11px;white-space:nowrap}
+.sig-marquee-list b{font-size:13px;font-weight:600;letter-spacing:-.025em}
+.sig-marquee-list span{font:11px/1.7 ui-monospace,SFMono-Regular,Consolas,monospace;color:var(--muted)}
+@keyframes sig-drift{from{transform:translate3d(0,0,0)}to{transform:translate3d(-50%,0,0)}}
+.sig-marquee:hover .sig-marquee-track{animation-play-state:paused}
+
+@media(max-width:650px){
+ .sig-marquee-list{gap:22px}
+ .sig-marquee-list b{font-size:12px}
+ .sig-marquee-list span{font-size:10px}
+}
+@media(prefers-reduced-motion:reduce){
+ .sig-marquee-track{animation:none;width:100%}
+ .sig-marquee{mask-image:none}
+ .sig-marquee-list{flex-wrap:wrap;gap:10px 22px}
+ .sig-marquee-list+.sig-marquee-list{display:none}
+}

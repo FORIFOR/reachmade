@@ -48,7 +48,19 @@ export const SHOTS = Object.freeze([
   // Whole page on a phone. Anchor routes are useless here: `html{scroll-behavior:smooth}`
   // needs animation frames, which this headless browser does not produce, so a
   // `/#faq` capture silently returns the top of the page instead.
-  { file: 'home-mobile-tall.png', route: '/', width: 390, height: 12200, state: 'whole page, reduced motion', reducedMotion: true }
+  { file: 'home-mobile-tall.png', route: '/', width: 390, height: 12200, state: 'whole page, reduced motion', reducedMotion: true },
+  // The English page at phone widths. Its copy is longer than the Japanese, so a
+  // badge or label that wraps here does not show up in any of the shots above.
+  { file: 'home-en-mobile.png', route: '/en/', width: 390, height: 844, state: 'default' },
+  { file: 'home-en-narrow.png', route: '/en/', width: 320, height: 900, state: 'default' },
+  // Lower bands at a readable size. A whole-page shot is 8400px tall, so anything
+  // below the first view is unreadable in it; `offset` scrolls the page up by that
+  // many CSS px through an injected stylesheet, because this browser produces no
+  // animation frames and `/#anchor` silently returns the top of the page.
+  { file: 'home-band-lab.png', route: '/', width: 1440, height: 1000, offset: 1700, state: 'product lab band, reduced motion', reducedMotion: true },
+  { file: 'home-band-cards.png', route: '/', width: 1440, height: 1000, offset: 3500, state: 'product card grid, reduced motion', reducedMotion: true },
+  { file: 'home-band-access.png', route: '/', width: 1440, height: 1000, offset: 4800, state: 'access table, reduced motion', reducedMotion: true },
+  { file: 'home-band-close.png', route: '/', width: 1440, height: 1000, offset: 6400, state: 'FAQ and closing CTA, reduced motion', reducedMotion: true }
 ]);
 
 function candidates() {
@@ -91,28 +103,52 @@ export async function capture() {
   const version = spawnSync(binary, ['--version'], { encoding: 'utf8' }).stdout?.trim() || 'unknown';
   await fs.mkdir(OUT, { recursive: true });
 
+  // Offset shots are served from a mirror of dist with one extra stylesheet, so the
+  // real build is never modified and `style-src 'self'` still holds.
+  const offsets = [...new Set(SHOTS.filter(shot => shot.offset).map(shot => shot.offset))];
+  const mirror = path.join(os.tmpdir(), `reachmade-capture-${process.pid}`);
+  if (offsets.length) {
+    await fs.rm(mirror, { recursive: true, force: true });
+    await fs.cp(path.join(root, 'dist'), mirror, { recursive: true });
+    for (const offset of offsets) {
+      await fs.writeFile(path.join(mirror, `assets/offset-${offset}.css`), `html{margin-top:-${offset}px}\n`);
+      for (const [route, file] of [['/', 'index.html'], ['/en/', 'en/index.html']]) {
+        const page = await fs.readFile(path.join(mirror, file), 'utf8');
+        const name = `${route === '/' ? '' : 'en/'}offset-${offset}.html`;
+        await fs.writeFile(path.join(mirror, name), page.replace('</head>', `<link rel="stylesheet" href="/assets/offset-${offset}.css"></head>`));
+      }
+    }
+  }
   const server = spawn(process.execPath, [path.join(root, 'scripts/serve.mjs')], { cwd: root, env: { ...process.env, PORT: String(PORT) }, stdio: 'ignore' });
+  const offsetServer = offsets.length
+    ? spawn(process.execPath, [path.join(root, 'scripts/serve.mjs')], { cwd: root, env: { ...process.env, PORT: String(PORT + 1), SERVE_ROOT: mirror }, stdio: 'ignore' })
+    : null;
   const shots = [];
   try {
     await waitForServer();
     for (const shot of SHOTS) {
       const target = path.join(OUT, shot.file);
+      const url = shot.offset
+        ? `http://127.0.0.1:${PORT + 1}${shot.route === '/' ? '' : shot.route.replace(/\/$/, '')}/offset-${shot.offset}.html`
+        : ORIGIN + shot.route;
       const args = [
         '--headless', '--disable-gpu', '--hide-scrollbars', '--no-sandbox',
         `--window-size=${shot.width},${shot.height}`,
         '--virtual-time-budget=6000',
         `--screenshot=${target}`,
         ...(shot.reducedMotion ? ['--force-prefers-reduced-motion'] : []),
-        ORIGIN + shot.route
+        url
       ];
       const result = spawnSync(binary, args, { encoding: 'utf8', timeout: 120000 });
       const bytes = fsSync.existsSync(target) ? fsSync.statSync(target).size : 0;
       if (!bytes) throw new Error(`Capture failed for ${shot.file}: ${(result.stderr || '').split('\n').slice(-3).join(' ')}`);
-      shots.push({ ...shot, bytes, url: ORIGIN + shot.route });
+      shots.push({ ...shot, bytes, url });
       console.error(`[ui-capture] ${shot.file} ${shot.width}x${shot.height} (${bytes} bytes)`);
     }
   } finally {
     server.kill();
+    offsetServer?.kill();
+    await fs.rm(mirror, { recursive: true, force: true });
   }
 
   const manifest = {

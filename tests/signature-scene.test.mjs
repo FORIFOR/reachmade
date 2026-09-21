@@ -186,7 +186,7 @@ test('build integration appends one layer, repeats cleanly and needs the scene p
     }
     await fs.writeFile(path.join(tmp, 'assets/showcase.css'), '/* earlier layers */');
     await fs.writeFile(path.join(tmp, 'assets/showcase.mjs'), '// earlier layers');
-    for (const file of ['signature-scene.css', 'signature-scene.mjs']) await fs.copyFile(new URL(`../public/assets/${file}`, import.meta.url), path.join(tmp, 'assets', file));
+    for (const file of ['signature-scene.css', 'signature-marquee.css', 'signature-scene.mjs']) await fs.copyFile(new URL(`../public/assets/${file}`, import.meta.url), path.join(tmp, 'assets', file));
     await writeSignatureScenes(tmp, products);
     const first = await fs.readFile(path.join(tmp, 'assets/showcase.css'), 'utf8');
     await writeSignatureScenes(tmp, products);
@@ -196,6 +196,35 @@ test('build integration appends one layer, repeats cleanly and needs the scene p
     assert.match(await fs.readFile(path.join(tmp, 'assets/showcase.mjs'), 'utf8'), /import\('\.\/signature-scene\.mjs'\)/);
     await fs.writeFile(path.join(tmp, 'index.html'), '<html><body>no scene</body></html>');
     await assert.rejects(writeSignatureScenes(tmp, products), /must compose the signature scene/);
+  } finally {
+    await fs.rm(tmp, {recursive: true, force: true});
+  }
+});
+
+/** An unmounted scene used to cost every page its stylesheet block and a module fetch. */
+test('a home without the scene ships neither the scene rules nor its module', async () => {
+  const tmp = await fs.mkdtemp(path.join(os.tmpdir(), 'reachmade-scene-'));
+  const home = lang => `<html lang="${lang}"><body data-outcome-first="x"><nav data-home-task-picker></nav>${renderMarquee(products, lang)}</body></html>`;
+  try {
+    await fs.mkdir(path.join(tmp, 'assets'), {recursive: true});
+    await fs.mkdir(path.join(tmp, 'en'), {recursive: true});
+    for (const [prefix, lang] of [['', 'ja'], ['en', 'en']]) {
+      await fs.writeFile(path.join(tmp, prefix, 'index.html'), home(lang));
+    }
+    await fs.writeFile(path.join(tmp, 'assets/showcase.css'), '/* earlier layers */');
+    await fs.writeFile(path.join(tmp, 'assets/showcase.mjs'), '// earlier layers');
+    for (const file of ['signature-scene.css', 'signature-marquee.css', 'signature-scene.mjs']) await fs.copyFile(new URL(`../public/assets/${file}`, import.meta.url), path.join(tmp, 'assets', file));
+    await writeSignatureScenes(tmp, products);
+    const css = await fs.readFile(path.join(tmp, 'assets/showcase.css'), 'utf8');
+    const js = await fs.readFile(path.join(tmp, 'assets/showcase.mjs'), 'utf8');
+    assert.match(css, /\.sig-marquee\{/, 'the band that is on the page keeps its rules');
+    assert.doesNotMatch(css, /\.sig-scene/);
+    assert.doesNotMatch(js, /signature-scene\.mjs/);
+    // The body attribute belongs to a mounted scene, not to every home.
+    assert.doesNotMatch(await fs.readFile(path.join(tmp, 'index.html'), 'utf8'), /data-signature-scene-version/);
+    // A stale asset still fails the build even while nothing mounts it.
+    await fs.writeFile(path.join(tmp, 'assets/signature-scene.css'), '/* emptied */');
+    await assert.rejects(writeSignatureScenes(tmp, products), /missing or stale/);
   } finally {
     await fs.rm(tmp, {recursive: true, force: true});
   }

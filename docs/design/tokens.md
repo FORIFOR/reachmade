@@ -48,8 +48,8 @@
 Inter, "Helvetica Neue", "Hiragino Kaku Gothic ProN", "Noto Sans CJK JP", Meiryo, sans-serif
 ```
 
-見出しは`clamp()`で幅に追従させる（例: トップのh1は`clamp(37px, 4.35vw, 63px)`、
-`letter-spacing:-.052em`、`font-weight:600`）。等幅は`--rm-mono`。
+見出しは`clamp()`で幅に追従させる（例: トップのh1は`clamp(38px, 5.3vw, 80px)`、
+`letter-spacing:-.058em`、`font-weight:650` — 下記「Homepage editorial layer」が正本）。等幅は`--rm-mono`。
 
 日本語の本文段落は語中で改行させない。`overflow-wrap:normal; word-break:normal;`に加えて
 `word-break:auto-phrase`を重ねる（非対応ブラウザは前者にフォールバックする）。
@@ -68,3 +68,42 @@ Inter, "Helvetica Neue", "Hiragino Kaku Gothic ProN", "Noto Sans CJK JP", Meiryo
 - 一度しか使わない装飾値をグローバルトークンへ昇格させない。
 - 0、auto、100%、calc、必要な光学補正は「トークン違反」ではない。
 - 新しい層は、既存層に詳細度で負けないスコープ（`body[data-<layer>]`か固有クラス名）を持たせる。
+
+## Guided sample follow-up
+
+`lab-explorer.css` keeps the existing paper/ink/rule/accent tokens. Secondary sample buttons now use the existing 7px component radius, 12px text, 1.6 line-height, 10×12px padding and minimum 44px hit height; focus remains a 3px outline. Pending file-read text uses ink and font-weight 600. No new animation or remote assets. The non-editable illustration is hidden only while guided editing is active; switching modes restores it. These are project values, not measured VoiceOS/PLAUD values.
+
+## Homepage task picker
+
+`public/assets/home-task-picker.css`: sage surface #edf1e9, ink #24372d, supporting
+text #53645a, rule #cbd5c8, focus #245c3d; title25–34px, task18–22px, result/product13px,
+auxiliary12px. Padding20–36px, linked-row padding22px, 18px outer radius. Native links;
+background response150ms, none under reduced motion. No automatic scene animation.
+
+## Homepage editorial layer
+
+`public/assets/home-editorial.css`（`writeHomeFlagship`が3番目の層として追記）。
+2026-09-22、ObsidianUIのトップを参照して構成と型階層のみ採り入れた層。配色は変更していない。
+
+| 対象 | 変更前 | 変更後 |
+|---|---|---|
+| トップのh1 | `clamp(37px,4.35vw,63px)` / `-.052em` / 600 / lh 1.24 | `clamp(38px,5.3vw,80px)` / `-.058em` / 650 / lh 1.12 |
+| `.rm-band-head h2` | `clamp(27px,3.1vw,42px)` / lh 1.42 / 560 | `clamp(28px,3.5vw,50px)` / lh 1.24 / 650 |
+| `.lab-collection-heading h2` | `clamp(30px,3.5vw,46px)` / lh 1.4 / 550 | `clamp(28px,3.5vw,50px)` / lh 1.24 / 650 |
+| `.rm-faq-intro h2` | 継承 | `clamp(27px,3.2vw,45px)` / lh 1.26 / 650 |
+| `.lab-work-with h2` | 継承 | `clamp(30px,3.9vw,56px)` / lh 1.2 / 650 |
+| `.sig-marquee-list b` | 13px | 14px / `-.03em` |
+
+新しい部品:
+
+- `.rm-hero-badge` — 事実のピル。`border-radius:999px`（≤700pxでは13px）、`--surface`面、
+  1px `--rm-line`、11px `--rm-mono`、`--rm-dim`。マーカーの●は`--accent`の8px。
+  角丸999pxはこれと、既存のヘッダーCTA・締めCTA（`.button`）を含めて使っている。
+  面やカードを丸めないという方針は変えていない。
+- `.rm-hero-evidence` — 11px `--rm-mono`のドット区切り行。ドットは`--accent`を`opacity:.65`で。
+- `.rm-task-go` / カード主リンクの`::after` — 34px（≤700pxで30px）と30pxの丸枠。
+  hoverで`#245c3d` / `--accent`に反転。`prefers-reduced-motion`で遷移なし、
+  `forced-colors`で枠を`CanvasText`に。
+- ヒットエリア: `.lab-card-actions>a` と `.rm-access-link` を`min-height:44px`へ。
+
+`--task-*`（task picker）と showcase系の`:root`は変更していない。

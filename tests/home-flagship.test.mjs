@@ -21,6 +21,16 @@ for (const lang of LANGS) {
     assert.equal((html.match(/class="rm-primary"/g) || []).length, 1);
     assert.match(html, /class="hero container lab-hero rm-hero"/);
     assert.match(html, /data-outcome-recorded-result/);
+    assert.match(html, /data-home-task-picker/);
+    // The opening states only facts the page already carries elsewhere.
+    assert.match(html, /class="rm-hero-badge"/);
+    assert.match(html, /2026-09-15/);
+    assert.equal((html.match(/class="rm-hero-evidence"/g)||[]).length,1);
+    assert.equal((html.match(/class="rm-task-go"/g)||[]).length,3);
+    assert.doesNotMatch(html, /rm-ghost/);
+    assert.equal((html.match(/class="rm-task-link"/g)||[]).length,3);
+    assert.doesNotMatch(html, /data-signature-scene="chain"|data-scene-toggle/);
+    for (const id of ['ai-meeting','agent-team','launchloom']) assert.ok(html.includes(`${lang === 'ja' ? '' : '/en'}/products/${id}/`));
     assert.match(html, /href="#explore"/);
     // The promise that has to survive without JavaScript.
     assert.match(html, lang === 'ja' ? /6つの製品を、実物から選べます/ : /Choose between six products/);
@@ -120,6 +130,8 @@ test('build integration appends one stylesheet layer and repeats cleanly', async
     await fs.writeFile(path.join(tmp, 'en/index.html'), shell('en'));
     await fs.writeFile(path.join(tmp, 'assets/showcase.css'), '/* earlier layers */');
     await fs.copyFile(new URL('../public/assets/home-flagship.css', import.meta.url), path.join(tmp, 'assets/home-flagship.css'));
+    await fs.copyFile(new URL('../public/assets/home-task-picker.css', import.meta.url), path.join(tmp, 'assets/home-task-picker.css'));
+    await fs.copyFile(new URL('../public/assets/home-editorial.css', import.meta.url), path.join(tmp, 'assets/home-editorial.css'));
     await writeHomeFlagship(tmp, fixtures());
     const first = await fs.readFile(path.join(tmp, 'assets/showcase.css'), 'utf8');
     await writeHomeFlagship(tmp, fixtures());
@@ -128,7 +140,11 @@ test('build integration appends one stylesheet layer and repeats cleanly', async
     assert.equal((second.match(/REACHMADE_HOME_FLAGSHIP/g) || []).length, 1);
     assert.match(second, /^\/\* earlier layers \*\//);
     for (const route of ['index.html', 'en/index.html']) assert.match(await fs.readFile(path.join(tmp, route), 'utf8'), new RegExp(HOME_VERSION));
+    // All three layers reach the one stylesheet the page is allowed to load.
+    for (const marker of ['[data-home-flagship]', '.rm-task-picker', '.rm-hero-badge']) assert.ok(second.includes(marker), marker);
     // A missing stylesheet must stop the pass instead of shipping an unstyled home.
+    await fs.writeFile(path.join(tmp, 'assets/home-editorial.css'), '/* empty */');
+    await assert.rejects(writeHomeFlagship(tmp, fixtures()), /Editorial home layer is missing or stale/);
     await fs.writeFile(path.join(tmp, 'assets/home-flagship.css'), '/* empty */');
     await assert.rejects(writeHomeFlagship(tmp, fixtures()), /stylesheet incomplete/);
   } finally {

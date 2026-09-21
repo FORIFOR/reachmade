@@ -1,5 +1,6 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import { createHash } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import { build as buildCore, root, validateConfig } from './build-core.mjs';
 import { products } from '../src/products.mjs';
@@ -35,6 +36,7 @@ export async function build() {
   await writeSignatureScenes(dist,products);
   routes.push(...await writeOwnedGuides(dist));
   const showcaseRoutes = ['', 'en/', ...products.flatMap(p=>[`products/${p.id}/`,`en/products/${p.id}/`])];
+  const cssVersion = createHash('sha256').update(await fs.readFile(path.join(dist,'assets/showcase.css'))).digest('hex').slice(0,16);
   for (const route of showcaseRoutes) {
     const html = await fs.readFile(path.join(dist,route,'index.html'),'utf8');
     if (!html.includes('data-showcase="20260918"') || !html.includes('href="/assets/showcase.css"') || !html.includes('src="/assets/showcase.mjs"') || !html.includes('data-lab-experience="20260919-product-lab-1"') || !html.includes('data-lab-signature="20260919-request-result-1"') || !html.includes('data-outcome-first="20260919-outcome-1"')) {
@@ -43,6 +45,8 @@ export async function build() {
     if (!route.includes('products/') && !html.includes('data-studio-choice="genie"')) {
       throw new Error(`Product selector missing at /${route}`);
     }
+    // New HTML must not reuse a visitor's cached stylesheet from an older release.
+    await fs.writeFile(path.join(dist,route,'index.html'), html.replace('href="/assets/showcase.css"', `href="/assets/showcase.css?v=${cssVersion}"`));
   }
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${routes.map(r=>`<url><loc>${config.origin}${r.route}</loc></url>`).join('\n')}\n</urlset>\n`;
   await fs.writeFile(path.join(dist,'sitemap.xml'),sitemap);
