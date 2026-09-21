@@ -2,6 +2,63 @@
 
 **できることの、その先をつくる。**
 
+*English summary below. 日本語は「ローカルで見る」から。*
+
+---
+
+A production bilingual (JA/EN) product site with **zero npm dependencies** — no
+`dependencies`, no `devDependencies`. Node 22 builds it, `node --test` tests it, and
+neither needs the network or an API key. Every page ships **exactly one `<script>`**
+and runs under `script-src 'self'` with no analytics, no external fonts and no
+embeds. The 14 showcase pages (home and the six product pages, in both languages)
+ship **one stylesheet** as well; the other pages link 2-3. Content and links survive
+with JavaScript turned off — checked with `--disable-javascript` on the home, a
+product page and the contact page. Live at **<https://reachmade.com>**.
+
+It also carries something less common: a **UI evidence gate** that refuses to record a
+check it did not run. Screenshots, a headless measurement probe and an independent
+review all feed one receipt, and an unverified item stays `BLOCKED` instead of becoming
+`PASS`. `CLAUDE.md` states the honesty invariants the tests enforce — no customer
+counts, no performance comparisons, no user numbers without measurement.
+
+### Try it in three minutes
+
+```sh
+git clone https://github.com/FORIFOR/reachmade.git && cd reachmade
+npm run check              # builds 30 localized pages + 404, runs 383 tests. No install step.
+node examples/sample.mjs   # the portable document core, printing real Markdown
+npm run dev                # serves the built site on http://127.0.0.1:4173
+```
+
+There is no `npm install`. If it asks you for one, that is a bug worth an issue.
+
+### The measurement, not the claim
+
+`npm run ui:probe` drives a Chrome/Chromium you already have (no browser-automation
+package) against the built site and reports what a screenshot cannot show. This is its
+actual output on the current commit:
+
+```
+  320px  no overflow  hit-areas under 44px: 4/93  focusable 93/93  FAQ 6/6
+  390px  no overflow  hit-areas under 44px: 4/93  focusable 93/93  FAQ 6/6
+  768px  no overflow  hit-areas under 44px: 4/93  focusable 93/93  FAQ 6/6
+  960px  no overflow  hit-areas under 44px: 4/98  focusable 98/98  FAQ 6/6
+ 1024px  no overflow  hit-areas under 44px: 4/98  focusable 98/98  FAQ 6/6
+ 1440px  no overflow  hit-areas under 44px: 4/98  focusable 98/98  FAQ 6/6
+ 1920px  no overflow  hit-areas under 44px: 4/98  focusable 98/98  FAQ 6/6
+```
+
+The four remaining sub-44px targets are the header and footer brand links and two
+side-panel links in the shared shell — counted, not hidden.
+
+**What this is not.** It is not a static-site generator, a component library or an npm
+package, and it does not contain the six applications it advertises. Real-device Safari,
+OS-level IME, VoiceOver and screen-measured contrast are **unverified** and recorded as
+such in `docs/design/acceptance.md`. Contrast figures in this repo are computed from CSS
+values, not measured on a display.
+
+---
+
 Reachmade Labの企業向けサイトと自主開発プロダクトの案内。公開先は **https://reachmade.com**。日本語・英語の静的サイトです。
 
 このリポジトリは**製品を試して導入判断するWebサイト**です。6製品の本体やAI実行SDKは含みません。操作サンプルは架空データ、実録画・保存済み成果物は過去の公開実演として区別しています。
