@@ -25,7 +25,6 @@ function wireGuide(figure,lang){
  const cancelRead=(message='')=>{editRevision++;reading=false;syncRead();notify(message);};
  const tryButton=doc.createElement('button');tryButton.type='button';tryButton.dataset.labTry='';tryButton.textContent=t('操作してみる','Try the steps');tryButton.setAttribute('aria-pressed','false');toolbar.append(tryButton);
  const box=doc.createElement('div');box.className='lab-hands';box.hidden=true;box.setAttribute('aria-label',t('サンプルを操作する','Guided sample'));root.querySelector('.rm-demo-visual').after(box);
- doc.querySelector('[data-lab-begin]')?.removeAttribute('hidden');
  const updateIntro=()=>{
   const c=copyFor(id,lang),choiceLink=workbench?.querySelector(`[data-studio-choice="${id}"]`),side=doc.querySelector('.lab-current');if(!side||!choiceLink)return;
   side.querySelector('[data-lab-name]').textContent=choiceLink.dataset.name;
@@ -100,7 +99,7 @@ function wireGuide(figure,lang){
   }
  });
  toolbar.addEventListener('click',event=>{if(event.target.closest('[data-mode]'))exit();});
- doc.querySelector('[data-lab-begin]')?.addEventListener('click',begin);
+ for(const opener of doc.querySelectorAll('[data-lab-begin],[data-try-open]'))opener.addEventListener('click',event=>{event.preventDefault();begin();figure.scrollIntoView({block:'nearest',behavior:'instant'});});
  if(workbench)new MutationObserver(()=>{const next=idOf();if(next===id||!IDS.includes(next))return;id=next;exit();updateIntro();}).observe(workbench,{attributes:true,attributeFilter:['data-product']});
  updateIntro();
 }

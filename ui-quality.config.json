@@ -46,7 +46,13 @@
     "artifacts/ui/home-band-lab.png",
     "artifacts/ui/home-band-cards.png",
     "artifacts/ui/home-band-access.png",
-    "artifacts/ui/home-band-close.png"
+    "artifacts/ui/home-band-close.png",
+    "artifacts/ui/home-band-proof.png",
+    "artifacts/ui/home-band-try.png",
+    "artifacts/ui/home-m-nav.png",
+    "artifacts/ui/home-m-proof.png",
+    "artifacts/ui/home-m-cards.png",
+    "artifacts/ui/home-m-access.png"
   ],
   "reviewFile": "artifacts/ui/review.json",
   "timeoutSeconds": 600,

@@ -19,8 +19,9 @@ export function initOutcome(doc=document){
  const wire=()=>{
   const target=doc.querySelector('.owned-film [data-lab-try]');if(!target)return false;
   if(entry.dataset.ready)return true;
-  entry.dataset.ready='true';entry.hidden=false;
-  entry.addEventListener('click',()=>target.click());
+  entry.dataset.ready='true';
+  // The link already works without JavaScript; with it, stay on the page.
+  entry.addEventListener('click',event=>{event.preventDefault();target.click();});
   return true;
  };
  if(!wire()){

@@ -92,7 +92,7 @@ test('home leads with an explorable product and retains source-aware catalogue r
   assert.equal((html.match(/class="lab-product-card"/g)||[]).length,products.length);
   assert.equal((html.match(/data-studio-choice=/g)||[]).length,products.length);
   for(const p of products){assert.ok(html.includes(`data-studio-choice="${p.id}"`));assert.ok(html.includes(`data-lab-select="${p.id}"`));assert.ok(html.includes(`${prefix}products/${p.id}/`));}
-  assert.match(html,/data-lab-proof/);assert.match(html,/data-lab-code/);assert.match(html,/data-lab-begin hidden/);
+  assert.match(html,/data-lab-proof/);assert.match(html,/data-lab-code/);assert.match(html,/<a class="lab-begin" data-lab-begin href="#studio-player">/);
   assert.doesNotMatch(html,/class="product-ribbon"|class="manifesto/);
  }
 });

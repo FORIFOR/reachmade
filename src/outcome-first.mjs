@@ -63,7 +63,7 @@ export function enhanceOutcomePage(html,id,lang){
  html=html.replace(/<p class="ad-category">[\s\S]*?<\/p>/,()=>`<p class="ad-category">${esc(subtitles[id][ja?0:1])}</p>`);
  const actionNote=html.match(/<p class="owned-action-note">[\s\S]*?<\/p>/);
  if(!actionNote)throw new Error('Missing access explanation');
- const choice=`<div class="outcome-try"><button type="button" data-outcome-sample hidden>${t('まず、操作サンプルを試す','Try the guided sample first')} <span aria-hidden="true">→</span><small>${t('サンプル内のみ。AI実行・外部送信なし。','Sample only. No AI run or external action.')}</small></button></div>`;
+ const choice=`<div class="outcome-try"><a data-outcome-sample href="#recording">${t('まず、操作サンプルを試す','Try the guided sample first')} <span aria-hidden="true">→</span><small>${t('サンプル内のみ。AI実行・外部送信なし。編集にはJavaScriptが必要です。','Sample only. No AI run or external action. Editing needs JavaScript.')}</small></a></div>`;
  html=html.replace(actionNote[0],()=>actionNote[0]+choice);
  // Put the original recorded output one click away; no invented output claim.
  if(id==='genie'){

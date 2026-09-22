@@ -26,6 +26,43 @@ body[data-home-flagship] .rm-hero-evidence li{display:flex;align-items:center;ga
 body[data-home-flagship] .rm-hero-evidence li::before{content:"";flex:none;width:4px;height:4px;border-radius:50%;background:var(--accent);opacity:.65}
 body[data-home-flagship] .rm-hero-facts{margin-top:clamp(19px,2vw,28px)}
 
+/* The condition sits directly under the one primary action, the way a download
+   button on a desktop-app page states its OS requirement. */
+body[data-home-flagship] .rm-hero-requirement{margin:clamp(11px,1.1vw,15px) 0 0;max-width:52ch;font-size:13px;line-height:1.85;color:var(--rm-dim);overflow-wrap:normal;word-break:normal;word-break:auto-phrase}
+
+/* ---- The first screen shows the product being operated ---------------- */
+body[data-home-flagship] .rm-film{margin:0;display:grid;gap:11px}
+body[data-home-flagship] .rm-film-video{display:block;width:100%;height:auto;aspect-ratio:16/9;background:#20231f;border:1px solid var(--rm-line)}
+body[data-home-flagship] .rm-film-note{display:grid;gap:5px}
+body[data-home-flagship] .rm-film-note b{font-size:12px;font-weight:600;letter-spacing:-.02em}
+body[data-home-flagship] .rm-film-note span{font-size:12px;line-height:1.85;color:var(--rm-dim);overflow-wrap:normal;word-break:normal;word-break:auto-phrase}
+/* The task navigation keeps its place, one step below the claim. */
+body[data-home-flagship] .rm-hero-nav{margin-top:clamp(26px,3vw,44px)}
+body[data-home-flagship] .rm-hero-nav .rm-task-picker{padding:clamp(20px,2.2vw,30px)}
+body[data-home-flagship] .rm-hero-nav .rm-task-heading{padding-bottom:18px}
+body[data-home-flagship] .rm-hero-nav .rm-task-heading h2{font-size:clamp(19px,1.7vw,24px)}
+body[data-home-flagship] .rm-hero-nav .rm-task-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0 clamp(16px,2vw,30px)}
+body[data-home-flagship] .rm-hero-nav .rm-task-list li{border-top:1px solid #cbd5c8}
+body[data-home-flagship] .rm-hero-nav .rm-task-link{align-items:flex-start;padding:18px 6px}
+body[data-home-flagship] .rm-hero-nav .rm-task-body{display:block}
+body[data-home-flagship] .rm-hero-nav .rm-task-body strong{font-size:clamp(15px,1.3vw,18px);line-height:1.5;overflow-wrap:normal;word-break:normal;word-break:auto-phrase}
+body[data-home-flagship] .rm-hero-nav .rm-task-result{font-size:12px}
+body[data-home-flagship] .rm-hero-nav .rm-task-product{margin-top:9px;justify-content:flex-start}
+
+/* ---- The shortest path to something you keep -------------------------- */
+body[data-home-flagship] .rm-try{margin-top:clamp(30px,3.4vw,52px);padding-top:clamp(24px,2.6vw,38px);border-top:1px solid var(--rm-line)}
+body[data-home-flagship] .rm-try-head{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:end;gap:14px clamp(34px,4vw,72px)}
+body[data-home-flagship] .rm-try-head .eyebrow{grid-column:1/-1;margin:0;font-size:10px;letter-spacing:.11em;color:var(--rm-dim)}
+body[data-home-flagship] .rm-try-head h2{margin:10px 0 0;font-size:clamp(25px,3vw,42px);font-weight:650;line-height:1.24;letter-spacing:-.05em}
+body[data-home-flagship] .rm-try-head>p:last-child{margin:0;max-width:46ch;font-size:13px;line-height:2;color:var(--rm-dim);overflow-wrap:normal;word-break:normal;word-break:auto-phrase}
+body[data-home-flagship] .rm-try-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(16px,2vw,34px);margin:clamp(22px,2.4vw,34px) 0 0;padding:0;list-style:none}
+body[data-home-flagship] .rm-try-steps li{display:grid;gap:5px;padding-top:13px;border-top:1px solid var(--rm-line)}
+body[data-home-flagship] .rm-try-index{font:500 12px/1.6 var(--rm-mono);letter-spacing:.09em;color:var(--rm-dim)}
+body[data-home-flagship] .rm-try-steps strong{font-size:clamp(15px,1.25vw,18px);font-weight:600;letter-spacing:-.03em}
+body[data-home-flagship] .rm-try-steps li>span:last-child{font-size:12px;line-height:1.9;color:var(--rm-dim);overflow-wrap:normal;word-break:normal;word-break:auto-phrase}
+body[data-home-flagship] .rm-try-foot{display:flex;flex-wrap:wrap;align-items:center;gap:12px clamp(20px,2.4vw,34px);margin-top:clamp(20px,2.2vw,30px)}
+body[data-home-flagship] .rm-try-foot>span{max-width:48ch;font-size:12px;line-height:1.85;color:var(--rm-dim);overflow-wrap:normal;word-break:normal;word-break:auto-phrase}
+
 /* ---- Forward affordance on every linked row --------------------------- */
 body[data-home-flagship] .rm-task-link{align-items:flex-start}
 body[data-home-flagship] .rm-task-link>.rm-task-go{display:grid;place-items:center;flex:none;align-self:center;width:34px;height:34px;border:1px solid #53645a;border-radius:50%;font-size:14px;line-height:1;transition:background-color .15s,border-color .15s,color .15s}
@@ -37,6 +74,9 @@ body[data-home-flagship] .lab-card-actions>a:last-child::after{content:"→";dis
 body[data-home-flagship] .lab-card-actions>a:last-child:hover::after{border-color:var(--accent);background:var(--accent);color:var(--paper)}
 
 body[data-home-flagship] .rm-access-link{display:inline-flex;align-items:center;min-height:44px}
+
+/* The shared header and footer wordmarks were the last targets under 44px. */
+body[data-home-flagship] .brand,body[data-home-flagship] .footer-brand{display:inline-flex;align-items:center;min-height:44px}
 
 /* ---- Section headers -------------------------------------------------- */
 body[data-home-flagship] .rm-band-head h2{font-size:clamp(28px,3.5vw,50px);font-weight:650;line-height:1.24;letter-spacing:-.055em}
@@ -50,6 +90,10 @@ body[data-home-flagship] .sig-marquee-list b{font-size:14px;letter-spacing:-.03e
 
 @media(max-width:900px){
  body[data-home-flagship] .rm-hero-grid{grid-template-columns:minmax(0,1fr)}
+ body[data-home-flagship] .rm-hero-nav .rm-task-list{grid-template-columns:minmax(0,1fr)}
+ body[data-home-flagship] .rm-try-head{grid-template-columns:minmax(0,1fr)}
+ body[data-home-flagship] .rm-try-steps{grid-template-columns:minmax(0,1fr);gap:0}
+ body[data-home-flagship] .rm-try-steps li{padding:13px 0}
 }
 /* Between the two-column hero and a roomy card, the flow text and the product name
    have no room side by side: the flow broke after a single arrow. Stack those two

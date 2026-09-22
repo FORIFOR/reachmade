@@ -26,7 +26,7 @@ for(const lang of ['ja','en'])test(`home/${lang}: six useful no-script paths and
  assert.equal((html.match(/<h1>/g)||[]).length,1);
  assert.equal((html.match(/data-studio-choice=/g)||[]).length,6);
  assert.equal((html.match(/class="lab-product-card"/g)||[]).length,6);
- assert.match(html,/data-lab-begin hidden/);
+ assert.match(html,/<a class="lab-begin" data-lab-begin href="#studio-player">/);assert.doesNotMatch(html,/data-lab-begin hidden/);
  assert.match(html,/width="1600" height="1000" fetchpriority="high"/);
  assert.doesNotMatch(html,/<script|<style|<iframe|<form|\bautoplay\b|\bonclick=/);
  for(const id of IDS)assert.ok(html.includes(`${lang==='en'?'/en':''}/products/${id}/`));

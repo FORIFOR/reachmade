@@ -191,10 +191,10 @@ try{
  await evaluate(`document.documentElement.style.zoom='2'`);
  const zoom=await evaluate(`({scrollWidth:document.documentElement.scrollWidth,width:innerWidth,editorWidth:document.querySelector('[data-draft-text]').getBoundingClientRect().width})`);
  assert.ok(zoom.scrollWidth<=zoom.width+1);await shot('sample-css-zoom-200.png');record('CSS zoom 200% proxy (not browser zoom)',zoom);
- // No-JS evidence route still exists; editing intentionally not available.
+ // Without JS the entry is a real link that states its own requirement; editing stays unavailable.
  await call('Emulation.setScriptExecutionDisabled',{value:true});await call('Page.navigate',{url:origin+'/products/genie/'});await pause(400);
- const response=await fetch(origin+'/products/genie/'),html=response.status;assert.equal(html,200);const staticHTML=await response.text();assert.ok(staticHTML.includes('/media/originals/genie/orbit.html'));assert.ok(staticHTML.includes('data-outcome-sample hidden')); await call('Emulation.setScriptExecutionDisabled',{value:false});
- record('no-script static route',{http:html,interactiveEditing:'NOT_APPLICABLE'});
+ const response=await fetch(origin+'/products/genie/'),html=response.status;assert.equal(html,200);const staticHTML=await response.text();assert.ok(staticHTML.includes('/media/originals/genie/orbit.html'));assert.ok(staticHTML.includes('<a data-outcome-sample href="#recording">'),'the sample entry must be reachable without JavaScript');assert.ok(!staticHTML.includes('data-outcome-sample hidden'));assert.ok(staticHTML.includes('id="recording"'),'its anchor target must exist statically');assert.ok(/JavaScript/.test(staticHTML),'the page must say that editing needs JavaScript'); await call('Emulation.setScriptExecutionDisabled',{value:false});
+ record('no-script static route',{http:html,sampleEntry:'REACHABLE_AS_LINK',interactiveEditing:'NOT_APPLICABLE'});
  // Local injected service responses only. No production network allowed.
  for(const mode of ['unknown','rejected','accepted']){
   postMode=mode;const before=postCount;await call('Page.navigate',{url:origin+'/contact/'});

@@ -70,7 +70,7 @@ setTimeout(()=>{
   out.hitAreas={interactive:inter.length,under44:small.length,smallest:small.sort((a,b)=>a.h-b.h).slice(0,8)};
   let focused=0;inter.forEach(e=>{e.focus();if(document.activeElement===e)focused++;});
   out.focusable=focused+'/'+inter.length;
-  out.contrast=[['.sig-body>span','scene line'],['.sig-note','scene note'],['.rm-faq-item p','FAQ answer'],['.rm-access-note','access note'],['.rm-foot-col a','footer link'],['.rm-hero-lead','hero lead'],['.rm-access-table td','table cell'],['.rm-foot-bottom small','copyright']]
+  out.contrast=[['.sig-body>span','scene line'],['.sig-note','scene note'],['.rm-faq-item p','FAQ answer'],['.rm-access-note','access note'],['.rm-foot-col a','footer link'],['.rm-hero-lead','hero lead'],['.rm-access-table td','table cell'],['.rm-foot-bottom small','copyright'],['.eyebrow','eyebrow label'],['.rm-hero-badge','hero badge'],['.rm-hero-evidence li','hero evidence dot'],['.rm-try-foot>span','try-band note'],['.rm-film-note span','film note'],['.rm-try-index','try step index'],['.lab-card-heading span','card index label'],['.rm-task-result','task flow label']]
     .map(([sel,name])=>{const el=document.querySelector(sel);if(!el)return name+': n/a';const cs=getComputedStyle(el);return name+' '+Math.round(parseFloat(cs.fontSize))+'px '+ratio(cs.color,bgOf(el)).toFixed(2)+':1';});
   const past=[...document.querySelectorAll('body *')].filter(e=>{const r=e.getBoundingClientRect();return r.width>0&&r.right>window.innerWidth+1&&getComputedStyle(e).position!=='fixed';});
   out.overflow={scrollWidth:document.documentElement.scrollWidth,innerWidth:window.innerWidth,

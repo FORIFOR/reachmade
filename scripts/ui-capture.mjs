@@ -57,10 +57,19 @@ export const SHOTS = Object.freeze([
   // below the first view is unreadable in it; `offset` scrolls the page up by that
   // many CSS px through an injected stylesheet, because this browser produces no
   // animation frames and `/#anchor` silently returns the top of the page.
-  { file: 'home-band-lab.png', route: '/', width: 1440, height: 1000, offset: 1700, state: 'product lab band, reduced motion', reducedMotion: true },
+  { file: 'home-band-lab.png', route: '/', width: 1440, height: 1000, offset: 2450, state: 'product lab band, reduced motion', reducedMotion: true },
   { file: 'home-band-cards.png', route: '/', width: 1440, height: 1000, offset: 3500, state: 'product card grid, reduced motion', reducedMotion: true },
   { file: 'home-band-access.png', route: '/', width: 1440, height: 1000, offset: 4800, state: 'access table, reduced motion', reducedMotion: true },
-  { file: 'home-band-close.png', route: '/', width: 1440, height: 1000, offset: 6400, state: 'FAQ and closing CTA, reduced motion', reducedMotion: true }
+  { file: 'home-band-close.png', route: '/', width: 1440, height: 1000, offset: 6400, state: 'FAQ and closing CTA, reduced motion', reducedMotion: true },
+  // The recording band and the try band at full resolution. A 8400px whole-page shot
+  // renders too small to read, so the bands that carry the proof get their own frames.
+  { file: 'home-band-proof.png', route: '/', width: 1440, height: 1000, offset: 780, state: 'real app recording band, reduced motion', reducedMotion: true },
+  { file: 'home-band-try.png', route: '/', width: 1440, height: 1000, offset: 1700, state: 'shortest-path band, reduced motion', reducedMotion: true },
+  // Phone widths below the fold, because home-mobile-tall.png is unreadable as one image.
+  { file: 'home-m-nav.png', route: '/', width: 390, height: 844, offset: 820, state: 'phone, task navigation, reduced motion', reducedMotion: true },
+  { file: 'home-m-proof.png', route: '/', width: 390, height: 844, offset: 1700, state: 'phone, recording band, reduced motion', reducedMotion: true },
+  { file: 'home-m-cards.png', route: '/', width: 390, height: 844, offset: 4200, state: 'phone, product cards, reduced motion', reducedMotion: true },
+  { file: 'home-m-access.png', route: '/', width: 390, height: 844, offset: 7000, state: 'phone, access table, reduced motion', reducedMotion: true }
 ]);
 
 function candidates() {

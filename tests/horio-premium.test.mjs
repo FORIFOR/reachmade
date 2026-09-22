@@ -49,7 +49,7 @@ test('home leads with a clear product promise and a real product surface before 
     assert.match(html,/WORKING PREVIEW \/ Genie/);
     assert.match(html,/data-lab-proof/);
     assert.match(html,/data-lab-detail href="(?:\/en)?\/products\/genie\/"/);
-    assert.match(html,/data-lab-begin hidden/);
+    assert.match(html,/<a class="lab-begin" data-lab-begin href="#studio-player">/);
     assert.match(html,/<video data-outcome-real-film controls playsinline preload="none"/);
     assert.match(html,/src="\/media\/originals\/genie\/assets\/genie-orbit-web\.mp4"/);
     assert.match(html,/class="outcome-open-artifact" href="\/media\/originals\/genie\/orbit\.html"/);

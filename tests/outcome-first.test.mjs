@@ -31,7 +31,7 @@ for(const lang of ['ja','en']){
  });
  test(`product/${lang}: proof and original CTA survive; output is idempotent`,()=>{
   const html='<body data-art-direction="20260919"><div class="ad-copy"><h1>Product</h1><a class="owned-primary" href="https://example.com">Setup</a><p class="owned-action-note">Requires setup.</p></div><figure class="owned-film">Original proof.</figure><footer class="container owned-footer">Footer</footer></body>';
-  for(const id of ids){const out=enhanceOutcomePage(html,id,lang);assert.ok(out.includes('<figure class="owned-film">Original proof.</figure>'));assert.ok(out.includes('Requires setup.'));assert.ok(out.includes('data-outcome-sample hidden'));assert.equal(enhanceOutcomePage(out,id,lang),out);}
+  for(const id of ids){const out=enhanceOutcomePage(html,id,lang);assert.ok(out.includes('<figure class="owned-film">Original proof.</figure>'));assert.ok(out.includes('Requires setup.'));assert.ok(out.includes('<a data-outcome-sample href="#recording">'),'the sample entry must be a link that works without JavaScript');assert.ok(!out.includes('data-outcome-sample hidden'));assert.equal(enhanceOutcomePage(out,id,lang),out);}
  });
 }
 test('unsupported values fail closed',()=>{for(const lang of ['de','constructor','__proto__']){assert.throws(()=>orbitCopy(lang),TypeError);assert.throws(()=>renderOutcomeHero(lang),TypeError);}assert.throws(()=>renderOrbit('ja','"><script>'),TypeError);assert.throws(()=>enhanceOutcomePage('','unknown','ja'),TypeError);assert.throws(()=>addDirectStarts('<a></a>','ja'));});
