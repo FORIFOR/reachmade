@@ -21,6 +21,15 @@ review all feed one receipt, and an unverified item stays `BLOCKED` instead of b
 `PASS`. `CLAUDE.md` states the honesty invariants the tests enforce — no customer
 counts, no performance comparisons, no user numbers without measurement.
 
+[![The guided sample on this site, recorded by operating it: edit the example, review it, export Markdown](public/media/derived/sample/sample-poster-en.jpg)](https://reachmade.com/en/)
+
+*The frame above is the first frame of a real recording: `scripts/record-sample.mjs` drives
+the built site in an installed Chrome, types into the sample, presses the real download
+button and reopens the saved file. Fictional data, no AI run, nothing sent. Captions were
+added; frames are assembled at 12fps with nothing sped up. Play it at
+[reachmade.com/en](https://reachmade.com/en/), or produce it yourself with
+`npm run build && node scripts/record-sample.mjs` (needs ffmpeg and a Chrome).*
+
 ### Try it in three minutes
 
 ```sh
@@ -39,17 +48,18 @@ package) against the built site and reports what a screenshot cannot show. This 
 actual output on the current commit:
 
 ```
-  320px  no overflow  hit-areas under 44px: 4/93  focusable 93/93  FAQ 6/6
-  390px  no overflow  hit-areas under 44px: 4/93  focusable 93/93  FAQ 6/6
-  768px  no overflow  hit-areas under 44px: 4/93  focusable 93/93  FAQ 6/6
-  960px  no overflow  hit-areas under 44px: 4/98  focusable 98/98  FAQ 6/6
- 1024px  no overflow  hit-areas under 44px: 4/98  focusable 98/98  FAQ 6/6
- 1440px  no overflow  hit-areas under 44px: 4/98  focusable 98/98  FAQ 6/6
- 1920px  no overflow  hit-areas under 44px: 4/98  focusable 98/98  FAQ 6/6
+  320px  no overflow  hit-areas under 44px: 0/94  focusable 94/94  FAQ 6/6
+  390px  no overflow  hit-areas under 44px: 0/94  focusable 94/94  FAQ 6/6
+  768px  no overflow  hit-areas under 44px: 0/94  focusable 94/94  FAQ 6/6
+  960px  no overflow  hit-areas under 44px: 0/99  focusable 99/99  FAQ 6/6
+ 1024px  no overflow  hit-areas under 44px: 0/99  focusable 99/99  FAQ 6/6
+ 1440px  no overflow  hit-areas under 44px: 0/99  focusable 99/99  FAQ 6/6
+ 1920px  no overflow  hit-areas under 44px: 0/99  focusable 99/99  FAQ 6/6
 ```
 
-The four remaining sub-44px targets are the header and footer brand links and two
-side-panel links in the shared shell — counted, not hidden.
+It used to read `4/93`: the header and footer wordmarks and two side-panel links sat at
+36-38px. They are padded to 44px now. The probe is what found them — none of them looked
+wrong in a screenshot.
 
 **What this is not.** It is not a static-site generator, a component library or an npm
 package, and it does not contain the six applications it advertises. Real-device Safari,
