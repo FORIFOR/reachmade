@@ -42,7 +42,7 @@ export function renderHero(products, lang) {
   // Both lines below are already asserted elsewhere on this page: the source-check
   // date is repeated in the access note, and the three kinds of evidence are what
   // the proof band, the product pages and /work/ actually publish.
-  const badge = t('公開情報の確認日 2026-09-15 / 実録画と検証記録を公開', 'Sources checked 2026-09-15 / recordings and evidence published');
+  const badge = t('公開情報の確認日 2026-09-25 / 実録画と検証記録を公開', 'Sources checked 2026-09-25 / recordings and evidence published');
   const evidence = ja
     ? ['実アプリの録画', '保存済みの成果物', '検証記録とBLOCKED項目']
     : ['Real app recordings', 'Saved artifacts', 'Evidence, BLOCKED items included'];
@@ -87,12 +87,12 @@ export function renderAccess(products, lang) {
     const c = p[lang];
     return `<tr><th scope="row"><span class="rm-access-index">${esc(p.index)}</span><a href="${product(lang, p.id)}">${esc(p.name)}</a></th><td data-label="${esc(heads[1])}">${esc(c.outcome)}</td><td data-label="${esc(heads[2])}"><span class="rm-stage-tag">${esc(c.status)}</span></td><td data-label="${esc(heads[3])}">${esc(c.license)}</td><td data-label="${esc(heads[4])}"><a class="rm-access-link" href="${product(lang, p.id)}">${t('詳しく見る', 'Open')} ${arrow}</a></td></tr>`;
   }).join('');
-  return `<section class="rm-band rm-access" id="access"><div class="container"><div class="rm-band-head"><div><p class="eyebrow">ACCESS AT A GLANCE</p><h2>${t('「試せるのか」に、<br>先に答える。', 'Can you actually<br>try it? Yes — here.')}</h2></div><p>${t('6つとも自主開発です。今の状態、成果物、ライセンス、入口を、ひとつの表に。<br>言えないことは、ここにも書きません。', 'All six are built here. Stage, result, license and entry point in one table.<br>What has not been verified is not claimed here either.')}</p></div><div class="rm-access-scroll"><table class="rm-access-table"><caption class="rm-sr">${t('プロダクトごとの状態・ライセンス・入口の一覧', 'Stage, license and entry point for each product')}</caption><thead><tr>${heads.map(h => `<th scope="col">${esc(h)}</th>`).join('')}</tr></thead><tbody>${rows}</tbody></table></div><p class="rm-access-note">${t('公開情報の確認日は2026年9月15日です。各製品の動作条件・未検証の範囲は、製品ページと検証資料に記載しています。実運用の性能や安全性を保証するものではありません。', 'Public sources were checked on 15 September 2026. Setup requirements and unverified scope are stated on each product page and in its evidence. This is not a guarantee of production performance or safety.')}</p></div></section>`;
+  return `<section class="rm-band rm-access" id="access"><div class="container"><div class="rm-band-head"><div><p class="eyebrow">ACCESS AT A GLANCE</p><h2>${t('「試せるのか」に、<br>先に答える。', 'Can you actually<br>try it? Yes — here.')}</h2></div><p>${t('6つとも自主開発です。今の状態、成果物、ライセンス、入口を、ひとつの表に。<br>言えないことは、ここにも書きません。', 'All six are built here. Stage, result, license and entry point in one table.<br>What has not been verified is not claimed here either.')}</p></div><div class="rm-access-scroll"><table class="rm-access-table"><caption class="rm-sr">${t('プロダクトごとの状態・ライセンス・入口の一覧', 'Stage, license and entry point for each product')}</caption><thead><tr>${heads.map(h => `<th scope="col">${esc(h)}</th>`).join('')}</tr></thead><tbody>${rows}</tbody></table></div><p class="rm-access-note">${t('公開情報の確認日は2026年9月25日です。各製品の動作条件・未検証の範囲は、製品ページと検証資料に記載しています。実運用の性能や安全性を保証するものではありません。', 'Public sources were checked on 25 September 2026. Setup requirements and unverified scope are stated on each product page and in its evidence. This is not a guarantee of production performance or safety.')}</p></div></section>`;
 }
 
 const QUESTIONS = {
   ja: [
-    ['いますぐ試せますか？', 'プロダクトごとに違います。AI Meetingは登録なしでタスク画面を、Oathraは公開サンプルの照合を、AI Secureは合成データの調査を、Agent TeamとLaunchloomは既存の実行記録と生成済み素材を、そのまま開けます。Genieはローカル設定が必要な開発者プレビューです。'],
+    ['いますぐ試せますか？', 'プロダクトごとに違います。AI Meetingは登録なしでタスク画面を、Oathraは公開サンプルの照合を、AI Secureは送信前の文書検査デモを、Agent TeamとLaunchloomは既存の実行記録と生成済み素材を、そのまま開けます。Genieはローカル設定が必要な開発者プレビューです。'],
     ['料金はかかりますか？', 'このサイトの閲覧と、ここから開けるサンプルに費用はかかりません。ライセンスは製品ごとに異なり、Apache-2.0のものと、まだ全体ライセンスを設定していないものがあります。外部のAIモデルを使う構成では、その利用料はご自身の契約によります。'],
     ['導入実績や利用者数は？', '掲載していません。確かめられた事実だけを載せる方針のため、顧客事例・利用者数・性能比較は、検証が済むまで書きません。代わりに、コード、実演の録画、検証資料を公開しています。'],
     ['入力した内容はどう扱われますか？', '広告・アクセス解析タグと外部フォントは読み込みません。相談フォームの送信内容は同じドメインの受付経路から運営者の受付システムへ保存し、対応にのみ使います。AI・広告・解析サービスへは送りません。'],
@@ -100,7 +100,7 @@ const QUESTIONS = {
     ['動きや音を止められますか？', '自動再生はしません。録画は押したときだけ再生し、音声もその操作で初めて鳴ります。OSの「視差効果を減らす」設定では登場演出を止めます。JavaScriptを無効にしても、全ページの内容とリンクは使えます。']
   ],
   en: [
-    ['Can I try it right now?', 'It depends on the product. AI Meeting opens account-free text tasks, Oathra opens a public transcript check, AI Secure opens a synthetic investigation, and Agent Team and Launchloom open existing run records and generated material. Genie is a developer preview that needs local setup.'],
+    ['Can I try it right now?', 'It depends on the product. AI Meeting opens account-free text tasks, Oathra opens a public transcript check, AI Secure opens a document-preflight demo, and Agent Team and Launchloom open existing run records and generated material. Genie is a developer preview that needs local setup.'],
     ['Does it cost anything?', 'Browsing this site and opening the samples linked here is free. Licenses differ per product: some are Apache-2.0, some have no project-wide license yet. If a setup uses an external AI model, that usage is billed under your own account.'],
     ['Do you have customers or user numbers?', 'None are published. Only verified facts are stated here, so customer stories, user counts and performance comparisons stay out until they are verified. What is published instead is the source code, the recordings and the evidence documents.'],
     ['What happens to what I type?', 'No advertising or analytics tags and no external fonts are loaded. An inquiry is sent through a same-origin route to the operator’s existing intake, stored there, and used only to answer you. It is not sent to an AI, advertising or analytics service.'],
