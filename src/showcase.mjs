@@ -4,12 +4,12 @@ import path from 'node:path';
 import { artDirectProductHero, writeArtDirectionStyles } from './product-art-direction.mjs';
 const e = s => String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 export const showcase = Object.freeze({
-  genie:{ja:['考えを形に','メモから、使える下書きへ。','メモ・計画・HTML'],en:['Make an idea tangible','From a rough note to a useful draft.','Notes · plans · HTML'],theme:'workspace'},
-  'ai-meeting':{ja:['話して整理','話して決めたTODOが、残る。','会話・確認・タスク'],en:['Think out loud','A conversation with a next step.','Conversation · review · tasks'],theme:'conversation'},
-  oathra:{ja:['電話を確かめる','電話の結果を、発言まで辿る。','通話・発言・結果'],en:['Check the call','A result you can trace to the conversation.','Call · evidence · result'],theme:'evidence'},
-  aisecure:{ja:['送る前に確かめる','AIへの送信前確認と、根拠を辿る調査。','送信前確認・調査'],en:['Check before sending','Preflight checks. Evidence-led investigation.','Preflight · investigation'],theme:'investigation'},
-  'agent-team':{ja:['言葉で依頼する','依頼から、開いて使える成果物へ。','Multibot · 作成・レビュー・修正'],en:['Describe the work','From a request to an artifact.','Multibot · draft · review · revise'],theme:'editorial'},
-  launchloom:{ja:['作ったものを届ける','ひとつの録画から、伝える素材へ。','動画・LP・投稿案'],en:['Show what you built','One recording. Material for a launch.','Film · page · social drafts'],theme:'cinema'}
+  genie:{ja:['作業を止めない','いまの作業から離れず、問いかけて結果を戻す。','TaskDock・画面・結果'],en:['Stay in the work','Ask about what is already in front of you.','TaskDock · screen · result'],theme:'workspace'},
+  'ai-meeting':{ja:['話したことを残す','割り込める会話から、確認済みタスクへ。','会話・割り込み・確認・タスク'],en:['Speak, interrupt, keep it','An interruptible conversation that leaves confirmed tasks.','Conversation · interruption · confirmation · tasks'],theme:'conversation'},
+  oathra:{ja:['「できた」を確かめる','AIの自己申告ではなく、相手の言葉で結果を検証する。','通話・相手の発言・検証'],en:['Verify “done”','Judge the result from the other party’s words, not the agent’s self-report.','Call · other-party evidence · verdict'],theme:'evidence'},
+  aisecure:{ja:['送る前に確かめる','文書を外へ出す前に、ローカルで検査して理由と範囲を残す。','文書・ローカル検査・レポート'],en:['Check before sending','Inspect a document locally, then keep the decision, reasons and coverage.','Document · local preflight · report'],theme:'investigation'},
+  'agent-team':{ja:['ひとつ頼む','チームが作り、確かめ、直す。','作成・レビュー・修正・再確認'],en:['One request','The team drafts, checks, and revises.','Draft · review · revise · re-check'],theme:'editorial'},
+  launchloom:{ja:['作ったものを届ける','ひとつの実録画から、公開前の素材一式へ。','横動画・縦動画・LP・投稿案'],en:['Show what you built','One real recording becomes pre-publish launch material.','Landscape · vertical · page · social drafts'],theme:'cinema'}
 });
 const route=(id,lang)=>`${lang==='en'?'/en':''}/products/${id}/`;
 const root=lang=>lang==='en'?'/en/':'/';
