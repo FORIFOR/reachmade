@@ -98,7 +98,7 @@ export const products = [
       description: '文書を外へ送る前にローカルで検査し、判定・理由・検査範囲をレポートとして残す。見つけられないカテゴリも測定結果として明示します。',
       status: 'アルファ / 検証中', license: 'MIT',
       outcome: '文書 → ローカル検査 → 判断・レポート',
-      scope: '送信前の明示的な検査です。OCR、アンチウイルス、全ブラウザDLP、完全な漏えい防止や本番認証を保証しません。公開測定では見逃すカテゴリがあります。',
+      scope: '送信前の明示的な検査です。常時監視や自動遮断ではなく、OCR、アンチウイルス、全ブラウザDLP、完全な漏えい防止や本番認証を保証しません。公開測定では見逃すカテゴリがあります。',
       proof: '実ワークベンチのデモと、60ケースのラベル付き合成コーパスで公開している検出測定。',
       consult: 'AI利用前のデータ検査、文書preflight、判断理由と監査記録を残す業務フローの試作。'
     },
@@ -107,7 +107,7 @@ export const products = [
       short: 'Inspect a document locally before sending it to an AI service.',
       description: 'Inspect a document locally before it leaves, then keep the decision, reasons and inspection coverage together in a report. Published measurements also show categories the current detector misses.',
       status: 'Alpha / under evaluation', license: 'MIT',
-      outcome: 'Document → local preflight → decision & report',
+      outcome: 'Document → local preflight → decision and report',
       scope: 'Explicit preflight, not blanket browser DLP. No OCR, antivirus, guaranteed leak prevention or production certification is claimed, and published measurements include categories the detector misses.',
       proof: 'A real workbench demo plus published detection measurements on a 60-case labelled synthetic corpus.',
       consult: 'Prototype AI-data preflight, document inspection, and workflows that preserve reasons and audit metadata.'
