@@ -24,7 +24,7 @@ for (const lang of LANGS) {
     assert.match(html, /data-home-task-picker/);
     // The opening states only facts the page already carries elsewhere.
     assert.match(html, /class="rm-hero-badge"/);
-    assert.match(html, /2026-09-15/);
+    assert.match(html, /2026-09-25/);
     assert.equal((html.match(/class="rm-hero-evidence"/g)||[]).length,1);
     assert.equal((html.match(/class="rm-task-go"/g)||[]).length,3);
     assert.doesNotMatch(html, /rm-ghost/);
