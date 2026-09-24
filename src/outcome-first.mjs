@@ -27,7 +27,7 @@ const subtitles={
  genie:['自分のモデルで、メモを成果物に。','Your model. A note becomes an artifact.'],
  'ai-meeting':['会話のあとに、次の一手が残る。','A conversation that leaves a next step.'],
  oathra:['通話の「できた」を、発言で確かめる。','Check the words behind “done.”'],
- aisecure:['送る前も、調べるときも、根拠から。','Before sending. During review. Start with evidence.'],
+ aisecure:['送る前に、ローカルで確かめる。','Inspect it locally before it leaves.'],
  'agent-team':['ひとつの依頼に、違う視点を。','One request. More than one perspective.'],
  launchloom:['つくったものを、伝わる素材に。','You made it. Now make it seen.']
 };
@@ -35,7 +35,7 @@ export const DIRECT_STARTS=Object.freeze({
  genie:{url:'/media/originals/genie/orbit.html',enUrl:'/media/originals/genie/orbit.html',ja:['実演で作ったものを動かす','保存済みのHTMLを開きます。新しいAI実行ではありません。'],en:['Open the recorded artifact','Opens the saved Japanese HTML example, not a new AI run.']},
  'ai-meeting':{url:'https://ai-meeting.web.app/#tasks',ja:['登録なしでタスクを試す','文字入力のタスク画面。音声体験は別条件です。'],en:['Try a task without signing up','Japanese text task UI. Voice has separate access conditions.']},
  oathra:{url:'https://forifor.github.io/oathra/check.html',ja:['サンプルの根拠を照合する','公開サンプルの検証。電話は発信しません。'],en:['Inspect a sample transcript','Public sample verification. No phone call is placed.']},
- aisecure:{url:'https://forifor.github.io/AISecure/try.html',ja:['合成ログの調査を試す','合成データのデモ。実環境の監視・遮断は行いません。'],en:['Investigate a synthetic case','Synthetic-data demo. No monitoring or enforcement.']},
+ aisecure:{url:'https://forifor.github.io/AISecure/',ja:['送信前検査の実演を見る','合成文書をローカル検査する公開デモ。全ブラウザDLPや完全な漏えい防止を保証するものではありません。'],en:['Watch the document preflight workflow','Public local-preflight demo on synthetic documents. Not blanket browser DLP or guaranteed leak prevention.']},
  'agent-team':{url:'https://forifor.github.io/Multibot/ja/',enUrl:'https://forifor.github.io/Multibot/',ja:['実モデルの作業記録を見る','過去の実行記録を開きます。新しいAI実行は始まりません。'],en:['Read a real-model work record','An existing run record, not a new AI execution.']},
  launchloom:{url:'https://forifor.github.io/Launchloom/ja/',enUrl:'https://forifor.github.io/Launchloom/',ja:['生成済みの素材を開く','既存の作例を閲覧。SNSへの投稿は行いません。'],en:['Open generated launch material','Existing examples. Nothing is published to a social account.']}
 });
