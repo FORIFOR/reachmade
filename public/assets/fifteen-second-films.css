@@ -1,0 +1,11 @@
+/* Fifteen-second films: a heading, an honest note, and a native player. No autoplay, no script. */
+.rm-film15{display:grid;grid-template-columns:minmax(0,.62fr) minmax(0,1.38fr);gap:28px 56px;align-items:start;padding-block:64px;border-top:1px solid var(--line,#d8dad2);color:var(--ink,#20251f)}
+.rm-film15--home{margin-top:58px}
+.rm-film15__kicker{margin:0 0 14px;font-size:12px;font-weight:700;letter-spacing:.1em;line-height:1.7;color:var(--accent,#294536)}
+.rm-film15 h2{margin:0;font-size:clamp(28px,3.1vw,42px);font-weight:560;letter-spacing:-.03em;line-height:1.35;word-break:auto-phrase}
+.rm-film15__note{margin:18px 0 0;max-width:34em;font-size:14px;line-height:1.9;color:var(--muted,#5b6059)}
+.rm-film15__figure{margin:0;min-width:0}
+.rm-film15__figure video{display:block;width:100%;height:auto;aspect-ratio:16/9;background:#171a17;border:1px solid #2d312d;border-radius:12px}
+.rm-film15__figure figcaption{margin-top:10px;font-size:13px;line-height:1.7;color:var(--muted,#5b6059)}
+@media(max-width:900px){.rm-film15{grid-template-columns:1fr;padding-block:48px}.rm-film15--home{margin-top:40px}.rm-film15__note{max-width:none}}
+@media(forced-colors:active){.rm-film15__figure video{border-color:CanvasText}}

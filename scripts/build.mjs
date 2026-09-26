@@ -15,6 +15,7 @@ import { writeOwnedGuides } from '../src/owned-guides.mjs';
 import { writeOutcomeFirst } from '../src/outcome-first.mjs';
 import { writeHomeFlagship } from '../src/home-flagship.mjs';
 import { writeSignatureScenes } from '../src/signature-scene.mjs';
+import { writeFifteenSecondFilms } from '../src/fifteen-second-films.mjs';
 export { root, escapeHTML, validateConfig } from './build-core.mjs';
 
 export async function build() {
@@ -35,6 +36,7 @@ export async function build() {
   // Signature scenes: composed DOM states on the home and every product hero.
   await writeSignatureScenes(dist,products);
   routes.push(...await writeOwnedGuides(dist));
+  await writeFifteenSecondFilms(dist);
   const showcaseRoutes = ['', 'en/', ...products.flatMap(p=>[`products/${p.id}/`,`en/products/${p.id}/`])];
   const cssVersion = createHash('sha256').update(await fs.readFile(path.join(dist,'assets/showcase.css'))).digest('hex').slice(0,16);
   for (const route of showcaseRoutes) {

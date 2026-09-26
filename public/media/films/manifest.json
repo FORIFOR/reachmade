@@ -1,0 +1,57 @@
+{
+  "schema": 1,
+  "note": "Fifteen-second introduction films rendered from supplied source packages (render(t) HTML films). Source zips are not in this repository; their hashes are recorded here.",
+  "files": [
+    {
+      "path": "/media/films/reachmade-15s.mp4",
+      "bytes": 2592371,
+      "sha256": "3235a87ff28db57b8c8256f73793bde1c90c27accca6a2cbebdcfb1b62bdfd24",
+      "source": "reachmade_15s_source.zip → film.html",
+      "sourceSha256": "960779062bd9b4a338d9c6047309f84e13ebd285ab37c1d56f030240e1d76b86",
+      "render": "render.py frames; audio.py; master.py; ffmpeg -framerate 60 -i frames/f%04d.png -i soundtrack.wav -vf \"scale=out_color_matrix=bt709:out_range=tv,format=yuv420p\" -c:v libx264 -preset slow -crf 20 -tune animation -c:a aac -b:a 192k -movflags +faststart -t 15",
+      "spec": "1920x1080, 60 fps, 15.000 s, AAC stereo, -14 LUFS master"
+    },
+    {
+      "path": "/media/films/reachmade-15s.jpg",
+      "bytes": 35149,
+      "sha256": "e47a3277d38ef1faf603911bfed7aa7a9e1dbad89e87e263558233fd7fa524ae",
+      "source": "/media/films/reachmade-15s.mp4",
+      "sourceSha256": "3235a87ff28db57b8c8256f73793bde1c90c27accca6a2cbebdcfb1b62bdfd24",
+      "render": "ffmpeg -ss 3.2 -frames:v 1 -vf scale=1280:-1 -q:v 3"
+    },
+    {
+      "path": "/media/films/genie-15s.mp4",
+      "bytes": 4320876,
+      "sha256": "79a0c98cd201169d5f44fa199ba009a1931f533f16258af412b71b418419dbc1",
+      "source": "reachmade_genie_oathra_source.zip → genie/film.html",
+      "sourceSha256": "e55b52a81af266f3812e54e947e0c5b309a683c445904c47d5c9f87c0d77aff8",
+      "render": "prepass.py (sheet:2.74 win:11.0); render2.py; genie/audio.py; master.py; ffmpeg -framerate 60 -i frames/f%04d.png -i soundtrack.wav -vf \"scale=out_color_matrix=bt709:out_range=tv,format=yuv420p\" -c:v libx264 -preset slow -crf 20 -tune animation -c:a aac -b:a 192k -movflags +faststart -t 15",
+      "spec": "1920x1080, 60 fps, 15.000 s, AAC stereo, -14 LUFS master"
+    },
+    {
+      "path": "/media/films/genie-15s.jpg",
+      "bytes": 64967,
+      "sha256": "17668b8c2ec2cb501ec4c208a1fb80a045b8e423bbed6b08f4d79642f08a0290",
+      "source": "/media/films/genie-15s.mp4",
+      "sourceSha256": "79a0c98cd201169d5f44fa199ba009a1931f533f16258af412b71b418419dbc1",
+      "render": "ffmpeg -ss 6.6 -frames:v 1 -vf scale=1280:-1 -q:v 3"
+    },
+    {
+      "path": "/media/films/oathra-15s.mp4",
+      "bytes": 1628517,
+      "sha256": "a817f02f0bbd21e89be4f75d28672ca6a7c63c083580f833d11f4a51216bf95a",
+      "source": "reachmade_genie_oathra_source.zip → oathra/film.html",
+      "sourceSha256": "e55b52a81af266f3812e54e947e0c5b309a683c445904c47d5c9f87c0d77aff8",
+      "render": "render2.py; oathra/audio.py; master.py; ffmpeg -framerate 60 -i frames/f%04d.png -i soundtrack.wav -vf \"scale=out_color_matrix=bt709:out_range=tv,format=yuv420p\" -c:v libx264 -preset slow -crf 20 -tune animation -c:a aac -b:a 192k -movflags +faststart -t 15",
+      "spec": "1920x1080, 60 fps, 15.000 s, AAC stereo, -14 LUFS master"
+    },
+    {
+      "path": "/media/films/oathra-15s.jpg",
+      "bytes": 73748,
+      "sha256": "7b8650fb168f610d7c570d58c1b5e6c313c57992c36f1c6bd9a2326e80f23c5f",
+      "source": "/media/films/oathra-15s.mp4",
+      "sourceSha256": "a817f02f0bbd21e89be4f75d28672ca6a7c63c083580f833d11f4a51216bf95a",
+      "render": "ffmpeg -ss 10.7 -frames:v 1 -vf scale=1280:-1 -q:v 3"
+    }
+  ]
+}
