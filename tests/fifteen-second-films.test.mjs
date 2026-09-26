@@ -5,6 +5,7 @@ import path from 'node:path';
 import { createHash } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import { FILMS, filmSection, insertFilm } from '../src/fifteen-second-films.mjs';
+import { serveOwnedRecording } from '../src/owned-recording-response.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const dist = path.join(root, 'dist');
@@ -64,4 +65,17 @@ test('packaged films match their manifest and stay small', async () => {
   const css = await read('assets/showcase.css');
   assert.equal(css.split('/* fifteen-second films */').length - 1, 1, 'the film layer is appended exactly once');
   assert.doesNotMatch(css.split('/* fifteen-second films */')[1], /animation|transition/);
+});
+
+test('every film is served with byte ranges, from its own path', async () => {
+  const bytes = new Uint8Array(Array.from({ length: 100 }, (_, i) => i));
+  for (const f of Object.values(FILMS)) {
+    const assets = { fetch: async req => { assert.equal(new URL(req.url).pathname, f.src); return new Response(bytes, { headers: { 'content-type': 'video/mp4', 'content-length': '100' } }); } };
+    const r = await serveOwnedRecording(new Request('https://reachmade.com' + f.src, { headers: { Range: 'bytes=10-19' } }), assets);
+    assert.equal(r.status, 206, f.src);
+    assert.equal(r.headers.get('content-range'), 'bytes 10-19/100');
+    assert.equal(r.headers.get('accept-ranges'), 'bytes');
+    assert.deepEqual(new Uint8Array(await r.arrayBuffer()), bytes.slice(10, 20));
+  }
+  assert.equal(await serveOwnedRecording(new Request('https://reachmade.com/media/films/other.mp4'), {}), null);
 });
