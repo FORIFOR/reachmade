@@ -1,4 +1,6 @@
-/** Public source statements checked 2026-09-15. These are NOT a fresh runtime audit. */
+/** Public source statements checked 2026-09-15. These are NOT a fresh runtime audit.
+ *  2026-09-27: Genie's macOS 14 / optional-screenshot statement and Oathra's simulator agents were
+ *  added from genie/README.md and oathra/README.md, for the fifteen-second films. */
 export const products = [
   {
     id: 'genie', name: 'Genie', index: '01', category: 'work', discipline: 'AI WORKSPACE',
@@ -14,7 +16,7 @@ export const products = [
       description: 'メモから実行計画、Webコピー、小さなHTMLの試作まで。接続したモデルと作業し、結果を開き直したり、Markdownとして保存したりできます。',
       status: '開発者プレビュー', license: 'ソース公開・全体ライセンス未設定',
       outcome: 'メモ → 計画・コピー・HTML',
-      scope: 'アプリだけでは利用が完結しません。ローカルサービスとモデルの設定が必要です。以前の名称はAstraです。',
+      scope: 'アプリだけでは利用が完結しません。ローカルサービスとモデルの設定が必要で、macOS 14以降が対象です。スクリーンショットは任意で、質問を送ったときだけ接続したモデルへ送られます。以前の名称はAstraです。',
       proof: '実アプリの録画と、保存された成果物。待ち時間は編集されています。',
       consult: '社内向けAIワークスペースや、ローカルモデルを含む業務アシスタントの試作。'
     },
@@ -24,7 +26,7 @@ export const products = [
       description: 'Turn rough notes into a plan, website copy, or a small HTML prototype. Reopen the result, copy it, or save it as Markdown.',
       status: 'Developer preview', license: 'Public source · no project-wide license',
       outcome: 'Notes → plans, copy, HTML',
-      scope: 'The app needs local services and a configured model. The download alone is not a hosted service. Previously Astra.',
+      scope: 'The app needs local services and a configured model, on macOS 14 or later. The download alone is not a hosted service. A screenshot is optional and goes to the connected model only when you send a question. Previously Astra.',
       proof: 'Real app recordings and saved artifacts. Waiting is condensed.',
       consult: 'Prototype an internal AI workspace or an assistant using local and external models.'
     }
@@ -71,7 +73,7 @@ export const products = [
       status: '開発版', license: 'Apache-2.0',
       outcome: '通話 → 発言の根拠 → 結果',
       scope: '会話上の合意と、店舗システムへの登録は別です。シミュレーターと実電話の検証も区別します。実電話には設定と費用が必要です。',
-      proof: '文字起こしの判定画面、シミュレーター、実通話の開発記録。100件の実電話検証は未完了です。',
+      proof: '文字起こしの判定画面、シミュレーター（組み込みAI・GPT-4o mini・Gemini Flashが電話した記録）、実通話の開発記録。100件の実電話検証は未完了です。',
       consult: '電話業務の試作、既存音声AIへの完了判定の組み込み、同意と人への引き継ぎの設計。'
     },
     en: {
@@ -81,7 +83,7 @@ export const products = [
       status: 'Developer release', license: 'Apache-2.0',
       outcome: 'Call → evidence → result',
       scope: 'A spoken agreement does not prove a booking exists in a business system. Simulation and real-call evidence are separate. Real calls need configuration and incur costs.',
-      proof: 'Transcript checks, simulation, and documented real-call development. The 100-real-call evaluation is not complete.',
+      proof: 'Transcript checks, simulation (recorded calls by the built-in agent, GPT-4o mini and Gemini Flash), and documented real-call development. The 100-real-call evaluation is not complete.',
       consult: 'Prototype a phone workflow, add completion checks to a voice agent, or design consent and human handoff.'
     }
   },
