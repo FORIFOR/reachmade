@@ -1,0 +1,33 @@
+/* Product capabilities: three ledger highlights under the hero and three ledger feature cards. Static, no script.
+   Surfaces are neutral overlays on the page tokens, because product pages ship light and dark palettes. */
+.owned-product .owned-hero-badges-bar{background:rgba(127,127,127,.09);border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);padding:20px 0;margin:0}
+.owned-product .owned-hero-badges{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:32px;list-style:none;padding:0;margin:0}
+.owned-product .owned-hero-badges li{display:flex;flex-direction:column;gap:5px;border-left:2px solid var(--rule);padding-left:16px}
+.owned-product .owned-hero-badges li strong{font-size:16px;font-weight:650;color:var(--ink);letter-spacing:-.015em;line-height:1.4}
+.owned-product .owned-hero-badges li span{font-size:12.5px;color:var(--muted);line-height:1.6}
+.owned-product .owned-features{padding-block:58px 72px;border-top:1px solid var(--rule)}
+.owned-product .owned-features__grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;margin-top:42px}
+.owned-product .owned-feature-card{background:rgba(127,127,127,.05);border:1px solid var(--rule);border-radius:6px;padding:28px 24px;display:flex;flex-direction:column;gap:14px}
+.owned-product .owned-feature-card__code{font-size:10.5px;font-weight:700;letter-spacing:.12em;color:var(--accent);text-transform:uppercase;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+.owned-product .owned-feature-card h3{font-size:18px;font-weight:630;line-height:1.45;letter-spacing:-.015em;margin:0;color:var(--ink)}
+.owned-product .owned-feature-card p{font-size:13.5px;line-height:1.8;color:var(--muted);margin:0;flex-grow:1}
+.owned-product .owned-feature-card__tags{display:flex;flex-wrap:wrap;gap:6px;list-style:none;padding:0;margin:8px 0 0}
+.owned-product .owned-feature-card__tags li{font-size:12px;font-weight:500;color:var(--ink);background:rgba(127,127,127,.14);padding:3px 8px;border-radius:4px;line-height:1.5}
+@media (max-width:800px){
+.owned-product .owned-hero-badges{grid-template-columns:1fr;gap:16px}
+.owned-product .owned-hero-badges li{border-left-width:3px;padding-left:14px}
+.owned-product .owned-features{padding-block:46px 56px}
+.owned-product .owned-features__grid{grid-template-columns:1fr;gap:20px}
+}
+@media (max-width:460px){
+.owned-product .owned-features__grid{margin-top:28px}
+.owned-product .owned-feature-card{padding:22px 18px}
+}
+@media (forced-colors:active){
+.owned-product .owned-hero-badges-bar{border-top:1px solid CanvasText;border-bottom:1px solid CanvasText}
+.owned-product .owned-hero-badges li{border-left:2px solid CanvasText}
+.owned-product .owned-feature-card{border:1px solid CanvasText}
+.owned-product .owned-feature-card__tags li{border:1px solid CanvasText}
+}
+.owned-product .owned-features__source{margin:24px 0 0;font-size:13px;line-height:1.7;color:var(--muted)}
+.owned-product .owned-features__source a{color:var(--ink)}

@@ -11,7 +11,7 @@
       "preview": "/assets/products/genie.jpg",
       "previewSource": "genie/docs/golden-screenshots/workspace-ux/home-1162-light.png",
       "status": "開発者プレビュー",
-      "scope": "アプリだけでは利用が完結しません。ローカルサービスとモデルの設定が必要です。以前の名称はAstraです。"
+      "scope": "アプリだけでは利用が完結しません。ローカルサービスとモデルの設定が必要で、macOS 14以降が対象です。スクリーンショットは任意で、質問を送ったときだけ接続したモデルへ送られます。以前の名称はAstraです。"
     },
     {
       "id": "ai-meeting",

@@ -40,6 +40,11 @@ export const SHOTS = Object.freeze([
   { file: 'home-tall-ja.png', route: '/', width: 1440, height: 8400, state: 'whole page, reduced motion', reducedMotion: true },
   { file: 'home-tall-en.png', route: '/en/', width: 1440, height: 8400, state: 'whole page, reduced motion', reducedMotion: true },
   { file: 'product-tall-genie.png', route: '/products/genie/', width: 1440, height: 5600, state: 'whole page, reduced motion', reducedMotion: true },
+  // Ledger capabilities under the hero: badges bar and three feature cards, in both languages and at phone width.
+  { file: 'product-capabilities-en.png', route: '/en/products/oathra/', width: 1440, height: 1000, offset: 1000, state: 'English capability badges and cards, reduced motion', reducedMotion: true },
+  { file: 'product-m-capabilities.png', route: '/products/ai-meeting/', width: 390, height: 1400, offset: 1450, state: 'phone, capability badges and cards, reduced motion', reducedMotion: true },
+  { file: 'product-capabilities-ja.png', route: '/products/genie/', width: 1440, height: 1000, offset: 1000, state: 'Japanese capability badges and cards, reduced motion', reducedMotion: true },
+  { file: 'product-capabilities-dark.png', route: '/en/products/ai-meeting/', width: 1440, height: 1000, offset: 1000, state: 'dark palette capability badges and cards, reduced motion', reducedMotion: true },
   // Widths between the phone and the desktop shots, where layouts usually break.
   { file: 'home-768.png', route: '/', width: 768, height: 1200, state: 'default' },
   { file: 'home-960.png', route: '/', width: 960, height: 900, state: 'default, narrowest two-column width' },
@@ -121,11 +126,12 @@ export async function capture() {
     await fs.cp(path.join(root, 'dist'), mirror, { recursive: true });
     for (const offset of offsets) {
       await fs.writeFile(path.join(mirror, `assets/offset-${offset}.css`), `html{margin-top:-${offset}px}\n`);
-      for (const [route, file] of [['/', 'index.html'], ['/en/', 'en/index.html']]) {
-        const page = await fs.readFile(path.join(mirror, file), 'utf8');
-        const name = `${route === '/' ? '' : 'en/'}offset-${offset}.html`;
-        await fs.writeFile(path.join(mirror, name), page.replace('</head>', `<link rel="stylesheet" href="/assets/offset-${offset}.css"></head>`));
-      }
+    }
+    // One offset page per (route, offset) pair, so any built route can be captured below the fold.
+    for (const shot of SHOTS.filter(shot => shot.offset)) {
+      const dir = shot.route.replace(/^\//, '');
+      const page = await fs.readFile(path.join(mirror, dir, 'index.html'), 'utf8');
+      await fs.writeFile(path.join(mirror, dir, `offset-${shot.offset}.html`), page.replace('</head>', `<link rel="stylesheet" href="/assets/offset-${shot.offset}.css"></head>`));
     }
   }
   const server = spawn(process.execPath, [path.join(root, 'scripts/serve.mjs')], { cwd: root, env: { ...process.env, PORT: String(PORT) }, stdio: 'ignore' });

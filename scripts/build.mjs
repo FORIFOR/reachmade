@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 import { build as buildCore, root, validateConfig } from './build-core.mjs';
 import { products } from '../src/products.mjs';
 import { recordings } from '../src/films.mjs';
-import { writeProductLandings } from '../src/product-landings.mjs';
+import { writeProductLandings, writeProductCapabilityStyles } from '../src/product-landings.mjs';
 import { writeInquiryPages } from '../src/inquiry-page.mjs';
 import { writeShowcase } from '../src/showcase.mjs';
 import { bundleDemoAssets } from '../src/animated-demo-assets.mjs';
@@ -37,6 +37,7 @@ export async function build() {
   await writeSignatureScenes(dist,products);
   routes.push(...await writeOwnedGuides(dist));
   await writeFifteenSecondFilms(dist);
+  await writeProductCapabilityStyles(dist);
   const showcaseRoutes = ['', 'en/', ...products.flatMap(p=>[`products/${p.id}/`,`en/products/${p.id}/`])];
   const cssVersion = createHash('sha256').update(await fs.readFile(path.join(dist,'assets/showcase.css'))).digest('hex').slice(0,16);
   for (const route of showcaseRoutes) {

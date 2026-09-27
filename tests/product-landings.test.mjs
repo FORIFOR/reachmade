@@ -34,6 +34,14 @@ for (const id of landingIds) for (const lang of ['ja','en']) {
     assert.match(html,lang==='ja'?/13秒で実演を見る/:/See it in 13 seconds/);
     assert.match(html,lang==='ja'?/約13秒.*再生速度は変えていません/:/about 13 seconds; playback speed is unchanged/);
     assert.match(html,lang==='ja'?/現行製品の実演や、新UIの実装完了を示すものではありません/:/not a demonstration of the current product/);
+    assert.equal((html.match(/class="owned-hero-badges"/g)||[]).length,1);
+    assert.equal((html.match(/<li><strong>/g)||[]).length,3);
+    assert.equal((html.match(/class="owned-feature-card"/g)||[]).length,3);
+    for (const h of p[lang].highlights) { assert.ok(html.includes(escaped(h.value))); assert.ok(html.includes(escaped(h.label))); }
+    assert.equal((html.match(/class="owned-features__source"/g)||[]).length,1);
+    assert.ok(html.includes(`href="${escaped(p.source)}"`));
+    assert.ok(html.includes(lang==='ja'?'にリポジトリと照合':'checked against the repository on'));
+    for (const fc of p[lang].features) { assert.ok(html.includes(escaped(fc.title))); assert.ok(html.includes(escaped(fc.body))); for (const t of fc.tags) assert.ok(html.includes(escaped(t))); }
     assert.equal(productNavigation(p,lang).site,config.origin+route);
   });
 }
@@ -72,4 +80,31 @@ test('landing player has no telemetry, persistence, form or model transport',asy
   assert.doesNotMatch(js,/\bfetch\s*\(|XMLHttpRequest|sendBeacon|localStorage|sessionStorage|document\.cookie|\.submit\(/);
   assert.match(js,/addEventListener\('click'/);assert.match(js,/video\.play\(\)/);
   for(const id of landingIds)assert.ok(js.includes(`'${id}'`));
+});
+
+test('product-page capabilities come from the ledger only, and stay inside what was verified',()=>{
+  // Checked 2026-09-27 against each product repository. These phrases were removed or qualified because
+  // the repositories do not implement them or do not measure them; they must not come back through page copy.
+  const unverified=/Notion|(?<!No )CRM\s*(自動|sync|integration)|最短即日|最短数分|in minutes|no data leaks|zero telemetry|高速|hallucination|ハルシネーション|\bWriter\b|\bEditor\b|手間をゼロ|手戻り.*ゼロ|eliminat/i;
+  for (const p of products) for (const lang of ['ja','en']) {
+    const x=p[lang];
+    assert.equal(x.highlights.length,3,`${p.id}/${lang} highlights`);
+    assert.equal(x.features.length,3,`${p.id}/${lang} features`);
+    for (const h of x.highlights) { assert.ok(h.value&&h.label); assert.doesNotMatch(h.value+' '+h.label,unverified,`${p.id}/${lang}: ${h.value}`); }
+    for (const fc of x.features) {
+      assert.ok(fc.code&&fc.title&&fc.body&&fc.tags.length===3,`${p.id}/${lang}: ${fc.code}`);
+      assert.doesNotMatch([fc.title,fc.body,...fc.tags].join(' '),unverified,`${p.id}/${lang}: ${fc.title}`);
+    }
+    const page=landingExperience[p.id][lang];
+    assert.ok(!('highlights' in page)&&!('featureCards' in page)&&!('features' in page),`${p.id}/${lang}: page copy must not carry its own capability claims`);
+    assert.doesNotMatch(JSON.stringify(page),unverified,`${p.id}/${lang}: page copy`);
+  }
+});
+
+test('capability layer reaches the shared stylesheet exactly once',async()=>{
+  const css=await fs.readFile(path.join(root,'dist','assets','showcase.css'),'utf8');
+  assert.equal((css.match(/\/\* REACHMADE_PRODUCT_CAPABILITIES \*\//g)||[]).length,1);
+  assert.equal((css.match(/\.owned-product \.owned-hero-badges\{display:grid/g)||[]).length,1);
+  assert.equal((css.match(/\.owned-product \.owned-feature-card\{background/g)||[]).length,1);
+  assert.match(css,/@media \(forced-colors:active\)\{\s*\.owned-product \.owned-hero-badges-bar/);
 });
