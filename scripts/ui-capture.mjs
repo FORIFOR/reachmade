@@ -37,7 +37,7 @@ export const SHOTS = Object.freeze([
   // no animation frames, so a default-motion capture can freeze mid-entrance and make
   // a section look washed out that is not. Reduced motion disables those animations
   // outright, so the colours in these files are the settled ones.
-  { file: 'home-tall-ja.png', route: '/', width: 1440, height: 8400, state: 'whole page, reduced motion', reducedMotion: true },
+  { file: 'home-tall-ja.png', route: '/', width: 1440, height: 9400, state: 'whole page, reduced motion', reducedMotion: true },
   { file: 'home-tall-en.png', route: '/en/', width: 1440, height: 8400, state: 'whole page, reduced motion', reducedMotion: true },
   { file: 'product-tall-genie.png', route: '/products/genie/', width: 1440, height: 5600, state: 'whole page, reduced motion', reducedMotion: true },
   // Ledger capabilities under the hero: badges bar and three feature cards, in both languages and at phone width.
@@ -53,7 +53,7 @@ export const SHOTS = Object.freeze([
   // Whole page on a phone. Anchor routes are useless here: `html{scroll-behavior:smooth}`
   // needs animation frames, which this headless browser does not produce, so a
   // `/#faq` capture silently returns the top of the page instead.
-  { file: 'home-mobile-tall.png', route: '/', width: 390, height: 12200, state: 'whole page, reduced motion', reducedMotion: true },
+  { file: 'home-mobile-tall.png', route: '/', width: 390, height: 13600, state: 'whole page, reduced motion', reducedMotion: true },
   // The English page at phone widths. Its copy is longer than the Japanese, so a
   // badge or label that wraps here does not show up in any of the shots above.
   { file: 'home-en-mobile.png', route: '/en/', width: 390, height: 844, state: 'default' },
@@ -62,19 +62,22 @@ export const SHOTS = Object.freeze([
   // below the first view is unreadable in it; `offset` scrolls the page up by that
   // many CSS px through an injected stylesheet, because this browser produces no
   // animation frames and `/#anchor` silently returns the top of the page.
-  { file: 'home-band-lab.png', route: '/', width: 1440, height: 1000, offset: 2450, state: 'product lab band, reduced motion', reducedMotion: true },
-  { file: 'home-band-cards.png', route: '/', width: 1440, height: 1000, offset: 3500, state: 'product card grid, reduced motion', reducedMotion: true },
-  { file: 'home-band-access.png', route: '/', width: 1440, height: 1000, offset: 4800, state: 'access table, reduced motion', reducedMotion: true },
-  { file: 'home-band-close.png', route: '/', width: 1440, height: 1000, offset: 6400, state: 'FAQ and closing CTA, reduced motion', reducedMotion: true },
+  { file: 'home-band-lab.png', route: '/', width: 1440, height: 1000, offset: 3200, state: 'product lab band, reduced motion', reducedMotion: true },
+  { file: 'home-band-cards.png', route: '/', width: 1440, height: 1000, offset: 4150, state: 'product card grid, reduced motion', reducedMotion: true },
+  { file: 'home-band-access.png', route: '/', width: 1440, height: 1000, offset: 6350, state: 'access table, reduced motion', reducedMotion: true },
+  { file: 'home-band-close.png', route: '/', width: 1440, height: 1000, offset: 7950, state: 'FAQ and closing CTA, reduced motion', reducedMotion: true },
   // The recording band and the try band at full resolution. A 8400px whole-page shot
   // renders too small to read, so the bands that carry the proof get their own frames.
   { file: 'home-band-proof.png', route: '/', width: 1440, height: 1000, offset: 780, state: 'real app recording band, reduced motion', reducedMotion: true },
   { file: 'home-band-try.png', route: '/', width: 1440, height: 1000, offset: 1700, state: 'shortest-path band, reduced motion', reducedMotion: true },
   // Phone widths below the fold, because home-mobile-tall.png is unreadable as one image.
+  // The fifteen-second film band (Japanese home only), desktop and phone.
+  { file: 'home-band-film.png', route: '/', width: 1440, height: 1000, offset: 2600, state: 'fifteen-second film band, reduced motion', reducedMotion: true },
+  { file: 'home-m-film.png', route: '/', width: 390, height: 1200, offset: 2700, state: 'phone, fifteen-second film band, reduced motion', reducedMotion: true },
   { file: 'home-m-nav.png', route: '/', width: 390, height: 844, offset: 820, state: 'phone, task navigation, reduced motion', reducedMotion: true },
   { file: 'home-m-proof.png', route: '/', width: 390, height: 844, offset: 1700, state: 'phone, recording band, reduced motion', reducedMotion: true },
-  { file: 'home-m-cards.png', route: '/', width: 390, height: 844, offset: 4200, state: 'phone, product cards, reduced motion', reducedMotion: true },
-  { file: 'home-m-access.png', route: '/', width: 390, height: 844, offset: 7000, state: 'phone, access table, reduced motion', reducedMotion: true }
+  { file: 'home-m-cards.png', route: '/', width: 390, height: 844, offset: 5500, state: 'phone, product cards, reduced motion', reducedMotion: true },
+  { file: 'home-m-access.png', route: '/', width: 390, height: 844, offset: 9300, state: 'phone, access table, reduced motion', reducedMotion: true }
 ]);
 
 function candidates() {
