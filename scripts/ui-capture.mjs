@@ -43,6 +43,20 @@ export const SHOTS = Object.freeze([
   // Ledger capabilities under the hero: badges bar and three feature cards, in both languages and at phone width.
   { file: 'product-capabilities-en.png', route: '/en/products/oathra/', width: 1440, height: 1000, offset: 1000, state: 'English capability badges and cards, reduced motion', reducedMotion: true },
   { file: 'product-m-capabilities.png', route: '/products/ai-meeting/', width: 390, height: 1400, offset: 1450, state: 'phone, capability badges and cards, reduced motion', reducedMotion: true },
+  // Genie only: the next-UI design frames under "current boundaries", and the app icon beside the heading.
+  { file: 'product-next-ui-ja.png', route: '/products/genie/', width: 1440, height: 1000, offset: 3250, state: 'Genie next-UI design frames, Japanese, reduced motion', reducedMotion: true },
+  { file: 'product-next-ui-en.png', route: '/en/products/genie/', width: 1440, height: 1000, offset: 2850, state: 'Genie next-UI design frames, English, reduced motion', reducedMotion: true },
+  { file: 'product-next-ui-760.png', route: '/products/genie/', width: 760, height: 1600, offset: 4200, state: '760px, Genie next-UI frames in one column, reduced motion', reducedMotion: true },
+  { file: 'product-next-ui-380.png', route: '/products/genie/', width: 380, height: 1600, offset: 4950, state: '380px, Genie next-UI frames, reduced motion', reducedMotion: true },
+  { file: 'product-next-ui-768.png', route: '/products/genie/', width: 768, height: 1400, offset: 4150, state: '768px, Genie next-UI frames in three columns, reduced motion', reducedMotion: true },
+  { file: 'product-next-ui-1024.png', route: '/products/genie/', width: 1024, height: 1100, offset: 3500, state: '1024px, Genie next-UI frames in three columns, reduced motion', reducedMotion: true },
+  { file: 'product-next-ui-1920.png', route: '/products/genie/', width: 1920, height: 1100, offset: 3100, state: '1920px, Genie next-UI frames in five columns, reduced motion', reducedMotion: true },
+  { file: 'product-next-ui-320.png', route: '/products/genie/', width: 320, height: 1800, offset: 5300, state: '320px, Genie next-UI frames, reduced motion', reducedMotion: true },
+  { file: 'product-next-ui-320-en.png', route: '/en/products/genie/', width: 320, height: 1800, offset: 4700, state: '320px English, Genie next-UI frames, reduced motion', reducedMotion: true },
+  { file: 'product-boundaries-oathra.png', route: '/products/oathra/', width: 1440, height: 1000, offset: 3000, state: 'Oathra current boundaries, unchanged external design link, reduced motion', reducedMotion: true },
+  { file: 'product-genie-380.png', route: '/products/genie/', width: 380, height: 900, state: '380px, Genie hero with app icon, reduced motion', reducedMotion: true },
+  { file: 'product-genie-760-tall.png', route: '/products/genie/', width: 760, height: 7000, state: '760px whole page (to locate bands), reduced motion', reducedMotion: true },
+  { file: 'product-genie-380-tall.png', route: '/products/genie/', width: 380, height: 9000, state: '380px whole page (to locate bands), reduced motion', reducedMotion: true },
   { file: 'product-capabilities-ja.png', route: '/products/genie/', width: 1440, height: 1000, offset: 1000, state: 'Japanese capability badges and cards, reduced motion', reducedMotion: true },
   { file: 'product-capabilities-dark.png', route: '/en/products/ai-meeting/', width: 1440, height: 1000, offset: 1000, state: 'dark palette capability badges and cards, reduced motion', reducedMotion: true },
   // Widths between the phone and the desktop shots, where layouts usually break.
@@ -131,10 +145,12 @@ export async function capture() {
       await fs.writeFile(path.join(mirror, `assets/offset-${offset}.css`), `html{margin-top:-${offset}px}\n`);
     }
     // One offset page per (route, offset) pair, so any built route can be captured below the fold.
+    // The page is shifted instead of scrolled, so lazy images would never start loading; the mirror
+    // (evidence only, never deployed) loads them eagerly so the shot shows the state a reader sees after scrolling.
     for (const shot of SHOTS.filter(shot => shot.offset)) {
       const dir = shot.route.replace(/^\//, '');
       const page = await fs.readFile(path.join(mirror, dir, 'index.html'), 'utf8');
-      await fs.writeFile(path.join(mirror, dir, `offset-${shot.offset}.html`), page.replace('</head>', `<link rel="stylesheet" href="/assets/offset-${shot.offset}.css"></head>`));
+      await fs.writeFile(path.join(mirror, dir, `offset-${shot.offset}.html`), page.replace('</head>', `<link rel="stylesheet" href="/assets/offset-${shot.offset}.css"></head>`).replaceAll(' loading="lazy"', '').replaceAll(' decoding="async"', ''));
     }
   }
   const server = spawn(process.execPath, [path.join(root, 'scripts/serve.mjs')], { cwd: root, env: { ...process.env, PORT: String(PORT) }, stdio: 'ignore' });

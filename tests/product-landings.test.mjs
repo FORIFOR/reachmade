@@ -33,7 +33,8 @@ for (const id of landingIds) for (const lang of ['ja','en']) {
     assert.ok(html.includes(escaped(x.primary[0])));
     assert.match(html,lang==='ja'?/13秒で実演を見る/:/See it in 13 seconds/);
     assert.match(html,lang==='ja'?/約13秒.*再生速度は変えていません/:/about 13 seconds; playback speed is unchanged/);
-    assert.match(html,lang==='ja'?/現行製品の実演や、新UIの実装完了を示すものではありません/:/not a demonstration of the current product/);
+    if (id==='genie') assert.match(html,lang==='ja'?/現行の製品にはまだ入っていません。実機での動作は未確認です/:/is not in the current product\. It has not been checked on a real Mac/);
+    else assert.match(html,lang==='ja'?/現行製品の実演や、新UIの実装完了を示すものではありません/:/not a demonstration of the current product/);
     assert.equal((html.match(/class="owned-hero-badges"/g)||[]).length,1);
     assert.equal((html.match(/<li><strong>/g)||[]).length,3);
     assert.equal((html.match(/class="owned-feature-card"/g)||[]).length,3);
@@ -107,4 +108,43 @@ test('capability layer reaches the shared stylesheet exactly once',async()=>{
   assert.equal((css.match(/\.owned-product \.owned-hero-badges\{display:grid/g)||[]).length,1);
   assert.equal((css.match(/\.owned-product \.owned-feature-card\{background/g)||[]).length,1);
   assert.match(css,/@media \(forced-colors:active\)\{\s*\.owned-product \.owned-hero-badges-bar/);
+});
+
+test('Genie shows five labelled next-UI design frames and its app icon; the other products are unchanged',async()=>{
+  for (const lang of ['ja','en']) {
+    const x=landingExperience.genie[lang];
+    const html=await fs.readFile(path.join(root,'dist',landingRoute('genie',lang),'index.html'),'utf8');
+    assert.equal((html.match(/class="owned-next-ui__frame"/g)||[]).length,5);
+    assert.equal(html.split(escaped(x.nextUi.label)).length-1,5,'each frame carries the design-preview label');
+    assert.ok(html.includes(escaped(x.nextUi.intro)));
+    assert.match(x.nextUi.intro,lang==='ja'?/実アプリの録画ではありません/:/not a recording of the app/);
+    assert.match(x.nextUi.intro,lang==='ja'?/コマの中の内容は架空の例です/:/The content inside the frames is fictional/);
+    assert.ok(html.includes(`<p class="owned-icon-note">${escaped(x.iconNote)}</p>`),'the icon is marked as not yet in the current app');
+    assert.match(x.iconNote,lang==='ja'?/現行版のアプリにはまだ入っていません/:/not yet in the current app/);
+    assert.ok(html.includes(escaped(x.nextUi.studyLabel)),'the external design film link says where it goes');
+    // Checked 2026-09-28 against FORIFOR/genie: the five screens exist on main; the one-surface redesign is on an
+    // unmerged branch and not verified on a device. "Not implemented" would be false, "shipped" would be false.
+    assert.doesNotMatch(JSON.stringify(x.nextUi),/未実装|not implemented|実装済み|shipped|available now/i);
+    for (const [i,f] of x.nextUi.frames.entries()) {
+      assert.equal(f.src,`/assets/products/genie/next-ui-0${i+1}.jpg`);
+      assert.ok(f.alt.length>10);
+      assert.ok(html.includes(`<a href="${f.src}"><img src="${f.src}" width="1600" height="900" loading="lazy" decoding="async" alt="${escaped(f.alt)}">`));
+      await fs.access(path.join(root,'dist',f.src));
+    }
+    assert.match(html,/<h1><img class="owned-product-icon" src="\/assets\/products\/genie\/icon-128\.png" width="128" height="128" alt="">/);
+    await fs.access(path.join(root,'dist',x.icon));
+  }
+  for (const id of landingIds.filter(id=>id!=='genie')) for (const lang of ['ja','en']) {
+    const html=await fs.readFile(path.join(root,'dist',landingRoute(id,lang),'index.html'),'utf8');
+    assert.doesNotMatch(html,/owned-next-ui|owned-product-icon|owned-icon-note/,`${id}/${lang} keeps its current boundaries`);
+    assert.match(html,lang==='ja'?/別公開の設計動画は、次のUIを考えるためのプレビューです/:/The separate design film is a proposal for a future interface/);
+  }
+});
+
+test('a missing Genie next-UI frame stops the build instead of shipping a broken figure',async()=>{
+  const { writeProductLandings } = await import('../src/product-landings.mjs');
+  const { recordings } = await import('../src/films.mjs');
+  const tmp=await fs.mkdtemp(path.join((await import('node:os')).tmpdir(),'landing-'));
+  try { await assert.rejects(writeProductLandings(tmp,products,config,recordings),/Missing landing asset for genie\/ja/); }
+  finally { await fs.rm(tmp,{recursive:true,force:true}); }
 });

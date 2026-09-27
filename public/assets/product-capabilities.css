@@ -31,3 +31,19 @@
 }
 .owned-product .owned-features__source{margin:24px 0 0;font-size:13px;line-height:1.7;color:var(--muted)}
 .owned-product .owned-features__source a{color:var(--ink)}
+
+/* Genie next-UI frames: five stills of a design file, labelled as unreleased. Full width under the current scope. */
+.owned-product .owned-next-ui{grid-column:1/-1;border-top:1px solid var(--rule);padding-top:28px}
+.owned-product .owned-next-ui__frames{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:16px;list-style:none;padding:0;margin:24px 0}
+.owned-product .owned-next-ui__frame figure{margin:0;display:flex;flex-direction:column;gap:10px}
+.owned-product .owned-next-ui__frame a{display:block;border:1px solid var(--rule);line-height:0}
+.owned-product .owned-next-ui__frame a:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.owned-product .owned-next-ui__frame img{display:block;width:100%;height:auto;aspect-ratio:16/7;object-fit:cover;object-position:50% 0}
+.owned-product .owned-next-ui__frame figcaption{display:flex;flex-direction:column;gap:4px;font-size:13px;line-height:1.7;color:var(--muted)}
+.owned-product .owned-next-ui__frame figcaption strong{font-size:14px;font-weight:630;color:var(--ink)}
+.owned-product .owned-next-ui__label{font-size:11px;font-weight:700;letter-spacing:.06em;color:var(--accent)}
+.owned-product .owned-icon-note{font-size:13px;color:var(--muted)}
+.owned-product .owned-product-icon{display:inline-block;width:.86em;height:.86em;vertical-align:-.1em;margin-right:.22em}
+@media (max-width:1100px){.owned-product .owned-next-ui__frames{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:760px){.owned-product .owned-next-ui__frames{grid-template-columns:1fr}}
+@media (forced-colors:active){.owned-product .owned-next-ui,.owned-product .owned-next-ui__frame a{border-color:CanvasText}}
