@@ -11,7 +11,7 @@ Reachmade Lab の親サイトはすでに作成・公開されています。
 - `www`: [https://www.reachmade.com/](https://www.reachmade.com/) → apex へ 301（確認）
 - 親サイトのページ: 日本語・英語、製品一覧、企業向け支援、開発記録、About、相談、プライバシー
 - 実装: `FORIFOR/reachmade` の静的サイトと Cloudflare Workers Static Assets
-- 問い合わせ: AI Meeting の既存窓口への外部リンク。Reachmade 専用フォーム・メールの受信確認は未完了
+- 問い合わせ: サイト内の受付フォーム（`/contact/`）から、同一オリジンの Worker（`/api/inquiries`）経由で Google Cloud の受付へ転送し、保存後に受付番号を表示する。本番受付側の保存・認可・重複防止はローカルのモック検証のみで、実受信の確認は未完了（`docs/RELEASE_CHECKLIST.md` の項目）
 
 ### 製品入口の台帳
 
