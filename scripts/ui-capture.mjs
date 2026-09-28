@@ -48,6 +48,20 @@ export const SHOTS = Object.freeze([
   { file: 'home-m-chapter.png', route: '/', width: 390, height: 844, scrollTo: '[data-v4-chapter="ai-meeting"]', state: 'phone, AI Meeting chapter, real time', realtime: true },
   { file: 'home-m-services.png', route: '/', width: 390, height: 844, scrollTo: '#services', state: 'phone, services band, reduced motion, real time', reducedMotion: true, realtime: true },
   { file: 'home-m-access.png', route: '/', width: 390, height: 844, scrollTo: '#access', state: 'phone, access table, reduced motion, real time', reducedMotion: true, realtime: true },
+  // Japanese Genie page (LP re-composition): its sections at a readable size, real time.
+  { file: 'genie-lp-hero.png', route: '/products/genie/', width: 1440, height: 1000, state: 'Genie LP hero, reduced motion, real time', reducedMotion: true, realtime: true },
+  { file: 'genie-lp-features.png', route: '/products/genie/', width: 1440, height: 1000, scrollTo: '#features', state: 'Genie LP features with stills, reduced motion, real time', reducedMotion: true, realtime: true },
+  { file: 'genie-lp-demos.png', route: '/products/genie/', width: 1440, height: 1000, scrollTo: '#demos', state: 'Genie LP three demos, reduced motion, real time', reducedMotion: true, realtime: true },
+  { file: 'genie-lp-artifacts.png', route: '/products/genie/', width: 1440, height: 1000, scrollTo: '#artifacts', state: 'Genie LP saved artifacts, reduced motion, real time', reducedMotion: true, realtime: true },
+  { file: 'genie-lp-trust.png', route: '/products/genie/', width: 1440, height: 1000, scrollTo: '#trust', state: 'Genie LP scope, reduced motion, real time', reducedMotion: true, realtime: true },
+  { file: 'genie-lp-start.png', route: '/products/genie/', width: 1440, height: 1000, scrollTo: '#start', state: 'Genie LP first task, reduced motion, real time', reducedMotion: true, realtime: true },
+  { file: 'genie-lp-m-hero.png', route: '/products/genie/', width: 390, height: 844, state: 'phone, Genie LP hero, reduced motion, real time', reducedMotion: true, realtime: true },
+  // JavaScript disabled, at phone width, section by section (a whole-page shot is too small to read).
+  { file: 'genie-lp-nojs-demos.png', route: '/products/genie/', width: 390, height: 1400, scrollTo: '#demos', state: 'phone, JavaScript disabled, three demos, real time', realtime: true, noScript: true },
+  { file: 'genie-lp-nojs-artifacts.png', route: '/products/genie/', width: 390, height: 1400, scrollTo: '#artifacts', state: 'phone, JavaScript disabled, saved artifacts, real time', realtime: true, noScript: true },
+  { file: 'genie-lp-nojs-next-ui.png', route: '/products/genie/', width: 390, height: 1400, scrollTo: '#next-ui', state: 'phone, JavaScript disabled, next-UI frames, real time', realtime: true, noScript: true },
+  { file: 'home-nojs-chapter.png', route: '/', width: 390, height: 1400, scrollTo: '[data-v4-chapter="launchloom"]', state: 'phone, JavaScript disabled, Launchloom chapter, real time', realtime: true, noScript: true },
+  { file: 'genie-lp-m-demos.png', route: '/products/genie/', width: 390, height: 844, scrollTo: '#demos', state: 'phone, Genie LP demos, reduced motion, real time', reducedMotion: true, realtime: true },
   { file: 'home-en-desktop.png', route: '/en/', width: 1440, height: 1000, state: 'default' },
   { file: 'product-desktop.png', route: '/products/genie/', width: 1440, height: 1100, state: 'default' },
   { file: 'product-mobile.png', route: '/products/oathra/', width: 390, height: 900, state: 'default' },
@@ -64,14 +78,14 @@ export const SHOTS = Object.freeze([
   { file: 'product-capabilities-en.png', route: '/en/products/oathra/', width: 1440, height: 1000, offset: 1000, state: 'English capability badges and cards, reduced motion', reducedMotion: true },
   { file: 'product-m-capabilities.png', route: '/products/ai-meeting/', width: 390, height: 1400, offset: 1450, state: 'phone, capability badges and cards, reduced motion', reducedMotion: true },
   // Genie only: the next-UI design frames under "current boundaries", and the app icon beside the heading.
-  { file: 'product-next-ui-ja.png', route: '/products/genie/', width: 1440, height: 1000, offset: 3250, state: 'Genie next-UI design frames, Japanese, reduced motion', reducedMotion: true },
+  { file: 'product-next-ui-ja.png', route: '/products/genie/', width: 1440, height: 1000, scrollTo: '#next-ui', state: 'Genie next-UI design frames, Japanese, reduced motion, real time', reducedMotion: true, realtime: true },
   { file: 'product-next-ui-en.png', route: '/en/products/genie/', width: 1440, height: 1000, offset: 2850, state: 'Genie next-UI design frames, English, reduced motion', reducedMotion: true },
-  { file: 'product-next-ui-760.png', route: '/products/genie/', width: 760, height: 1600, offset: 4200, state: '760px, Genie next-UI frames in one column, reduced motion', reducedMotion: true },
-  { file: 'product-next-ui-380.png', route: '/products/genie/', width: 380, height: 1600, offset: 4950, state: '380px, Genie next-UI frames, reduced motion', reducedMotion: true },
-  { file: 'product-next-ui-768.png', route: '/products/genie/', width: 768, height: 1400, offset: 4150, state: '768px, Genie next-UI frames in three columns, reduced motion', reducedMotion: true },
-  { file: 'product-next-ui-1024.png', route: '/products/genie/', width: 1024, height: 1100, offset: 3500, state: '1024px, Genie next-UI frames in three columns, reduced motion', reducedMotion: true },
-  { file: 'product-next-ui-1920.png', route: '/products/genie/', width: 1920, height: 1100, offset: 3100, state: '1920px, Genie next-UI frames in five columns, reduced motion', reducedMotion: true },
-  { file: 'product-next-ui-320.png', route: '/products/genie/', width: 320, height: 1800, offset: 5300, state: '320px, Genie next-UI frames, reduced motion', reducedMotion: true },
+  { file: 'product-next-ui-760.png', route: '/products/genie/', width: 760, height: 1600, scrollTo: '#next-ui', state: '760px, Genie next-UI frames in one column, reduced motion, real time', reducedMotion: true, realtime: true },
+  { file: 'product-next-ui-380.png', route: '/products/genie/', width: 380, height: 1600, scrollTo: '#next-ui', state: '380px, Genie next-UI frames, reduced motion, real time', reducedMotion: true, realtime: true },
+  { file: 'product-next-ui-768.png', route: '/products/genie/', width: 768, height: 1400, scrollTo: '#next-ui', state: '768px, Genie next-UI frames in three columns, reduced motion, real time', reducedMotion: true, realtime: true },
+  { file: 'product-next-ui-1024.png', route: '/products/genie/', width: 1024, height: 1100, scrollTo: '#next-ui', state: '1024px, Genie next-UI frames in three columns, reduced motion, real time', reducedMotion: true, realtime: true },
+  { file: 'product-next-ui-1920.png', route: '/products/genie/', width: 1920, height: 1100, scrollTo: '#next-ui', state: '1920px, Genie next-UI frames in five columns, reduced motion, real time', reducedMotion: true, realtime: true },
+  { file: 'product-next-ui-320.png', route: '/products/genie/', width: 320, height: 1800, scrollTo: '#next-ui', state: '320px, Genie next-UI frames, reduced motion, real time', reducedMotion: true, realtime: true },
   { file: 'product-next-ui-320-en.png', route: '/en/products/genie/', width: 320, height: 1800, offset: 4700, state: '320px English, Genie next-UI frames, reduced motion', reducedMotion: true },
   { file: 'product-boundaries-oathra.png', route: '/products/oathra/', width: 1440, height: 1000, offset: 3000, state: 'Oathra current boundaries, unchanged external design link, reduced motion', reducedMotion: true },
   { file: 'product-genie-380.png', route: '/products/genie/', width: 380, height: 900, state: '380px, Genie hero with app icon, reduced motion', reducedMotion: true },
@@ -154,6 +168,7 @@ async function captureRealtime(binary, shots) {
     for (const shot of shots) {
       await send('Emulation.setDeviceMetricsOverride', { width: shot.width, height: shot.height, deviceScaleFactor: 1, mobile: shot.width < 600 });
       await send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: shot.reducedMotion ? 'reduce' : 'no-preference' }] });
+      await send('Emulation.setScriptExecutionDisabled', { value: Boolean(shot.noScript) });
       loaded = false;
       await send('Page.navigate', { url: ORIGIN + shot.route });
       for (let i = 0; i < 150 && !loaded; i++) await sleep(100);
@@ -167,7 +182,7 @@ async function captureRealtime(binary, shots) {
         if (!found) throw new Error(`Real-time capture: ${shot.file} has no ${shot.scrollTo}`);
         await sleep(1600);
       }
-      const overflow = await evaluate('document.documentElement.scrollWidth > document.documentElement.clientWidth');
+      const overflow = shot.noScript ? null : await evaluate('document.documentElement.scrollWidth > document.documentElement.clientWidth');
       let clip;
       if (shot.fullPage) { const m = await send('Page.getLayoutMetrics'); clip = { x: 0, y: 0, width: shot.width, height: Math.min(Math.ceil(m.result.cssContentSize.height), 16000), scale: 1 }; }
       const r = await send('Page.captureScreenshot', { format: 'png', ...(clip ? { clip, captureBeyondViewport: true } : {}) });
