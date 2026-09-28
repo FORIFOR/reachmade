@@ -1,5 +1,5 @@
-/** Fifteen-second introduction films: the Reachmade overview on the Japanese home, and one
- * film each on the Japanese Genie and Oathra pages. They are edited films with motion graphics,
+/** Fifteen-second introduction films: one film each on the Japanese Genie and Oathra pages.
+ * (The Japanese home offers the same two films inside its product stage — see home-v4.mjs.) They are edited films with motion graphics,
  * so every placement says so beside the player, and says which parts are real. Native controls
  * only: nothing autoplays, nothing downloads before a press, and the page needs no script. */
 import fs from 'node:fs/promises';
@@ -10,16 +10,6 @@ const MARK = '/* fifteen-second films */';
 const SECTION = 'data-film15';
 
 export const FILMS = Object.freeze({
-  home: Object.freeze({
-    page: 'index.html',
-    before: '<section class="container lab-explorer" id="explore"',
-    src: '/media/films/reachmade-15s.mp4',
-    poster: '/media/films/reachmade-15s.jpg',
-    label: 'Reachmade Labの15秒紹介映像',
-    kicker: '15秒の紹介映像',
-    title: ['6つの道具を、', '15秒で。'],
-    note: 'モーショングラフィックスで作った紹介映像です。映像内の画面は演出のための再現で、実物の画面と検証記録は、このすぐ下の各製品で確かめられます。',
-  }),
   genie: Object.freeze({
     page: 'products/genie/index.html',
     before: '<section class="container owned-flow" id="flow"',

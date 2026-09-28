@@ -19,11 +19,14 @@ test('each film appears once, before its anchor, on its Japanese page only', asy
     const en = await read(path.join('en', f.page));
     assert.doesNotMatch(en, /data-film15/, `${id}: the English page gets no Japanese film`);
   }
-  // The home still reads hero → recorded result → films → explore → products.
+  // The v4 home offers the Genie and Oathra films inside its product stage, labelled as edited films.
   const home = await read('index.html');
-  const at = s => home.indexOf(s);
-  assert.ok(at('data-outcome-recorded-result') < at('data-film15="home"'));
-  assert.ok(at('data-film15="home"') < at('id="explore"'));
+  assert.doesNotMatch(home, /data-film15=/);
+  for (const id of ['genie', 'oathra']) {
+    assert.ok(home.includes(`data-v4-film-src="${FILMS[id].src}"`), `${id} film offered on the home`);
+    assert.ok(home.includes(`href="/products/${id}/#film15-${id}-title"`), `${id} film reachable without JavaScript`);
+  }
+  assert.match(home, /演出を含む/);
 });
 
 test('players never autoplay, never preload, and say what they are', async () => {
@@ -64,7 +67,10 @@ test('packaged films match their manifest and stay small', async () => {
   }
   const css = await read('assets/showcase.css');
   assert.equal(css.split('/* fifteen-second films */').length - 1, 1, 'the film layer is appended exactly once');
-  assert.doesNotMatch(css.split('/* fifteen-second films */')[1], /animation|transition/);
+  // Only the films layer itself: later layers (capabilities, home v4) are appended after it and checked by their own tests.
+  const filmsLayer = css.split('/* fifteen-second films */')[1].split(/\n\/\* REACHMADE_[A-Z0-9_]+ \*\//)[0];
+  assert.ok(filmsLayer.includes('.rm-film15'));
+  assert.doesNotMatch(filmsLayer, /animation|transition/);
 });
 
 test('every film is served with byte ranges, from its own path', async () => {

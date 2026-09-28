@@ -23,10 +23,31 @@ const PORT = Number(process.env.UI_CAPTURE_PORT || 4179);
 const ORIGIN = `http://127.0.0.1:${PORT}`;
 
 export const SHOTS = Object.freeze([
-  { file: 'home-desktop.png', route: '/', width: 1440, height: 1000, state: 'default' },
-  { file: 'home-mobile.png', route: '/', width: 390, height: 844, state: 'default' },
-  { file: 'home-reduced-motion.png', route: '/', width: 1440, height: 1000, state: 'prefers-reduced-motion: reduce', reducedMotion: true },
-  { file: 'home-narrow.png', route: '/', width: 320, height: 900, state: 'default' },
+  // Japanese home (v4). Its chapters, sticky stage and reveals run on IntersectionObserver, which the
+  // --screenshot mode below never advances, so these shots use a real-time browser over CDP (realtime: true):
+  // scrollTo scrolls the element into view the way a reader does; fullPage scrolls through once first.
+  { file: 'home-desktop.png', route: '/', width: 1440, height: 1000, state: 'default, real time', realtime: true },
+  { file: 'home-mobile.png', route: '/', width: 390, height: 844, state: 'default, real time', realtime: true },
+  { file: 'home-reduced-motion.png', route: '/', width: 1440, height: 1000, state: 'prefers-reduced-motion: reduce, real time', reducedMotion: true, realtime: true },
+  { file: 'home-narrow.png', route: '/', width: 320, height: 900, state: 'default, real time', realtime: true },
+  { file: 'home-768.png', route: '/', width: 768, height: 1200, state: 'default, real time', realtime: true },
+  { file: 'home-960.png', route: '/', width: 960, height: 900, state: 'default, real time', realtime: true },
+  { file: 'home-1024.png', route: '/', width: 1024, height: 900, state: 'default, real time', realtime: true },
+  { file: 'home-1920.png', route: '/', width: 1920, height: 1080, state: 'default, real time', realtime: true },
+  { file: 'home-tall-ja.png', route: '/', width: 1440, height: 1000, state: 'whole page after scrolling through, reduced motion, real time', reducedMotion: true, realtime: true, fullPage: true },
+  { file: 'home-mobile-tall.png', route: '/', width: 390, height: 844, state: 'whole page after scrolling through, reduced motion, real time', reducedMotion: true, realtime: true, fullPage: true },
+  { file: 'home-band-reel.png', route: '/', width: 1440, height: 1000, scrollTo: '#reel', state: 'six recordings reel, reduced motion, real time', reducedMotion: true, realtime: true },
+  { file: 'home-band-chapter-genie.png', route: '/', width: 1440, height: 1000, scrollTo: '[data-v4-chapter="genie"]', state: 'Genie chapter with sticky stage, real time', realtime: true },
+  { file: 'home-band-chapter-oathra.png', route: '/', width: 1440, height: 1000, scrollTo: '[data-v4-chapter="oathra"]', state: 'Oathra chapter, stage switched, real time', realtime: true },
+  { file: 'home-band-chapter-launchloom.png', route: '/', width: 1440, height: 1000, scrollTo: '[data-v4-chapter="launchloom"]', state: 'Launchloom chapter, last stage, real time', realtime: true },
+  { file: 'home-band-principles.png', route: '/', width: 1440, height: 1000, scrollTo: '#principles', state: 'principles, reduced motion, real time', reducedMotion: true, realtime: true },
+  { file: 'home-band-services.png', route: '/', width: 1440, height: 1000, scrollTo: '#services', state: 'services band, reduced motion, real time', reducedMotion: true, realtime: true },
+  { file: 'home-band-access.png', route: '/', width: 1440, height: 1000, scrollTo: '#access', state: 'access table, reduced motion, real time', reducedMotion: true, realtime: true },
+  { file: 'home-band-close.png', route: '/', width: 1440, height: 1000, scrollTo: '#faq', state: 'FAQ and contact, reduced motion, real time', reducedMotion: true, realtime: true },
+  { file: 'home-m-reel.png', route: '/', width: 390, height: 844, scrollTo: '#reel', state: 'phone, recordings reel, reduced motion, real time', reducedMotion: true, realtime: true },
+  { file: 'home-m-chapter.png', route: '/', width: 390, height: 844, scrollTo: '[data-v4-chapter="ai-meeting"]', state: 'phone, AI Meeting chapter, real time', realtime: true },
+  { file: 'home-m-services.png', route: '/', width: 390, height: 844, scrollTo: '#services', state: 'phone, services band, reduced motion, real time', reducedMotion: true, realtime: true },
+  { file: 'home-m-access.png', route: '/', width: 390, height: 844, scrollTo: '#access', state: 'phone, access table, reduced motion, real time', reducedMotion: true, realtime: true },
   { file: 'home-en-desktop.png', route: '/en/', width: 1440, height: 1000, state: 'default' },
   { file: 'product-desktop.png', route: '/products/genie/', width: 1440, height: 1100, state: 'default' },
   { file: 'product-mobile.png', route: '/products/oathra/', width: 390, height: 900, state: 'default' },
@@ -37,7 +58,6 @@ export const SHOTS = Object.freeze([
   // no animation frames, so a default-motion capture can freeze mid-entrance and make
   // a section look washed out that is not. Reduced motion disables those animations
   // outright, so the colours in these files are the settled ones.
-  { file: 'home-tall-ja.png', route: '/', width: 1440, height: 9400, state: 'whole page, reduced motion', reducedMotion: true },
   { file: 'home-tall-en.png', route: '/en/', width: 1440, height: 8400, state: 'whole page, reduced motion', reducedMotion: true },
   { file: 'product-tall-genie.png', route: '/products/genie/', width: 1440, height: 5600, state: 'whole page, reduced motion', reducedMotion: true },
   // Ledger capabilities under the hero: badges bar and three feature cards, in both languages and at phone width.
@@ -60,14 +80,9 @@ export const SHOTS = Object.freeze([
   { file: 'product-capabilities-ja.png', route: '/products/genie/', width: 1440, height: 1000, offset: 1000, state: 'Japanese capability badges and cards, reduced motion', reducedMotion: true },
   { file: 'product-capabilities-dark.png', route: '/en/products/ai-meeting/', width: 1440, height: 1000, offset: 1000, state: 'dark palette capability badges and cards, reduced motion', reducedMotion: true },
   // Widths between the phone and the desktop shots, where layouts usually break.
-  { file: 'home-768.png', route: '/', width: 768, height: 1200, state: 'default' },
-  { file: 'home-960.png', route: '/', width: 960, height: 900, state: 'default, narrowest two-column width' },
-  { file: 'home-1024.png', route: '/', width: 1024, height: 900, state: 'default' },
-  { file: 'home-1920.png', route: '/', width: 1920, height: 1080, state: 'default' },
   // Whole page on a phone. Anchor routes are useless here: `html{scroll-behavior:smooth}`
   // needs animation frames, which this headless browser does not produce, so a
   // `/#faq` capture silently returns the top of the page instead.
-  { file: 'home-mobile-tall.png', route: '/', width: 390, height: 13600, state: 'whole page, reduced motion', reducedMotion: true },
   // The English page at phone widths. Its copy is longer than the Japanese, so a
   // badge or label that wraps here does not show up in any of the shots above.
   { file: 'home-en-mobile.png', route: '/en/', width: 390, height: 844, state: 'default' },
@@ -76,22 +91,10 @@ export const SHOTS = Object.freeze([
   // below the first view is unreadable in it; `offset` scrolls the page up by that
   // many CSS px through an injected stylesheet, because this browser produces no
   // animation frames and `/#anchor` silently returns the top of the page.
-  { file: 'home-band-lab.png', route: '/', width: 1440, height: 1000, offset: 3200, state: 'product lab band, reduced motion', reducedMotion: true },
-  { file: 'home-band-cards.png', route: '/', width: 1440, height: 1000, offset: 4150, state: 'product card grid, reduced motion', reducedMotion: true },
-  { file: 'home-band-access.png', route: '/', width: 1440, height: 1000, offset: 6350, state: 'access table, reduced motion', reducedMotion: true },
-  { file: 'home-band-close.png', route: '/', width: 1440, height: 1000, offset: 7950, state: 'FAQ and closing CTA, reduced motion', reducedMotion: true },
   // The recording band and the try band at full resolution. A 8400px whole-page shot
   // renders too small to read, so the bands that carry the proof get their own frames.
-  { file: 'home-band-proof.png', route: '/', width: 1440, height: 1000, offset: 780, state: 'real app recording band, reduced motion', reducedMotion: true },
-  { file: 'home-band-try.png', route: '/', width: 1440, height: 1000, offset: 1700, state: 'shortest-path band, reduced motion', reducedMotion: true },
   // Phone widths below the fold, because home-mobile-tall.png is unreadable as one image.
   // The fifteen-second film band (Japanese home only), desktop and phone.
-  { file: 'home-band-film.png', route: '/', width: 1440, height: 1000, offset: 2600, state: 'fifteen-second film band, reduced motion', reducedMotion: true },
-  { file: 'home-m-film.png', route: '/', width: 390, height: 1200, offset: 2700, state: 'phone, fifteen-second film band, reduced motion', reducedMotion: true },
-  { file: 'home-m-nav.png', route: '/', width: 390, height: 844, offset: 820, state: 'phone, task navigation, reduced motion', reducedMotion: true },
-  { file: 'home-m-proof.png', route: '/', width: 390, height: 844, offset: 1700, state: 'phone, recording band, reduced motion', reducedMotion: true },
-  { file: 'home-m-cards.png', route: '/', width: 390, height: 844, offset: 5500, state: 'phone, product cards, reduced motion', reducedMotion: true },
-  { file: 'home-m-access.png', route: '/', width: 390, height: 844, offset: 9300, state: 'phone, access table, reduced motion', reducedMotion: true }
 ]);
 
 function candidates() {
@@ -128,6 +131,61 @@ async function waitForServer(timeoutMs = 15000) {
   throw new Error(`Preview server did not answer on ${ORIGIN}. Run "npm run build" first.`);
 }
 
+// Real-time capture over the Chrome DevTools Protocol (Node's built-in WebSocket, no dependency).
+// Frames and IntersectionObserver advance, unlike --screenshot with a virtual time budget.
+async function captureRealtime(binary, shots) {
+  const port = PORT + 7;
+  const profile = await fs.mkdtemp(path.join(os.tmpdir(), 'reachmade-rt-'));
+  const chrome = spawn(binary, ['--headless=new', `--remote-debugging-port=${port}`, `--user-data-dir=${profile}`, '--hide-scrollbars', '--no-sandbox', 'about:blank'], { stdio: 'ignore' });
+  const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+  const results = [];
+  try {
+    let targets = [];
+    for (let i = 0; i < 100 && !targets.some(t => t.type === 'page'); i++) { try { targets = await (await fetch(`http://127.0.0.1:${port}/json/list`)).json(); } catch { await sleep(100); } }
+    const page = targets.find(t => t.type === 'page');
+    if (!page) throw new Error('Real-time capture: no browser page');
+    const ws = new WebSocket(page.webSocketDebuggerUrl);
+    await new Promise((resolve, reject) => { ws.addEventListener('open', resolve, { once: true }); ws.addEventListener('error', reject, { once: true }); });
+    let seq = 0; const pending = new Map(); let loaded = false;
+    ws.addEventListener('message', m => { const d = JSON.parse(m.data); if (d.id && pending.has(d.id)) { pending.get(d.id)(d); pending.delete(d.id); } else if (d.method === 'Page.loadEventFired') loaded = true; });
+    const send = (method, params = {}) => new Promise(resolve => { const id = ++seq; pending.set(id, resolve); ws.send(JSON.stringify({ id, method, params })); });
+    const evaluate = async expression => (await send('Runtime.evaluate', { expression, returnByValue: true, awaitPromise: true })).result?.result?.value;
+    await send('Page.enable');
+    for (const shot of shots) {
+      await send('Emulation.setDeviceMetricsOverride', { width: shot.width, height: shot.height, deviceScaleFactor: 1, mobile: shot.width < 600 });
+      await send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: shot.reducedMotion ? 'reduce' : 'no-preference' }] });
+      loaded = false;
+      await send('Page.navigate', { url: ORIGIN + shot.route });
+      for (let i = 0; i < 150 && !loaded; i++) await sleep(100);
+      await sleep(1200);
+      if (shot.fullPage) {
+        await evaluate(`(async () => { const h = document.documentElement.scrollHeight; for (let y = 0; y < h; y += innerHeight / 2) { scrollTo({ top: y, behavior: 'instant' }); await new Promise(r => setTimeout(r, 120)); } scrollTo({ top: 0, behavior: 'instant' }); })()`);
+        await sleep(800);
+      }
+      if (shot.scrollTo) {
+        const found = await evaluate(`(() => { const e = document.querySelector(${JSON.stringify(shot.scrollTo)}); if (!e) return false; e.scrollIntoView({ block: 'start', behavior: 'instant' }); return true; })()`);
+        if (!found) throw new Error(`Real-time capture: ${shot.file} has no ${shot.scrollTo}`);
+        await sleep(1600);
+      }
+      const overflow = await evaluate('document.documentElement.scrollWidth > document.documentElement.clientWidth');
+      let clip;
+      if (shot.fullPage) { const m = await send('Page.getLayoutMetrics'); clip = { x: 0, y: 0, width: shot.width, height: Math.min(Math.ceil(m.result.cssContentSize.height), 16000), scale: 1 }; }
+      const r = await send('Page.captureScreenshot', { format: 'png', ...(clip ? { clip, captureBeyondViewport: true } : {}) });
+      const target = path.join(OUT, shot.file);
+      await fs.writeFile(target, Buffer.from(r.result.data, 'base64'));
+      const bytes = fsSync.statSync(target).size;
+      results.push({ ...shot, bytes, url: ORIGIN + shot.route, horizontalOverflow: overflow, ...(clip ? { capturedHeight: clip.height } : {}) });
+      console.error(`[ui-capture] ${shot.file} ${shot.width}x${clip ? clip.height : shot.height} real time${overflow ? ' OVERFLOW' : ''} (${bytes} bytes)`);
+    }
+    ws.close();
+  } finally {
+    chrome.kill();
+    await sleep(300);
+    await fs.rm(profile, { recursive: true, force: true }).catch(() => {});
+  }
+  return results;
+}
+
 export async function capture() {
   await fs.access(path.join(root, 'dist/index.html')).catch(() => { throw new Error('dist/ is missing. Run "npm run build" first.'); });
   const binary = findBrowser();
@@ -160,7 +218,7 @@ export async function capture() {
   const shots = [];
   try {
     await waitForServer();
-    for (const shot of SHOTS) {
+    for (const shot of SHOTS.filter(shot => !shot.realtime)) {
       const target = path.join(OUT, shot.file);
       const url = shot.offset
         ? `http://127.0.0.1:${PORT + 1}${shot.route === '/' ? '' : shot.route.replace(/\/$/, '')}/offset-${shot.offset}.html`
@@ -179,6 +237,7 @@ export async function capture() {
       shots.push({ ...shot, bytes, url });
       console.error(`[ui-capture] ${shot.file} ${shot.width}x${shot.height} (${bytes} bytes)`);
     }
+    shots.push(...await captureRealtime(binary, SHOTS.filter(shot => shot.realtime)));
   } finally {
     server.kill();
     offsetServer?.kill();

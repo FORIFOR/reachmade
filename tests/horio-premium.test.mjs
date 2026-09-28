@@ -39,7 +39,8 @@ test('all design layers are imported before any CSS declarations',()=>{
 test('home leads with a clear product promise and a real product surface before JavaScript enhancement',()=>{
   // Assert the current outcome-led design, including the actual saved result.
   // Retired copy is not a contract; evidence, accessible actions and scope are.
-  for (const html of [home,en]) {
+  // The English home keeps the flagship composition; the Japanese home is v4 (tests/home-v4.test.mjs).
+  for (const html of [en]) {
     assert.match(html,/REACHMADE \/ INDEPENDENT AI STUDIO/);
     assert.match(html,/data-outcome-first="20260919-outcome-1"/);
     assert.match(html,/data-lab-experience="20260919-product-lab-1"/);
@@ -55,10 +56,11 @@ test('home leads with a clear product promise and a real product surface before 
     assert.match(html,/class="outcome-open-artifact" href="\/media\/originals\/genie\/orbit\.html"/);
     assert.doesNotMatch(html,/<video[^>]*\bautoplay\b/);
   }
-  assert.match(home,/思いついたら、<br>使えるかたちに。/);
-  assert.match(home,/6つの製品を、実物から選べます/);
-  assert.match(home,/サンプルから外部への送信・実行は行いません/);
-  assert.match(home,/ここで新しいAI生成は行いません/);
+  assert.match(home,/data-home-v4="/);
+  assert.equal((home.match(/<h1[\s>]/g)||[]).length,1);
+  assert.equal((home.match(/data-studio-choice=/g)||[]).length,6);
+  assert.match(home,/思いついたら、/);
+  assert.doesNotMatch(home,/<video[^>]*\bautoplay\b/);
   assert.match(en,/From an idea\.<br>To something real\./);
   assert.match(en,/Choose between six products/);
   assert.match(en,/Samples do not execute workflows or send data/);
