@@ -75,11 +75,11 @@
     },
     {
       "path": "/media/films/oathra-30s.jpg",
-      "bytes": 86999,
-      "sha256": "df7fc7d9ecdb9a38774e115019a0d044ad7bb0a744d26bf7c0132d5aacecd683",
+      "bytes": 76014,
+      "sha256": "35ab849a6426cae372fa0b44858979a7fb0d6a10d9f672dd7533d0520cc6fb67",
       "source": "/media/films/oathra-30s.mp4",
       "sourceSha256": "fd93f105a370a5fe1d0273e852ccb7498c27bb2ac7fcfec3b79aac339e6ae720",
-      "render": "ffmpeg -ss 18.0 -frames:v 1 -vf scale=1280:-1 -q:v 3 (ring closed at 3/3)"
+      "render": "ffmpeg -ss 18.0 -frames:v 1, crop=1564:880:0:0 (above the burned caption, ring closed at 3/3), scale=1280:720 -q:v 3"
     }
   ]
 }

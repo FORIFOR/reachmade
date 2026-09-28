@@ -79,6 +79,8 @@
 [data-oathra-lp] .olp-status__detail .owned-access .owned-requirements{margin:6px 0 0;font-size:13.5px;line-height:1.8;color:var(--olp-muted);max-width:none}
 [data-oathra-lp] .olp-status .owned-features__source{margin-top:16px}
 
+/* Keep Japanese phrases whole in the moved start and consult headings (320px broke '見比べ／る。'). */
+[data-oathra-lp] .owned-start h2,[data-oathra-lp] .owned-consult h2{word-break:keep-all;overflow-wrap:anywhere}
 @media (max-width:1000px){
 [data-oathra-lp] .olp-steps__list{grid-template-columns:repeat(2,minmax(0,1fr))}
 [data-oathra-lp] .olp-ring__cards{grid-template-columns:1fr}
