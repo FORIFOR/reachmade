@@ -26,7 +26,7 @@ const copy = {
   post:'兆候を調べる', postBody:'観測・仮説・不明点を分ける。', postLink:'調査の録画を見る',
   investigation:'ここで見るのは、調査側の実演。', investigationBody:'この録画は合成ログの調査デモです。送信前チェックや実環境の遮断を示すものではありません。',
   handoff:'作る。確かめる。磨く。', roleLabel:'役割の案内 · 実行中の状態ではありません',
-  roles:[['01','作成','まず、成果物の初稿を。'],['02','レビュー','確かめる視点を変える。'],['03','修正','指摘と差分を、次の版へ。']],
+  roles:[['01','作成','まず、成果物の初稿を。'],['02','レビュー','確かめる視点を変える。'],['03','修正','指摘は作成担当に戻り、次の版で直す。']],
   teamNote:'作業記録を読む前に、何ができたかを見る。未完了の部分も残します。',
   cinema:'一つの素材。伝え方は、いくつも。', cinemaNote:'出力形式の案内です。生成済みの作例は上の録画・元資料で確認できます。',
   formats:[['01','横動画','製品を紹介する'],['02','縦動画','モバイルへ届ける'],['03','LP','価値を一ページに'],['04','投稿案','公開前に見直す']]
@@ -43,7 +43,7 @@ const copy = {
   post:'Investigate a signal',postBody:'Separate observations, hypotheses and unknowns.',postLink:'Watch the investigation',
   investigation:'This recording shows investigation.',investigationBody:'A synthetic-log investigation demo. It does not demonstrate preflight checks or enforcement in a live environment.',
   handoff:'Draft. Review. Refine.',roleLabel:'Role guide · not a live execution status',
-  roles:[['01','Draft','Make the first artifact.'],['02','Review','Look at it from another angle.'],['03','Revise','Keep the feedback and the changes.']],
+  roles:[['01','Draft','Make the first artifact.'],['02','Review','Look at it from another angle.'],['03','Revise','Findings go back to the maker for the next revision.']],
   teamNote:'See what was made, then inspect the work behind it. Unfinished work stays visible.',
   cinema:'One source. More ways to show it.',cinemaNote:'An index of output formats, not four newly generated artifacts. Inspect the recording and source for published examples.',
   formats:[['01','Landscape film','Introduce the product'],['02','Vertical cut','Made for mobile'],['03','Landing page','Put the value on a page'],['04','Social draft','Review before publishing']]

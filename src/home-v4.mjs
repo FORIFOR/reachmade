@@ -28,7 +28,7 @@ const JS_MARK = '// REACHMADE_HOME_V4';
 const arrow = '<span aria-hidden="true">↗</span>';
 
 // Clip labels match public/media/products/manifest.json (edit.label.ja).
-const CLIP = Object.freeze({genie:'依頼から成果物へ','ai-meeting':'会話からタスクへ',oathra:'会話から証拠へ',aisecure:'兆候から調査へ','agent-team':'依頼から成果物へ',launchloom:'録画から公開素材へ'});
+const CLIP = Object.freeze({genie:'依頼から成果物へ','ai-meeting':'会話からタスクへ',oathra:'会話から証拠へ',aisecure:'兆候から調査へ','agent-team':'依頼から、確かめた版へ',launchloom:'録画から公開素材へ'});
 const CAT = Object.freeze({genie:'WORK','ai-meeting':'VOICE',oathra:'PHONE',aisecure:'SECURITY','agent-team':'AGENTS',launchloom:'MEDIA'});
 // What each product's footage is. Launchloom's source is a film the tool made about itself (ledger proof:
 // 自身で作った紹介映像), not a screen recording of the app, so it is never called a recording.

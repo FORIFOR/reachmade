@@ -155,8 +155,8 @@
         "speed": 1,
         "audio": false,
         "label": {
-          "ja": "依頼から成果物へ",
-          "en": "Brief to artifact"
+          "ja": "依頼から、確かめた版へ",
+          "en": "Request to checked version"
         }
       }
     },

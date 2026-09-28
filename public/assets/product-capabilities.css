@@ -47,3 +47,10 @@
 @media (max-width:1100px){.owned-product .owned-next-ui__frames{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media (max-width:760px){.owned-product .owned-next-ui__frames{grid-template-columns:1fr}}
 @media (forced-colors:active){.owned-product .owned-next-ui,.owned-product .owned-next-ui__frame a{border-color:CanvasText}}
+/* Agent Team design film inside the next-UI preview (moved from product-landings.css, which the build does not ship). */
+.owned-product .owned-next-ui__film{margin:0 0 24px}
+.owned-product .owned-next-ui__film video{display:block;width:100%;height:auto;aspect-ratio:16/9;background:#1b1a17;border:1px solid var(--rule)}
+.owned-product .owned-next-ui__film figcaption{margin-top:8px;font-size:13px;color:var(--muted)}
+@media (forced-colors:active){.owned-product .owned-next-ui__film video{border:1px solid CanvasText}}
+/* Agent Team: keep Japanese phrases whole ('確かめた／版', '確／認済みの版', a lone 'ら'). */
+html[lang=ja] body[data-art-direction].owned-product--agent-team .ad-hero h1,.owned-product--agent-team h1,.owned-product--agent-team .owned-flow h2,.owned-product--agent-team .owned-hero-badges li span{word-break:keep-all;overflow-wrap:anywhere}

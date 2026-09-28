@@ -37,6 +37,8 @@ for (const id of landingIds) for (const lang of ['ja','en']) {
     assert.match(html,lang==='ja'?/13秒で実演を見る/:/See it in 13 seconds/);
     assert.match(html,lang==='ja'?/約13秒.*再生速度は変えていません/:/about 13 seconds; playback speed is unchanged/);
     if (id==='genie') assert.match(html,lang==='ja'?/現行の製品にはまだ入っていません。実機での動作は未確認です/:/is not in the current product\. It has not been checked on a real Mac/);
+    // Products with a next-UI preview (Genie, Agent Team) state in its intro that the frames are renders, not recordings.
+    else if (x.nextUi) assert.match(x.nextUi.intro,lang==='ja'?/実アプリの録画ではありません/:/not (a )?recordings? of the app/);
     else assert.match(html,lang==='ja'?/現行製品の実演や、新UIの実装完了を示すものではありません/:/not a demonstration of the current product/);
     if (!recomposed) assert.equal((html.match(/class="owned-hero-badges"/g)||[]).length,1);
     if (!recomposed) assert.equal((html.match(/<li><strong>/g)||[]).length,3);
@@ -138,7 +140,7 @@ test('Genie shows five labelled next-UI design frames and its app icon; the othe
     assert.match(html,/<h1><img class="owned-product-icon" src="\/assets\/products\/genie\/icon-128\.png" width="128" height="128" alt="">/);
     await fs.access(path.join(root,'dist',x.icon));
   }
-  for (const id of landingIds.filter(id=>id!=='genie')) for (const lang of ['ja','en']) {
+  for (const id of landingIds.filter(id=>!landingExperience[id].ja.nextUi)) for (const lang of ['ja','en']) {
     const html=await fs.readFile(path.join(root,'dist',landingRoute(id,lang),'index.html'),'utf8');
     assert.doesNotMatch(html,/owned-next-ui|owned-product-icon|owned-icon-note/,`${id}/${lang} keeps its current boundaries`);
     assert.match(html,lang==='ja'?/別公開の設計動画は、次のUIを考えるためのプレビューです/:/The separate design film is a proposal for a future interface/);
@@ -151,4 +153,30 @@ test('a missing Genie next-UI frame stops the build instead of shipping a broken
   const tmp=await fs.mkdtemp(path.join((await import('node:os')).tmpdir(),'landing-'));
   try { await assert.rejects(writeProductLandings(tmp,products,config,recordings),/Missing landing asset for genie\/ja/); }
   finally { await fs.rm(tmp,{recursive:true,force:true}); }
+});
+
+test('Agent Team shows its next-UI design as labelled renders, and the Japanese design film never autoplays',async()=>{
+  for (const lang of ['ja','en']) {
+    const x=landingExperience['agent-team'][lang];
+    const html=await fs.readFile(path.join(root,'dist',landingRoute('agent-team',lang),'index.html'),'utf8');
+    assert.equal((html.match(/class="owned-next-ui__frame"/g)||[]).length,5);
+    assert.equal(html.split(escaped(x.nextUi.label)).length-1,x.nextUi.film?6:5,'each frame, and the film when there is one, carries the design-preview label');
+    assert.match(x.nextUi.intro,lang==='ja'?/架空の例です/:/fictional/);
+    for (const f of x.nextUi.frames) await fs.access(path.join(root,'dist',f.src));
+    const film=html.match(/<figure class="owned-next-ui__film">[\s\S]*?<\/figure>/);
+    if (lang==='ja') {
+      assert.ok(film,'the Japanese page carries the design film');
+      assert.match(film[0],/<video controls muted playsinline preload="none"[^>]*><source src="\/media\/films\/agent-team-design-30s\.mp4" type="video\/mp4">/);
+      assert.doesNotMatch(film[0],/autoplay|<video[^>]*\ssrc=/);
+      assert.match(film[0],/演出を含む/);
+      assert.ok(film[0].includes(escaped(x.nextUi.label)),'the film carries the same preview label as the frames');
+    } else assert.equal(film,null,'no English design film until one is delivered');
+  }
+});
+
+test('the Agent Team illustration uses the ledger roles, and the maker fixes the finding', async () => {
+  const js = await fs.readFile(path.join(root, 'public/assets/animated-demos.mjs'), 'utf8');
+  const scene = js.slice(js.indexOf("id === 'agent-team'"), js.indexOf("id === 'launchloom'"));
+  assert.doesNotMatch(scene, /WRITER|EDITOR|'Writer'|'Editor'|なおす/, 'no roles the product does not have');
+  assert.match(scene, /BUILDER · V1/); assert.match(scene, /BUILDER · V2/); assert.match(scene, /Reviewer/);
 });

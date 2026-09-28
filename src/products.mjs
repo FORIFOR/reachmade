@@ -3,7 +3,9 @@
  *  added from genie/README.md and oathra/README.md, for the fifteen-second films.
  *  2026-09-27: highlights/features per product were checked against each repository's README, docs and
  *  implementation (genie, AI-meeting, oathra, AISecure, Multibot, Launchloom). Only implemented behaviour is
- *  listed; timing and integration claims without a measurement were removed or qualified. */
+ *  listed; timing and integration claims without a measurement were removed or qualified.
+ *  2026-09-29: Agent Team copy re-centred on the maker/checker split, per-revision checks and the ZIP with a
+ *  SHA-256 manifest, all stated in Multibot/README.md (Why Agent Team; First useful result step 4; My team characters). */
 /** Date the highlights/features of every product were checked against its repository. */
 export const capabilitiesCheckedAt = '2026-09-27';
 export const products = [
@@ -176,35 +178,35 @@ export const products = [
     evidence: 'https://github.com/FORIFOR/Multibot/blob/main/docs/evidence/readiness-2026-09-14/README.md',
     demo: 'https://forifor.github.io/Multibot/',
     ja: {
-      headline: '成果物も、そこまでの仕事も。', demoLabel: '実行記録を見る', previewLabel: 'エージェント実行記録',
-      short: '作成・レビュー・修正を、経緯と一緒に残す。',
-      description: '依頼に合わせてAIが役割を分担。成果物の版と、誰が何を確かめたかを結びつけ、完成した部分も未完了の部分も残します。',
+      headline: '依頼は一度。確かめた版だけを、受け取る。', demoLabel: '実行記録を見る', previewLabel: 'エージェント実行記録',
+      short: 'つくる担当と、確かめる担当を分ける。',
+      description: 'ひとつの依頼をAIの担当が分け合います。つくった担当とは別の担当が成果物の版を確かめ、どの版が何に合格したかと、終わらなかった部分まで残します。',
       status: '開発・評価中', license: 'MIT · リポジトリ名はMultibot',
-      outcome: '依頼 → 作成 → レビュー → 修正',
+      outcome: '依頼 → 作成 → 確認 → 確認済みの版',
       scope: '単一エージェントより高品質とはまだ言えません。公開比較には失敗や実行環境による制約があり、顧客環境での本番受け入れは別評価です。',
       proof: '実モデルの作業記録と、失敗も含めた評価記録。紹介映像の研究タスクは部分完了です。',
       consult: '業務の役割分担、成果物の検証、予算・権限・人の承認を含むエージェント基盤の試作。',
-      highlights: [{value:'4つの役割',label:'Master・Researcher・Builder・Reviewerが分担'},{value:'出典を照合',label:'Reviewerが原典と食い違う記述を検出し、修正案を出す'},{value:'追記専用の記録',label:'会話・タイムライン・報告はすべてイベント記録から生成'}],
+      highlights: [{value:'つくる担当と別',label:'確かめる担当（Reviewer）は作成担当と別。指摘は次の版で直す'},{value:'版ごとの確認',label:'確認はファイルの版（SHA-256）に結びつく。新しい版は未確認から'},{value:'記録ごと保存',label:'選んだ版を、SHA-256の一覧・報告・イベントと一緒にZIPで保存'}],
       features: [
-        {code:'F-01 / ROLES',title:'役割を分けて実行する',body:'Masterが成果物を計画し、Researcher・Builder・Reviewerが作業します。単一エージェントより高品質とはまだ言えず、公開比較には失敗も含みます。',tags:['マルチエージェント','Master / Researcher / Builder / Reviewer','比較は失敗も公開']},
-        {code:'F-02 / REVIEW',title:'原典と照らして査読する',body:'出典URL付きの主張はReviewerが原典を取得して照合し、取得できなければunverifiedとします。指摘には最小の修正案を添えます。',tags:['出典照合','unverifiedを残す','最小修正案']},
-        {code:'F-03 / TRAIL',title:'経緯を消さない',body:'すべてを追記専用のイベント記録に書き、版ごとの成果物とレビュー文書を並べて残します。部分完了もそのまま報告します。',tags:['追記専用','版ごとの成果物','部分完了も報告']}
+        {code:'F-01 / ROLES',title:'つくる担当と、確かめる担当を分ける',body:'まとめ役（Master）が成果物と完了条件を決め、調べる係・つくる係・確かめる係が作業します。マイチームでは🐣まめ・🐻ぽん・🐱むぎ・🐧るるのキャラクターから名前と話し方を選べます。単一エージェントより高品質とはまだ言えず、公開比較には失敗も含みます。',tags:['Master / Researcher / Builder / Reviewer','キャラクターは担当と独立','比較は失敗も公開']},
+        {code:'F-02 / REVIEW',title:'資料と食い違う文を見つけて、直す',body:'確かめる係は実際の版を原典や添付資料と照らし、取得できないものはunverifiedとして残します。指摘は作成担当に戻り、次の版で直します。',tags:['出典照合','unverifiedを残す','指摘は次の版へ']},
+        {code:'F-03 / TRAIL',title:'途中も、未完了も消さない',body:'すべてを追記専用のイベント記録に書き、版ごとの成果物と確認を並べて残します。選んだ版はSHA-256の一覧・報告・イベントと一緒にZIPで保存できます。部分完了もそのまま報告します。',tags:['追記専用','版ごとの確認','ZIPで保存']}
       ]
     },
     en: {
-      headline: 'The deliverable. And how it got there.', demoLabel: 'Read the run record', previewLabel: 'Agent work trail',
-      short: 'Draft, review, revise — with a work trail.',
-      description: 'AI agents share the work. Revisions stay connected to who checked what, and unfinished work is reported alongside completed artifacts.',
+      headline: 'Ask once. Keep only the version that was checked.', demoLabel: 'Read the run record', previewLabel: 'Agent work trail',
+      short: 'The maker and the checker are different.',
+      description: 'AI teammates share one request. A teammate other than the maker checks each revision, and you keep which version passed what — plus whatever was left unfinished.',
       status: 'Under evaluation', license: 'MIT · repository: Multibot',
-      outcome: 'Request → draft → review → revision',
+      outcome: 'Request → draft → check → checked version',
       scope: 'A quality advantage over a single agent has not been established. Published comparisons include failures and provider constraints. Production acceptance is separate.',
       proof: 'Real-model work records and evaluation results including failures. The featured research replay ended partial.',
       consult: 'Prototype agent workflows with explicit roles, artifact checks, budgets, permissions, and human approval.',
-      highlights: [{value:'Four roles',label:'Master, Researcher, Builder and Reviewer share the work'},{value:'Source-checked',label:'The Reviewer fetches cited sources and proposes fixes'},{value:'Append-only trail',label:'Chat, timeline and report are projections of one event log'}],
+      highlights: [{value:'Not the maker',label:'The Reviewer is separate from the maker; findings are fixed in the next revision'},{value:'Per-revision checks',label:'Checks bind to one revision’s SHA-256; a new revision starts unchecked'},{value:'Saved with its record',label:'Save chosen revisions as a ZIP with a SHA-256 manifest, report and events'}],
       features: [
-        {code:'F-01 / ROLES',title:'Explicit roles',body:'A Master plans the deliverables while a Researcher, a Builder and a Reviewer do the work. No quality advantage over a single agent is claimed, and published comparisons include failures.',tags:['Multi-agent','Master / Researcher / Builder / Reviewer','Failures published']},
-        {code:'F-02 / REVIEW',title:'Review against the source',body:'Claims with a source URL are fetched and compared by the Reviewer; anything it cannot fetch is marked unverified. Each finding comes with a minimal fix.',tags:['Source check','Unverified stays visible','Minimal fix']},
-        {code:'F-03 / TRAIL',title:'Nothing is overwritten',body:'Everything goes to an append-only event store, with per-revision artifacts and review documents kept side by side. Partial completion is reported as such.',tags:['Append-only','Per-revision artifacts','Partial reported']}
+        {code:'F-01 / ROLES',title:'The maker is not the checker',body:'A Master sets the deliverables and finish conditions while a Researcher, a Builder and a Reviewer do the work. In My team you can pick names and voices from the Mame, Pon, Mugi and Lulu characters. No quality advantage over a single agent is claimed, and published comparisons include failures.',tags:['Master / Researcher / Builder / Reviewer','Characters are independent of roles','Failures published']},
+        {code:'F-02 / REVIEW',title:'Catch what disagrees with the source',body:'The Reviewer compares the actual revision with cited sources and attachments; anything it cannot fetch stays unverified. Findings go back to the maker and are fixed in the next revision.',tags:['Source check','Unverified stays visible','Finding → next revision']},
+        {code:'F-03 / TRAIL',title:'Nothing is overwritten',body:'Everything goes to an append-only event store, with per-revision artifacts and checks side by side. Chosen revisions can be saved as a ZIP with a SHA-256 manifest, report and events. Partial completion is reported as such.',tags:['Append-only','Per-revision checks','ZIP with manifest']}
       ]
     }
   },

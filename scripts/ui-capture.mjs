@@ -50,6 +50,14 @@ export const SHOTS = Object.freeze([
   { file: 'home-m-access.png', route: '/', width: 390, height: 844, scrollTo: '#access', state: 'phone, access table, reduced motion, real time', reducedMotion: true, realtime: true },
   // Japanese Genie page (LP re-composition): its sections at a readable size, real time.
   // Japanese Oathra page (2026-09-29 brief): each section, real time.
+  // Agent Team page (2026-09-29 patch): hero, capabilities and the next-UI design with its film.
+  { file: 'agent-team-hero.png', route: '/products/agent-team/', width: 1440, height: 1000, state: 'Agent Team hero, reduced motion, real time', reducedMotion: true, realtime: true },
+  { file: 'agent-team-features.png', route: '/products/agent-team/', width: 1440, height: 1000, scrollTo: '#features', state: 'Agent Team capabilities, reduced motion, real time', reducedMotion: true, realtime: true },
+  { file: 'agent-team-next-ui.png', route: '/products/agent-team/', width: 1440, height: 1400, scrollTo: '#next-ui', state: 'Agent Team next-UI design film and frames, reduced motion, real time', reducedMotion: true, realtime: true },
+  { file: 'agent-team-next-ui-en.png', route: '/en/products/agent-team/', width: 1440, height: 1200, scrollTo: '#next-ui', state: 'Agent Team next-UI frames, English, reduced motion, real time', reducedMotion: true, realtime: true },
+  { file: 'agent-team-m-next-ui.png', route: '/products/agent-team/', width: 390, height: 1400, scrollTo: '#next-ui', state: 'phone, Agent Team next-UI, reduced motion, real time', reducedMotion: true, realtime: true },
+  { file: 'agent-team-m-hero.png', route: '/products/agent-team/', width: 390, height: 1000, state: 'phone, Agent Team hero, reduced motion, real time', reducedMotion: true, realtime: true },
+  { file: 'home-band-chapter-agent-team.png', route: '/', width: 1440, height: 1000, scrollTo: '[data-v4-chapter="agent-team"]', state: 'home v4 Agent Team chapter with the new clip label, real time', realtime: true },
   { file: 'oathra-lp-hero.png', route: '/products/oathra/', width: 1440, height: 1000, state: 'Oathra first view, reduced motion, real time', reducedMotion: true, realtime: true },
   { file: 'oathra-lp-ring.png', route: '/products/oathra/', width: 1440, height: 1000, scrollTo: '#ring', state: 'Oathra ring, reduced motion, real time', reducedMotion: true, realtime: true },
   { file: 'oathra-lp-steps.png', route: '/products/oathra/', width: 1440, height: 1000, scrollTo: '#steps', state: 'Oathra request-to-report design stills, reduced motion, real time', reducedMotion: true, realtime: true },

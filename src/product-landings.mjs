@@ -125,24 +125,45 @@ export const landingExperience = Object.freeze({
   },
   'agent-team': {
     ja: {
-      title:'成果物だけでなく、そこまでの仕事も。',
+      title:'依頼は一度。確かめた版だけを、受け取る。',
       primary:['実モデルの作業記録を読む','https://forifor.github.io/Multibot/ja/'],
       secondary:['コードと役割分担を見る','https://github.com/FORIFOR/Multibot'],
       tryNow:'作成→レビュー→修正の実行記録を、未完了の箇所も含めて読む。',
       actionNote:'公開ページは実モデルの実行記録を閲覧する入口です。クリックして新しいモデル実行を開始するものではありません。',
       startTitle:'完成だけでなく、途中も読む。',
       startBody:'Agent Teamは作成・レビュー・修正の役割を分け、成果物と作業記録を結びつけます。公開例には失敗や部分完了も残しており、単一エージェントより高品質だとはまだ主張していません。',
-      beats:[['依頼する','目的と成果物を指定し、役割ごとに作業を分けます。'],['レビューする','誰が何を確認したかを、成果物の版と一緒に残します。'],['未完了も残す','完成した部分だけでなく、検証できなかった箇所や次の作業も報告します。']]
+      beats:[['依頼する','目的と成果物を書き、資料を添えます。まとめ役が進め方と完了条件を決めます。'],['つくって、別の担当が確かめる','つくる係が版を公開し、確かめる係がその版を条件ごとに確認します。指摘は次の版で直します。'],['確認済みの版を受け取る','どの版が何に合格したかと未完了の部分を残したまま、選んだ版を記録ごと保存します。']],
+      // frames and film: exported from the "Agent Team LP video" design file (Claude design project, 2026-09-29),
+      //   30 s, 1920×1080, silent. The redesign (sidebar, palette, characters) is a patch to Multibot that is not merged;
+      //   the side-by-side workroom and the highlighted passages are not implemented. Labelled as a design preview.
+      nextUi:{label:'設計プレビュー · 未実装を含む',studyLabel:'別に公開している設計動画（Launchloom）',intro:'サイドバー、会話と成果物を並べる作業室、指摘と修正箇所の表示を見直す設計です。動画と各コマは設計ファイルから書き出した再現図で、実アプリの録画ではありません。依頼・会話・確認の内容は架空の例です。配色・サイドバー・キャラクターは未マージの変更として試作中で、作業室の並列表示と修正箇所のハイライトは未実装です。',
+        film:{src:'/media/films/agent-team-design-30s.mp4',poster:'/assets/products/agent-team/next-ui-01.jpg',label:'30秒の設計動画（演出を含む・無音・自動再生しません）'},
+        frames:[
+          {src:'/assets/products/agent-team/next-ui-01.jpg',title:'依頼',body:'ひとことと資料だけで、お願いできる。',alt:'サイドバーのある画面で、依頼文と添付した product.md、「チームにお願いする」ボタンを表示している設計図。'},
+          {src:'/assets/products/agent-team/next-ui-02.jpg',title:'分担',body:'だれが何を、だれに渡したかが会話で見える。',alt:'キャラクターのぽん・まめ・むぎが吹き出しで作業を引き継ぎ、右に guide.md の第1版が開いている設計図。'},
+          {src:'/assets/products/agent-team/next-ui-03.jpg',title:'指摘',body:'確かめる係の指摘が、該当する文に付く。',alt:'第1版の一文が黄色く示され、「るるの指摘：資料の範囲を超えています」と表示されている設計図。'},
+          {src:'/assets/products/agent-team/next-ui-04.jpg',title:'確認',body:'第2版で直り、4つの条件をすべて通過。',alt:'第2版で直った文が緑で示され、4つの確認項目に通過の印が付いている設計図。'},
+          {src:'/assets/products/agent-team/next-ui-05.jpg',title:'保存',body:'選んだ版を、確認の記録と一緒にZIPで。',alt:'guide.md 第2版、manifest.json、report.md、events.jsonl の4つを含むZIPの一覧を表示している設計図。'}
+      ]}
     },
     en: {
-      title:'The deliverable. And how it got there.',
+      title:'Ask once. Keep only the version that was checked.',
       primary:['Read a real-model work record','https://forifor.github.io/Multibot/'],
       secondary:['Inspect the roles and code','https://github.com/FORIFOR/Multibot'],
       tryNow:'Read a draft → review → revision trail, including what remained unfinished.',
       actionNote:'The public page is a record of a real-model run. Clicking it does not start a new model run in the browser.',
       startTitle:'Read the work, not only the final answer.',
       startBody:'Agent Team separates drafting, review and revision while keeping artifacts connected to the work trail. Public examples retain failures and partial completion; no quality advantage over a single agent is claimed.',
-      beats:[['Request','Define the goal and artifact, then assign explicit roles.'],['Review','Keep who checked what connected to the artifact revision.'],['Report gaps','Preserve unfinished verification and next work alongside what was completed.']]
+      beats:[['Ask','Describe the goal and the artifact, and attach your source. The coordinator sets the plan and the finish conditions.'],['Made, then checked by someone else','The maker publishes a revision and the reviewer checks that revision condition by condition. Findings are fixed in the next revision.'],['Keep the checked version','Save the chosen revision with its record, including which checks it passed and what remained unfinished.']],
+      nextUi:{label:'Design preview · partly not implemented',studyLabel:'The separate design film (Launchloom)',intro:'A redesign with a sidebar, a workroom that keeps conversation and result side by side, and marked findings and fixes. The frames are renders of a design file, not recordings of the app. The request, messages and checks are fictional, and the stills show the Japanese interface. The palette, sidebar and characters exist as an unmerged change; the side-by-side workroom and highlighted passages are not implemented.',
+        // English design film not delivered yet (2026-09-29); the English page shows the five stills only.
+        frames:[
+          {src:'/assets/products/agent-team/next-ui-01.jpg',title:'Ask',body:'One sentence and a source file are enough.',alt:'Design render: a sidebar layout with the request, the attached product.md and the “Ask the team” button.'},
+          {src:'/assets/products/agent-team/next-ui-02.jpg',title:'Share the work',body:'Who handed what to whom, in the conversation.',alt:'Design render: the Pon, Mame and Mugi characters hand work over in chat bubbles, with guide.md version 1 open on the right.'},
+          {src:'/assets/products/agent-team/next-ui-03.jpg',title:'Finding',body:'The reviewer’s finding sits on the sentence it is about.',alt:'Design render: one sentence of version 1 is marked in amber with “Lulu’s finding: goes beyond the source”.'},
+          {src:'/assets/products/agent-team/next-ui-04.jpg',title:'Checked',body:'Fixed in version 2; all four conditions pass.',alt:'Design render: the fixed sentence is marked in green and four check items show a pass mark.'},
+          {src:'/assets/products/agent-team/next-ui-05.jpg',title:'Save',body:'The chosen version, zipped with its check record.',alt:'Design render: a ZIP list with guide.md version 2, manifest.json, report.md and events.jsonl.'}
+      ]}
     }
   },
   launchloom: {
@@ -175,9 +196,13 @@ function experienceFor(product, lang) {
   return value;
 }
 
-/** Genie only: five stills of the next TaskDock design. Renders of a design file, labelled as unreleased; no script. */
+/** Optional design film: plain controls, no autoplay, poster first; works without JavaScript. */
+function nextUiFilm(f, label) {
+  return `<figure class="owned-next-ui__film"><video controls muted playsinline preload="none" poster="${e(f.poster)}" width="1920" height="1080"><source src="${e(f.src)}" type="video/mp4"></video><figcaption><span class="owned-next-ui__label">${e(label)}</span> ${e(f.label)}</figcaption></figure>`;
+}
+/** Genie and Agent Team: stills of the next interface design. Renders of a design file, labelled as unreleased; no script. */
 function nextUiArticle(n, ja, prototypeLink) {
-  return `<article class="owned-next-ui" id="next-ui"><h3>${ja?'次のUI設計':'Proposed interface design'}</h3><p>${e(n.intro)}</p><ol class="owned-next-ui__frames">${n.frames.map((f,i)=>`<li class="owned-next-ui__frame"><figure><a href="${e(f.src)}"><img src="${e(f.src)}" width="1600" height="900" loading="lazy" decoding="async" alt="${e(f.alt)}"></a><figcaption><span class="owned-next-ui__label">${e(n.label)}</span><strong>0${i+1} ${e(f.title)}</strong><span>${e(f.body)}</span></figcaption></figure></li>`).join('')}</ol>${prototypeLink}</article>`;
+  return `<article class="owned-next-ui" id="next-ui"><h3>${ja?'次のUI設計':'Proposed interface design'}</h3><p>${e(n.intro)}</p>${n.film?nextUiFilm(n.film,n.label):''}<ol class="owned-next-ui__frames">${n.frames.map((f,i)=>`<li class="owned-next-ui__frame"><figure><a href="${e(f.src)}"><img src="${e(f.src)}" width="1600" height="900" loading="lazy" decoding="async" alt="${e(f.alt)}"></a><figcaption><span class="owned-next-ui__label">${e(n.label)}</span><strong>0${i+1} ${e(f.title)}</strong><span>${e(f.body)}</span></figcaption></figure></li>`).join('')}</ol>${prototypeLink}</article>`;
 }
 
 export function renderProductLanding(product, lang, config, recordingSource) {
@@ -209,7 +234,7 @@ export async function writeProductLandings(dist, products, config, recordings) {
     if (!product || !recordings[id]) throw new Error(`Missing landing source: ${id}`);
     for (const lang of ['ja','en']) {
       const x = experienceFor(product, lang);
-      for (const src of [x.icon, ...(x.nextUi?.frames || []).map(f => f.src)].filter(Boolean)) {
+      for (const src of [x.icon, x.nextUi?.film?.src, x.nextUi?.film?.poster, ...(x.nextUi?.frames || []).map(f => f.src)].filter(Boolean)) {
         await fs.access(path.join(dist, src)).catch(() => { throw new Error(`Missing landing asset for ${id}/${lang}: ${src}`); });
       }
     }
