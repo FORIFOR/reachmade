@@ -44,6 +44,9 @@ test('Genie LP never autoplays, labels every demonstration and claims only ledge
   assert.equal((html.match(/<li><strong>/g) || []).length, 0, 'the LP adds no list items that could be read as hero badges');
 });
 
+// (The v2 patch's test for the next-TaskDock figure in 01 was replaced by the current-product test below:
+//  that figure depicted unshipped behaviour next to the ledger's current features. Independent review, P1.)
+
 test('built Genie page is the LP in Japanese only, with its assets present', async () => {
   const ja = await read('products/genie/index.html'), en = await read('en/products/genie/index.html');
   assert.match(ja, new RegExp(`data-genie-lp="${GENIE_LP_VERSION}"`));
@@ -60,6 +63,8 @@ test('Genie LP assets stay dependency-free and respect visitor settings', async 
   assert.doesNotMatch(css, /@import|url\(|linear-gradient|radial-gradient|backdrop-filter/);
   assert.match(css, /prefers-reduced-motion:reduce/);
   assert.match(css, /forced-colors:active/);
+  assert.match(css, /--glp-presence:#48bcec/);
+  assert.match(css, /\.glp-trace::after\{[^}]*var\(--glp-presence\)/, 'the heading line is the presence colour');
   assert.doesNotMatch(js, /\bfetch\s*\(|XMLHttpRequest|sendBeacon|localStorage|sessionStorage|indexedDB|document\.cookie|autoplay|\.play\(/);
 });
 
@@ -85,4 +90,19 @@ test('the Genie LP labels its demos as published demos and states the scope once
   assert.ok(!trust.includes(scope), '04 does not repeat the scope that the page already states');
   assert.doesNotMatch(html, /いま抱えているメモ|手元のメモ/, 'first tries use fictional notes, as the start section says');
   assert.match(html, /画像は紹介映像の静止画/);
+});
+
+test('01 shows the current product next to the ledger features, not the unshipped next TaskDock', async () => {
+  const html = await fs.readFile(path.join(root, 'dist/products/genie/index.html'), 'utf8');
+  const start = html.indexOf('data-glp-how');
+  const how = html.slice(start, html.indexOf('</figure>', start));
+  for (const f of ['lp-ask.jpg', 'lp-question.jpg', 'lp-result.jpg']) assert.ok(how.includes(f), `${f} is shown in 01`);
+  // The next-version figure depicted voice capture and auto-save, which the ledger does not list for Genie.
+  assert.doesNotMatch(how, /glp-dock|聞いています|録音|保存済み|次の版の TaskDock/);
+  assert.match(how, /実アプリの画面を使った紹介映像から切り出した静止画/);
+});
+
+test('the closing line returns to the mark before the start heading', () => {
+  const html = refineGenieLp(shell, products);
+  assert.ok(html.indexOf('data-glp-return') >= 0 && html.indexOf('data-glp-return') < html.indexOf('05 · START'));
 });

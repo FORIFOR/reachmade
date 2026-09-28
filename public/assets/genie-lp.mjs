@@ -33,4 +33,14 @@ if (body.dataset.genieLp) {
   });
   demos.forEach((d, i) => d.querySelector('[data-glp-demo-pick]')?.addEventListener('click', () => choose(i)));
   document.addEventListener('visibilitychange', () => { if (document.hidden) pauseAll(); });
+
+  // 05 · The presence line draws back into the small mark once, when the closing section comes into view.
+  const ret = document.querySelector('[data-glp-return]');
+  if (ret) {
+    if (reduced || !('IntersectionObserver' in window)) ret.classList.add('is-on');
+    else {
+      const io = new IntersectionObserver(es => { if (es.some(x => x.isIntersecting)) { ret.classList.add('is-on'); io.disconnect(); } }, {threshold: 0.5});
+      io.observe(ret);
+    }
+  }
 }

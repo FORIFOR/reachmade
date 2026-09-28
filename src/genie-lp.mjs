@@ -17,7 +17,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import {products as ledgerProducts} from './products.mjs';
 
-export const GENIE_LP_VERSION = '20260928-genie-lp-1';
+export const GENIE_LP_VERSION = '20260928-genie-lp-2';
 const CSS_MARK = '/* REACHMADE_GENIE_LP */';
 const JS_MARK = '// REACHMADE_GENIE_LP';
 const PAGE = 'products/genie/index.html';
@@ -33,8 +33,14 @@ export const FRAMES = Object.freeze({
   question: {src: `${A}lp-question.jpg`, alt: 'スクリーンショットを添えて依頼文を入力している画面'},
   result: {src: `${A}lp-result.jpg`, alt: 'コピーと保存のボタンがある回答画面'},
   proposal: {src: `${A}lp-proposal.jpg`, alt: '「ともに、未来へ。」という見出しのWebページと、依頼の説明'},
-  orbit: {src: `${A}lp-orbit.jpg`, alt: 'Genieが生成した、惑星が公転するHTML'}
+  orbit: {src: `${A}lp-orbit.jpg`, alt: 'Genieが生成した、惑星が公転するHTML'},
+  // Genie の印（白）。GenieMark-source.png を切り詰めたもの。197×120。
+  mark: {src: `${A}genie-mark-white.png`, alt: ''}
 });
+// 01 は同じ作業画面の上で、TaskDock（次の版・1b）だけが姿を変える。
+// 01 shows the current product: stills cut from the published film. The next TaskDock (1b) is not shown here,
+// next to the ledger's current features, because it depicts unshipped behaviour (voice, auto-save); the
+// "次のUI設計" section already presents that design, labelled as an unreleased preview.
 const HOW = [['01', '呼び出す', 'ask'], ['02', '必要な情報を渡す', 'question'], ['03', '結果を使う', 'result']];
 export const DEMOS = Object.freeze([
   {id: 'proposal', ask: 'このページの見出しを、もっと伝わる言葉にして', shows: '元のページ → 依頼 → 見出しとボタンの案と理由', title: 'Webページの伝え方を見直す',
@@ -60,9 +66,13 @@ function genie(products) {
 }
 const img = (f, cls, lazy = true) => `<img class="${cls}" src="${f.src}" width="1600" height="900" ${lazy ? 'loading="lazy" ' : ''}decoding="async" alt="${e(f.alt)}">`;
 
+const mark = () => `<span class="glp-mark"><img src="${FRAMES.mark.src}" width="30" height="18" alt=""><i></i></span>`;
+/** TaskDock（1b）を静的な HTML で描く。動きは CSS だけ（Reduce Motion では止まる）。 */
 function howFrames() {
   return `<figure class="glp-how" data-glp-how><div class="glp-how__screen">${HOW.map(([n, t, k], i) => `<div class="glp-how__frame${i === 0 ? ' is-on' : ''}" data-glp-how-frame="${i}">${img(FRAMES[k], 'glp-shot')}<span class="glp-how__label">${n} ${e(t)}</span></div>`).join('')}</div><figcaption>実アプリの画面を使った紹介映像から切り出した静止画 · デモ用の架空データ</figcaption></figure>`;
 }
+// 最後の導線: ページを通ってきた青い流線が、小さな印に戻る。
+const RETURN = `<div class="glp-return" data-glp-return aria-hidden="true"><span class="glp-return__line"></span><img class="glp-return__mark" src="${FRAMES.mark.src}" width="59" height="36" alt=""></div>`;
 
 function demosSection() {
   const items = DEMOS.map((d, i) => `<article class="glp-demo${i === 0 ? ' is-on' : ''}" id="demo-${d.id}" data-glp-demo="${i}"><button class="glp-demo__ask" type="button" aria-pressed="${i === 0}" data-glp-demo-pick="${i}"><strong>「${e(d.ask)}」</strong><span>${e(d.shows)}</span></button><figure class="glp-demo__player"><div class="glp-demo__screen"><video controls playsinline preload="none" poster="${d.poster.src}" aria-label="${e(d.title)}（実アプリの公開実演・音あり）"><source src="${d.src}" type="video/mp4"><track kind="captions" srclang="ja" label="日本語" src="${d.vtt}" default>この動画は、このブラウザーでは再生できません。</video></div><figcaption><span><b>${e(d.title)}</b> — 実アプリの画面を使った公開実演。架空の入力、待ち時間は短縮しています。</span><span>${e(d.note)}</span></figcaption></figure></article>`).join('');
@@ -111,7 +121,7 @@ export function refineGenieLp(html, products = ledgerProducts) {
   html = before(html, '<p class="owned-features__source">', 'features source', howFrames());
   html = before(html, '<section class="container rm-film15 rm-film15--genie"', '15-second film', demosSection() + artifactsSection());
   html = before(html, '<section class="container owned-start" id="start"', 'start section', trustSection(p));
-  html = html.replace(START_H2, (_, a, b) => `${a}05 · START${b}<h2>最初の仕事は、<br>小さくていい。</h2><p class="glp-start-lead">共有してよい、架空のメモをひとつ。Genieと、次の一歩に変えてみてください。</p>`);
+  html = html.replace(START_H2, (_, a, b) => `${a.replace('<p class="owned-kicker">', RETURN + '<p class="owned-kicker">')}05 · START${b}<h2>最初の仕事は、<br>小さくていい。</h2><p class="glp-start-lead">共有してよい、架空のメモをひとつ。Genieと、次の一歩に変えてみてください。</p>`);
   html = before(html, '<div class="owned-start__actions">', 'start actions', `<ol class="glp-setup">${SETUP.map(([n, t, b]) => `<li><span>${n}</span><strong>${e(t)}</strong><small>${e(b)}</small></li>`).join('')}</ol>`);
   return html.replace('<body ', `<body data-genie-lp="${GENIE_LP_VERSION}" `);
 }
