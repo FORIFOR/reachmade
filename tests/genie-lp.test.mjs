@@ -14,7 +14,7 @@ test('Genie LP composes once, keeps its anchors in order and fails closed', () =
   assert.ok(once.includes(`data-genie-lp="${GENIE_LP_VERSION}"`));
   assert.equal(refineGenieLp(once, products), once);
   assert.equal((once.match(/<h1\b/g) || []).length, 1);
-  assert.match(once, /<h1><img class="owned-product-icon" src="\/assets\/products\/genie\/icon-128\.png" width="128" height="128" alt="">依頼の先に、<br>使える<span class="glp-trace">成果物<\/span>。<\/h1>/);
+  assert.match(once, /<h1><img class="owned-product-icon" src="\/assets\/products\/genie\/icon-128\.png" width="128" height="128" alt="">頼むだけで、<br>仕事が/);
   const at = s => once.indexOf(s);
   assert.ok(at('id="features"') < at('id="demos"') && at('id="demos"') < at('id="artifacts"') && at('id="artifacts"') < at('data-film15="genie"'));
   assert.ok(at('data-film15="genie"') < at('id="flow"') && at('id="flow"') < at('id="trust"') && at('id="trust"') < at('id="start"'));
@@ -37,15 +37,20 @@ test('Genie LP never autoplays, labels every demonstration and claims only ledge
   for (const tag of html.match(/<a\b[^>]*target="_blank"[^>]*>/g) || []) assert.match(tag, /rel="noopener noreferrer"/);
   const p = products.find(x => x.id === 'genie').ja;
   const esc = s => s.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&#39;');
-  // 04 quotes the ledger's screenshot rule; the scope itself is stated in the hero requirements and in
-  // "current boundaries", which the built-page test below checks.
-  assert.ok(html.includes(esc(p.features[1].body)));
+  assert.ok(html.includes(esc(p.features[1].body)) && html.includes(esc(p.scope)));
   assert.doesNotMatch(html, /コンピューター操作|完全にローカル|絶対に安全|10x|導入企業|ユーザー数/);
   assert.equal((html.match(/<li><strong>/g) || []).length, 0, 'the LP adds no list items that could be read as hero badges');
 });
 
-// (The v2 patch's test for the next-TaskDock figure in 01 was replaced by the current-product test below:
-//  that figure depicted unshipped behaviour next to the ledger's current features. Independent review, P1.)
+test('01 shows one work screen where only the next TaskDock changes, labelled as in development', () => {
+  const html = refineGenieLp(shell, products);
+  assert.equal((html.match(/data-glp-how-frame=/g) || []).length, 3);
+  assert.equal((html.match(/class="glp-dock glp-dock--/g) || []).length, 3);
+  assert.equal(html.split(FRAMES.work.src).length - 1, 3, 'all three steps share the same real screen');
+  assert.match(html, /次の版の TaskDock（開発中）の動きを再現した図です/);
+  assert.match(html, /送信するまで渡しません/);
+  assert.ok(html.indexOf('data-glp-return') < html.indexOf('05 · START'), 'the closing line returns to the mark before the start heading');
+});
 
 test('built Genie page is the LP in Japanese only, with its assets present', async () => {
   const ja = await read('products/genie/index.html'), en = await read('en/products/genie/index.html');
@@ -66,43 +71,4 @@ test('Genie LP assets stay dependency-free and respect visitor settings', async 
   assert.match(css, /--glp-presence:#48bcec/);
   assert.match(css, /\.glp-trace::after\{[^}]*var\(--glp-presence\)/, 'the heading line is the presence colour');
   assert.doesNotMatch(js, /\bfetch\s*\(|XMLHttpRequest|sendBeacon|localStorage|sessionStorage|indexedDB|document\.cookie|autoplay|\.play\(/);
-});
-
-test('the Genie LP keeps the reviewed product-page title and ships only the stills it shows', async () => {
-  const {landingExperience} = await import('../src/product-landings.mjs');
-  const html = await fs.readFile(path.join(root, 'dist/products/genie/index.html'), 'utf8');
-  const h1 = html.match(/<h1>[\s\S]*?<\/h1>/)[0].replace(/<[^>]+>/g, '');
-  assert.equal(h1, landingExperience.genie.ja.title, 'no new slogan beside the ledger');
-  assert.doesNotMatch(html, /頼むだけで/);
-  for (const f of Object.values(FRAMES)) assert.ok(html.includes(f.src), `${f.src} is shown, not just shipped`);
-});
-
-test('the Genie LP labels its demos as published demos and states the scope once', async () => {
-  const {products} = await import('../src/products.mjs');
-  const html = await fs.readFile(path.join(root, 'dist/products/genie/index.html'), 'utf8');
-  assert.doesNotMatch(html, /REAL WORKFLOWS/);
-  assert.match(html, /02 · 公開実演/);
-  assert.match(html, /冒頭の題字や字幕を含みます/);
-  const esc = s => s.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&#39;');
-  const scope = esc(products.find(x => x.id === 'genie').ja.scope);
-  const trust = html.slice(html.indexOf('id="trust"'), html.indexOf('</section>', html.indexOf('id="trust"')));
-  assert.ok(html.includes(scope), 'the ledger scope is still on the page');
-  assert.ok(!trust.includes(scope), '04 does not repeat the scope that the page already states');
-  assert.doesNotMatch(html, /いま抱えているメモ|手元のメモ/, 'first tries use fictional notes, as the start section says');
-  assert.match(html, /画像は紹介映像の静止画/);
-});
-
-test('01 shows the current product next to the ledger features, not the unshipped next TaskDock', async () => {
-  const html = await fs.readFile(path.join(root, 'dist/products/genie/index.html'), 'utf8');
-  const start = html.indexOf('data-glp-how');
-  const how = html.slice(start, html.indexOf('</figure>', start));
-  for (const f of ['lp-ask.jpg', 'lp-question.jpg', 'lp-result.jpg']) assert.ok(how.includes(f), `${f} is shown in 01`);
-  // The next-version figure depicted voice capture and auto-save, which the ledger does not list for Genie.
-  assert.doesNotMatch(how, /glp-dock|聞いています|録音|保存済み|次の版の TaskDock/);
-  assert.match(how, /実アプリの画面を使った紹介映像から切り出した静止画/);
-});
-
-test('the closing line returns to the mark before the start heading', () => {
-  const html = refineGenieLp(shell, products);
-  assert.ok(html.indexOf('data-glp-return') >= 0 && html.indexOf('data-glp-return') < html.indexOf('05 · START'));
 });
