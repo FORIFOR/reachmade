@@ -23,7 +23,10 @@ for (const id of landingIds) for (const lang of ['ja','en']) {
     assert.match(html,new RegExp(`poster="/media/products/${id}\\.jpg"`));
     assert.doesNotMatch(html,/<video[^>]*\ssrc=|<video[^>]*\bautoplay\b|<iframe|<form\b/);
     assert.match(html,/preload="none"/);
-    assert.equal((html.match(/class="owned-step-index"/g)||[]).length,3);
+    const recomposed = id==='oathra' && lang==='ja';
+    // The Japanese Oathra page follows the 2026-09-29 brief: no hero badges, feature cards or 3-step flow;
+    // the ledger highlights appear once, in the "where it stands" table (tests/oathra-lp.test.mjs).
+    if (!recomposed) assert.equal((html.match(/class="owned-step-index"/g)||[]).length,3);
     assert.equal((html.match(/class="owned-try-now"/g)||[]).length,1);
     assert.equal((html.match(/class="owned-action-note"/g)||[]).length,1);
     assert.ok(html.includes(escaped(p[lang].scope)));
@@ -35,14 +38,15 @@ for (const id of landingIds) for (const lang of ['ja','en']) {
     assert.match(html,lang==='ja'?/約13秒.*再生速度は変えていません/:/about 13 seconds; playback speed is unchanged/);
     if (id==='genie') assert.match(html,lang==='ja'?/現行の製品にはまだ入っていません。実機での動作は未確認です/:/is not in the current product\. It has not been checked on a real Mac/);
     else assert.match(html,lang==='ja'?/現行製品の実演や、新UIの実装完了を示すものではありません/:/not a demonstration of the current product/);
-    assert.equal((html.match(/class="owned-hero-badges"/g)||[]).length,1);
-    assert.equal((html.match(/<li><strong>/g)||[]).length,3);
-    assert.equal((html.match(/class="owned-feature-card"/g)||[]).length,3);
-    for (const h of p[lang].highlights) { assert.ok(html.includes(escaped(h.value))); assert.ok(html.includes(escaped(h.label))); }
+    if (!recomposed) assert.equal((html.match(/class="owned-hero-badges"/g)||[]).length,1);
+    if (!recomposed) assert.equal((html.match(/<li><strong>/g)||[]).length,3);
+    if (!recomposed) assert.equal((html.match(/class="owned-feature-card"/g)||[]).length,3);
+    if (!recomposed) for (const h of p[lang].highlights) { assert.ok(html.includes(escaped(h.value))); assert.ok(html.includes(escaped(h.label))); }
+    else for (const h of p[lang].highlights) assert.equal(html.split(escaped(h.label)).length-1, 1, `${h.value} stated once`);
     assert.equal((html.match(/class="owned-features__source"/g)||[]).length,1);
     assert.ok(html.includes(`href="${escaped(p.source)}"`));
     assert.ok(html.includes(lang==='ja'?'にリポジトリと照合':'checked against the repository on'));
-    for (const fc of p[lang].features) { assert.ok(html.includes(escaped(fc.title))); assert.ok(html.includes(escaped(fc.body))); for (const t of fc.tags) assert.ok(html.includes(escaped(t))); }
+    if (!recomposed) for (const fc of p[lang].features) { assert.ok(html.includes(escaped(fc.title))); assert.ok(html.includes(escaped(fc.body))); for (const t of fc.tags) assert.ok(html.includes(escaped(t))); }
     assert.equal(productNavigation(p,lang).site,config.origin+route);
   });
 }

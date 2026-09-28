@@ -62,6 +62,24 @@
       "source": "/media/films/oathra-15s.mp4",
       "sourceSha256": "4ed0d27d63a5a8fc69d619c1b09b6c08a8f92834fb51062c6d4747e4e375edf6",
       "render": "ffmpeg -ss 10.7 -frames:v 1 -vf scale=1280:-1 -q:v 3"
+    },
+    {
+      "path": "/media/films/oathra-30s.mp4",
+      "bytes": 4165847,
+      "sha256": "fd93f105a370a5fe1d0273e852ccb7498c27bb2ac7fcfec3b79aac339e6ae720",
+      "source": "Oathra LP Film.mp4 (owner-supplied, 2026-09-29, 1920x1080 30 fps 30 s, no audio)",
+      "sourceSha256": "fdb9c995a7d26cda9bf469ca05fc292dbf5fa57de484cb2e2492043cb09800d4",
+      "render": "ffmpeg -an -c:v libx264 -preset slow -crf 24 -tune animation -pix_fmt yuv420p -movflags +faststart",
+      "spec": "1920x1080, 30 fps, 30.000 s, no audio",
+      "note": "Image film with motion design. The app screens in it are a design that the current Oathra does not have."
+    },
+    {
+      "path": "/media/films/oathra-30s.jpg",
+      "bytes": 86999,
+      "sha256": "df7fc7d9ecdb9a38774e115019a0d044ad7bb0a744d26bf7c0132d5aacecd683",
+      "source": "/media/films/oathra-30s.mp4",
+      "sourceSha256": "fd93f105a370a5fe1d0273e852ccb7498c27bb2ac7fcfec3b79aac339e6ae720",
+      "render": "ffmpeg -ss 18.0 -frames:v 1 -vf scale=1280:-1 -q:v 3 (ring closed at 3/3)"
     }
   ]
 }

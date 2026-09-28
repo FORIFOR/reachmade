@@ -1,0 +1,153 @@
+/**
+ * Japanese Oathra page, re-composed from the owner's design brief "Oathra LP 改善案" (2026-09-29).
+ *
+ * Runs as the last pass on dist/products/oathra/index.html and rebuilds <main> in the brief's order:
+ *   1 first view (headline, one sentence, the 30-second image film, one button)
+ *   2 the ring (the judgement: only the other party's words close a segment)
+ *   3 from request to report (four stills of the design, labelled as not released)
+ *   4 what the AI may decide (the design's three levels, labelled as not implemented)
+ *   5 recordings (the existing 13-second recording and the 15-second film)
+ *   6 where it stands (can / conditional / not claimed)
+ *   7 try and consult (the existing sections, unchanged)
+ *
+ * Checked 2026-09-29 against FORIFOR/oathra: the judgement rules (2), the published runtime, CLI and
+ * evaluation harness, and "real calls need setup and cost; the 100-call evaluation is not done" (6) are
+ * implemented or documented. The request/approve/report app screens (3) and the approval, cost cap,
+ * inbound handling and three-level delegation (4) exist only in the design film, so both sections say so.
+ *
+ * Existing pieces are moved, not rewritten, so the ledger text they carry stays as it was. Idempotent and
+ * fail closed: if an expected piece is missing, the build stops instead of shipping a broken page.
+ */
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import {products as ledgerProducts} from './products.mjs';
+import {landingExperience} from './product-landings.mjs';
+
+export const OATHRA_LP_VERSION = '20260929-oathra-lp-1';
+const CSS_MARK = '/* REACHMADE_OATHRA_LP */';
+const PAGE = 'products/oathra/index.html';
+const A = '/assets/products/oathra/';
+export const FILM = Object.freeze({src: '/media/films/oathra-30s.mp4', poster: '/media/films/oathra-30s.jpg'});
+export const STEPS = Object.freeze([
+  {src: `${A}lp-step-01.jpg`, title: '頼む', body: 'だれに・何をしてほしいかを、ふだんの言葉で書く。', alt: '「電話を頼む」画面。相手に焼肉 たけ、依頼に10月3日（土）19時から2名の予約、任せる範囲の3列が入っている'},
+  {src: `${A}lp-step-02.jpg`, title: '確認して発信', body: '相手・内容・上限の費用・記録の扱いを見て、あなたが承認するまで電話はかからない。', alt: 'AIへの指示書と「相手・頼むこと・費用を確かめました」のチェック、「この内容で電話をかける」ボタン'},
+  {src: `${A}lp-step-03.jpg`, title: '電話中', body: '会話と輪が、その場で進む。いつでも通話を終えられる。', alt: '通話中の画面。輪が3/3で閉じ、日付・時刻・人数の3項目が相手の言葉で確認済みになっている'},
+  {src: `${A}lp-step-04.jpg`, title: '報告', body: '決まったこと、頼んだ内容との違い、あなたがすること。', alt: '「決まりました」の報告画面。日付・時刻・人数と、それぞれの根拠の発言と時刻'}
+]);
+const e = s => String(s).replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
+const arrow = '<span aria-hidden="true">↗</span>';
+const ext = (href, label, cls = '') => `<a${cls ? ` class="${cls}"` : ''} href="${e(href)}" target="_blank" rel="noopener noreferrer">${e(label)} ${arrow}</a>`;
+
+/** Returns the outer HTML of the first element that starts with `open`, balancing tags of the same name. */
+export function outer(html, open, what) {
+  const start = html.indexOf(open);
+  if (start < 0 || html.indexOf(open, start + 1) >= 0) throw new Error(`Oathra LP: expected exactly one ${what}`);
+  const tag = open.match(/^<([a-z0-9]+)/)[1];
+  const re = new RegExp(`<${tag}[\\s>]|</${tag}>`, 'g');
+  re.lastIndex = start;
+  let depth = 0, m;
+  while ((m = re.exec(html))) {
+    depth += m[0].startsWith('</') ? -1 : 1;
+    if (depth === 0) return html.slice(start, m.index + m[0].length);
+  }
+  throw new Error(`Oathra LP: unbalanced ${what}`);
+}
+
+function oathra(products) {
+  const p = products.find(x => x.id === 'oathra');
+  if (!p?.ja?.highlights || p.ja.highlights.length !== 3) throw new TypeError('Oathra LP: the ledger entry is missing its highlights');
+  return p;
+}
+
+function ring(closed) {
+  // Three segments, as in the film. Green only for "confirmed in the other party's words".
+  const arc = (i, on) => {
+    const a0 = -90 + i * 120 + 4, a1 = a0 + 112, r = 44, c = 50;
+    const pt = a => [c + r * Math.cos(a * Math.PI / 180), c + r * Math.sin(a * Math.PI / 180)].map(n => n.toFixed(2)).join(' ');
+    return `<path class="olp-ring__seg${on ? ' is-closed' : ''}" d="M ${pt(a0)} A ${r} ${r} 0 0 1 ${pt(a1)}"/>`;
+  };
+  return `<svg class="olp-ring__svg" viewBox="0 0 100 100" aria-hidden="true" focusable="false">${[0, 1, 2].map(i => arc(i, i < closed)).join('')}<text x="50" y="55" text-anchor="middle">${closed}/3</text></svg>`;
+}
+
+function hero(p, x) {
+  return `<section class="container olp-hero" aria-labelledby="olp-title"><div class="olp-hero__copy"><p class="owned-kicker">${e(p.index)} / ${e(p.discipline)} / ${e(p.ja.status)}</p><h1 id="olp-title">「できました」を、<br>根拠にしない。</h1><p class="olp-lead">AIに電話を任せて、結果は相手の言葉で確かめる。日時・人数・金額が決まったかどうかを、相手の発言と時刻に結びつけて報告します。</p><div class="olp-actions">${ext(x.primary[1], x.primary[0], 'owned-primary')}${ext(p.repo, 'GitHubで見る', 'olp-link')}</div><p class="owned-action-note">${e(x.actionNote)}</p></div>`
+    + `<figure class="olp-film"><p class="olp-film__tag">イメージ映像（演出を含む）· 設計画面 · 未リリース</p><div class="olp-film__screen"><video controls playsinline preload="none" poster="${FILM.poster}" width="1920" height="1080" aria-label="Oathraのイメージ映像（30秒・音声なし・演出を含む）"><source src="${FILM.src}" type="video/mp4">この動画は、このブラウザーでは再生できません。</video></div><figcaption>30秒・音声なし・押したときだけ再生。紹介のために作ったイメージ映像です。映像の中の画面はこれから作るアプリの設計で、現行のOathraにはまだありません。</figcaption></figure></section>`;
+}
+
+function ringSection() {
+  const cards = [
+    ['確かめる項目の数だけ区切る', '日付・時刻・人数なら3つ。', 0, ''],
+    ['相手の言葉で、一区切り閉じる', '根拠になった発言には緑の下線を引き、ミリ秒単位の区間を記録します。', 1, ' is-closed'],
+    ['AIの言葉では閉じない', 'AIが「予約できました」と言っても、判定には数えません。', 1, ' is-open']
+  ];
+  return `<section class="container olp-ring" id="ring" aria-labelledby="olp-ring-title"><div class="olp-head"><p class="owned-kicker">01 · 輪のしくみ</p><h2 id="olp-ring-title">相手の言葉でだけ、<br>輪が閉じる。</h2><p>判定の考え方です。図に使うのは、映像と同じ輪です。</p></div><div class="olp-ring__body"><figure class="olp-ring__figure">${ring(3)}<figcaption>日付・時刻・人数の3項目が、相手の言葉で確認済み</figcaption></figure><ol class="olp-ring__cards">${cards.map(([t, b, , cls]) => `<li class="olp-ring__card${cls}"><strong>${e(t)}</strong><span>${e(b)}</span></li>`).join('')}</ol></div><p class="olp-note">緑は「相手の言葉で確認済み」の意味にだけ使います。ページ内のボタンやリンクの色には使いません。</p></section>`;
+}
+
+function stepsSection(prototypeLink) {
+  return `<section class="container olp-steps" id="steps" aria-labelledby="olp-steps-title"><div class="olp-head"><p class="owned-kicker">02 · 頼んでから報告まで</p><h2 id="olp-steps-title">頼む。承認する。<br>報告を読む。</h2><p>4枚は、上のイメージ映像から切り出した、これから作るアプリの設計画面です。現行のOathra（CLIとシミュレーター）には、この画面はまだありません。</p></div><ol class="olp-steps__list">${STEPS.map((s, i) => `<li class="olp-steps__item"><figure><a href="${s.src}"><img src="${s.src}" width="1600" height="900" loading="lazy" decoding="async" alt="${e(s.alt)}"></a><figcaption><span class="olp-label">開発中の画面 · 未リリース</span><strong>${i + 1}. ${e(s.title)}</strong><span>${e(s.body)}</span></figcaption></figure></li>`).join('')}</ol><p class="olp-note">別公開の設計動画は、次のUIを考えるためのプレビューです。現行製品の実演や、新UIの実装完了を示すものではありません。 ${prototypeLink}</p></section>`;
+}
+
+function delegationSection() {
+  const cols = [
+    ['ok', '○ AIが決めてよい', '例：時間は第一希望から2時間以内'],
+    ['hold', '△ 決めずに持ち帰る', '例：コースや前金が必要と言われた'],
+    ['no', '✕ しない', '支払いの約束、AIであることを隠す']
+  ];
+  return `<section class="container olp-trust" id="trust" aria-labelledby="olp-trust-title"><div class="olp-head"><p class="owned-kicker">03 · 任せる範囲と承認</p><h2 id="olp-trust-title">AIに決めさせること、<br>させないこと。</h2><p class="olp-label olp-label--block">設計 · 現行版には未実装</p><p>これから作るアプリでの設計です。現行のOathraには、この3段階の指定、発信前の承認、費用の上限による打ち切り、着信の応対はまだありません。</p></div><div class="olp-trust__cols">${cols.map(([k, t, b]) => `<div class="olp-trust__col olp-trust__col--${k}"><strong>${e(t)}</strong><span>${e(b)}</span></div>`).join('')}</div><p class="olp-note">設計では、本番の電話は毎回承認が必要で、この設定は外せません。費用は1回ごとの上限つきです。電話がかかってきたときは、AIが用件だけを聞きます。</p></section>`;
+}
+
+function recordingsSection(p, heroFilm, film15) {
+  const figure15 = outer(film15, '<figure class="rm-film15__figure"', '15-second film figure');
+  const note15 = outer(film15, '<p class="rm-film15__note"', '15-second film note');
+  return `<section class="container olp-rec" id="recordings" aria-labelledby="film15-oathra-title"><div class="olp-head"><p class="owned-kicker">04 · 実録画</p><h2 id="film15-oathra-title">一本の電話と、<br>確定を決めた一言。</h2><p>上のイメージ映像と見比べられるよう、現行のOathraの判定画面と通話記録をここにまとめます。</p></div><div class="olp-rec__grid"><div class="olp-rec__item"><p class="olp-rec__kicker">判定画面 · 約13秒の実録画</p><p class="olp-note olp-rec__lead">最初に出るのは、判定の流れを説明する再現です。「実録画を見る」で、13秒の実録画に切り替わります。</p>${heroFilm}</div><div class="olp-rec__item" data-film15="oathra"><p class="olp-rec__kicker">15秒の紹介映像</p>${figure15}${note15}</div></div><p class="olp-note">${ext(p.repo, 'コードと記録をGitHubで見る')}</p></section>`;
+}
+
+function statusSection(p, source, access) {
+  const [ms, speech, license] = p.ja.highlights;
+  const rows = [
+    ['できる', [`会話上の合意の判定 — ${speech.label}`, `根拠の区間の記録 — ${ms.label}`, `${license.value} — 開発者向けに、${license.label}`]],
+    ['条件付き', ['実際の電話（設定と費用が必要）']],
+    ['まだ言わない', ['店舗システムへの登録', '100件の実電話検証']]
+  ];
+  return `<section class="container olp-status" id="status" aria-labelledby="olp-status-title"><div class="olp-head"><p class="owned-kicker">05 · 現在地</p><h2 id="olp-status-title">できること、条件付きのこと、<br>まだ言わないこと。</h2></div><div class="olp-status__table" role="table" aria-label="Oathraの現在地">${rows.map(([h, items]) => `<div class="olp-status__col" role="rowgroup"><p class="olp-status__head" role="columnheader">${e(h)}</p><ul role="row">${items.map(i => `<li role="cell">${e(i)}</li>`).join('')}</ul></div>`).join('')}</div><div class="olp-status__detail">${access}<p>${e(p.ja.proof)}</p>${ext(p.evidence, '検証資料を見る')}</div>${source}</section>`;
+}
+
+export function refineOathraLp(html, products = ledgerProducts) {
+  if (html.includes(`data-oathra-lp="${OATHRA_LP_VERSION}"`)) return html;
+  if (!/<html lang="ja">/.test(html) || !html.includes('data-product-id="oathra"')) throw new Error('Oathra LP: not the Japanese Oathra page');
+  const p = oathra(products), x = landingExperience.oathra.ja;
+  const mainStart = html.indexOf('<main id="main">'), mainEnd = html.lastIndexOf('</main>');
+  if (mainStart < 0 || mainEnd < mainStart || html.indexOf('<main id="main">', mainStart + 1) >= 0) throw new Error('Oathra LP: expected one <main id="main">');
+  const main = html.slice(mainStart, mainEnd);
+  const heroFilm = outer(main, '<figure class="owned-film owned-film--hero"', 'hero recording');
+  const film15 = outer(main, '<section class="container rm-film15 rm-film15--oathra"', '15-second film section');
+  const start = outer(main, '<section class="container owned-start" id="start">', 'start section');
+  const consult = outer(main, '<section class="container owned-consult">', 'consult section');
+  const related = outer(main, '<section class="container studio-related">', 'related products');
+  const footer = outer(main, '<footer class="container owned-footer">', 'footer');
+  const source = outer(main, '<p class="owned-features__source">', 'source line');
+  const tryNow = outer(main, '<p class="owned-try-now">', 'try-now line');
+  const access = outer(main, '<details class="owned-access">', 'access conditions');
+  const boundaries = outer(main, '<section class="container owned-boundaries">', 'boundaries');
+  const prototypeLink = boundaries.match(/<a [^>]*href="https:\/\/forifor\.github\.io\/Launchloom\/design\/index\.html\?product=oathra"[^>]*>[\s\S]*?<\/a>/);
+  if (!prototypeLink) throw new Error('Oathra LP: expected the design-study link');
+  const startWithTry = start.replace('</div><div class="owned-start__actions">', `${tryNow}</div><div class="owned-start__actions">`);
+  if (startWithTry === start) throw new Error('Oathra LP: expected the start actions');
+  const composed = `<main id="main">${hero(p, x)}${ringSection()}${stepsSection(prototypeLink[0])}${delegationSection()}${recordingsSection(p, heroFilm, film15)}${statusSection(p, source, access.replace('<details class="owned-access">', '<details class="owned-access" open>').replace(`>${e(p.ja.license)} · `, '>'))}${startWithTry}${consult}${related}${footer}`;
+  let out = html.slice(0, mainStart) + composed + html.slice(mainEnd);
+  out = out.replace('<body ', `<body data-oathra-lp="${OATHRA_LP_VERSION}" `);
+  // Header links follow the new sections.
+  out = out.replace('href="#features">機能</a>', 'href="#ring">しくみ</a>').replace('href="#flow">流れ</a>', 'href="#steps">流れ</a>');
+  if ((out.match(/<h1[\s>]/g) || []).length !== 1) throw new Error('Oathra LP: expected one h1');
+  return out;
+}
+
+export async function writeOathraLp(dist, products = ledgerProducts) {
+  for (const asset of [FILM.src, FILM.poster, ...STEPS.map(s => s.src)]) await fs.access(path.join(dist, asset)).catch(() => { throw new Error(`Oathra LP: missing ${asset}`); });
+  const file = path.join(dist, PAGE);
+  await fs.writeFile(file, refineOathraLp(await fs.readFile(file, 'utf8'), products));
+  const assets = path.join(dist, 'assets');
+  const [css, layer] = await Promise.all(['showcase.css', 'oathra-lp.css'].map(f => fs.readFile(path.join(assets, f), 'utf8')));
+  if (!layer.includes('[data-oathra-lp]')) throw new Error('Oathra LP stylesheet is missing or stale');
+  await fs.writeFile(path.join(assets, 'showcase.css'), css.split(CSS_MARK)[0].trimEnd() + `\n${CSS_MARK}\n${layer}`);
+}

@@ -82,10 +82,10 @@ export const landingExperience = Object.freeze({
   oathra: {
     ja: {
       title:'「できました」を、根拠にしない。',
-      primary:['サンプル発言の根拠を照合する','https://forifor.github.io/oathra/check.html'],
+      primary:['サンプルの根拠を照合する','https://forifor.github.io/oathra/check.html'],
       secondary:['シミュレーター全体を見る','https://forifor.github.io/oathra/'],
       tryNow:'公開サンプルから、日時・金額・確定表現の根拠を照合する。',
-      actionNote:'最初のボタンで公開サンプルの検証画面が開きます。実電話の発信や店舗システムへの登録は行いません。',
+      actionNote:'照合するのは公開サンプルだけです。電話はかからず、お店のシステムにも登録しません。',
       startTitle:'まず、会話と証拠を見比べる。',
       startBody:'公開シミュレーターでは、相手の発言から日時・金額・確定表現を抽出し、結果判定と結びつける流れを確認できます。実電話や店舗システム登録の証明ではありません。',
       beats:[['会話する','電話エージェントと相手側のやり取りを記録します。'],['証拠を拾う','日時・金額・確定表現を、相手側の実際の発言に結びつけます。'],['結果を分ける','話した合意と、外部システムへ本当に登録された事実を混同しません。']]

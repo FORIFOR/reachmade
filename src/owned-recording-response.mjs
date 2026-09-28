@@ -8,6 +8,7 @@ const originals=new Map([
  ['/media/films/reachmade-15s.mp4','genie'],
  ['/media/films/genie-15s.mp4','genie'],
  ['/media/films/oathra-15s.mp4','oathra'],
+ ['/media/films/oathra-30s.mp4','oathra'],
 ]);
 export async function serveOwnedRecording(request, assets) {
  const url=new URL(request.url), id=originals.get(url.pathname);

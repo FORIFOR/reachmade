@@ -49,6 +49,17 @@ export const SHOTS = Object.freeze([
   { file: 'home-m-services.png', route: '/', width: 390, height: 844, scrollTo: '#services', state: 'phone, services band, reduced motion, real time', reducedMotion: true, realtime: true },
   { file: 'home-m-access.png', route: '/', width: 390, height: 844, scrollTo: '#access', state: 'phone, access table, reduced motion, real time', reducedMotion: true, realtime: true },
   // Japanese Genie page (LP re-composition): its sections at a readable size, real time.
+  // Japanese Oathra page (2026-09-29 brief): each section, real time.
+  { file: 'oathra-lp-hero.png', route: '/products/oathra/', width: 1440, height: 1000, state: 'Oathra first view, reduced motion, real time', reducedMotion: true, realtime: true },
+  { file: 'oathra-lp-ring.png', route: '/products/oathra/', width: 1440, height: 1000, scrollTo: '#ring', state: 'Oathra ring, reduced motion, real time', reducedMotion: true, realtime: true },
+  { file: 'oathra-lp-steps.png', route: '/products/oathra/', width: 1440, height: 1000, scrollTo: '#steps', state: 'Oathra request-to-report design stills, reduced motion, real time', reducedMotion: true, realtime: true },
+  { file: 'oathra-lp-trust.png', route: '/products/oathra/', width: 1440, height: 1000, scrollTo: '#trust', state: 'Oathra delegation design, reduced motion, real time', reducedMotion: true, realtime: true },
+  { file: 'oathra-lp-rec.png', route: '/products/oathra/', width: 1440, height: 1000, scrollTo: '#recordings', state: 'Oathra recordings, reduced motion, real time', reducedMotion: true, realtime: true },
+  { file: 'oathra-lp-status.png', route: '/products/oathra/', width: 1440, height: 1000, scrollTo: '#status', state: 'Oathra where it stands, reduced motion, real time', reducedMotion: true, realtime: true },
+  { file: 'oathra-lp-m-hero.png', route: '/products/oathra/', width: 390, height: 1200, state: 'phone, Oathra first view, reduced motion, real time', reducedMotion: true, realtime: true },
+  { file: 'oathra-lp-m-steps.png', route: '/products/oathra/', width: 390, height: 1400, scrollTo: '#steps', state: 'phone, Oathra design stills, reduced motion, real time', reducedMotion: true, realtime: true },
+  { file: 'oathra-lp-tall.png', route: '/products/oathra/', width: 1440, height: 1000, state: 'Oathra whole page, reduced motion, real time', reducedMotion: true, realtime: true, fullPage: true },
+  { file: 'oathra-lp-nojs-390.png', route: '/products/oathra/', width: 390, height: 1400, scrollTo: '#trust', state: 'phone, JavaScript disabled, Oathra delegation and recordings, real time', realtime: true, noScript: true },
   { file: 'genie-lp-hero.png', route: '/products/genie/', width: 1440, height: 1000, state: 'Genie LP hero, reduced motion, real time', reducedMotion: true, realtime: true },
   { file: 'genie-lp-features.png', route: '/products/genie/', width: 1440, height: 1000, scrollTo: '#features', state: 'Genie LP features with stills, reduced motion, real time', reducedMotion: true, realtime: true },
   { file: 'genie-lp-demos.png', route: '/products/genie/', width: 1440, height: 1000, scrollTo: '#demos', state: 'Genie LP three demos, reduced motion, real time', reducedMotion: true, realtime: true },

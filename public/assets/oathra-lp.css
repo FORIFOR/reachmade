@@ -1,0 +1,97 @@
+/* Oathra LP (Japanese product page), from the 2026-09-29 design brief. Scoped to [data-oathra-lp].
+   Page colours from the brief: green only for the logo and "confirmed in the other party's words",
+   button ink, and the film ground. Flat colours only, no blur layers, no external resources. */
+[data-oathra-lp]{--olp-green:#0b7a58;--olp-green-soft:#e3f1ea;--olp-ink:#0e1512;--olp-film:#f1f4f2;--olp-hold:#fbeede;--olp-rule:rgba(14,21,18,.14);--olp-muted:#4b524e;--olp-quiet:#5d645f}
+[data-oathra-lp] .owned-brand span{color:var(--olp-green)}
+[data-oathra-lp] .owned-primary{background:var(--olp-ink);border-color:var(--olp-ink);color:#fff}
+[data-oathra-lp] main>section{padding-block:clamp(56px,7vw,104px);border-top:1px solid var(--olp-rule)}
+[data-oathra-lp] main>section:first-child{border-top:0;padding-top:clamp(40px,5vw,72px)}
+[data-oathra-lp] .olp-head{display:grid;gap:14px;max-width:44em;margin-bottom:clamp(28px,3vw,44px)}
+[data-oathra-lp] .olp-head h2{font-size:clamp(28px,3.6vw,48px);line-height:1.18;letter-spacing:-.04em;font-weight:640;margin:0;word-break:keep-all;overflow-wrap:anywhere}
+[data-oathra-lp] .olp-head>p{margin:0;font-size:16px;line-height:1.9;color:var(--olp-muted)}
+[data-oathra-lp] .olp-note{margin:20px 0 0;font-size:13px;line-height:1.8;color:var(--olp-quiet)}
+[data-oathra-lp] .olp-label{font-size:11px;font-weight:700;letter-spacing:.06em;color:var(--olp-ink);border:1px solid var(--olp-rule);padding:2px 8px;align-self:flex-start;justify-self:start;width:max-content;max-width:100%}
+[data-oathra-lp] .olp-label--block{justify-self:start;margin:0}
+
+/* 1 · First view: copy left, film right (below on phones). */
+[data-oathra-lp] .olp-hero{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(28px,4vw,64px);align-items:center}
+[data-oathra-lp] .olp-hero h1{font-size:clamp(32px,3.5vw,52px);line-height:1.16;letter-spacing:-.045em;font-weight:660;margin:14px 0 0;word-break:keep-all}
+[data-oathra-lp] .olp-lead{font-size:17px;line-height:1.9;color:var(--olp-muted);margin:22px 0 0;max-width:30em}
+[data-oathra-lp] .olp-actions{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:center;margin-top:28px}
+[data-oathra-lp] .olp-link{display:inline-flex;min-height:44px;align-items:center;font-size:15px;color:var(--olp-ink);text-decoration:underline;text-underline-offset:4px}
+[data-oathra-lp] .olp-hero .owned-action-note{margin:12px 0 0;font-size:12.5px;color:var(--olp-quiet)}
+[data-oathra-lp] .olp-film{margin:0;background:var(--olp-film);border:1px solid var(--olp-rule)}
+[data-oathra-lp] .olp-film__tag{margin:0;padding:8px 12px;font-size:12px;color:var(--olp-muted);border-bottom:1px solid var(--olp-rule)}
+[data-oathra-lp] .olp-film__screen video{display:block;width:100%;height:auto;aspect-ratio:16/9;background:var(--olp-film)}
+[data-oathra-lp] .olp-film figcaption{padding:10px 12px;font-size:12.5px;line-height:1.7;color:var(--olp-quiet);border-top:1px solid var(--olp-rule)}
+
+/* 2 · The ring. */
+[data-oathra-lp] .olp-ring__body{display:grid;grid-template-columns:minmax(160px,220px) minmax(0,1fr);gap:clamp(24px,4vw,56px);align-items:center}
+[data-oathra-lp] .olp-ring__figure{margin:0;display:grid;gap:10px;justify-items:center;text-align:center}
+[data-oathra-lp] .olp-ring__figure figcaption{font-size:12.5px;color:var(--olp-quiet)}
+[data-oathra-lp] .olp-ring__svg{width:100%;max-width:200px;height:auto}
+[data-oathra-lp] .olp-ring__svg path{fill:none;stroke:#d5dbd7;stroke-width:7;stroke-linecap:butt}
+[data-oathra-lp] .olp-ring__svg path.is-closed{stroke:var(--olp-green)}
+[data-oathra-lp] .olp-ring__svg text{font:600 20px/1 ui-monospace,SFMono-Regular,Menlo,monospace;fill:var(--olp-ink)}
+[data-oathra-lp] .olp-ring__cards{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+[data-oathra-lp] .olp-ring__card{border:1px solid var(--olp-rule);padding:18px 18px 20px;display:grid;gap:8px;align-content:start;background:#fff}
+[data-oathra-lp] .olp-ring__card strong{font-size:15px;line-height:1.5}
+[data-oathra-lp] .olp-ring__card span{font-size:13.5px;line-height:1.8;color:var(--olp-muted)}
+[data-oathra-lp] .olp-ring__card.is-closed{background:var(--olp-green-soft);border-color:var(--olp-green)}
+[data-oathra-lp] .olp-ring__card.is-open{border-style:dashed}
+
+/* 3 · From request to report (design stills). */
+[data-oathra-lp] .olp-steps__list{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+[data-oathra-lp] .olp-steps__item figure{margin:0;display:grid;gap:10px}
+[data-oathra-lp] .olp-steps__item a{display:block;line-height:0;border:1px solid var(--olp-rule);background:var(--olp-film)}
+[data-oathra-lp] .olp-steps__item a:focus-visible{outline:2px solid var(--olp-ink);outline-offset:2px}
+[data-oathra-lp] .olp-steps__item img{display:block;width:100%;height:auto;aspect-ratio:16/9;object-fit:cover}
+[data-oathra-lp] .olp-steps__item figcaption{display:grid;gap:6px;font-size:13px;line-height:1.75;color:var(--olp-muted)}
+[data-oathra-lp] .olp-steps__item figcaption strong{font-size:15px;color:var(--olp-ink)}
+
+/* 4 · What the AI may decide (design). */
+[data-oathra-lp] .olp-trust__cols{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+[data-oathra-lp] .olp-trust__col{border:1px solid var(--olp-rule);padding:18px;display:grid;gap:8px;background:#fff}
+[data-oathra-lp] .olp-trust__col strong{font-size:15px}
+[data-oathra-lp] .olp-trust__col span{font-size:13.5px;line-height:1.8;color:var(--olp-muted)}
+[data-oathra-lp] .olp-trust__col--hold{background:var(--olp-hold)}
+
+/* 5 · Recordings: the 13-second recording and the 15-second film side by side. */
+[data-oathra-lp] .olp-rec__grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(20px,3vw,40px);align-items:start}
+[data-oathra-lp] .olp-rec__item .owned-film--hero{margin:0;width:auto}
+[data-oathra-lp] .olp-rec__item .rm-film15__figure{margin:0}
+[data-oathra-lp] .olp-rec__kicker{margin:0 0 10px;font-size:12px;font-weight:700;letter-spacing:.06em;color:var(--olp-quiet)}
+[data-oathra-lp] .olp-rec__lead{margin:0 0 12px}
+[data-oathra-lp] .olp-rec__item .rm-film15__note{margin:10px 0 0;font-size:12.5px;line-height:1.75;color:var(--olp-quiet)}
+
+/* 6 · Where it stands. */
+[data-oathra-lp] .olp-status__table{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border:1px solid var(--olp-rule)}
+[data-oathra-lp] .olp-status__col{padding:18px 20px;border-left:1px solid var(--olp-rule)}
+[data-oathra-lp] .olp-status__col:first-child{border-left:0}
+[data-oathra-lp] .olp-status__head{margin:0 0 10px;font-size:13px;font-weight:700;color:var(--olp-ink)}
+[data-oathra-lp] .olp-status__col:first-child .olp-status__head::before{content:"✓ ";color:var(--olp-ink)}
+[data-oathra-lp] .olp-status__col ul{margin:0;padding-left:1.1em;display:grid;gap:6px;font-size:14px;line-height:1.75;color:var(--olp-muted)}
+[data-oathra-lp] .olp-status__detail{margin-top:20px;display:grid;gap:8px;font-size:13.5px;line-height:1.8;color:var(--olp-muted);max-width:48em}
+[data-oathra-lp] .olp-status__detail p{margin:0}
+[data-oathra-lp] .olp-status__detail{display:flex;flex-direction:column;align-items:flex-start}
+[data-oathra-lp] .olp-status__detail .owned-access{display:block;width:100%;max-width:48em;margin:0;padding:0;border:0;grid-column:auto;grid-row:auto}
+[data-oathra-lp] .olp-status__detail .owned-access summary{font-size:13px;font-weight:600;color:var(--olp-ink);cursor:pointer}
+[data-oathra-lp] .olp-status__detail .owned-access .owned-requirements{margin:6px 0 0;font-size:13.5px;line-height:1.8;color:var(--olp-muted);max-width:none}
+[data-oathra-lp] .olp-status .owned-features__source{margin-top:16px}
+
+@media (max-width:1000px){
+[data-oathra-lp] .olp-steps__list{grid-template-columns:repeat(2,minmax(0,1fr))}
+[data-oathra-lp] .olp-ring__cards{grid-template-columns:1fr}
+}
+@media (max-width:760px){
+[data-oathra-lp] .olp-hero,[data-oathra-lp] .olp-ring__body,[data-oathra-lp] .olp-rec__grid{grid-template-columns:1fr}
+[data-oathra-lp] .olp-steps__list,[data-oathra-lp] .olp-trust__cols,[data-oathra-lp] .olp-status__table{grid-template-columns:1fr}
+[data-oathra-lp] .olp-status__col{border-left:0;border-top:1px solid var(--olp-rule)}
+[data-oathra-lp] .olp-status__col:first-child{border-top:0}
+[data-oathra-lp] .olp-ring__figure{justify-items:start;text-align:left}
+[data-oathra-lp] .olp-ring__svg{max-width:140px}
+}
+@media (forced-colors:active){
+[data-oathra-lp] .olp-ring__svg path.is-closed{stroke:Highlight}
+[data-oathra-lp] .olp-ring__card,[data-oathra-lp] .olp-trust__col,[data-oathra-lp] .olp-status__table,[data-oathra-lp] .olp-film,[data-oathra-lp] .olp-steps__item a{border:1px solid CanvasText}
+}

@@ -18,6 +18,7 @@ import { writeSignatureScenes } from '../src/signature-scene.mjs';
 import { writeFifteenSecondFilms } from '../src/fifteen-second-films.mjs';
 import { writeHomeV4 } from '../src/home-v4.mjs';
 import { writeGenieLp } from '../src/genie-lp.mjs';
+import { writeOathraLp } from '../src/oathra-lp.mjs';
 export { root, escapeHTML, validateConfig } from './build-core.mjs';
 
 export async function build() {
@@ -43,6 +44,8 @@ export async function build() {
   await writeHomeV4(dist,products);
   // Japanese Genie page only: the LP re-composes the owned page around its existing recording, features and scope.
   await writeGenieLp(dist,products);
+  // Japanese Oathra page only: re-composed from the 2026-09-29 design brief.
+  await writeOathraLp(dist,products);
   await writeProductCapabilityStyles(dist);
   const showcaseRoutes = ['', 'en/', ...products.flatMap(p=>[`products/${p.id}/`,`en/products/${p.id}/`])];
   const cssVersion = createHash('sha256').update(await fs.readFile(path.join(dist,'assets/showcase.css'))).digest('hex').slice(0,16);

@@ -15,7 +15,10 @@ test('each film appears once, before its anchor, on its Japanese page only', asy
   for (const [id, f] of Object.entries(FILMS)) {
     const html = await read(f.page);
     assert.equal(html.split(`data-film15="${id}"`).length - 1, 1, id);
-    assert.ok(html.indexOf(`data-film15="${id}"`) < html.indexOf(f.before), `${id} precedes its anchor`);
+    // The Japanese Oathra page is re-composed by src/oathra-lp.mjs (2026-09-29 brief); there the film sits in its
+    // recordings section. Elsewhere it still precedes the anchor it was inserted before.
+    if (html.includes('data-oathra-lp=')) assert.ok(html.indexOf('id="recordings"') < html.indexOf(`data-film15="${id}"`) && html.indexOf(`data-film15="${id}"`) < html.indexOf('id="status"'), `${id} sits in the recordings section`);
+    else assert.ok(html.indexOf(`data-film15="${id}"`) < html.indexOf(f.before), `${id} precedes its anchor`);
     const en = await read(path.join('en', f.page));
     assert.doesNotMatch(en, /data-film15/, `${id}: the English page gets no Japanese film`);
   }

@@ -27,7 +27,8 @@ for(const [id,direction] of Object.entries(directions))for(const lang of ['ja','
  });
  test(`integration ${id}/${lang}: final built page contains the active composition`,async()=>{
   const html=await fs.readFile(path.join(root,'dist',lang==='en'?'en':'','products',id,'index.html'),'utf8');
-  assert.match(html,new RegExp(`data-direction="${direction}"`));
+  // The Japanese Oathra page uses the 2026-09-29 brief's first view instead of the art-directed hero.
+  if(id==='oathra'&&lang==='ja') assert.match(html,/data-oathra-lp="/); else assert.match(html,new RegExp(`data-direction="${direction}"`));
   assert.match(html,/data-art-direction="20260919"/);
   assert.equal((html.match(/<script\b/g)||[]).length,1);
   assert.equal((html.match(/rel="stylesheet"/g)||[]).length,1);
