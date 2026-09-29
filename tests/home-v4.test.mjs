@@ -67,7 +67,8 @@ test('v4 build layer appends once and repeats cleanly', async () => {
     await writeHomeV4(tmp, fixtures());
     assert.equal(await fs.readFile(path.join(tmp, 'assets/showcase.css'), 'utf8'), css1);
     assert.equal(await fs.readFile(path.join(tmp, 'assets/showcase.mjs'), 'utf8'), js1);
-    assert.equal((css1.match(/REACHMADE_HOME_V4/g) || []).length, 1);
+    // Count the build marker itself: the readability layer's own comment (2026-09-30) also starts with REACHMADE_HOME_V4.
+    assert.equal((css1.match(/\/\* REACHMADE_HOME_V4 \*\//g) || []).length, 1);
     assert.match(css1, /^\/\* earlier \*\//);
     assert.match(js1, /import\('\.\/home-v4\.mjs'\)/);
     await fs.rm(path.join(tmp, 'assets/products/genie/next-ui-03.jpg'));

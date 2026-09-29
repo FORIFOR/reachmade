@@ -81,7 +81,8 @@ test('the home names Noa\'s clip for what it is and links the explainer section'
   assert.match(html, /data-v4-chapter="noa" data-kind="紹介映像（画面は再現・演出を含む）"/);
   assert.match(html, /href="\/products\/noa\/#watch">5:48の解説（演出を含む）を見る/);
   assert.match(html, /夜澄ノアの映像は、画面構成を再現した紹介映像（演出を含む）です。/);
-  assert.match(html, /録画を、伝わる紹介素材に。コメントを、声と表情に。/);
+  // The 2026-09-30 readability patch shortened the hero lead to three phrases; Noa's phrase is no longer in it.
+  assert.match(html, /<span class="v4-ph">録画を紹介素材に。<\/span>/);
   assert.match(html, /夜澄ノアはソース非公開のため、YouTubeの配信と解説動画で動きを確かめられます。/);
 });
 

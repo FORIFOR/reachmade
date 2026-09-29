@@ -239,3 +239,67 @@
 [data-home-v4] .v4-screen{overflow:hidden}
 [data-home-v4] .v4-start strong,[data-home-v4] .v4-start small{background:rgba(5,6,5,.72);padding:4px 10px}
 [data-home-v4] .v4-choice strong,[data-home-v4] .v4-choice small{word-break:keep-all;overflow-wrap:anywhere}
+/* REACHMADE_HOME_V4_READABILITY — 2026-09-30. Appended after home-v4.css; overrides only. */
+/* 1. Line breaking: headings keep phrases whole; body text wraps normally without orphaned kana or leading punctuation. */
+[data-home-v4] .v4 :where(h1,h2,h3){word-break:keep-all;overflow-wrap:anywhere;line-break:strict}
+[data-home-v4] .v4 :where(p,li,dd,small,figcaption){word-break:normal;line-break:strict}
+[data-home-v4] .v4-ph{display:inline-block}
+
+/* 2. Minimum sizes (14px) and contrast (#6b7068 / #8b968f -> quiet on light, #c3ccc5 on dark). */
+[data-home-v4] .v4-meta{font-size:14px;line-height:1.6;font-weight:400;letter-spacing:0;font-family:inherit}
+[data-home-v4] .v4-kicker{font-size:14px;line-height:1.4;font-weight:700;font-family:inherit;letter-spacing:0;margin-bottom:16px}
+[data-home-v4] .v4-lead>p{color:var(--ink);font-weight:500}
+[data-home-v4] .v4-lead small{font-size:16px;color:var(--muted);font-weight:400;margin-top:8px}
+[data-home-v4] .v4-start strong{padding:6px 14px;border-radius:4px;background:rgba(5,6,5,.8)}
+[data-home-v4] .v4-start small{font-size:14px;line-height:1.5;font-weight:400;font-family:inherit;letter-spacing:0;color:#eef1ea;background:rgba(5,6,5,.8);padding:5px 12px;border-radius:4px}
+[data-home-v4] .v4-choice-meta{font-size:13px;color:#c3ccc5}
+[data-home-v4] .v4-choice strong{font-size:16px}
+[data-home-v4] .v4-choice small{font-size:13px;line-height:1.5;color:#c3ccc5}
+[data-home-v4] .v4-note{font-size:14px;color:var(--quiet)}
+[data-home-v4] .v4-head>p,[data-home-v4] .v4-services-lead p,[data-home-v4] .v4-contact-row p{font-size:16px;line-height:1.9}
+[data-home-v4] .v4-products h2 span{color:var(--quiet)}
+[data-home-v4] .v4-figure figcaption,[data-home-v4] .v4-proof,[data-home-v4] .v4-stage-proof{font-size:14px;line-height:1.7;color:var(--quiet)}
+[data-home-v4] .v4-chip-row{font-size:14px;line-height:1.4;font-weight:400;font-family:inherit;letter-spacing:0}
+[data-home-v4] .v4-num{font-size:15px}
+[data-home-v4] .v4-pill{font-size:14px;color:var(--ink);border-color:#b4bbae}
+[data-home-v4] .v4-name{font-size:18px}
+[data-home-v4] .v4-name span{font-size:15px}
+[data-home-v4] .v4-desc{font-size:17px;line-height:1.9}
+[data-home-v4] .v4 .v4-btn--sm{font-size:15px}
+[data-home-v4] .v4 .v4-link{font-size:15px}
+[data-home-v4] .v4 .v4-film-link{font-size:15px}
+[data-home-v4] .v4-scope summary{font-size:15px;min-height:52px}
+[data-home-v4] .v4-lic{font-size:14px;line-height:1.4;font-weight:400;font-family:inherit;color:var(--quiet)}
+[data-home-v4] .v4-scope p{font-size:15px;line-height:1.9;color:var(--muted)}
+[data-home-v4] .v4-scope b{font-size:14px;line-height:1;font-weight:700;font-family:inherit;letter-spacing:0;color:var(--ink)}
+[data-home-v4] .v4-switch button{font-size:14px;min-height:40px}
+[data-home-v4] .v4-bar-line small{font-size:14px}
+[data-home-v4] .v4-time{font-size:13px}
+[data-home-v4] .v4-hud{font-size:12px}
+[data-home-v4] .v4-tag{font-size:12px}
+[data-home-v4] .v4-three span,[data-home-v4] .v4-grid span{font-size:14px;line-height:1;font-weight:400;font-family:inherit;letter-spacing:0}
+[data-home-v4] .v4-three p{font-size:16px;line-height:1.9;color:var(--muted)}
+[data-home-v4] .v4-grid p{font-size:15px;color:#d3dbd5}
+[data-home-v4] .v4-grid small{font-size:14px;color:#c3ccc5}
+[data-home-v4] .v4-next-list button span,[data-home-v4] .v4-next-list p,[data-home-v4] .v4-next-desc,[data-home-v4] .v4-next-note{font-size:14px;color:var(--quiet)}
+[data-home-v4] .v4-next-head span{font-size:14px;line-height:1.4;font-weight:400;font-family:inherit;letter-spacing:0}
+
+/* 3. Fewer elements per product chapter: the flow chips, the 3-row spec table and the dev-icon note are hidden
+      (markup stays for no-JS readers of the product page and for tests). The English discipline label is dropped. */
+[data-home-v4] .v4-flow,[data-home-v4] .v4-points,[data-home-v4] .v4-icon,[data-home-v4] .v4-dev{display:none}
+[data-home-v4] .v4-chip-row>i,[data-home-v4] .v4-chip-row>span:not(.v4-num):not(.v4-pill){display:none}
+@media (min-width:1000px){[data-home-v4] .v4-staged .v4-chapter{opacity:.5}}
+
+/* 4. Access table and FAQ (flagship components reused on the v4 home). */
+[data-home-v4] .rm-access .eyebrow,[data-home-v4] .rm-faq .eyebrow{font-size:14px;line-height:1.4;font-weight:700;font-family:inherit;letter-spacing:0;color:var(--red)}
+[data-home-v4] .rm-access .rm-band-head p,[data-home-v4] .rm-faq-intro p{font-size:16px;line-height:1.9;color:var(--muted)}
+[data-home-v4] .rm-access-table th[scope=col]{font-size:14px;color:var(--quiet)}
+[data-home-v4] .rm-access-table td{font-size:15px;color:var(--muted)}
+[data-home-v4] .rm-access-index{font-size:14px}
+[data-home-v4] .rm-stage-tag{font-size:14px}
+[data-home-v4] .rm-access-note{font-size:14px;line-height:1.8;color:var(--quiet)}
+[data-home-v4] .rm-faq-item summary{font-size:17px}
+[data-home-v4] .rm-faq-item p{font-size:16px;line-height:1.95;color:var(--muted)}
+
+/* 5. Phones: the date line wraps as one phrase. */
+@media (max-width:640px){[data-home-v4] .v4-meta>span{flex-wrap:wrap}}

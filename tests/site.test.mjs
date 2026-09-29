@@ -83,12 +83,12 @@ test('each product is rendered exactly once in each product directory',()=>{
  }
 });
 test('home leads with an explorable product and retains source-aware catalogue routes',()=>{
- // Japanese home: v4 order hero → reel → products → access → FAQ, every product reachable without script.
+ // Japanese home: v4 order hero → reel → access → products → FAQ (the table moved up on 2026-09-30), every product reachable without script.
  {
   const html=htmlByPath.get('/');
   const at=s=>html.indexOf(s);
   assert.match(html,/data-home-v4="/);
-  assert.ok(at('class="v4-hero')>=0&&at('class="v4-hero')<at('id="reel"')&&at('id="reel"')<at('id="products"')&&at('id="products"')<at('id="access"')&&at('id="access"')<at('id="faq"'));
+  assert.ok(at('class="v4-hero')>=0&&at('class="v4-hero')<at('id="reel"')&&at('id="reel"')<at('id="access"')&&at('id="access"')<at('id="products"')&&at('id="products"')<at('id="faq"'));
   assert.equal((html.match(/data-studio-choice=/g)||[]).length,products.length);
   assert.equal((html.match(/data-v4-chapter=/g)||[]).length,products.length);
   for(const p of products){assert.ok(html.includes(`data-studio-choice="${p.id}"`));assert.ok(html.includes(`href="/products/${p.id}/"`));assert.ok(html.includes(`src="/media/products/${p.id}.mp4"`));}
