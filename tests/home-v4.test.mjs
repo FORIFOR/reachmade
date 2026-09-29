@@ -125,13 +125,12 @@ test('v4 names each product film for what it is, and shows the ledger conditions
   for (const [id, label, src] of [['oathra', 'イメージ映像（演出を含む）', '/media/films/home-oathra-13s.mp4'], ['agent-team', '設計動画（画面は再現・未実装を含む）', '/media/films/home-agent-team-13s.mp4']]) {
     const c = chapterOf(id);
     assert.match(html, new RegExp(`data-v4-chapter="${id}" data-kind="${label.replace(/[()（）]/g, '\\$&')}"`));
-    assert.ok(c.includes(`data-v4-rec="${src}"`) && c.includes(`<source src="${src}"`), id);
+    assert.ok(c.includes(`<source src="${src}"`), id);
     assert.doesNotMatch(c.slice(0, c.indexOf('</figcaption>')), /実録画/, id);
     assert.ok(html.includes(`data-studio-choice="${id}" data-v4-choice data-kind="${label}"`), id);
     // The caption under the clip says what the clip is; the ledger evidence stays in the scope details.
     const note = c.slice(c.indexOf('<span class="v4-proof">'), c.indexOf('</figcaption>'));
     assert.match(note, /を切り出したもので、実(際の通話|アプリ)の録画ではありません。/, id);
-    assert.match(c, /data-proof="[^"]*録画ではありません。/, id);
     const p = products.find(x => x.id === id);
     assert.ok(c.includes(`<b>EVIDENCE</b>${p.ja.proof}`), `${id} keeps the ledger evidence in the scope details`);
   }
@@ -140,8 +139,12 @@ test('v4 names each product film for what it is, and shows the ledger conditions
   assert.doesNotMatch(html, /実際の画面で。/);
   assert.doesNotMatch(client, /\/media\/products\/\$\{/, 'the client takes the footage source from data-v4-rec');
   for (const p of products.filter(x => !['oathra', 'agent-team'].includes(x.id))) assert.ok(chapterOf(p.id).includes(`<span class="v4-proof">${p.ja.proof.replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#39;')}</span>`), `${p.id} shows its evidence conditions`);
-  assert.match(html, /<p class="v4-proof v4-stage-proof" data-v4-stage-proof>/, 'the wide-screen stage shows the conditions of the product on screen');
-  assert.match(client, /data-v4-stage-proof/);
+  // Each chapter is one row: its own video, labelled, beside its text. No shared stage can show another product's video.
+  assert.doesNotMatch(html, /data-v4-stage|v4-staged/);
+  assert.doesNotMatch(client, /data-v4-stage|v4-staged/);
+  for (const p of products) assert.match(chapterOf(p.id), /^[^]*?<figure class="v4-figure"><div class="v4-screen v4-screen--sm"><video [^>]*aria-label="[^"]+"><source src="[^"]+"/, `${p.id} has its own video`);
+  const css = await fs.readFile(new URL('../public/assets/home-v4.css', import.meta.url), 'utf8');
+  assert.match(css, /\.v4-chapter>\.v4-figure\{grid-column:2;/, 'wide screens put the video beside its own text');
   assert.match(chapterOf('genie'), /<small class="v4-dev">開発中のアイコン · 現行版のアプリには未搭載<\/small>/);
   assert.doesNotMatch(client, /'実録画 · 約13秒|'STILL · 実録画/, 'the client takes the footage kind from data-kind');
 });

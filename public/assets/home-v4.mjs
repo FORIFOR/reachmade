@@ -54,14 +54,14 @@ if (root) {
       }, started ? 380 : 0);
     };
     const begin = i => {
-      pauseAll(video); stage?.stop();
+      pauseAll(video);
       started = true; frame.classList.add('is-started'); start.hidden = true; cap.hidden = false;
       tag.textContent = `${(choices[i] && choices[i].dataset.kind) || '実録画'} · 編集あり`;
       load(i);
     };
     const toggle = () => {
       if (!started) return begin(slide);
-      if (video.paused) { pauseAll(video); stage?.stop(); play(video, fail); } else video.pause();
+      if (video.paused) { pauseAll(video); play(video, fail); } else video.pause();
     };
     start.addEventListener('click', () => begin(slide));
     video.addEventListener('click', toggle);
@@ -104,81 +104,8 @@ if (root) {
     }
   }
 
-  /* Product chapters with a sticky stage on wide screens. */
-  const section = $('.v4-products'), stageEl = $('[data-v4-stage]'), chapters = $$('[data-v4-chapter]');
-  let stage = null;
-  if (section && stageEl && chapters.length) {
-    const v = $('[data-v4-stage-video]', stageEl), toggleBtn = $('[data-v4-stage-toggle]', stageEl), sw = $('[data-v4-switch]', stageEl);
-    const status = $('[data-v4-stage-status]', stageEl), tag = $('[data-v4-stage-tag] span', stageEl);
-    const modes = $$('[data-v4-mode]', stageEl), dots = $$('[data-v4-dot]', stageEl), stills = $$('[data-v4-stage-still]', stageEl);
-    let cur = 0, mode = 'rec', timer;
-    const ch = () => chapters[cur];
-    const isFilm = () => mode === 'film' && Boolean(ch().dataset.v4FilmSrc);
-    const paint = () => {
-      const c = ch(), film = isFilm(), key = film ? `${c.dataset.v4Chapter}-film` : c.dataset.v4Chapter;
-      chapters.forEach((a, k) => a.classList.toggle('is-current', k === cur));
-      dots.forEach((d, k) => d.classList.toggle('is-on', k === cur));
-      stills.forEach(s => s.classList.toggle('is-on', s.dataset.v4StageStill === key));
-      $('[data-v4-stage-index]', stageEl).textContent = c.dataset.index;
-      $('[data-v4-stage-disc]', stageEl).textContent = c.dataset.disc;
-      $('[data-v4-stage-name]', stageEl).textContent = c.dataset.name;
-      $('[data-v4-stage-clip]', stageEl).textContent = film ? '15秒の紹介映像（演出を含む）' : c.dataset.clip;
-      tag.textContent = film ? '紹介映像 · 演出を含む' : `${c.dataset.kind || '実録画'} · 約13秒 · 1× · 編集あり`;
-      { const proof = document.querySelector('[data-v4-stage-proof]'); if (proof) proof.textContent = film ? '15秒の紹介映像です。演出を含み、実録画ではありません。' : (c.dataset.proof || ''); }
-      sw.hidden = !c.dataset.v4FilmSrc;
-      modes.forEach(b => { if (b.dataset.v4Mode === 'rec') b.textContent = `${(c.dataset.kind || '実録画').replace(/（.*$/, '')} · 約13秒`; });
-      modes.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.v4Mode === mode)));
-      v.classList.toggle('v4-crop', !film); v.classList.toggle('v4-full', film);
-      v.setAttribute('aria-label', `${c.dataset.name} ${film ? '紹介映像（音声あり・演出を含む）' : `${c.dataset.kind || '実録画'}（無音・編集あり）`}`);
-    };
-    const stop = () => { clearTimeout(timer); if (!v.paused) v.pause(); };
-    const reset = () => {
-      stop(); v.removeAttribute('src'); v.load(); stageEl.classList.remove('is-live', 'is-playing'); status.hidden = true;
-      stageEl.style.setProperty('--p', '0'); $('[data-v4-stage-fill]', stageEl).style.setProperty('--p', '0');
-      $('[data-v4-stage-time]', stageEl).textContent = '00:00 / 00:--'; toggleBtn.setAttribute('aria-label', '再生');
-    };
-    const fail = () => { reset(); status.textContent = '映像を読み込めませんでした。製品ページからもご覧いただけます。'; status.hidden = false; };
-    const setChap = i => { if (i === cur) return; cur = i; mode = 'rec'; reset(); paint(); };
-    const toggle = () => {
-      if (!v.paused) return v.pause();
-      const c = ch(), src = isFilm() ? c.dataset.v4FilmSrc : c.dataset.v4Rec;
-      if (!v.getAttribute('src')) v.src = src;
-      v.muted = !isFilm();
-      pauseAll(v); status.hidden = true;
-      clearTimeout(timer); timer = setTimeout(fail, 10000);
-      play(v, fail);
-    };
-    toggleBtn.addEventListener('click', toggle);
-    v.addEventListener('click', toggle);
-    v.addEventListener('playing', () => { clearTimeout(timer); stageEl.classList.add('is-live', 'is-playing'); toggleBtn.setAttribute('aria-label', '一時停止'); });
-    v.addEventListener('pause', () => { stageEl.classList.remove('is-playing'); toggleBtn.setAttribute('aria-label', '再生'); });
-    v.addEventListener('waiting', () => { clearTimeout(timer); timer = setTimeout(fail, 10000); });
-    v.addEventListener('error', () => { if (v.getAttribute('src')) fail(); });
-    v.addEventListener('ended', () => { stageEl.classList.remove('is-playing'); v.currentTime = 0; });
-    v.addEventListener('timeupdate', () => {
-      if (!v.duration) return;
-      $('[data-v4-stage-fill]', stageEl).style.setProperty('--p', String(v.currentTime / v.duration));
-      $('[data-v4-stage-time]', stageEl).textContent = `${fmt(v.currentTime)} / ${fmt(v.duration)}`;
-    });
-    modes.forEach(b => b.addEventListener('click', () => { if (b.dataset.v4Mode === mode) return; mode = b.dataset.v4Mode; reset(); paint(); }));
-    stage = {stop: () => { if (!v.paused) v.pause(); }};
-
-    const wide = matchMedia('(min-width:1000px)');
-    let io;
-    const apply = () => {
-      const on = wide.matches && 'IntersectionObserver' in window;
-      section.classList.toggle('v4-staged', on); stageEl.hidden = !on;
-      io?.disconnect(); io = null;
-      if (!on) { reset(); return; }
-      io = new IntersectionObserver(entries => entries.forEach(e => { if (e.isIntersecting) setChap(chapters.indexOf(e.target)); }), {rootMargin: '-50% 0px -50% 0px'});
-      chapters.forEach(a => io.observe(a));
-      paint();
-    };
-    wide.addEventListener('change', apply);
-    apply();
-    // Narrow screens: inline native players; one plays at a time.
-    chapters.forEach(a => $('video', a)?.addEventListener('play', e => pauseAll(e.target)));
-  }
+  /* Product chapters: each row plays its own inline native player; one video plays at a time. */
+  $$('[data-v4-chapter] video').forEach(v => v.addEventListener('play', e => pauseAll(e.target)));
 
   /* TaskDock design preview frames */
   const next = $('[data-v4-next-root]');
