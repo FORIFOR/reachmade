@@ -19,6 +19,8 @@ jobs:
       WRANGLER_SEND_METRICS: 'false'
       CI: 'true'
       QA_BROWSERS: chromium,webkit
+      QA_BASE: https://127.0.0.1:8787
+      QA_ALLOW_SELF_SIGNED_LOOPBACK: '1'
     steps:
       - uses: actions/checkout@v4
       - name: Install Japanese glyphs for real browser rendering
@@ -46,10 +48,19 @@ jobs:
           python -m playwright install --with-deps chromium webkit
       - name: Check the built site with desktop and touch viewports
         run: |
-          npx wrangler@4 dev --local --ip 127.0.0.1 --port 8787 > /tmp/signature-worker.log 2>&1 &
+          # The production CSP upgrades insecure resources. Exercise it over
+          # real local HTTPS, using only Wrangler's CI loopback certificate.
+          npx wrangler@4 dev --local --local-protocol https --ip 127.0.0.1 --port 8787 > /tmp/signature-worker.log 2>&1 &
           PID=$!
           trap 'kill "$PID" || true' EXIT
           python scripts/verify-lab-signature.py
+      - name: Preserve actual Worker delivery diagnostics
+        if: always()
+        run: |
+          mkdir -p film-qa/lab-signature
+          if [ -f /tmp/signature-worker.log ]; then
+            cp /tmp/signature-worker.log film-qa/lab-signature/worker.log
+          fi
       - name: Report measured results, not a physical-device claim
         if: always()
         run: |
