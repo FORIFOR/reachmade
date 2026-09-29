@@ -9,6 +9,12 @@ const originals=new Map([
  ['/media/films/genie-15s.mp4','genie'],
  ['/media/films/oathra-15s.mp4','oathra'],
  ['/media/films/oathra-30s.mp4','oathra'],
+ ['/media/films/agent-team-design-30s.mp4','agent-team'],
+ // The Japanese home's clips cut from the owner's 2026-09-30 films (src/home-v4.mjs HOME_REC).
+ ['/media/films/home-agent-team-13s.mp4','agent-team'],
+ ['/media/films/home-oathra-13s.mp4','oathra'],
+ // 夜澄ノア's introduction film: the owned original is also the film on the Japanese product page.
+ ['/media/originals/noa/lp-film.mp4','noa'],
 ]);
 export async function serveOwnedRecording(request, assets) {
  const url=new URL(request.url), id=originals.get(url.pathname);

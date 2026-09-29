@@ -22,11 +22,10 @@ test('each film appears once, before its anchor, on its Japanese page only', asy
     const en = await read(path.join('en', f.page));
     assert.doesNotMatch(en, /data-film15/, `${id}: the English page gets no Japanese film`);
   }
-  // The v4 home offers the Genie and Oathra films inside its product stage, labelled as edited films.
+  // The v4 home links the Genie and Oathra films from their chapters, labelled as edited films.
   const home = await read('index.html');
   assert.doesNotMatch(home, /data-film15=/);
   for (const id of ['genie', 'oathra']) {
-    assert.ok(home.includes(`data-v4-film-src="${FILMS[id].src}"`), `${id} film offered on the home`);
     assert.ok(home.includes(`href="/products/${id}/#film15-${id}-title"`), `${id} film reachable without JavaScript`);
   }
   assert.match(home, /演出を含む/);

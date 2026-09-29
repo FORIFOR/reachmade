@@ -4,7 +4,7 @@ import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import {HOME_V4_VERSION, renderHomeV4, refineHomeV4, writeHomeV4} from '../src/home-v4.mjs';
-import {products, publishedHomeLinks} from '../src/products.mjs';
+import {products} from '../src/products.mjs';
 import {landingExperience} from '../src/product-landings.mjs';
 import {esc} from '../public/assets/lab-core.mjs';
 
@@ -12,7 +12,7 @@ const root = path.resolve(import.meta.dirname, '..');
 const fixtures = () => structuredClone(products);
 const shell = `<!doctype html><html lang="ja"><head><title>t</title></head><body data-home-flagship="x" id="top"><main id="main"><section>old</section></main><footer class="site-footer rm-footer"><a href="#access">a</a><a href="#faq">f</a></footer></body></html>`;
 
-test('v4 home: one h1, six products, no autoplay, preload none, safe external links', () => {
+test('v4 home: one h1, seven products, no autoplay, preload none, safe external links', () => {
   const html = renderHomeV4(fixtures(), 'ja');
   assert.equal((html.match(/<h1\b/g) || []).length, 1);
   assert.equal((html.match(/data-studio-choice=/g) || []).length, products.length);
@@ -69,7 +69,8 @@ test('v4 build layer appends once and repeats cleanly', async () => {
     await writeHomeV4(tmp, fixtures());
     assert.equal(await fs.readFile(path.join(tmp, 'assets/showcase.css'), 'utf8'), css1);
     assert.equal(await fs.readFile(path.join(tmp, 'assets/showcase.mjs'), 'utf8'), js1);
-    assert.equal((css1.match(/REACHMADE_HOME_V4/g) || []).length, 1);
+    // Count the build marker itself: the readability layer's own comment (2026-09-30) also starts with REACHMADE_HOME_V4.
+    assert.equal((css1.match(/\/\* REACHMADE_HOME_V4 \*\//g) || []).length, 1);
     assert.match(css1, /^\/\* earlier \*\//);
     assert.match(js1, /import\('\.\/home-v4\.mjs'\)/);
     await fs.rm(path.join(tmp, 'assets/products/genie/next-ui-03.jpg'));
@@ -121,10 +122,41 @@ test('v4 names each product film for what it is, and shows the ledger conditions
   assert.match(launchloomFigure, /Launchloomが作った紹介映像（無音・編集あり）/);
   assert.doesNotMatch(launchloomFigure, /実録画/);
   assert.doesNotMatch(html, /\d本の実録画|REAL RECORDINGS/);
+  // Noa remains the seventh real catalogue entry; its introductory film is never a stream recording.
+  assert.equal(products.length, 7);
+  assert.match(html, /data-v4-chapter="noa" data-kind="紹介映像（画面は再現・演出を含む）"/);
+  assert.match(chapterOf('noa'), /<source src="\/media\/products\/noa\.mp4"/);
+  assert.match(chapterOf('noa'), /href="\/products\/noa\/#watch">5:48の解説（演出を含む）を見る/);
+  // The deployed home uses different footage from the product recordings for these two products.
+  for (const [id, label, src] of [['oathra', 'イメージ映像（演出を含む）', '/media/films/home-oathra-13s.mp4'], ['agent-team', '設計動画（画面は再現・未実装を含む）', '/media/films/home-agent-team-13s.mp4']]) {
+    const c = chapterOf(id), figure = c.match(/<figure\b[^>]*>[\s\S]*?<\/figure>/)?.[0];
+    assert.ok(figure, `${id} retains its own footage and caption`);
+    assert.ok(c.includes(`data-kind="${label}"`), id);
+    assert.ok(figure.includes(`<source src="${src}"`), `${id} retains the deployed home film`);
+    assert.ok(figure.includes(`poster="${src.replace('.mp4', '.jpg')}"`), `${id} uses the matching home-film poster`);
+    assert.doesNotMatch(figure, /実録画/, id);
+    assert.ok(html.includes(`data-studio-choice="${id}" data-v4-choice data-kind="${label}"`), id);
+    const note = figure.slice(figure.indexOf('<span class="v4-proof">'), figure.indexOf('</figcaption>'));
+    assert.match(note, /を切り出したもので、実(際の通話|アプリ)の録画ではありません。/, id);
+    const p = products.find(x => x.id === id);
+    assert.ok(c.includes(`<p><b>公開している記録</b><br>${esc(p.ja.proof)}</p>`), `${id} keeps the separate ledger evidence in its scope details`);
+  }
+  assert.match(html, /Oathraはイメージ映像、Agent Teamは未実装の画面を含む設計動画、夜澄ノアは画面を再現した紹介映像です。これらは実アプリや配信の実録画ではありません。/);
+  assert.doesNotMatch(html, /実際の画面で。/);
+  assert.doesNotMatch(client, /\/media\/products\/\$\{/, 'the client takes each footage source from data-v4-rec');
   for (const p of products) {
-    assert.ok(chapterOf(p.id).includes(`<span class="v4-proof">${esc(p.ja.proof)}</span>`), `${p.id} shows its evidence conditions beside its footage`);
+    const chapter = chapterOf(p.id);
+    const figure = chapter.match(/<figure\b[^>]*>[\s\S]*?<\/figure>/)?.[0];
+    assert.ok(figure, `${p.id} keeps its own labelled video with its text`);
+    const source = figure.match(/<source src="([^"]+)"/)?.[1];
+    const poster = figure.match(/<video\b[^>]*poster="([^"]+)"/)?.[1];
+    const proof = figure.match(/<span class="v4-proof">([\s\S]*?)<\/span>/)?.[1];
+    assert.ok(source && poster && proof, `${p.id} has a source, poster and evidence caption`);
+    if (!['oathra', 'agent-team'].includes(p.id)) assert.equal(proof, esc(p.ja.proof), `${p.id} shows its ledger evidence conditions beside its footage`);
     const choice = html.match(new RegExp(`<a\\b[^>]*data-studio-choice="${p.id}"[^>]*>`))?.[0];
-    assert.ok(choice?.includes(`data-proof="${esc(p.ja.proof)}"`), `${p.id} carries its ledger evidence into the shared player`);
+    assert.ok(choice?.includes(`data-v4-rec="${source}"`), `${p.id} opens the same footage in the shared player`);
+    assert.ok(choice?.includes(`data-src="${source}"`) && choice?.includes(`data-poster="${poster}"`), `${p.id} gives the client its explicit matching source and poster`);
+    assert.ok(choice?.includes(`data-proof="${proof}"`), `${p.id} carries its footage-specific evidence into the shared player`);
   }
   const initial = products.find(p => p.id === 'ai-meeting');
   const reelProof = html.match(/<p\b[^>]*data-v4-reel-proof[^>]*>[\s\S]*?<\/p>/)?.[0];
@@ -133,7 +165,8 @@ test('v4 names each product film for what it is, and shows the ledger conditions
   assert.match(client, /\$\('\[data-v4-reel-proof\]'[^;]*\.textContent\s*=\s*c\.dataset\.proof/, 'changing the selected footage updates the evidence conditions');
   assert.match(chapterOf('genie'), /href="\/products\/genie\/#next-ui"[^>]*>次のTaskDockの設計プレビューを見る/);
   assert.match(chapterOf('genie'), /設計プレビューは未リリースで、実アプリの録画ではありません/);
-  assert.doesNotMatch(html, /data-v4-stage|data-v4-next-root|class="v4-app-icon"/, 'the home does not present unreleased design assets as a current application');
+  assert.doesNotMatch(html, /data-v4-stage|v4-staged|data-v4-next-root|class="v4-app-icon"/, 'the home keeps each film with its product and does not present unreleased design assets as a current application');
+  assert.doesNotMatch(client, /data-v4-stage|v4-staged/);
   assert.doesNotMatch(client, /'実録画 · 約13秒|'STILL · 実録画/, 'the client takes the footage kind from data-kind');
 });
 
@@ -157,11 +190,8 @@ test('built v4 home leads with consultation, brings services forward, and links 
     assert.ok(chapter.includes(`>${esc(label)} <span`), `${p.id} describes what its entry actually opens`);
     for (const fact of [p.ja.headline, p.ja.outcome, p.ja.status, p.ja.scope, p.ja.license]) assert.ok(chapter.includes(esc(fact)), `${p.id} retains its ledger facts and conditions`);
   }
-  for (const p of publishedHomeLinks) {
-    const start = html.indexOf(`class="v4-published" id="${p.id}"`);
-    assert.ok(start >= 0, `${p.name} retains its published entry`);
-    const card = html.slice(start, html.indexOf('</article>', start));
-    assert.ok(card.includes(`href="${esc(p.url)}"`) && card.includes(`>${esc(p.label)} <span`));
-    assert.ok(card.includes(esc(p.status)) && card.includes(esc(p.license)));
-  }
+  const noa = products.find(p => p.id === 'noa');
+  assert.ok(noa && noa.closedSource, 'Noa remains in the verified seven-product ledger');
+  assert.ok(html.includes(`href="/products/${noa.id}/"`), 'Noa keeps its existing product page');
+  assert.doesNotMatch(html, /class="v4-published"/, 'Noa no longer depends on a temporary external-only card');
 });

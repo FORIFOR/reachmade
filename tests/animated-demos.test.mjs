@@ -8,7 +8,7 @@ import {bundleDemoAssets} from '../src/animated-demo-assets.mjs';
 const root=path.resolve(import.meta.dirname,'..');
 const read=file=>fs.readFile(path.join(root,file),'utf8');
 test('five ordered scenes fit one deterministic 18 second clock',()=>{
- assert.equal(PRODUCTS.length,6);assert.equal(new Set(PRODUCTS).size,6);
+ assert.equal(PRODUCTS.length,7);assert.equal(new Set(PRODUCTS).size,7);
  assert.deepEqual(CUES,[0,2600,6000,9600,13600]);assert.equal(DURATION,18000);
  CUES.forEach((cue,i)=>assert.equal(phaseAt(cue),i));
  assert.equal(phaseAt(2599),0);assert.equal(phaseAt(18000),4);

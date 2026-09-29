@@ -6,7 +6,8 @@ export const MOMENTS = Object.freeze({
   oathra: {ja:['金曜日の14時に、予約を。','「金曜日の14時」 · 00:18','発言の根拠を見る'],en:['Book Friday at 14:00.','“Friday at 14:00” · 00:18','Inspect the words']},
   aisecure: {ja:['この3件のログを、調べて。','観測 / 仮説 / 不明点','調査メモを読む'],en:['Investigate these three logs.','Observed / hypothesis / unknown','Read the case notes']},
   'agent-team': {ja:['発表文を作って、見直して。','announcement.md · v2','修正の経緯を見る'],en:['Draft it. Review it. Revise it.','announcement.md · v2','Follow the revision']},
-  launchloom: {ja:['この録画を、届ける素材に。','16:9 / 9:16 / Web','公開前に確認する'],en:['Turn this recording into a kit.','16:9 / 9:16 / Web','Review before publishing']}
+  launchloom: {ja:['この録画を、届ける素材に。','16:9 / 9:16 / Web','公開前に確認する'],en:['Turn this recording into a kit.','16:9 / 9:16 / Web','Review before publishing']},
+  noa: {ja:['コメントに、声と表情で返す。','返事 / 声 / 表情','配信で確かめる'],en:['Answer comments with voice and expression.','Reply / voice / expression','Check it on the stream']}
 });
 export function momentFor(id, lang='ja') {
   if (!Object.hasOwn(MOMENTS,id) || !['ja','en'].includes(lang)) throw new TypeError('Unknown signature product or locale');

@@ -130,6 +130,16 @@
     "page": "product-launchloom"
   },
   {
+    "route": "/products/noa/",
+    "lang": "ja",
+    "page": "product-noa"
+  },
+  {
+    "route": "/en/products/noa/",
+    "lang": "en",
+    "page": "product-noa"
+  },
+  {
     "route": "/products/genie/demos/",
     "lang": "ja",
     "page": "genie-demos"

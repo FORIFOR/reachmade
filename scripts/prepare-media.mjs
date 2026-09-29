@@ -9,7 +9,7 @@ import { recordings } from '../src/films.mjs';
 import { PREMIUM_FILM_VERSION, premiumFilmCuts, premiumFilmPolicy, validatePremiumFilmCuts } from '../src/premium-film-cuts.mjs';
 
 export const MAX_BYTES = 24 * 1024 * 1024;
-export const SIGNATURE_ORDER = Object.freeze(['genie','ai-meeting','oathra','aisecure','agent-team','launchloom']);
+export const SIGNATURE_ORDER = Object.freeze(['genie','ai-meeting','oathra','aisecure','agent-team','launchloom','noa']);
 export const SIGNATURE_SEGMENT_SECONDS = 2;
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -118,8 +118,8 @@ export async function prepareMedia({ dist = path.join(root, 'dist'), fetcher = f
   validatePremiumFilmCuts();
   const recordingIds = Object.keys(recordings).sort();
   const cutIds = Object.keys(premiumFilmCuts).sort();
-  if (JSON.stringify(recordingIds) !== JSON.stringify(cutIds)) throw new Error('Premium film cuts must cover exactly the six packaged recordings');
-  if (JSON.stringify([...SIGNATURE_ORDER].sort()) !== JSON.stringify(recordingIds)) throw new Error('Signature film must cover exactly the six packaged recordings');
+  if (JSON.stringify(recordingIds) !== JSON.stringify(cutIds)) throw new Error('Premium film cuts must cover exactly the packaged recordings');
+  if (JSON.stringify([...SIGNATURE_ORDER].sort()) !== JSON.stringify(recordingIds)) throw new Error('Signature film must cover exactly the packaged recordings');
   const mediaRoot = path.join(dist, 'media'); await fs.mkdir(mediaRoot, { recursive: true });
   const stage = await fs.mkdtemp(path.join(mediaRoot, '.recordings-'));
   const rawRoot = await fs.mkdtemp(path.join(mediaRoot, '.raw-'));
@@ -179,7 +179,7 @@ export async function prepareMedia({ dist = path.join(root, 'dist'), fetcher = f
     await fs.rm(path.join(destination, 'reachmade-signature.jpg'), { force: true });
     const posterDestination = path.join(assetRoot, 'products'); await fs.mkdir(posterDestination, { recursive: true });
     for (const { id } of manifest.recordings) await fs.copyFile(path.join(destination, `${id}.jpg`), path.join(posterDestination, `${id}.jpg`));
-    console.log(`Rendered ${manifest.recordings.length} premium website films plus one ${manifest.signature.duration}s six-product signature film from validated real recordings. Playback speed unchanged; no synthetic product frames added.`);
+    console.log(`Rendered ${manifest.recordings.length} premium website films plus one ${manifest.signature.duration}s signature film of ${manifest.recordings.length} products from hash-verified or published product films. Playback speed unchanged; no frames added.`);
     return manifest;
   } finally {
     await fs.rm(stage, { recursive: true, force: true });

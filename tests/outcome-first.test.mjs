@@ -24,9 +24,9 @@ for(const lang of ['ja','en']){
   assert.doesNotThrow(()=>new vm.Script(matches[0][1]));
   assert.doesNotMatch(html,/<script[^>]+src=|<link[^>]+href=|src="https?:|@import|fetch\(/);
  });
- test(`explorer/${lang}: all six destinations keep their own conditions`,()=>{
+ test(`explorer/${lang}: all seven destinations keep their own conditions`,()=>{
   const html=ids.map(id=>`<a href="/products/${id}/" data-studio-choice="${id}">link</a>`).join('')+'<a data-lab-detail href="/products/genie/">details</a>';
-  const h=addDirectStarts(html,lang);assert.equal((h.match(/data-outcome-start="/g)||[]).length,6);
+  const h=addDirectStarts(html,lang);assert.equal((h.match(/data-outcome-start="/g)||[]).length,7);
   for(const id of ids){assert.ok(h.includes(DIRECT_STARTS[id][lang][0]));assert.ok(h.includes(DIRECT_STARTS[id][lang][1]));}
  });
  test(`product/${lang}: proof and original CTA survive; output is idempotent`,()=>{

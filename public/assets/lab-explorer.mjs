@@ -33,7 +33,7 @@ function wireGuide(figure,lang){
   side.querySelector('[data-lab-flow]').textContent=c.flow;
   side.querySelector('[data-lab-detail]').href=choiceLink.href;
   side.querySelector('[data-lab-detail]').setAttribute('aria-label',`${choiceLink.dataset.name} ${t('の詳細','details')}`);
-  side.querySelector('[data-lab-code]').href=choiceLink.dataset.repo;
+  const code=side.querySelector('[data-lab-code]');code.hidden=!choiceLink.dataset.repo;if(choiceLink.dataset.repo)code.href=choiceLink.dataset.repo;
   side.querySelector('[data-lab-proof]').href=choiceLink.dataset.evidence;
   side.querySelector('[data-lab-status]').textContent=choiceLink.dataset.status;
   side.dataset.product=id;

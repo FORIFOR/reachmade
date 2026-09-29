@@ -33,6 +33,13 @@ export const premiumFilmCuts = Object.freeze({
     clips: [[3, 8], [10, 17]],
     label: { ja: '録画から公開素材へ', en: 'Recording to launch assets' },
   },
+  // Introduction film (recreated screens): the studio screen with a comment (4–9 s), then the diagram of what the AI
+  // handles and what code decides (16–23 s). The close-up between them is cut; playback speed is unchanged.
+  noa: {
+    sourceWindow: [4, 23],
+    clips: [[4, 9], [16, 23]],
+    label: { ja: '管理画面と仕組み', en: 'Studio screen and how it works' },
+  },
 });
 
 export const premiumFilmPolicy = Object.freeze({

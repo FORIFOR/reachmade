@@ -13,7 +13,7 @@ const strip = s => String(s).replace(/<br\s*\/?\s*>/g,' ').replace(/<[^>]*>/g,''
 const pageKeys = ['home','products','services','work','about','contact','privacy'];
 const href = (lang, page='home') => `${lang === 'en' ? '/en' : ''}${page === 'home' ? '/' : `/${page}/`}`;
 const e = escapeHTML;
-const link = (url, text, cls='text-link', extra='') => `<a class="${cls}" href="${e(url)}" target="_blank" rel="noopener noreferrer" ${extra}>${text}<span aria-hidden="true">↗</span></a>`;
+const link = (url, text, cls='text-link', extra='') => !url ? '' : `<a class="${cls}" href="${e(url)}" target="_blank" rel="noopener noreferrer" ${extra}>${text}<span aria-hidden="true">↗</span></a>`;
 const arrow = '<span aria-hidden="true">↗</span>';
 
 export function validateConfig(config) {
@@ -27,7 +27,10 @@ export function validateConfig(config) {
   } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(config.contact.email || '')) throw new Error('A verified email address is required for email mode');
   for (const product of products) {
     if (!/^[a-z0-9-]+$/.test(product.id)) throw new Error('Invalid product ID');
-    for (const field of ['repo','site','source','evidence','demo']) {
+    // A closed-source product (closedSource: true) has no repository or README link, and must not pretend to.
+    if (product.closedSource !== undefined && product.closedSource !== true) throw new Error(`Invalid closedSource flag: ${product.id}`);
+    if (product.closedSource && (product.repo !== null || product.source !== null)) throw new Error(`Closed-source product links a repository: ${product.id}`);
+    for (const field of product.closedSource ? ['site','evidence','demo'] : ['repo','site','source','evidence','demo']) {
       if (!product[field]?.startsWith('https://')) throw new Error(`Invalid URL: ${product.id}.${field}`);
     }
     if (product.preview && (!product.preview.startsWith('/assets/') || product.preview.includes('..'))) throw new Error(`Invalid local preview: ${product.id}.preview`);

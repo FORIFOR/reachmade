@@ -26,9 +26,9 @@ test('contact must use a known mode',()=>{const c=clone();c.contact.mode='form';
 test('rejects non-HTTPS contact',()=>{const c=clone();c.contact.url='javascript:alert(1)';assert.throws(()=>validateConfig(c));});
 test('email mode rejects an absent address',()=>{const c=clone();c.contact.email=null;assert.throws(()=>{c.contact.mode='email';validateConfig(c);});});
 test('email mode supports an owner-configured address',()=>{const c=clone();c.contact.mode='email';c.contact.email='owner@example.org';assert.doesNotThrow(()=>validateConfig(c));});
-test('30 routes represent portfolio, product and owned guide pages in both languages',()=>{
- assert.equal(routes.length,30);for(const lang of ['ja','en'])assert.equal(routes.filter(r=>r.lang===lang).length,15);
- assert.equal(routes.filter(r=>r.page.startsWith('product-')).length,12);
+test('32 routes represent portfolio, product and owned guide pages in both languages',()=>{
+ assert.equal(routes.length,32);for(const lang of ['ja','en'])assert.equal(routes.filter(r=>r.lang===lang).length,16);
+ assert.equal(routes.filter(r=>r.page.startsWith('product-')).length,14);
 });
 test('attribute checks do not mistake lazy data-src attributes for active sources',()=>{
  assert.deepEqual(attr('<video data-recording-src="/later.mp4" src="/now.mp4">','src'),['/now.mp4']);
@@ -83,15 +83,15 @@ test('each product is rendered exactly once in each product directory',()=>{
  }
 });
 test('home leads with an explorable product and retains source-aware catalogue routes',()=>{
- // Japanese home: v4 order hero → reel → products → access → FAQ, every product reachable without script.
+ // Japanese home: claim + reel → services → products → optional access table → FAQ; every product stays reachable without script.
  {
   const html=htmlByPath.get('/');
   const at=s=>html.indexOf(s);
   assert.match(html,/data-home-v4="/);
-  assert.ok(at('class="v4-hero')>=0&&at('class="v4-hero')<at('id="reel"')&&at('id="reel"')<at('id="products"')&&at('id="products"')<at('id="access"')&&at('id="access"')<at('id="faq"'));
+  assert.ok(at('class="v4-hero')>=0&&at('class="v4-hero')<at('id="reel"')&&at('id="reel"')<at('id="services"')&&at('id="services"')<at('id="products"')&&at('id="products"')<at('id="access"')&&at('id="access"')<at('id="faq"'));
   assert.equal((html.match(/data-studio-choice=/g)||[]).length,products.length);
   assert.equal((html.match(/data-v4-chapter=/g)||[]).length,products.length);
-  for(const p of products){assert.ok(html.includes(`data-studio-choice="${p.id}"`));assert.ok(html.includes(`href="/products/${p.id}/"`));assert.ok(html.includes(`src="/media/products/${p.id}.mp4"`));}
+  for(const p of products){assert.ok(html.includes(`data-studio-choice="${p.id}"`));assert.ok(html.includes(`href="/products/${p.id}/"`));{const src=['oathra','agent-team'].includes(p.id)?`/media/films/home-${p.id}-13s.mp4`:`/media/products/${p.id}.mp4`;assert.ok(html.includes(`<source src="${src}"`),p.id);}}
   for(const tag of html.match(/<video\b[^>]*>/g)||[])assert.match(tag,/preload="none"/);
  }
  for(const prefix of ['/en/']){

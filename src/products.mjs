@@ -3,7 +3,13 @@
  *  added from genie/README.md and oathra/README.md, for the fifteen-second films.
  *  2026-09-27: highlights/features per product were checked against each repository's README, docs and
  *  implementation (genie, AI-meeting, oathra, AISecure, Multibot, Launchloom). Only implemented behaviour is
- *  listed; timing and integration claims without a measurement were removed or qualified. */
+ *  listed; timing and integration claims without a measurement were removed or qualified.
+ *  2026-09-29: Agent Team copy re-centred on the maker/checker split, per-revision checks and the ZIP with a
+ *  SHA-256 manifest, all stated in Multibot/README.md (Why Agent Team; First useful result step 4; My team characters).
+ *  2026-09-29: 夜澄ノア (07) added from the owner's patch 夜澄ノア自己紹介PV制作. Checked against Jev_VTuber_Studio
+ *  (private) origin/main a6aa1b7 and release/rc6-voice: comment de-duplication and expiry (src/engine.mjs), fixed-fact
+ *  answers (src/talk-engine.mjs), AivisSpeech コハク (docs/VOICE.md), 4 mouth shapes and 22 parts
+ *  (public/models/noa/model.json), 6 effects (public/effect-director.mjs). */
 /** Date the highlights/features of every product were checked against its repository. */
 export const capabilitiesCheckedAt = '2026-09-27';
 export const products = [
@@ -176,35 +182,35 @@ export const products = [
     evidence: 'https://github.com/FORIFOR/Multibot/blob/main/docs/evidence/readiness-2026-09-14/README.md',
     demo: 'https://forifor.github.io/Multibot/',
     ja: {
-      headline: '成果物も、そこまでの仕事も。', demoLabel: '実行記録を見る', previewLabel: 'エージェント実行記録',
-      short: '作成・レビュー・修正を、経緯と一緒に残す。',
-      description: '依頼に合わせてAIが役割を分担。成果物の版と、誰が何を確かめたかを結びつけ、完成した部分も未完了の部分も残します。',
+      headline: '依頼は一度。確かめた版だけを、受け取る。', demoLabel: '実行記録を見る', previewLabel: 'エージェント実行記録',
+      short: 'つくる担当と、確かめる担当を分ける。',
+      description: 'ひとつの依頼をAIの担当が分け合います。つくった担当とは別の担当が成果物の版を確かめ、どの版が何に合格したかと、終わらなかった部分まで残します。',
       status: '開発・評価中', license: 'MIT · リポジトリ名はMultibot',
-      outcome: '依頼 → 作成 → レビュー → 修正',
+      outcome: '依頼 → 作成 → 確認 → 確認済みの版',
       scope: '単一エージェントより高品質とはまだ言えません。公開比較には失敗や実行環境による制約があり、顧客環境での本番受け入れは別評価です。',
       proof: '実モデルの作業記録と、失敗も含めた評価記録。紹介映像の研究タスクは部分完了です。',
       consult: '業務の役割分担、成果物の検証、予算・権限・人の承認を含むエージェント基盤の試作。',
-      highlights: [{value:'4つの役割',label:'Master・Researcher・Builder・Reviewerが分担'},{value:'出典を照合',label:'Reviewerが原典と食い違う記述を検出し、修正案を出す'},{value:'追記専用の記録',label:'会話・タイムライン・報告はすべてイベント記録から生成'}],
+      highlights: [{value:'つくる担当と別',label:'確かめる担当（Reviewer）は作成担当と別。指摘は次の版で直す'},{value:'版ごとの確認',label:'確認はファイルの版（SHA-256）に結びつく。新しい版は未確認から'},{value:'記録ごと保存',label:'選んだ版を、SHA-256の一覧・報告・イベントと一緒にZIPで保存'}],
       features: [
-        {code:'F-01 / ROLES',title:'役割を分けて実行する',body:'Masterが成果物を計画し、Researcher・Builder・Reviewerが作業します。単一エージェントより高品質とはまだ言えず、公開比較には失敗も含みます。',tags:['マルチエージェント','Master / Researcher / Builder / Reviewer','比較は失敗も公開']},
-        {code:'F-02 / REVIEW',title:'原典と照らして査読する',body:'出典URL付きの主張はReviewerが原典を取得して照合し、取得できなければunverifiedとします。指摘には最小の修正案を添えます。',tags:['出典照合','unverifiedを残す','最小修正案']},
-        {code:'F-03 / TRAIL',title:'経緯を消さない',body:'すべてを追記専用のイベント記録に書き、版ごとの成果物とレビュー文書を並べて残します。部分完了もそのまま報告します。',tags:['追記専用','版ごとの成果物','部分完了も報告']}
+        {code:'F-01 / ROLES',title:'つくる担当と、確かめる担当を分ける',body:'まとめ役（Master）が成果物と完了条件を決め、調べる係・つくる係・確かめる係が作業します。マイチームでは🐣まめ・🐻ぽん・🐱むぎ・🐧るるのキャラクターから名前と話し方を選べます。単一エージェントより高品質とはまだ言えず、公開比較には失敗も含みます。',tags:['Master / Researcher / Builder / Reviewer','キャラクターは担当と独立','比較は失敗も公開']},
+        {code:'F-02 / REVIEW',title:'資料と食い違う文を見つけて、直す',body:'確かめる係は実際の版を原典や添付資料と照らし、取得できないものはunverifiedとして残します。指摘は作成担当に戻り、次の版で直します。',tags:['出典照合','unverifiedを残す','指摘は次の版へ']},
+        {code:'F-03 / TRAIL',title:'途中も、未完了も消さない',body:'すべてを追記専用のイベント記録に書き、版ごとの成果物と確認を並べて残します。選んだ版はSHA-256の一覧・報告・イベントと一緒にZIPで保存できます。部分完了もそのまま報告します。',tags:['追記専用','版ごとの確認','ZIPで保存']}
       ]
     },
     en: {
-      headline: 'The deliverable. And how it got there.', demoLabel: 'Read the run record', previewLabel: 'Agent work trail',
-      short: 'Draft, review, revise — with a work trail.',
-      description: 'AI agents share the work. Revisions stay connected to who checked what, and unfinished work is reported alongside completed artifacts.',
+      headline: 'Ask once. Keep only the version that was checked.', demoLabel: 'Read the run record', previewLabel: 'Agent work trail',
+      short: 'The maker and the checker are different.',
+      description: 'AI teammates share one request. A teammate other than the maker checks each revision, and you keep which version passed what — plus whatever was left unfinished.',
       status: 'Under evaluation', license: 'MIT · repository: Multibot',
-      outcome: 'Request → draft → review → revision',
+      outcome: 'Request → draft → check → checked version',
       scope: 'A quality advantage over a single agent has not been established. Published comparisons include failures and provider constraints. Production acceptance is separate.',
       proof: 'Real-model work records and evaluation results including failures. The featured research replay ended partial.',
       consult: 'Prototype agent workflows with explicit roles, artifact checks, budgets, permissions, and human approval.',
-      highlights: [{value:'Four roles',label:'Master, Researcher, Builder and Reviewer share the work'},{value:'Source-checked',label:'The Reviewer fetches cited sources and proposes fixes'},{value:'Append-only trail',label:'Chat, timeline and report are projections of one event log'}],
+      highlights: [{value:'Not the maker',label:'The Reviewer is separate from the maker; findings are fixed in the next revision'},{value:'Per-revision checks',label:'Checks bind to one revision’s SHA-256; a new revision starts unchecked'},{value:'Saved with its record',label:'Save chosen revisions as a ZIP with a SHA-256 manifest, report and events'}],
       features: [
-        {code:'F-01 / ROLES',title:'Explicit roles',body:'A Master plans the deliverables while a Researcher, a Builder and a Reviewer do the work. No quality advantage over a single agent is claimed, and published comparisons include failures.',tags:['Multi-agent','Master / Researcher / Builder / Reviewer','Failures published']},
-        {code:'F-02 / REVIEW',title:'Review against the source',body:'Claims with a source URL are fetched and compared by the Reviewer; anything it cannot fetch is marked unverified. Each finding comes with a minimal fix.',tags:['Source check','Unverified stays visible','Minimal fix']},
-        {code:'F-03 / TRAIL',title:'Nothing is overwritten',body:'Everything goes to an append-only event store, with per-revision artifacts and review documents kept side by side. Partial completion is reported as such.',tags:['Append-only','Per-revision artifacts','Partial reported']}
+        {code:'F-01 / ROLES',title:'The maker is not the checker',body:'A Master sets the deliverables and finish conditions while a Researcher, a Builder and a Reviewer do the work. In My team you can pick names and voices from the Mame, Pon, Mugi and Lulu characters. No quality advantage over a single agent is claimed, and published comparisons include failures.',tags:['Master / Researcher / Builder / Reviewer','Characters are independent of roles','Failures published']},
+        {code:'F-02 / REVIEW',title:'Catch what disagrees with the source',body:'The Reviewer compares the actual revision with cited sources and attachments; anything it cannot fetch stays unverified. Findings go back to the maker and are fixed in the next revision.',tags:['Source check','Unverified stays visible','Finding → next revision']},
+        {code:'F-03 / TRAIL',title:'Nothing is overwritten',body:'Everything goes to an append-only event store, with per-revision artifacts and checks side by side. Chosen revisions can be saved as a ZIP with a SHA-256 manifest, report and events. Partial completion is reported as such.',tags:['Append-only','Per-revision checks','ZIP with manifest']}
       ]
     }
   },
@@ -247,16 +253,48 @@ export const products = [
         {code:'F-03 / CODE',title:'Tuned in React and TypeScript',body:'A separate Remotion tool defines every frame as a function of time, so timing and typography are adjusted in code.',tags:['Remotion','Frame-level','Separate tool']}
       ]
     }
+  },
+  {
+    // Closed source (the repository is private), so there is no repo, README or document link: the stream and the
+    // explainer videos on YouTube are the public record. The film on this site is an introduction film with recreated screens.
+    id: 'noa', name: '夜澄ノア', index: '07', category: 'creation', discipline: 'CHARACTER & LIVE',
+    // filmKind 'intro': the site film is a produced introduction film (screens recreated, staged), never labelled a recording.
+    closedSource: true, filmKind: 'intro', repo: null, labSite: 'https://noa.reachmade.com/', site: 'https://reachmade.com/products/noa/',
+    preview: '/assets/products/noa.jpg', previewSource: 'Frame at 5 s of the introduction film Jev Studio LP Video.mp4 (recreated rc.6 screen layout)',
+    source: null,
+    evidence: 'https://youtube.com/channel/UCjX52bV1kfUgSuqf3vv_rTQ',
+    demo: 'https://youtube.com/channel/UCjX52bV1kfUgSuqf3vv_rTQ', capabilitiesCheckedAt: '2026-09-29',
+    ja: {
+      headline: 'コメントを、声と表情に。', demoLabel: '配信を見る', previewLabel: '紹介映像の一場面（画面は再現）',
+      short: 'コメントに、声と表情で返す配信キャラクター。',
+      description: '返事・声・見た目は別々の仕組み。その間をつなぎ、配信のコメントに声と表情で返します。',
+      status: '配信中', license: 'ソース非公開',
+      outcome: 'コメント → 判定 → 声・表情',
+      scope: '不適切な返事を絶対に出さない仕組みではありません。会話AIの利用料と電力がかかります。配信の通し運転の実録画は未公開です。',
+      proof: '解説用に作った映像。配信の実録画ではありません。',
+      consult: 'キャラクターを使った配信、店頭や施設での案内、問い合わせ対応の試作。',
+      highlights: [{value:'先にコードで整理',label:'重複・古いコメントはAIに渡さない'},{value:'声はコハク',label:'AivisSpeechの既存音声。専用学習なし'},{value:'演出6種類',label:'声の再生に合わせる。AIの追加呼び出しなし'}],
+      features: [
+        {code:'F-01 / JUDGE',title:'AIに渡す前に、コードで整理',body:'同じ内容のコメントや、時間が経ったコメントは返事の対象から外します。決まった答えがある質問は、AIに作文させません。',tags:['重複の除外','古いコメントの除外','決まった文に値を入れる']},
+        {code:'F-02 / VOICE',title:'手元のPCで声を作る',body:'AivisSpeechの「コハク」で読み上げます。音声合成に1回ごとの料金はかかりませんが、会話AIの利用料とPCの電力はかかります。',tags:['AivisSpeech','手元のPCで合成','専用学習なし']},
+        {code:'F-03 / FACE',title:'声に合わせて、口と目が動く',body:'口の形4種・まばたき・視線を、再生中の音量に合わせて切り替えます。演出6種類は返事の内容から選び、AIの追加呼び出しはしません。',tags:['口の形4種','画像パーツ22枚','演出6種類']}
+      ]
+    },
+    en: {
+      headline: 'Comments, answered in voice and expression.', demoLabel: 'Watch the stream', previewLabel: 'A scene from the introduction film (recreated screen)',
+      short: 'A streaming character who answers comments with a voice and a face.',
+      description: 'The reply, the voice and the look are separate systems. Noa joins them and answers stream comments with voice and expression.',
+      status: 'Streaming', license: 'Closed source',
+      outcome: 'Comment → judgement → voice and expression',
+      scope: 'It is not a system that can never give an inappropriate reply. The conversation AI has usage fees, and running it uses electricity. A recording of a full live run has not been published.',
+      proof: 'A film made to explain Noa; not a recording of a live stream.',
+      consult: 'Character-led streams, guidance in shops and venues, and prototypes for handling enquiries.',
+      highlights: [{value:'Sorted in code first',label:'Duplicate and stale comments never reach the AI'},{value:'Kohaku voice',label:'An existing AivisSpeech voice, not trained for Noa'},{value:'Six effects',label:'Timed to the voice, with no extra AI call'}],
+      features: [
+        {code:'F-01 / JUDGE',title:'Sorted in code before the AI',body:'Repeated comments and comments that have gone stale are dropped before a reply is chosen. Questions with a fixed answer are not left to the AI to write.',tags:['Duplicate removal','Stale comments dropped','Fixed sentence, correct value']},
+        {code:'F-02 / VOICE',title:'The voice is made on the local PC',body:'Replies are read out with the AivisSpeech voice Kohaku. Speech synthesis has no per-call fee, but the conversation AI has usage fees and the PC uses electricity.',tags:['AivisSpeech','Synthesised on the local PC','Not trained for Noa']},
+        {code:'F-03 / FACE',title:'Mouth and eyes follow the voice',body:'Four mouth shapes, blinking and gaze change with the volume of the voice as it plays. Six effects are chosen from the reply, with no extra AI call.',tags:['Four mouth shapes','22 image parts','Six effects']}
+      ]
+    }
   }
 ];
-
-/** Publicly listed on reachmade.com on 2026-09-30. The dedicated Noa page has not
- * reached this repository, so preserve its verified channel entry without inventing
- * a local product route, source repository or application availability. */
-export const publishedHomeLinks = Object.freeze([{
-  id: 'noa', name: '夜澄ノア', headline: 'コメントを、声と表情に。',
-  description: 'コメントに、声と表情で返す配信キャラクター。',
-  status: '配信中', license: 'ソース非公開', label: '配信を見る',
-  url: 'https://youtube.com/channel/UCjX52bV1kfUgSuqf3vv_rTQ',
-  source: 'https://reachmade.com/products/noa/', checkedAt: '2026-09-30'
-}]);

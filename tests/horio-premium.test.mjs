@@ -45,7 +45,7 @@ test('home leads with a clear product promise and a real product surface before 
     assert.match(html,/data-outcome-first="20260919-outcome-1"/);
     assert.match(html,/data-lab-experience="20260919-product-lab-1"/);
     assert.equal((html.match(/<h1>/g)||[]).length,1);
-    assert.equal((html.match(/data-studio-choice=/g)||[]).length,6);
+    assert.equal((html.match(/data-studio-choice=/g)||[]).length,7);
     assert.match(html,/src="\/assets\/products\/genie\.jpg"/);
     assert.match(html,/WORKING PREVIEW \/ Genie/);
     assert.match(html,/data-lab-proof/);
@@ -58,24 +58,26 @@ test('home leads with a clear product promise and a real product surface before 
   }
   assert.match(home,/data-home-v4="/);
   assert.equal((home.match(/<h1[\s>]/g)||[]).length,1);
-  assert.equal((home.match(/data-studio-choice=/g)||[]).length,6);
+  assert.equal((home.match(/data-studio-choice=/g)||[]).length,7);
   assert.match(home,/思いついたら、/);
   assert.doesNotMatch(home,/<video[^>]*\bautoplay\b/);
   assert.match(en,/From an idea\.<br>To something real\./);
-  assert.match(en,/Choose between six products/);
+  assert.match(en,/Choose between seven products/);
   assert.match(en,/Samples do not execute workflows or send data/);
   assert.match(en,/does not run a new AI generation/);
   assert.match(rhythm,/CLAIM  →  PROOF/);
 });
 
-test('the homepage has one six-product automatic signature moment and manual lower films',()=>{
-  assert.match(site,/SIGNATURE FILM \/ 6 REAL PRODUCTS/);
+test('the homepage has one seven-product automatic signature moment and manual lower films',()=>{
+  assert.match(site,/SIGNATURE FILM \/ 7 REAL PRODUCTS/);
   assert.match(site,/reachmade-signature\.mp4/);
   assert.match(site,/reachmade-signature\.jpg/);
   assert.match(site,/\(min-width:1181px\)/);
   assert.match(site,/prefers-reduced-motion: reduce/);
   assert.match(site,/connection\?\.saveData/);
-  assert.match(site,/Two real seconds from each product/);
+  // Two seconds from each product at normal speed; the Noa segment comes from an introduction film and says so.
+  assert.match(site,/Two seconds from each product, at normal speed; the Noa segment is an introduction film with recreated screens\./);
+  assert.match(site,/夜澄ノアは画面を再現した紹介映像（演出を含む）です。/);
   assert.match(films,/if \(!isHome\)/);
   assert.match(films,/s\.manual===true\|\|\(s\.autoEligible/);
 });

@@ -45,7 +45,7 @@ if (root) {
         choice.style.setProperty('--fill', '0');
       });
       screen.setAttribute('aria-labelledby', c.id);
-      video.poster = stills[i].currentSrc || stills[i].getAttribute('src');
+      video.poster = c.dataset.poster || stills[i].currentSrc || stills[i].getAttribute('src');
       $('[data-v4-reel-index]', frame).textContent = c.dataset.index;
       $('[data-v4-reel-disc]', frame).textContent = c.dataset.disc;
       $('[data-v4-reel-name]', frame).textContent = c.dataset.name;
@@ -80,6 +80,8 @@ if (root) {
     };
     const begin = () => {
       const thisEpoch = ++epoch, c = choices[selected];
+      const source = c.dataset.src || c.dataset.v4Rec;
+      if (!source) { fail(); return; }
       pauseAll(video);
       started = true;
       frame.classList.add('is-started');
@@ -87,7 +89,7 @@ if (root) {
       cap.hidden = false;
       video.tabIndex = 0;
       tag.textContent = `${c.dataset.kind || '実録画'} · 編集あり`;
-      video.src = `/media/products/${c.dataset.studioChoice}.mp4`;
+      video.src = source;
       clearTimeout(timer); timer = setTimeout(fail, 10000);
       play(video, () => { if (thisEpoch === epoch) fail(); });
       video.focus({preventScroll: true});
