@@ -260,7 +260,9 @@ async function captureRealtime(binary, shots, results = []) {
       const y = (quad[1] + quad[3] + quad[5] + quad[7]) / 4;
       await send('Input.dispatchMouseEvent', { type: 'mousePressed', x, y, button: 'left', clickCount: 1 });
       await send('Input.dispatchMouseEvent', { type: 'mouseReleased', x, y, button: 'left', clickCount: 1 });
-      const opened = await send('DOM.getAttributes', { nodeId });
+      // queryNode(summary) refreshes the CDP document tree, so the earlier
+      // details node ID must not be reused to inspect the result of the click.
+      const opened = await send('DOM.getAttributes', { nodeId: await queryNode(selector) });
       if (!opened.result.attributes.filter((_, i) => i % 2 === 0).includes('open')) {
         throw new Error(`Native disclosure did not open after clicking its summary: ${selector}`);
       }
