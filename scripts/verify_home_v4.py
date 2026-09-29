@@ -29,10 +29,36 @@ def begin_home_v4_requests(page):
     assert page.url == 'about:blank', 'Register home request observation before navigation'
     assert page not in HOME_REQUESTS, 'Do not reset an existing request history'
     requests = []
+    by_request = {}
     HOME_REQUESTS[page] = requests
-    page.on('request', lambda request: requests.append({
-        'url': request.url, 'type': request.resource_type,
-    }))
+
+    def requested(request):
+        record = {'url': request.url, 'type': request.resource_type,
+                  'method': request.method, 'range': request.headers.get('range')}
+        requests.append(record)
+        by_request[request] = record
+
+    def responded(response):
+        record = by_request.get(response.request)
+        if record is not None:
+            record.update({'status': response.status,
+                           'content_length': response.headers.get('content-length'),
+                           'content_range': response.headers.get('content-range')})
+
+    def finished(request):
+        record = by_request.get(request)
+        if record is not None and urlsplit(request.url).path.endswith('.mp4'):
+            record['transfer'] = request.sizes()
+
+    def failed(request):
+        record = by_request.get(request)
+        if record is not None:
+            record['failure'] = request.failure
+
+    page.on('request', requested)
+    page.on('response', responded)
+    page.on('requestfinished', finished)
+    page.on('requestfailed', failed)
 
 
 def _home_requests(page, *, before_play=True):
