@@ -40,6 +40,9 @@
     {id:'launchloom',name:'Launchloom',repo:'Launchloom',start:0,end:90,
       demo:'https://forifor.github.io/Launchloom/',
       note:ja?'実録画からLaunchloomで作成した映像をサイト用に再編集。外部SNSへの投稿実演ではありません。':'Website re-edit of a film made by Launchloom from real footage; not a live social-publishing demo.'},
+    {id:'noa',name:'夜澄ノア',repo:'',start:0,end:90,
+      demo:'https://youtube.com/channel/UCjX52bV1kfUgSuqf3vv_rTQ',
+      note:ja?'紹介映像（画面は再現・演出を含む）のサイト用編集版。配信の実録画ではありません。再生速度は変えていません。':'Website edit of an introduction film (recreated screens, staged); not a recording of a live stream. Playback speed is unchanged.'},
   ];
   const isHome = !!document.querySelector('.hero') && !!document.querySelector('.selected-work');
   const targets = [];

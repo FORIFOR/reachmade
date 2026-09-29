@@ -5,7 +5,11 @@
  *  implementation (genie, AI-meeting, oathra, AISecure, Multibot, Launchloom). Only implemented behaviour is
  *  listed; timing and integration claims without a measurement were removed or qualified.
  *  2026-09-29: Agent Team copy re-centred on the maker/checker split, per-revision checks and the ZIP with a
- *  SHA-256 manifest, all stated in Multibot/README.md (Why Agent Team; First useful result step 4; My team characters). */
+ *  SHA-256 manifest, all stated in Multibot/README.md (Why Agent Team; First useful result step 4; My team characters).
+ *  2026-09-29: 夜澄ノア (07) added from the owner's patch 夜澄ノア自己紹介PV制作. Checked against Jev_VTuber_Studio
+ *  (private) origin/main a6aa1b7 and release/rc6-voice: comment de-duplication and expiry (src/engine.mjs), fixed-fact
+ *  answers (src/talk-engine.mjs), AivisSpeech コハク (docs/VOICE.md), 4 mouth shapes and 22 parts
+ *  (public/models/noa/model.json), 6 effects (public/effect-director.mjs). */
 /** Date the highlights/features of every product were checked against its repository. */
 export const capabilitiesCheckedAt = '2026-09-27';
 export const products = [
@@ -247,6 +251,49 @@ export const products = [
         {code:'F-01 / KIT',title:'A complete launch kit',body:'From a product brief and a real recording, one run writes a landscape film, a vertical cut, a landing page and social drafts. Re-syncing every deliverable after edits is not guaranteed by default.',tags:['Batch output','LP included','Re-sync not guaranteed']},
         {code:'F-02 / FOOTAGE',title:'Commercials from real footage',body:'Instead of slides, the film is cut from named spans of an actual screen recording. Each product needs its composition written in code; it is not automatic for any recording.',tags:['Real footage','Named spans','Per-product code']},
         {code:'F-03 / CODE',title:'Tuned in React and TypeScript',body:'A separate Remotion tool defines every frame as a function of time, so timing and typography are adjusted in code.',tags:['Remotion','Frame-level','Separate tool']}
+      ]
+    }
+  },
+  {
+    // Closed source (the repository is private), so there is no repo, README or document link: the stream and the
+    // explainer videos on YouTube are the public record. The film on this site is an introduction film with recreated screens.
+    id: 'noa', name: '夜澄ノア', index: '07', category: 'creation', discipline: 'CHARACTER & LIVE',
+    // filmKind 'intro': the site film is a produced introduction film (screens recreated, staged), never labelled a recording.
+    closedSource: true, filmKind: 'intro', repo: null, labSite: 'https://noa.reachmade.com/', site: 'https://reachmade.com/products/noa/',
+    preview: '/assets/products/noa.jpg', previewSource: 'Frame at 5 s of the introduction film Jev Studio LP Video.mp4 (recreated rc.6 screen layout)',
+    source: null,
+    evidence: 'https://youtube.com/channel/UCjX52bV1kfUgSuqf3vv_rTQ',
+    demo: 'https://youtube.com/channel/UCjX52bV1kfUgSuqf3vv_rTQ', capabilitiesCheckedAt: '2026-09-29',
+    ja: {
+      headline: 'コメントを、声と表情に。', demoLabel: '配信を見る', previewLabel: '紹介映像の一場面（画面は再現）',
+      short: 'コメントに、声と表情で返す配信キャラクター。',
+      description: '返事・声・見た目は別々の仕組み。その間をつなぎ、配信のコメントに声と表情で返します。',
+      status: '配信中', license: 'ソース非公開',
+      outcome: 'コメント → 判定 → 声・表情',
+      scope: '不適切な返事を絶対に出さない仕組みではありません。会話AIの利用料と電力がかかります。配信の通し運転の実録画は未公開です。',
+      proof: '解説用に作った映像。配信の実録画ではありません。',
+      consult: 'キャラクターを使った配信、店頭や施設での案内、問い合わせ対応の試作。',
+      highlights: [{value:'先にコードで整理',label:'重複・古いコメントはAIに渡さない'},{value:'声はコハク',label:'AivisSpeechの既存音声。専用学習なし'},{value:'演出6種類',label:'声の再生に合わせる。AIの追加呼び出しなし'}],
+      features: [
+        {code:'F-01 / JUDGE',title:'AIに渡す前に、コードで整理',body:'同じ内容のコメントや、時間が経ったコメントは返事の対象から外します。決まった答えがある質問は、AIに作文させません。',tags:['重複の除外','古いコメントの除外','決まった文に値を入れる']},
+        {code:'F-02 / VOICE',title:'手元のPCで声を作る',body:'AivisSpeechの「コハク」で読み上げます。音声合成に1回ごとの料金はかかりませんが、会話AIの利用料とPCの電力はかかります。',tags:['AivisSpeech','手元のPCで合成','専用学習なし']},
+        {code:'F-03 / FACE',title:'声に合わせて、口と目が動く',body:'口の形4種・まばたき・視線を、再生中の音量に合わせて切り替えます。演出6種類は返事の内容から選び、AIの追加呼び出しはしません。',tags:['口の形4種','画像パーツ22枚','演出6種類']}
+      ]
+    },
+    en: {
+      headline: 'Comments, answered in voice and expression.', demoLabel: 'Watch the stream', previewLabel: 'A scene from the introduction film (recreated screen)',
+      short: 'A streaming character who answers comments with a voice and a face.',
+      description: 'The reply, the voice and the look are separate systems. Noa joins them and answers stream comments with voice and expression.',
+      status: 'Streaming', license: 'Closed source',
+      outcome: 'Comment → judgement → voice and expression',
+      scope: 'It is not a system that can never give an inappropriate reply. The conversation AI has usage fees, and running it uses electricity. A recording of a full live run has not been published.',
+      proof: 'A film made to explain Noa; not a recording of a live stream.',
+      consult: 'Character-led streams, guidance in shops and venues, and prototypes for handling enquiries.',
+      highlights: [{value:'Sorted in code first',label:'Duplicate and stale comments never reach the AI'},{value:'Kohaku voice',label:'An existing AivisSpeech voice, not trained for Noa'},{value:'Six effects',label:'Timed to the voice, with no extra AI call'}],
+      features: [
+        {code:'F-01 / JUDGE',title:'Sorted in code before the AI',body:'Repeated comments and comments that have gone stale are dropped before a reply is chosen. Questions with a fixed answer are not left to the AI to write.',tags:['Duplicate removal','Stale comments dropped','Fixed sentence, correct value']},
+        {code:'F-02 / VOICE',title:'The voice is made on the local PC',body:'Replies are read out with the AivisSpeech voice Kohaku. Speech synthesis has no per-call fee, but the conversation AI has usage fees and the PC uses electricity.',tags:['AivisSpeech','Synthesised on the local PC','Not trained for Noa']},
+        {code:'F-03 / FACE',title:'Mouth and eyes follow the voice',body:'Four mouth shapes, blinking and gaze change with the volume of the voice as it plays. Six effects are chosen from the reply, with no extra AI call.',tags:['Four mouth shapes','22 image parts','Six effects']}
       ]
     }
   }

@@ -10,11 +10,12 @@ export const directions = Object.freeze({
   oathra: 'evidence-ledger',
   aisecure: 'preflight-desk',
   'agent-team': 'editorial-handoff',
-  launchloom: 'output-cinema'
+  launchloom: 'output-cinema',
+  noa: 'live-stage'
 });
 const copy = {
  ja: {
-  category: {genie:'自分のモデルで使う、MacのAIワークスペース','ai-meeting':'話して動かすタスク管理',oathra:'発言を根拠にする、AI電話の実行基盤',aisecure:'AI利用前の確認と、根拠を辿る調査','agent-team':'Agent Team / Multibot — コードや資料をつくるAI作業アプリ',launchloom:'実録画から、公開前の素材をつくる制作基盤'},
+  category: {genie:'自分のモデルで使う、MacのAIワークスペース','ai-meeting':'話して動かすタスク管理',oathra:'発言を根拠にする、AI電話の実行基盤',aisecure:'AI利用前の確認と、根拠を辿る調査','agent-team':'Agent Team / Multibot — コードや資料をつくるAI作業アプリ',launchloom:'実録画から、公開前の素材をつくる制作基盤',noa:'コメントに、声と表情で返す配信キャラクター'},
   scope:'試す前に知っておくこと', cue:'録画の見どころ', sample:'使い方の例 · 実際の発言ログではありません',
   request:'メモから始める。', requestBody:'何を作りたいかを伝えて、結果を開く。依頼と成果物を、同じ作業場所に。',
   output:['メモ・依頼','計画・下書き・HTML'],
@@ -26,13 +27,16 @@ const copy = {
   post:'兆候を調べる', postBody:'観測・仮説・不明点を分ける。', postLink:'調査の録画を見る',
   investigation:'ここで見るのは、調査側の実演。', investigationBody:'この録画は合成ログの調査デモです。送信前チェックや実環境の遮断を示すものではありません。',
   handoff:'作る。確かめる。磨く。', roleLabel:'役割の案内 · 実行中の状態ではありません',
+  stageLabel:'ひとつのコメントが通る道', stage:'コメント → 判定 → 声・表情',
+  stageSteps:[['01','返事','Jevが判定して、返事を決める'],['02','声','コハクの声で読み上げる'],['03','見た目','画像を重ねて、表情を動かす']],
+  stageNote:'サイトの映像は、画面構成を再現した紹介映像（演出を含む）です。配信の実録画ではありません。',
   roles:[['01','作成','まず、成果物の初稿を。'],['02','レビュー','確かめる視点を変える。'],['03','修正','指摘は作成担当に戻り、次の版で直す。']],
   teamNote:'作業記録を読む前に、何ができたかを見る。未完了の部分も残します。',
   cinema:'一つの素材。伝え方は、いくつも。', cinemaNote:'出力形式の案内です。生成済みの作例は上の録画・元資料で確認できます。',
   formats:[['01','横動画','製品を紹介する'],['02','縦動画','モバイルへ届ける'],['03','LP','価値を一ページに'],['04','投稿案','公開前に見直す']]
  },
  en: {
-  category: {genie:'A Mac AI workspace for your own model','ai-meeting':'Voice-driven task management',oathra:'AI phone calls with evidence-led results',aisecure:'Preflight checks and evidence-led investigation','agent-team':'Agent Team / Multibot — an AI work app for code and documents',launchloom:'A local production workflow, from recording to launch material'},
+  category: {genie:'A Mac AI workspace for your own model','ai-meeting':'Voice-driven task management',oathra:'AI phone calls with evidence-led results',aisecure:'Preflight checks and evidence-led investigation','agent-team':'Agent Team / Multibot — an AI work app for code and documents',launchloom:'A local production workflow, from recording to launch material',noa:'A streaming character who answers comments with voice and expression'},
   scope:'Before you try it', cue:'WHAT TO LOOK FOR', sample:'Usage example · not an actual conversation log',
   request:'Start with a note.', requestBody:'Describe the output. Open the result. Keep the request and the artifact in one place.',
   output:['Notes & requests','Plans, drafts & HTML'],
@@ -43,6 +47,9 @@ const copy = {
   post:'Investigate a signal',postBody:'Separate observations, hypotheses and unknowns.',postLink:'Watch the investigation',
   investigation:'This recording shows investigation.',investigationBody:'A synthetic-log investigation demo. It does not demonstrate preflight checks or enforcement in a live environment.',
   handoff:'Draft. Review. Refine.',roleLabel:'Role guide · not a live execution status',
+  stageLabel:'The path one comment takes', stage:'Comment → judgement → voice and expression',
+  stageSteps:[['01','Reply','Jev judges the comment and decides the reply'],['02','Voice','Read out in the Kohaku voice'],['03','Look','Image layers are switched to move the face']],
+  stageNote:'The film on this site is an introduction film with recreated screens (staged), not a recording of a live stream.',
   roles:[['01','Draft','Make the first artifact.'],['02','Review','Look at it from another angle.'],['03','Revise','Findings go back to the maker for the next revision.']],
   teamNote:'See what was made, then inspect the work behind it. Unfinished work stays visible.',
   cinema:'One source. More ways to show it.',cinemaNote:'An index of output formats, not four newly generated artifacts. Inspect the recording and source for published examples.',
@@ -93,6 +100,9 @@ export function artDirectProductHero(html, product, lang) {
   }
   case 'agent-team':
    scene=`<div class="ad-team-head">${intro}</div><div class="ad-handoff">${film}<aside class="ad-role-guide">${paragraph(t.roleLabel,'ad-label')}<h2>${escapeHTML(t.handoff)}</h2>${rail(t.roles,'ad-role-list')}${paragraph(t.teamNote)}</aside></div>`;
+   break;
+  case 'noa':
+   scene=`<div class="ad-stage-head">${intro}</div><div class="ad-stage">${film}<aside class="ad-stage-guide">${paragraph(t.stageLabel,'ad-label')}<h2>${escapeHTML(t.stage)}</h2>${rail(t.stageSteps,'ad-role-list')}${paragraph(t.stageNote)}</aside></div>`;
    break;
   case 'launchloom':
    scene=`<div class="ad-cinema-head">${intro}</div><div class="ad-cinema-screen">${film}</div><div class="ad-output-wall"><h2>${escapeHTML(t.cinema)}</h2>${rail(t.formats,'ad-output-index')}${paragraph(t.cinemaNote)}</div>`;

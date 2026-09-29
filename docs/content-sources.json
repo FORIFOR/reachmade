@@ -67,6 +67,17 @@
       "previewSource": "Launchloom/homepage/generated-page.png",
       "status": "アルファ",
       "scope": "単一利用者向けです。素材の生成とSNSへの公開は別工程で、実アカウントへの投稿は検証未完了。成果や反響は保証しません。"
+    },
+    {
+      "id": "noa",
+      "repo": null,
+      "source": null,
+      "sourceBlobSha": null,
+      "evidence": "https://youtube.com/channel/UCjX52bV1kfUgSuqf3vv_rTQ",
+      "preview": "/assets/products/noa.jpg",
+      "previewSource": "Frame at 5 s of the introduction film Jev Studio LP Video.mp4 (recreated rc.6 screen layout)",
+      "status": "配信中",
+      "scope": "不適切な返事を絶対に出さない仕組みではありません。会話AIの利用料と電力がかかります。配信の通し運転の実録画は未公開です。"
     }
   ]
 }

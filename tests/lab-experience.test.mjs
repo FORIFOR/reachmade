@@ -21,11 +21,11 @@ test('invalid identifiers and locales are rejected before rendering',()=>{
  assert.throws(()=>renderLabHome(fixtures().slice(1),'ja'),TypeError);
  const duplicate=fixtures();duplicate[5]=duplicate[0];assert.throws(()=>renderLabHome(duplicate,'ja'),TypeError);
 });
-for(const lang of ['ja','en'])test(`home/${lang}: six useful no-script paths and one primary headline`,()=>{
+for(const lang of ['ja','en'])test(`home/${lang}: seven useful no-script paths and one primary headline`,()=>{
  const html=renderLabHome(fixtures(),lang);
  assert.equal((html.match(/<h1>/g)||[]).length,1);
- assert.equal((html.match(/data-studio-choice=/g)||[]).length,6);
- assert.equal((html.match(/class="lab-product-card"/g)||[]).length,6);
+ assert.equal((html.match(/data-studio-choice=/g)||[]).length,7);
+ assert.equal((html.match(/class="lab-product-card"/g)||[]).length,7);
  assert.match(html,/<a class="lab-begin" data-lab-begin href="#studio-player">/);assert.doesNotMatch(html,/data-lab-begin hidden/);
  assert.match(html,/width="1600" height="1000" fetchpriority="high"/);
  assert.doesNotMatch(html,/<script|<style|<iframe|<form|\bautoplay\b|\bonclick=/);

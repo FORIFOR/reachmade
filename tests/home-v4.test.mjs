@@ -118,6 +118,8 @@ test('v4 names each product film for what it is, and shows the ledger conditions
   assert.match(launchloom, /Launchloomが作った紹介映像（無音・編集あり）/);
   assert.doesNotMatch(launchloom.slice(0, launchloom.indexOf('</figcaption>')), /実録画/);
   assert.doesNotMatch(html, /\d本の実録画|REAL RECORDINGS/);
+  // 夜澄ノア's footage is an introduction film with recreated screens, never called a recording.
+  assert.match(html, /data-v4-chapter="noa" data-kind="紹介映像（画面は再現・演出を含む）"/);
   for (const p of products) assert.ok(chapterOf(p.id).includes(`<span class="v4-proof">${p.ja.proof.replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#39;')}</span>`), `${p.id} shows its evidence conditions`);
   assert.match(html, /<p class="v4-proof v4-stage-proof" data-v4-stage-proof>/, 'the wide-screen stage shows the conditions of the product on screen');
   assert.match(client, /data-v4-stage-proof/);

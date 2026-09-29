@@ -9,7 +9,7 @@ import {renderSignature,refineSignature,writeSignature} from '../src/lab-signatu
 const root=path.resolve(import.meta.dirname,'..');
 const shell=lang=>`<!doctype html><html lang="${lang}"><head><title>Old title</title><meta property="og:title" content="Old title"><link rel="stylesheet" href="/assets/showcase.css"><script type="module" src="/assets/showcase.mjs"></script></head><body data-lab-experience="20260919-product-lab-1"><main id="main"><section class="hero container lab-hero"><div class="hero-copy"><h1>Old headline</h1></div></section>\n <section class="container lab-explorer" id="explore"></section></main></body></html>`;
 for(const id of Object.keys(MOMENTS))for(const lang of ['ja','en'])test(`${id}/${lang}: a localized request and sample result`,()=>{
- const m=momentFor(id,lang);assert.ok(m.request.length>7);assert.ok(m.result.length>3);assert.ok(m.action.length>3);assert.ok(m.index>=1&&m.index<=6);
+ const m=momentFor(id,lang);assert.ok(m.request.length>7);assert.ok(m.result.length>3);assert.ok(m.action.length>3);assert.ok(m.index>=1&&m.index<=7);
  if(lang==='en')assert.doesNotMatch(Object.values(m).join(''),/[\u3040-\u30ff]/);
 });
 test('unknown inputs do not become markup or object properties',()=>{

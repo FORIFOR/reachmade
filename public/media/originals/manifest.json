@@ -54,7 +54,7 @@
       "path": "/media/originals/genie/assets/genie-orbit-social.mp4",
       "bytes": 2743541,
       "sha256": "a726402d5c8fbeb7816c9043619784636231dab676017fa596392e72119ceb65",
-      "duration": 33.0,
+      "duration": 33,
       "streams": [
         {
           "codec_name": "h264",
@@ -72,7 +72,7 @@
       "path": "/media/originals/genie/assets/genie-orbit-web.mp4",
       "bytes": 2549408,
       "sha256": "4d4fb8d4fde5d1f7ead1ae738a29f64293dc8588fa305ebafac73c79c487c5c3",
-      "duration": 33.0,
+      "duration": 33,
       "streams": [
         {
           "codec_name": "h264",
@@ -90,7 +90,7 @@
       "path": "/media/originals/genie/assets/genie-product-film-social.mp4",
       "bytes": 5741332,
       "sha256": "a18bce64d112d902e0279102380ca494c73dc94b61097656e22280af6d8da4aa",
-      "duration": 42.0,
+      "duration": 42,
       "streams": [
         {
           "codec_name": "h264",
@@ -108,7 +108,7 @@
       "path": "/media/originals/genie/assets/genie-product-film-web.mp4",
       "bytes": 6560761,
       "sha256": "9dcd8445f3864eb4031ef5326a1788410c3f2873c5cec16c06c7667066e7ea40",
-      "duration": 42.0,
+      "duration": 42,
       "streams": [
         {
           "codec_name": "h264",
@@ -146,7 +146,7 @@
       "path": "/media/originals/genie/assets/genie-web-proposal-social.mp4",
       "bytes": 2376389,
       "sha256": "4b687a37a72ea15ad32c767293aab243d118c63fd3f14dd3458f8a5e21fc36d6",
-      "duration": 30.0,
+      "duration": 30,
       "streams": [
         {
           "codec_name": "h264",
@@ -164,7 +164,7 @@
       "path": "/media/originals/genie/assets/genie-web-proposal-web.mp4",
       "bytes": 2328023,
       "sha256": "1bca09955dfb1621e8384f52cec8a8b75869f2d75db64f5a30b4688efd971484",
-      "duration": 30.0,
+      "duration": 30,
       "streams": [
         {
           "codec_name": "h264",
@@ -260,6 +260,20 @@
       "path": "/media/originals/genie/orbit-script-1.js",
       "bytes": 9465,
       "sha256": "3e4eab2b9422dd237064c0c9022db0b02ce623fa85ba74fd18306d895e7ddcbb"
+    },
+    {
+      "path": "/media/originals/noa/lp-film.mp4",
+      "bytes": 4770609,
+      "sha256": "b02a2f4ca0b9800d76a8965cc292f84dd4a3888768d522c6af428091ee3b9028",
+      "duration": 35.5,
+      "streams": [
+        {
+          "codec_name": "h264",
+          "codec_type": "video",
+          "width": 1920,
+          "height": 1080
+        }
+      ]
     }
   ]
 }

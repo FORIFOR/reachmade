@@ -26,7 +26,7 @@ export function refineSignature(html,lang='ja') {
  return html;
 }
 export async function writeSignature(dist,products) {
- if(!Array.isArray(products)||products.length!==6)throw new TypeError('Expected six products');
+ if(!Array.isArray(products)||products.length!==7)throw new TypeError('Expected seven products');
  const routes=['','en/',...products.flatMap(p=>{
    momentFor(p.id);return [`products/${p.id}/`,`en/products/${p.id}/`];
  })];

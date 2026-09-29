@@ -52,6 +52,12 @@ body.owned-product--agent-team[data-art-direction]{--paper:#f5f0e7;--ink:#2d2b28
 body.owned-product--launchloom[data-art-direction]{--paper:#1e201e;--ink:#f8f1e4;--muted:#c7beb0;--accent:#efb86e;--rule:#514c40;--surface:#282a25;--stage:#11130f;color-scheme:dark}
 .ad-cinema-head .ad-copy{display:grid;grid-template-columns:1.12fr .88fr;gap:0 60px;align-items:start}.ad-cinema-head .owned-kicker,.ad-cinema-head .ad-category{grid-column:1/-1}.ad-cinema-head h1{grid-column:1;grid-row:3/5}.ad-cinema-head .owned-lead{grid-column:2;grid-row:3}.ad-cinema-head .ad-entry{grid-column:2;grid-row:4}
 .ad-cinema-head .owned-primary{background:var(--accent);color:#292217}.ad-cinema-head .owned-primary:hover{background:#f5ce95}.ad-cinema-screen{margin-top:28px}.ad-cinema-screen .owned-film__screen{aspect-ratio:16/8.5}.ad-output-wall{margin-top:26px}.ad-output-wall>h2{font-size:24px;margin-bottom:23px}.ad-output-index{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}.ad-output-index li{padding:20px;border-right:1px solid var(--rule)}.ad-output-index li:first-child{padding-left:0}.ad-output-index li:last-child{border-right:0}.ad-output-index li>span{font:10px/1.6 ui-monospace,monospace;color:var(--accent)}.ad-output-index h3{font-size:21px;margin-top:9px;line-height:1.5}.ad-output-index p{font-size:12px;color:var(--muted);margin-top:6px}.ad-output-wall>.ad-note{margin-top:12px;font-size:11px}
+/* Jev VTuber Studio: the film beside the programme's three moves. The guide describes the demo script, not a live status. */
+body.owned-product--noa[data-art-direction]{--paper:#f4f4f7;--ink:#1f2335;--muted:#555a6e;--accent:#3d4f8c;--rule:#d8d9e2;--surface:#fff;--stage:#151a2c}
+html[lang=ja] body.owned-product--noa[data-art-direction] .ad-hero h1{word-break:keep-all;overflow-wrap:anywhere}
+/* 「コメントがなくても、」 is ten full-width characters; at 32px it overflows 320px and the comma starts the next line. */
+@media(max-width:380px){html[lang=ja] body.owned-product--noa[data-art-direction] .ad-hero h1{font-size:27px!important}}
+.ad-stage-head .ad-copy{max-width:870px}.ad-stage{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(250px,.75fr);gap:38px;margin-top:34px;align-items:start}.ad-stage>*{min-width:0}.ad-stage-guide h2{margin:15px 0 20px}.ad-stage-guide .ad-role-list li>span{color:#3d4f8c}
 /* Tablet is a deliberate intermediate layout, not a compressed desktop. */
 @media(max-width:1100px){
  .ad-workspace{gap:28px;grid-template-columns:1fr 1.12fr}.ad-workspace-proof{padding:16px}
@@ -67,7 +73,7 @@ body.owned-product--launchloom[data-art-direction]{--paper:#1e201e;--ink:#f8f1e4
  .ad-hero[data-direction=conversation-room] .ad-room-screen{order:1;margin-top:25px}
  .ad-hero[data-direction=conversation-room] .ad-utterance{order:2;margin-top:25px}
  .ad-hero[data-direction=conversation-room] .ad-access-row{order:3}
- .ad-workspace,.ad-room-head,.ad-call-head,.ad-secure-head,.ad-handoff{grid-template-columns:1fr;gap:25px}
+ .ad-workspace,.ad-room-head,.ad-call-head,.ad-secure-head,.ad-handoff,.ad-stage{grid-template-columns:1fr;gap:25px}
  .ad-workspace-proof{padding:18px}.ad-entry{margin-top:21px}.ad-call-question{padding:18px 0;border:0;border-top:1px solid var(--rule)}
  .ad-room-head{margin-bottom:25px}.ad-utterance{padding:18px 0 18px 23px}.ad-utterance blockquote{font-size:27px;margin-block:12px}.ad-utterance ol{margin-top:18px}
  .ad-ledger{grid-template-columns:1fr}.ad-ledger .owned-film{border-right:0;border-bottom:1px solid var(--rule)}.ad-evidence-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}.ad-evidence-list li{border:0;display:block;padding:20px 0}.ad-evidence-list h3{margin-top:6px}
@@ -85,7 +91,7 @@ body.owned-product--launchloom[data-art-direction]{--paper:#1e201e;--ink:#f8f1e4
  .ad-hero .owned-film__bar{font-size:9px;padding:11px;gap:12px}.ad-hero .owned-film__bar>span{overflow-wrap:anywhere}.ad-hero .owned-film figcaption{font-size:12px;padding:12px;line-height:1.8}.ad-hero .owned-film figcaption>a{min-height:44px}
  .ad-security-routes{grid-template-columns:1fr;gap:0}.ad-security-routes>div{padding:18px 0}.ad-investigation{margin-top:26px;padding-top:24px}
  .ad-evidence{padding:0 16px}.ad-evidence-list{display:block}.ad-evidence-list li{display:flex;padding:17px 0;border-bottom:1px solid var(--rule)}.ad-evidence-list h3{margin-top:0}.ad-evidence-list li>span{padding-top:2px}
- .ad-role-list{display:block}.ad-role-list li{display:flex;padding:16px 0}.ad-role-list h3{margin:0}.ad-handoff{margin-top:25px}
+ .ad-role-list{display:block}.ad-role-list li{display:flex;padding:16px 0}.ad-role-list h3{margin:0}.ad-handoff,.ad-stage{margin-top:25px}
  .ad-output-index{grid-template-columns:1fr 1fr}.ad-output-index li{padding:16px 10px!important}.ad-output-index li:nth-child(even){border-right:0}.ad-output-index li:nth-child(-n+2){border-bottom:1px solid var(--rule)}.ad-output-index h3{font-size:18px}.ad-output-wall>h2{font-size:22px}
  .ad-access-row{grid-template-columns:1fr;gap:12px;padding-top:20px;margin-top:24px}.ad-label{font-size:10px;line-height:1.8}.ad-afterword{font-size:12px}
 }

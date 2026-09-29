@@ -7,6 +7,7 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const sources = new Set([
   '/media/originals/genie/assets/genie-orbit-web.mp4',
   '/media/originals/ai-meeting/demo.mp4',
+  '/media/originals/noa/lp-film.mp4',
 ]);
 export async function readOwnedRecording(value, { repositoryRoot = root } = {}) {
   const url = new URL(value);

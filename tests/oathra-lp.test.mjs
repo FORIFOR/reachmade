@@ -53,7 +53,7 @@ test('the Japanese Oathra page follows the brief order and states the status of 
 
 test('English Oathra and the other product pages are not re-composed', async () => {
   assert.doesNotMatch(await read('en/products/oathra/index.html'), /data-oathra-lp/);
-  for (const id of ['genie', 'ai-meeting', 'aisecure', 'agent-team', 'launchloom']) assert.doesNotMatch(await read(`products/${id}/index.html`), /data-oathra-lp/);
+  for (const id of ['genie', 'ai-meeting', 'aisecure', 'agent-team', 'launchloom', 'noa']) assert.doesNotMatch(await read(`products/${id}/index.html`), /data-oathra-lp/);
 });
 
 test('the pass is idempotent and fails closed', async () => {

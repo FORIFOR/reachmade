@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 
 const read = path => fs.readFile(new URL(`../${path}`, import.meta.url), 'utf8');
-const ids = ['genie','ai-meeting','oathra','aisecure','agent-team','launchloom'];
+const ids = ['genie','ai-meeting','oathra','aisecure','agent-team','launchloom','noa'];
 
 test('final layout layer preserves the Claim to Proof system while removing AI-style surface effects', async () => {
   const [layers, layouts] = await Promise.all([
@@ -16,12 +16,12 @@ test('final layout layer preserves the Claim to Proof system while removing AI-s
   assert.match(layouts,/background-image:none!important/);
 });
 
-test('all six products own a distinct desktop page composition', async () => {
+test('all seven products own a distinct desktop page composition', async () => {
   const layouts = await read('public/assets/hero-layouts.css');
   for (const id of ids) assert.match(layouts,new RegExp(`\\.owned-product--${id.replace('-','\\-')} \\.owned-hero-grid`));
   const templates=[...layouts.matchAll(/grid-template-areas:([^!;]+)!important/g)].map(match=>match[1].trim());
-  assert.equal(templates.length,6);
-  assert.equal(new Set(templates).size,6);
+  assert.equal(templates.length,7);
+  assert.equal(new Set(templates).size,7);
 });
 
 test('distinct composition is functional rather than decorative', async () => {
@@ -30,6 +30,7 @@ test('distinct composition is functional rather than decorative', async () => {
   assert.match(layouts,/owned-product--oathra[\s\S]*"film kicker" "film title"/);
   assert.match(layouts,/owned-product--agent-team[\s\S]*"kicker film try" "title film actions"/);
   assert.match(layouts,/owned-product--launchloom[\s\S]*"title try" "actions try" "film film"/);
+  assert.match(layouts,/owned-product--noa[\s\S]*"film title" "film lead" "film actions"/);
   assert.match(layouts,/owned-product--ai-meeting[\s\S]*"title try" "title actions" "film film"/);
   assert.match(layouts,/owned-product--aisecure[\s\S]*"title try" "title actions" "film film"/);
 });
