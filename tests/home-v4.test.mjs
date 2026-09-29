@@ -39,7 +39,7 @@ test('v4 home escapes ledger content and fails closed', () => {
   const html = renderHomeV4(hostile, 'ja');
   assert.ok(html.includes('&lt;img onerror=&quot;x&quot;&gt;'));
   assert.doesNotMatch(html, /<img onerror=/);
-  assert.throws(() => renderHomeV4(fixtures(), 'en'), TypeError);
+  assert.throws(() => renderHomeV4(fixtures(), 'fr'), TypeError);
   const unknown = fixtures(); unknown[0].id = 'other';
   assert.throws(() => renderHomeV4(unknown, 'ja'), TypeError);
   assert.throws(() => refineHomeV4(shell.replace('data-home-flagship="x" ', ''), fixtures(), 'ja'), /flagship/);
@@ -54,6 +54,16 @@ test('v4 refine is idempotent and keeps the footer outside <main>', () => {
   assert.equal(refineHomeV4(once, fixtures(), 'ja'), once);
 });
 
+test('English refinement uses the real built page and refuses a mismatched language', async () => {
+  const built = await fs.readFile(path.join(root, 'dist/en/index.html'), 'utf8');
+  const source = built.replace(/data-home-v4="[^"]+"\s*/, '');
+  const once = refineHomeV4(source, products, 'en');
+  assert.equal(refineHomeV4(once, products, 'en'), once);
+  assert.match(once, new RegExp(`data-home-v4="${HOME_V4_VERSION}"`));
+  assert.throws(() => refineHomeV4(source, products, 'ja'), /language|locale|shell/i);
+  assert.ok(once.indexOf('</main>') < once.indexOf('<footer'), 'English keeps the real footer outside main');
+});
+
 test('v4 build layer appends once and repeats cleanly', async () => {
   const tmp = await fs.mkdtemp(path.join(os.tmpdir(), 'reachmade-v4-'));
   try {
@@ -61,8 +71,10 @@ test('v4 build layer appends once and repeats cleanly', async () => {
     await fs.mkdir(path.join(tmp, 'assets'), {recursive: true});
     await fs.cp(path.join(root, 'public/assets/products/genie'), path.join(tmp, 'assets/products/genie'), {recursive: true});
     await fs.writeFile(path.join(tmp, 'index.html'), shell);
+    await fs.mkdir(path.join(tmp, 'en'), {recursive: true});
+    await fs.copyFile(path.join(root, 'dist/en/index.html'), path.join(tmp, 'en/index.html'));
     await fs.writeFile(path.join(tmp, 'assets/showcase.css'), '/* earlier */');
-    await fs.writeFile(path.join(tmp, 'assets/showcase.mjs'), '// earlier');
+    await fs.copyFile(path.join(root, 'dist/assets/showcase.mjs'), path.join(tmp, 'assets/showcase.mjs'));
     for (const f of ['home-v4.css', 'home-v4.mjs']) await fs.copyFile(path.join(root, 'public/assets', f), path.join(tmp, 'assets', f));
     await writeHomeV4(tmp, fixtures());
     const css1 = await fs.readFile(path.join(tmp, 'assets/showcase.css'), 'utf8'), js1 = await fs.readFile(path.join(tmp, 'assets/showcase.mjs'), 'utf8');
@@ -92,11 +104,32 @@ test('v4 assets stay dependency-free and respect visitor settings', async () => 
   assert.match(js, /setTimeout\(fail, 10000\)/);
 });
 
-test('built Japanese home is v4 and the English home is unchanged', async () => {
+test('both built homes use the same v4 architecture with their real localized facts', async () => {
   const ja = await fs.readFile(path.join(root, 'dist/index.html'), 'utf8');
   const en = await fs.readFile(path.join(root, 'dist/en/index.html'), 'utf8');
   assert.match(ja, new RegExp(`data-home-v4="${HOME_V4_VERSION}"`));
-  assert.doesNotMatch(en, /data-home-v4/);
+  assert.match(en, new RegExp(`data-home-v4="${HOME_V4_VERSION}"`));
+  assert.match(en, /href="\/en\/contact\/"/);
+  assert.equal((en.match(/data-v4-chapter=/g) || []).length, products.length);
+  assert.equal((en.match(/data-v4-choice\b/g) || []).length, products.length);
+  assert.doesNotMatch(en, /AIプロダクトの自主開発と、企業向け開発支援|class="studio-player"/);
+  for (const p of products) {
+    const start = en.indexOf(`data-v4-chapter="${p.id}"`);
+    const chapter = en.slice(start, en.indexOf('</article>', start));
+    assert.ok(chapter.includes(`href="/en/products/${p.id}/"`), p.id);
+    for (const fact of ['headline', 'outcome', 'status', 'scope', 'license', 'proof']) assert.ok(chapter.includes(esc(p.en[fact])), `${p.id} keeps its English ${fact}`);
+    assert.ok(chapter.includes(`alt="${esc(p.en.previewLabel)}"`), `${p.id} uses its English image description`);
+  }
+  for (const html of [ja, en]) {
+    assert.ok(html.indexOf('class="v4-rail"') < html.indexOf('id="v4-reel-panel"'), 'the tablist precedes its panel for keyboard focus order');
+    assert.match(html, /id="v4-reel-proof"/);
+    assert.match(html, /aria-describedby="v4-reel-proof"/);
+    for (const video of html.match(/<video\b[^>]*>/g) || []) {
+      assert.match(video, /controls/);
+      assert.match(video, /preload="none"/);
+      assert.doesNotMatch(video, /\bautoplay\b/);
+    }
+  }
   const css = await fs.readFile(path.join(root, 'dist/assets/showcase.css'), 'utf8');
   assert.equal(css.split('/* REACHMADE_HOME_V4 */').length - 1, 1);
 });

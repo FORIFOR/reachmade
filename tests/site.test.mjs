@@ -83,28 +83,22 @@ test('each product is rendered exactly once in each product directory',()=>{
  }
 });
 test('home leads with an explorable product and retains source-aware catalogue routes',()=>{
- // Japanese home: claim + reel → services → products → optional access table → FAQ; every product stays reachable without script.
- {
-  const html=htmlByPath.get('/');
+ // Both homes: claim + reel → services → products → optional access table → FAQ; every product stays reachable without script.
+ for(const [lang,prefix] of [['ja','/'],['en','/en/']]){
+  const html=htmlByPath.get(prefix);
   const at=s=>html.indexOf(s);
   assert.match(html,/data-home-v4="/);
   assert.ok(at('class="v4-hero')>=0&&at('class="v4-hero')<at('id="reel"')&&at('id="reel"')<at('id="services"')&&at('id="services"')<at('id="products"')&&at('id="products"')<at('id="access"')&&at('id="access"')<at('id="faq"'));
   assert.equal((html.match(/data-studio-choice=/g)||[]).length,products.length);
   assert.equal((html.match(/data-v4-chapter=/g)||[]).length,products.length);
-  for(const p of products){assert.ok(html.includes(`data-studio-choice="${p.id}"`));assert.ok(html.includes(`href="/products/${p.id}/"`));{const src=['oathra','agent-team'].includes(p.id)?`/media/films/home-${p.id}-13s.mp4`:`/media/products/${p.id}.mp4`;assert.ok(html.includes(`<source src="${src}"`),p.id);}}
+  for(const p of products){
+   assert.ok(html.includes(`data-studio-choice="${p.id}"`));
+   assert.ok(html.includes(`href="${prefix}products/${p.id}/"`));
+   const src=['oathra','agent-team'].includes(p.id)?`/media/films/home-${p.id}-13s.mp4`:`/media/products/${p.id}.mp4`;
+   assert.ok(html.includes(`<source src="${src}"`),p.id);
+   assert.ok(html.includes(escapeHTML(p[lang].proof)),`${lang}/${p.id} retains its evidence conditions`);
+  }
   for(const tag of html.match(/<video\b[^>]*>/g)||[])assert.match(tag,/preload="none"/);
- }
- for(const prefix of ['/en/']){
-  const html=htmlByPath.get(prefix);
-  const hero=classIndex(html,'lab-hero'),explore=html.indexOf('id="explore"'),collection=classIndex(html,'lab-collection'),proof=classIndex(html,'lab-evidence-band');
-  assert.ok(hero>=0&&hero<explore&&explore<collection&&collection<proof);
-  const actualResult=html.indexOf('data-outcome-recorded-result');
-  assert.ok(hero<actualResult&&actualResult<explore,'The original recording and output must precede the product chooser');
-  assert.equal((html.match(/class="lab-product-card"/g)||[]).length,products.length);
-  assert.equal((html.match(/data-studio-choice=/g)||[]).length,products.length);
-  for(const p of products){assert.ok(html.includes(`data-studio-choice="${p.id}"`));assert.ok(html.includes(`data-lab-select="${p.id}"`));assert.ok(html.includes(`${prefix}products/${p.id}/`));}
-  assert.match(html,/data-lab-proof/);assert.match(html,/data-lab-code/);assert.match(html,/<a class="lab-begin" data-lab-begin href="#studio-player">/);
-  assert.doesNotMatch(html,/class="product-ribbon"|class="manifesto/);
  }
 });
 test('Genie license and setup limits are explicit',()=>{

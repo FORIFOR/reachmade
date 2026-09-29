@@ -3,6 +3,8 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { root } from '../scripts/build.mjs';
+import {products} from '../src/products.mjs';
+import {esc} from '../public/assets/lab-core.mjs';
 
 const css = await fs.readFile(path.join(root,'public/assets/horio-premium.css'),'utf8');
 const precision = await fs.readFile(path.join(root,'public/assets/precision-polish.css'),'utf8');
@@ -36,35 +38,36 @@ test('all design layers are imported before any CSS declarations',()=>{
   ]);
 });
 
-test('home leads with a clear product promise and a real product surface before JavaScript enhancement',()=>{
-  // Assert the current outcome-led design, including the actual saved result.
-  // Retired copy is not a contract; evidence, accessible actions and scope are.
-  // The English home keeps the flagship composition; the Japanese home is v4 (tests/home-v4.test.mjs).
-  for (const html of [en]) {
-    assert.match(html,/REACHMADE \/ INDEPENDENT AI STUDIO/);
-    assert.match(html,/data-outcome-first="20260919-outcome-1"/);
-    assert.match(html,/data-lab-experience="20260919-product-lab-1"/);
-    assert.equal((html.match(/<h1>/g)||[]).length,1);
-    assert.equal((html.match(/data-studio-choice=/g)||[]).length,7);
-    assert.match(html,/src="\/assets\/products\/genie\.jpg"/);
-    assert.match(html,/WORKING PREVIEW \/ Genie/);
-    assert.match(html,/data-lab-proof/);
-    assert.match(html,/data-lab-detail href="(?:\/en)?\/products\/genie\/"/);
-    assert.match(html,/<a class="lab-begin" data-lab-begin href="#studio-player">/);
-    assert.match(html,/<video data-outcome-real-film controls playsinline preload="none"/);
-    assert.match(html,/src="\/media\/originals\/genie\/assets\/genie-orbit-web\.mp4"/);
-    assert.match(html,/class="outcome-open-artifact" href="\/media\/originals\/genie\/orbit\.html"/);
+test('both homes lead with a clear promise, real footage and localized actions before enhancement',()=>{
+  // The old flagship hero is replaced in both locales. Preserve the actual
+  // promise -> footage -> product evidence journey with native no-script access.
+  for (const [html,lang,prefix] of [[home,'ja',''],[en,'en','/en']]) {
+    assert.match(html,/data-home-v4="/);
+    assert.equal((html.match(/<h1[\s>]/g)||[]).length,1);
+    assert.equal((html.match(/data-studio-choice=/g)||[]).length,products.length);
+    assert.equal((html.match(/data-v4-chapter=/g)||[]).length,products.length);
+    assert.ok(html.includes(`href="${prefix}/contact/"`));
+    assert.match(html,/class="v4-hero"[^]*?href="#products"/);
+    assert.match(html,/data-v4-reel-proof/);
     assert.doesNotMatch(html,/<video[^>]*\bautoplay\b/);
+    for (const tag of html.match(/<video\b[^>]*>/g)||[]) {
+      assert.match(tag,/\bcontrols\b/);
+      assert.match(tag,/preload="none"/);
+    }
+    for (const p of products) {
+      const source = ['oathra','agent-team'].includes(p.id) ? `/media/films/home-${p.id}-13s.mp4` : `/media/products/${p.id}.mp4`;
+      assert.ok(html.includes(`data-src="${source}"`), `${lang}: ${p.id} real media source`);
+      assert.ok(html.includes(`href="${prefix}/products/${p.id}/"`), `${lang}: ${p.id} product detail`);
+      assert.ok(html.includes(esc(p[lang].proof)), `${lang}: ${p.id} ledger evidence`);
+      assert.ok(html.includes(esc(p[lang].scope)), `${lang}: ${p.id} actual conditions`);
+    }
   }
-  assert.match(home,/data-home-v4="/);
-  assert.equal((home.match(/<h1[\s>]/g)||[]).length,1);
-  assert.equal((home.match(/data-studio-choice=/g)||[]).length,7);
+  assert.match(home,/AIプロダクトの自主開発と、企業向け開発支援/);
   assert.match(home,/思いついたら、/);
-  assert.doesNotMatch(home,/<video[^>]*\bautoplay\b/);
-  assert.match(en,/From an idea\.<br>To something real\./);
-  assert.match(en,/Choose between seven products/);
-  assert.match(en,/Samples do not execute workflows or send data/);
-  assert.match(en,/does not run a new AI generation/);
+  assert.match(en,/Independent AI products and development for companies/);
+  assert.match(en,/From an idea\./);
+  assert.match(en,/To something useful/);
+  assert.match(en,/not recordings of the live apps or stream/);
   assert.match(rhythm,/CLAIM  →  PROOF/);
 });
 

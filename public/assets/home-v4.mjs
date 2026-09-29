@@ -1,4 +1,4 @@
-/* Japanese home v4 — progressive enhancement only. Nothing plays by itself; no storage, tracking or network calls besides
+/* Localized home v4 — progressive enhancement only. Nothing plays by itself; no storage, tracking or network calls besides
  * the video files a visitor asks to play. Without this file every video keeps its native controls. */
 const root = document.querySelector('[data-home-v4-root]');
 if (root) {
@@ -25,7 +25,7 @@ if (root) {
   if (frame) {
     const video = $('.v4-reel-video', frame), start = $('[data-v4-reel-start]', frame), cap = $('[data-v4-reel-cap]', frame);
     const tag = $('[data-v4-reel-tag] span', frame), rail = $('.v4-rail', frame), choices = $$('[data-v4-choice]', frame), stills = $$('[data-v4-still]', frame);
-    const screen = $('#v4-reel-screen', frame);
+    const panel = $('#v4-reel-panel', frame);
     let selected = 0, started = false, timer, epoch = 0;
     video.controls = true;
     video.tabIndex = -1;
@@ -33,7 +33,7 @@ if (root) {
     start.hidden = false;
     tag.setAttribute('role', 'status');
     rail.setAttribute('role', 'tablist');
-    screen.setAttribute('role', 'tabpanel');
+    panel.setAttribute('role', 'tabpanel');
     const show = i => {
       const c = choices[i];
       stills.forEach((s, k) => s.classList.toggle('is-on', k === i));
@@ -44,7 +44,7 @@ if (root) {
         choice.tabIndex = on ? 0 : -1;
         choice.style.setProperty('--fill', '0');
       });
-      screen.setAttribute('aria-labelledby', c.id);
+      panel.setAttribute('aria-labelledby', c.id);
       video.poster = c.dataset.poster || stills[i].currentSrc || stills[i].getAttribute('src');
       $('[data-v4-reel-index]', frame).textContent = c.dataset.index;
       $('[data-v4-reel-disc]', frame).textContent = c.dataset.disc;
@@ -52,9 +52,9 @@ if (root) {
       $('[data-v4-reel-proof]').textContent = c.dataset.proof;
       $('[data-v4-reel-clip]', frame).textContent = c.dataset.clip;
       $('[data-v4-reel-time]', frame).textContent = '00:00 / 00:--';
-      video.setAttribute('aria-label', `${c.dataset.name} ${c.dataset.kind || '実録画'}（無音・編集あり）`);
-      start.setAttribute('aria-label', `${c.dataset.name}の映像を再生（無音・編集あり）`);
-      $('strong', start).textContent = `${c.dataset.name}の映像を見る`;
+      video.setAttribute('aria-label', c.dataset.videoLabel);
+      start.setAttribute('aria-label', c.dataset.playLabel);
+      $('strong', start).textContent = c.dataset.playCopy;
     };
     const reset = () => {
       ++epoch;
@@ -71,11 +71,11 @@ if (root) {
       reset();
       selected = i;
       show(i);
-      tag.textContent = `${choices[i].dataset.kind || '実録画'}の静止画`;
+      tag.textContent = choices[i].dataset.stillLabel;
     };
     const fail = () => {
       reset();
-      tag.textContent = '映像を読み込めませんでした。再生ボタンで再試行できます。';
+      tag.textContent = root.dataset.reelError;
       if (document.activeElement === video) start.focus({preventScroll: true});
     };
     const begin = () => {
@@ -88,7 +88,7 @@ if (root) {
       start.hidden = true;
       cap.hidden = false;
       video.tabIndex = 0;
-      tag.textContent = `${c.dataset.kind || '実録画'} · 編集あり`;
+      tag.textContent = c.dataset.playingLabel;
       video.src = source;
       clearTimeout(timer); timer = setTimeout(fail, 10000);
       play(video, () => { if (thisEpoch === epoch) fail(); });
@@ -112,7 +112,7 @@ if (root) {
     });
     choices.forEach((c, i) => {
       c.id ||= `v4-reel-choice-${i}`;
-      c.setAttribute('role', 'tab'); c.setAttribute('aria-controls', 'v4-reel-screen');
+      c.setAttribute('role', 'tab'); c.setAttribute('aria-controls', 'v4-reel-panel');
       c.addEventListener('click', e => {
         if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
         e.preventDefault(); select(i);

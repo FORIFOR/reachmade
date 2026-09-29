@@ -1,8 +1,8 @@
-"""Retained CI entrypoint for current product layouts and native recordings.
+"""CI entrypoint for both v4 homes and all seven actual product pages.
 
-The active contract is data-media-state, not the retired data-user-intent.
-Shared acceptance retains real playback, network failure/retry, source links,
-UI-story controls and no-JavaScript access. Assertions are not optional.
+The shared suite checks each active player: manual home reels, the dedicated
+Japanese Noa film, and the retained product story/recording players. Real playback,
+failed-resource retry, source links and no-JavaScript access remain required.
 """
 from verify_showcase import main
 

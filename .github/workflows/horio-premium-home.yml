@@ -12,6 +12,11 @@ on:
       - 'scripts/build*.mjs'
       - 'scripts/prepare-media.mjs'
       - 'scripts/verify-horio-premium.py'
+      - 'scripts/verify_home_v4.py'
+      - 'scripts/verify_showcase.py'
+      - 'scripts/verify-outcome-first.py'
+      - 'src/home-v4*.mjs'
+      - 'public/assets/home-v4.*'
       - 'tests/horio-premium.test.mjs'
       - 'tests/premium-films.test.mjs'
       - '.github/workflows/horio-premium-home.yml'
@@ -24,6 +29,11 @@ on:
       - 'src/premium-film-cuts.mjs'
       - 'scripts/prepare-media.mjs'
       - 'scripts/verify-horio-premium.py'
+      - 'scripts/verify_home_v4.py'
+      - 'scripts/verify_showcase.py'
+      - 'scripts/verify-outcome-first.py'
+      - 'src/home-v4*.mjs'
+      - 'public/assets/home-v4.*'
       - '.github/workflows/horio-premium-home.yml'
   workflow_dispatch:
 permissions:
@@ -52,13 +62,13 @@ jobs:
             sudo apt-get install -y ffmpeg
           fi
           ffmpeg -version | head -1
-      - name: Render and package the six premium product films
+      - name: Render and package the seven product films
         run: npm run media:prepare
       - name: Install Chromium for exact viewport QA
         run: |
           python -m pip install playwright==1.57.0
           python -m playwright install --with-deps chromium
-      - name: Run Logo Swap, Screenshot, first-view, product-primary and stillness tests
+      - name: Verify current home layouts, native playback, stillness and failure recovery
         run: |
           npx wrangler@4 dev --local --ip 127.0.0.1 --port 8787 >/tmp/horio-premium-worker.log 2>&1 &
           PID=$!

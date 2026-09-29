@@ -1,0 +1,69 @@
+name: Required UI image evidence
+on:
+  pull_request:
+    paths:
+      - 'src/**'
+      - 'public/**'
+      - 'scripts/**'
+      - 'tests/**'
+      - 'docs/design/**'
+      - 'ui-quality.config.json'
+      - 'site.config.json'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'CLAUDE.md'
+      - 'worker.js'
+      - '.github/workflows/ui-evidence.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: ui-evidence-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Run the complete static checks
+        run: npm run check
+      - name: Build clean pages after the build-contract tests
+        run: npm run build
+      - name: Locate the runner's real Chrome binary
+        run: |
+          CAPTURE_CHROME="$(command -v google-chrome)"
+          "$CAPTURE_CHROME" --version
+          echo "CHROME_BIN=$CAPTURE_CHROME" >> "$GITHUB_ENV"
+      - name: Capture every image required by the current UI gate
+        env:
+          UI_CAPTURE_REQUIRED_ONLY: '1'
+        run: npm run ui:capture
+      - name: Preserve real PNGs and source fingerprints for independent review
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ui-evidence-${{ github.event.pull_request.head.sha || github.sha }}
+          path: |
+            artifacts/ui/*.png
+            artifacts/ui/capture.json
+          if-no-files-found: error
+          retention-days: 7
+          overwrite: true
+      - name: Report capture metadata without claiming a visual review
+        if: always()
+        run: |
+          echo '## Required UI image evidence' >> "$GITHUB_STEP_SUMMARY"
+          echo 'Real browser PNGs. Image inspection and independent review remain separate requirements.' >> "$GITHUB_STEP_SUMMARY"
+          if [ -f artifacts/ui/capture.json ]; then
+            echo '```json' >> "$GITHUB_STEP_SUMMARY"
+            cat artifacts/ui/capture.json >> "$GITHUB_STEP_SUMMARY"
+            echo '```' >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo 'No capture metadata was produced. Check the failed build or capture step.' >> "$GITHUB_STEP_SUMMARY"
+          fi

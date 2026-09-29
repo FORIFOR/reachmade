@@ -1,7 +1,7 @@
 """Check packaged-media integrity, delivery and unchanged catalogue playback.
 
-The homepage defaults to an illustrative UI story with an explicit recording
-mode; the legacy signature remains a validated packaged asset, not autoplay.
+Both homepages expose seven manually selected, clearly labelled product films.
+The legacy signature remains a validated packaged asset, not automatic playback.
 """
 from pathlib import Path
 import hashlib
@@ -10,9 +10,11 @@ import subprocess
 import time
 import urllib.request
 from playwright.sync_api import sync_playwright
+from verify_home_v4 import assert_home_v4, begin_home_v4_requests
 
 ROOT=Path(__file__).resolve().parents[1]
 BASE='http://127.0.0.1:8787'
+IDS=['genie','ai-meeting','oathra','aisecure','agent-team','launchloom','noa']
 
 def probe_video(target):
     return json.loads(subprocess.check_output(['ffprobe','-v','error','-show_entries','format=duration:stream=codec_type,codec_name,width,height,avg_frame_rate','-of','json',str(target)],text=True,timeout=30))
@@ -38,15 +40,15 @@ def delivery(item,raw,allow_full=False):
 def main():
     out=ROOT/'film-qa';out.mkdir(exist_ok=True)
     manifest=json.loads((ROOT/'dist/media/products/manifest.json').read_text())
-    report={'scope':'Built site and packaged media in local Chromium; not production or Safari','media':[],'signature':{},'pages':[],'errors':[]}
+    report={'scope':'Built site and packaged media in local Chromium; not production or Safari','media':[],'home_media':[],'signature':{},'pages':[],'errors':[]}
     assert manifest['schema']==3 and manifest['mode']=='premium-site-edits'
     assert manifest['policy']['speed']==1 and manifest['policy']['audio'] is False
-    assert len(manifest['recordings'])==6
+    assert [item['id'] for item in manifest['recordings']]==IDS
     signature=manifest['signature']
-    assert signature['duration']==12 and signature['secondsPerProduct']==2
+    assert signature['duration']==14 and signature['secondsPerProduct']==2
     assert signature['speed']==1 and signature['audio'] is False
     assert signature['transition']=='hard-cut'
-    assert signature['order']==['genie','ai-meeting','oathra','aisecure','agent-team','launchloom']
+    assert signature['order']==IDS
     for attempt in range(60):
         try:
             with urllib.request.urlopen(BASE,timeout=2) as r:
@@ -78,43 +80,52 @@ def main():
         assert len(raw)==signature['bytes']<25*1024*1024
         poster=(ROOT/'dist'/signature['poster'].lstrip('/')).read_bytes()
         assert poster[:2]==b'\xff\xd8' and poster[-2:]==b'\xff\xd9'
-        metadata=probe_video(target);duration=assert_h264_silent_720(metadata,11.7,12.3)
+        metadata=probe_video(target);duration=assert_h264_silent_720(metadata,13.7,14.3)
         delivery(signature,raw,allow_full=True)
         report['signature']={'duration':duration,'bytes':len(raw),'metadata':metadata,'head_range_poster':True}
     except Exception as error:
         report['errors'].append('signature: '+str(error))
+    # The homepage deliberately uses two owner-supplied illustrative/design cuts.
+    # Verify their real bytes, metadata and delivery separately from the app recordings.
+    film_manifest=json.loads((ROOT/'dist/media/films/manifest.json').read_text())
+    film_files={item['path']:item for item in film_manifest['files']}
+    for product in ['oathra','agent-team']:
+        try:
+            path=f'/media/films/home-{product}-13s.mp4'
+            item=film_files[path]
+            poster_path=path.replace('.mp4','.jpg')
+            poster_item=film_files[poster_path]
+            target=ROOT/'dist'/path.lstrip('/');raw=target.read_bytes()
+            poster=(ROOT/'dist'/poster_path.lstrip('/')).read_bytes()
+            assert hashlib.sha256(raw).hexdigest()==item['sha256']
+            assert len(raw)==item['bytes']<25*1024*1024
+            assert hashlib.sha256(poster).hexdigest()==poster_item['sha256']
+            assert len(poster)==poster_item['bytes']
+            assert poster[:2]==b'\xff\xd8' and poster[-2:]==b'\xff\xd9'
+            metadata=probe_video(target);duration=assert_h264_silent_720(metadata,12.5,13.5)
+            delivery({**item,'poster':poster_path},raw,allow_full=True)
+            report['home_media'].append({'id':product,'path':path,'sha256':item['sha256'],'bytes':len(raw),'duration':duration,'metadata':metadata,'head_range_poster':True})
+        except Exception as error:
+            report['errors'].append('home film '+product+': '+str(error))
     with sync_playwright() as pw:
         browser=pw.chromium.launch()
         for width in [390,1440]:
             context=browser.new_context(viewport={'width':width,'height':1000},reduced_motion='reduce')
-            page=context.new_page();page.set_default_timeout(20000)
-            page.on('pageerror',lambda error:report['errors'].append('page: '+str(error)))
             for language in ['', 'en/']:
                 for sub in ['', 'products/','services/','work/','about/','contact/','privacy/']:
                     route='/'+language+sub
+                    page=context.new_page();page.set_default_timeout(20000)
+                    page.on('pageerror',lambda error:report['errors'].append('page: '+str(error)))
+                    if sub=='': begin_home_v4_requests(page)
                     try:
                         page.goto(BASE+route,wait_until='networkidle')
                         assert page.locator('h1').count()==1
                         assert page.evaluate('document.documentElement.scrollWidth<=innerWidth+1'),route
+                        home_contract = None
                         if sub=='':
-                            assert page.locator('.studio-player').count()==1
-                            assert page.locator('[role=tab]').count()==6
-                            page.wait_for_selector('.rm-live-demo')
-                            assert page.locator('.rm-live-demo').get_attribute('data-phase')=='4', 'Reduced motion shows the completed story'
-                            assert page.locator('.rm-demo-disclosure').inner_text().strip(), 'Illustration must be disclosed'
-                            assert not page.locator('.studio-player-screen>img').is_visible(), 'Poster must not overlap the UI story'
-                            assert page.locator('.studio-player video').get_attribute('src') is None
-                            assert page.locator('.studio-player video').evaluate('(v)=>v.paused')
-                            page.locator('[data-mode="recording"]').click()
-                            assert not page.locator('.rm-live-demo').is_visible()
-                            assert page.locator('.studio-player-screen>img').is_visible(), 'Recording mode retains the actual product poster'
-                            assert page.locator('.studio-player video').get_attribute('src') is None, 'Mode switching must not download a recording'
-                            assert page.locator('.studio-player video').evaluate('(v)=>v.paused'), 'Mode switching must not autoplay'
-                            assert page.locator('[data-studio-link]').is_visible(), 'Recording source and product route remain accessible'
-                            page.locator('[data-mode="story"]').click()
-                            assert page.locator('.rm-live-demo').is_visible(), 'Visitors can return to the UI story'
+                            home_contract = assert_home_v4(page)
                         elif sub=='products/':
-                            assert page.locator('.rm-film-preview').count()==6
+                            assert page.locator('.rm-film-preview').count()==len(IDS)
                             assert page.locator('.rm-film-preview[src]').count()==0
                             for item in manifest['recordings']:
                                 assert page.locator(f'[data-product-film="{item["id"]}"] video').get_attribute('poster')==item['poster']
@@ -123,9 +134,11 @@ def main():
                             assert not page.locator('input[name="consent"]').is_checked()
                             assert page.locator('#inquiry-submit').is_disabled()
                             assert not page.locator('#inquiry-result').get_attribute('data-receipt')
-                        report['pages'].append({'route':route,'width':width,'overflow':False})
+                        report['pages'].append({'route':route,'width':width,'overflow':False,**({'home_contract':home_contract} if home_contract else {})})
                     except Exception as error:
                         report['errors'].append(route+': '+str(error))
+                    finally:
+                        page.close()
             context.close()
         context=browser.new_context(viewport={'width':1440,'height':1000},reduced_motion='reduce')
         page=context.new_page();page.set_default_timeout(20000)
