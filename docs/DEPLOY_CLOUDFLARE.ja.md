@@ -4,7 +4,7 @@
 
 ## 今あるもの / まだないもの
 
-- あるもの: 購入済み`reachmade.com`、Cloudflare DNS、`FORIFOR/reachmade`のソース、Workers Static Assetsへのデプロイ、`reachmade.com`と`www.reachmade.com`のWorker接続、台帳に登録した各プロダクト用サブドメイン（現在6件）。
+- あるもの: 購入済み`reachmade.com`、Cloudflare DNS、`FORIFOR/reachmade`のソース、Workers Static Assetsへのデプロイ、`reachmade.com`と`www.reachmade.com`のWorker接続、台帳に登録した各プロダクト用サブドメイン（現在7件。noa.reachmade.comは2026-09-29にAPIで追加）。
 - まだないもの: 専用のReachmadeメールボックス、問い合わせ受信・実機表示の確認。
 - Namecheapの登録・更新は継続します。ネームサーバーを元に戻したり、有料のホスティングを追加契約したりする手順ではありません。
 
