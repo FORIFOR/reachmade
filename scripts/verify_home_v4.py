@@ -21,6 +21,7 @@ HOME_FILMS = {
 HOME_REQUESTS = WeakKeyDictionary()
 HOME_PROGRESS = WeakKeyDictionary()
 NATIVE_REJECTIONS = WeakKeyDictionary()
+NATIVE_ATTEMPTS = WeakKeyDictionary()
 NATIVE_REJECTION_PREFIX = 'reachmade-native-rejection:'
 RETIRED_HOME_MODULES = {
     'animated-demos.mjs', 'lab-explorer.mjs', 'lab-signature.mjs', 'outcome-controls.mjs',
@@ -44,6 +45,7 @@ def begin_home_v4_requests(page, *, progress=None):
     HOME_REQUESTS[page] = requests
     HOME_PROGRESS[page] = progress
     NATIVE_REJECTIONS[page] = []
+    NATIVE_ATTEMPTS[page] = {}
 
     def native_rejected(message):
         if message.type == 'error' and message.text.startswith(NATIVE_REJECTION_PREFIX):
@@ -140,12 +142,54 @@ def _native_video(video):
     assert video.evaluate('v=>v.paused'), 'Media must start paused'
 
 
-def wait_native_media(page, expression, *, phase, selector='.v4-reel-video', arg=None):
+def native_playback_report(page):
+    """Retain every rejection, distinguishing only proven completed playback."""
+    attempts = NATIVE_ATTEMPTS.get(page, {})
+    rejections = NATIVE_REJECTIONS.get(page, [])
+    completed_aborts, unexpected = [], []
+    for rejection in rejections:
+        attempt = attempts.get(rejection.get('attempt_id'), {})
+        ended_before_rejection = rejection.get('ended_before_rejection') or {}
+        start = attempt.get('resume_from', {})
+        # Ending playback may reject pending play promises with AbortError:
+        # https://html.spec.whatwg.org/multipage/media.html#ended-playback
+        # A completed native-state proof for this exact call/source is required;
+        # an AbortError alone never excuses a failed or interrupted playback.
+        completed = (rejection.get('name') == 'AbortError'
+                     and attempt.get('completed_playback')
+                     and rejection.get('source') == attempt.get('source')
+                     and rejection.get('phase') == attempt.get('phase')
+                     and ended_before_rejection.get('source') == attempt.get('source')
+                     and ended_before_rejection.get('ended') is True
+                     and ended_before_rejection.get('paused') is True
+                     and ended_before_rejection.get('error') is None
+                     and ended_before_rejection.get('time', 0) > start.get('time', float('inf')) + .25
+                     and ended_before_rejection.get('frames', 0) > start.get('frames', float('inf')))
+        (completed_aborts if completed else unexpected).append(rejection)
+    return {'attempts': list(attempts.values()), 'rejections': list(rejections),
+            'completed_playback_aborts': completed_aborts,
+            'unexpected_rejections': unexpected}
+
+
+def wait_native_media(page, expression, *, phase, selector='.v4-reel-video', arg=None,
+                      completed_attempt=None):
     """Keep the native-media assertion, and preserve observable state when it fails."""
     try:
         home_v4_phase(page, 'Wait for ' + phase)
         page.wait_for_function(expression, arg=arg)
-        assert not NATIVE_REJECTIONS.get(page, []), NATIVE_REJECTIONS.get(page)
+        if completed_attempt is not None:
+            attempt = NATIVE_ATTEMPTS[page][completed_attempt]
+            end = page.locator(selector).evaluate('''v=>({source:v.currentSrc,
+              time:v.currentTime,duration:v.duration,ended:v.ended,paused:v.paused,
+              frames:v.getVideoPlaybackQuality().totalVideoFrames,error:v.error?.code ?? null})''')
+            start, resumed = attempt['resume_from'], attempt['resumed']
+            assert resumed['source'] == end['source'] == attempt['source']
+            assert resumed['time'] > start['time'] + .25 and resumed['frames'] > start['frames']
+            assert resumed['error'] is None and end['error'] is None
+            assert end['ended'] and end['paused'] and abs(end['time'] - end['duration']) < .1
+            attempt['completed_playback'] = end
+        unexpected = native_playback_report(page)['unexpected_rejections']
+        assert not unexpected, unexpected
     except Exception as exc:
         state = page.locator(selector).evaluate('''v=>({
           source:v.currentSrc, time:v.currentTime, duration:v.duration,
@@ -162,11 +206,31 @@ def wait_native_media(page, expression, *, phase, selector='.v4-reel-video', arg
 def start_native_media(page, video, *, phase):
     """Start the real player without waiting indefinitely for its play promise."""
     home_v4_phase(page, phase)
-    video.evaluate('''(v, args)=>{
-      v.play().catch(error=>console.error(args.prefix+JSON.stringify({
-        phase:args.phase,name:error.name,message:error.message,source:v.currentSrc
-      })));
-    }''', {'prefix': NATIVE_REJECTION_PREFIX, 'phase': phase})
+    attempts = NATIVE_ATTEMPTS[page]
+    attempt_id = len(attempts) + 1
+    attempt = {'attempt_id': attempt_id, 'phase': phase}
+    attempts[attempt_id] = attempt
+    attempt['source'] = video.evaluate('''(v, args)=>{
+      const source=v.currentSrc || v.querySelector('source')?.src || v.src;
+      const snapshot=()=>({source:v.currentSrc,time:v.currentTime,duration:v.duration,
+        ended:v.ended,paused:v.paused,frames:v.getVideoPlaybackQuality().totalVideoFrames,
+        error:v.error?.code ?? null});
+      let endedBeforeRejection=null;
+      const onEnded=()=>{if(v.currentSrc===source) endedBeforeRejection=snapshot();};
+      v.addEventListener('ended',onEnded);
+      v.play().then(()=>v.removeEventListener('ended',onEnded), error=>{
+        const atRejection=snapshot();
+        v.removeEventListener('ended',onEnded);
+        console.error(args.prefix+JSON.stringify({
+          attempt_id:args.attemptId,phase:args.phase,name:error.name,message:error.message,source,
+          at_rejection:atRejection,
+          ended_before_rejection:endedBeforeRejection ||
+            (atRejection.source===source && atRejection.ended ? atRejection : null)
+        }));
+      });
+      return source;
+    }''', {'attemptId': attempt_id, 'prefix': NATIVE_REJECTION_PREFIX, 'phase': phase})
+    return attempt_id
 
 
 def _selected(page, choice):
@@ -316,15 +380,16 @@ def playback_home_v4(page):
         assert video.evaluate('v=>v.paused')
         video.evaluate('v=>{v.currentTime=Math.min(3,v.duration/2)}')
         wait_native_media(page, '()=>{const v=document.querySelector(".v4-reel-video");return !v.seeking && v.currentTime>=2.9 && v.readyState>=2}', phase=source + ': paused native seek')
-        # Finish seeking while paused before resuming. Starting only .15s from
-        # the end can reach ended before WebKit settles its play promise.
+        # Finish seeking while paused, then measure real resumed frames before
+        # testing native end; a seek to the final frame alone is insufficient.
         video.evaluate('v=>{v.currentTime=v.duration-2}')
         wait_native_media(page, '()=>{const v=document.querySelector(".v4-reel-video");return v.paused && !v.seeking && v.readyState>=2 && Math.abs(v.currentTime-(v.duration-2))<.1}', phase=source + ': paused seek near end')
         resume_from = video.evaluate('v=>({time:v.currentTime,frames:v.getVideoPlaybackQuality().totalVideoFrames})')
-        start_native_media(page, video, phase=source + ': resume near end')
+        attempt_id = start_native_media(page, video, phase=source + ': resume near end')
         wait_native_media(page, '(start)=>{const v=document.querySelector(".v4-reel-video");return !v.paused && !v.seeking && v.readyState>=2 && v.currentTime>start.time+.25 && v.getVideoPlaybackQuality().totalVideoFrames>start.frames}', phase=source + ': resumed time and decoded frames advance', arg=resume_from)
-        resumed = video.evaluate('v=>({time:v.currentTime,frames:v.getVideoPlaybackQuality().totalVideoFrames})')
-        wait_native_media(page, '()=>document.querySelector(".v4-reel-video").ended', phase=source + ': native end after seek')
+        resumed = video.evaluate('v=>({source:v.currentSrc,time:v.currentTime,frames:v.getVideoPlaybackQuality().totalVideoFrames,error:v.error?.code ?? null})')
+        NATIVE_ATTEMPTS[page][attempt_id].update({'resume_from': resume_from, 'resumed': resumed})
+        wait_native_media(page, '()=>document.querySelector(".v4-reel-video").ended', phase=source + ': native end after seek', completed_attempt=attempt_id)
         page.wait_for_timeout(200)
         _selected(page, choice)
         results.append({'id': choice.get_attribute('data-studio-choice'), **info, 'pause_seek_end': True,
@@ -338,7 +403,7 @@ def playback_home_v4(page):
     expect(scope).not_to_have_attribute('open', '')
     wait_native_media(page, '()=>document.querySelector("[data-v4-chapter=ai-meeting] video").paused', phase='AI Meeting: closing disclosure pauses playback', selector='[data-v4-chapter="ai-meeting"] video')
     return {'films': results, 'closing_scope_pauses': True, 'before_play_network': initial_requests,
-            'network': _home_requests(page, before_play=False)}
+            'network': _home_requests(page, before_play=False), 'native_playback': native_playback_report(page)}
 
 
 def failure_home_v4(page):
