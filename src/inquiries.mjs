@@ -48,10 +48,11 @@ export async function handleInquiry(request, fetcher = fetch) {
     // The real site origin must be authorized by the broker; no impersonation
     // of its older GitHub Pages origin is used to get around that policy.
     const response = await fetcher(INTAKE_ORIGIN + '/api/site/' + (statusOnly ? 'status' : 'leads'), {
-      method: statusOnly ? 'GET' : 'POST', redirect:'error', signal:AbortSignal.timeout(12000),
+      method: statusOnly ? 'GET' : 'POST', redirect:'manual', signal:AbortSignal.timeout(12000),
       headers:{Origin:SITE_ORIGIN,'Content-Type':'application/json',Accept:'application/json'},
       ...(payload ? {body:JSON.stringify(payload)} : {}),
     });
+    if (response.status >= 300 && response.status < 400) { await response.body?.cancel(); return json(503,{error:'UNAVAILABLE'}); }
     if (!/^application\/json(?:;|$)/i.test(response.headers.get('Content-Type') || '')) { await response.body?.cancel(); return json(503,{error:'UNAVAILABLE'}); }
     let result;
     try { result = await boundedJson(response.body,2048); }
