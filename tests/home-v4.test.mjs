@@ -4,7 +4,9 @@ import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import {HOME_V4_VERSION, renderHomeV4, refineHomeV4, writeHomeV4} from '../src/home-v4.mjs';
-import {products} from '../src/products.mjs';
+import {products, publishedHomeLinks} from '../src/products.mjs';
+import {landingExperience} from '../src/product-landings.mjs';
+import {esc} from '../public/assets/lab-core.mjs';
 
 const root = path.resolve(import.meta.dirname, '..');
 const fixtures = () => structuredClone(products);
@@ -98,10 +100,10 @@ test('built Japanese home is v4 and the English home is unchanged', async () => 
   assert.equal(css.split('/* REACHMADE_HOME_V4 */').length - 1, 1);
 });
 
-test('v4 hero states the public-source check date, and recordings never chain into one another', async () => {
+test('v4 home retains the public-source check date, and recordings never chain into one another', async () => {
   const config = JSON.parse(await fs.readFile(new URL('../site.config.json', import.meta.url), 'utf8'));
   const html = await fs.readFile(new URL('../dist/index.html', import.meta.url), 'utf8');
-  assert.ok(html.includes(`公開情報の確認日 ${config.checkedAt}`), 'the hero date is the public-source check, not the capability check');
+  assert.ok(html.includes(`公開情報の確認日 ${config.checkedAt}`), 'the source note uses the public-source check, not the capability check');
   const client = await fs.readFile(new URL('../public/assets/home-v4.mjs', import.meta.url), 'utf8');
   const ended = client.slice(client.indexOf("addEventListener('ended'"), client.indexOf("addEventListener('ended'") + 400);
   assert.doesNotMatch(ended, /load\(|\.play\(/, 'a finished recording must not start the next one');
@@ -109,18 +111,57 @@ test('v4 hero states the public-source check date, and recordings never chain in
 });
 
 test('v4 names each product film for what it is, and shows the ledger conditions under it', async () => {
-  const {products} = await import('../src/products.mjs');
   const client = await fs.readFile(new URL('../public/assets/home-v4.mjs', import.meta.url), 'utf8');
   const html = await fs.readFile(new URL('../dist/index.html', import.meta.url), 'utf8');
   const chapterOf = id => html.slice(html.indexOf(`data-v4-chapter="${id}"`), html.indexOf('</article>', html.indexOf(`data-v4-chapter="${id}"`)));
   // Launchloom's footage is a film the tool made about itself (ledger: 自身で作った紹介映像), never a recording.
   const launchloom = chapterOf('launchloom');
-  assert.match(launchloom, /Launchloomが作った紹介映像（無音・編集あり）/);
-  assert.doesNotMatch(launchloom.slice(0, launchloom.indexOf('</figcaption>')), /実録画/);
+  const launchloomFigure = launchloom.match(/<figure\b[^>]*>[\s\S]*?<\/figure>/)?.[0];
+  assert.ok(launchloomFigure, 'Launchloom keeps its actual footage and visible caption');
+  assert.match(launchloomFigure, /Launchloomが作った紹介映像（無音・編集あり）/);
+  assert.doesNotMatch(launchloomFigure, /実録画/);
   assert.doesNotMatch(html, /\d本の実録画|REAL RECORDINGS/);
-  for (const p of products) assert.ok(chapterOf(p.id).includes(`<span class="v4-proof">${p.ja.proof.replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#39;')}</span>`), `${p.id} shows its evidence conditions`);
-  assert.match(html, /<p class="v4-proof v4-stage-proof" data-v4-stage-proof>/, 'the wide-screen stage shows the conditions of the product on screen');
-  assert.match(client, /data-v4-stage-proof/);
-  assert.match(chapterOf('genie'), /<small class="v4-dev">開発中のアイコン · 現行版のアプリには未搭載<\/small>/);
+  for (const p of products) {
+    assert.ok(chapterOf(p.id).includes(`<span class="v4-proof">${esc(p.ja.proof)}</span>`), `${p.id} shows its evidence conditions beside its footage`);
+    const choice = html.match(new RegExp(`<a\\b[^>]*data-studio-choice="${p.id}"[^>]*>`))?.[0];
+    assert.ok(choice?.includes(`data-proof="${esc(p.ja.proof)}"`), `${p.id} carries its ledger evidence into the shared player`);
+  }
+  const initial = products.find(p => p.id === 'ai-meeting');
+  const reelProof = html.match(/<p\b[^>]*data-v4-reel-proof[^>]*>[\s\S]*?<\/p>/)?.[0];
+  assert.ok(reelProof?.includes(esc(initial.ja.proof)), 'the shared player initially shows the selected product’s evidence conditions');
+  assert.doesNotMatch(reelProof, /\bhidden\b/, 'evidence conditions remain visible before playback');
+  assert.match(client, /\$\('\[data-v4-reel-proof\]'[^;]*\.textContent\s*=\s*c\.dataset\.proof/, 'changing the selected footage updates the evidence conditions');
+  assert.match(chapterOf('genie'), /href="\/products\/genie\/#next-ui"[^>]*>次のTaskDockの設計プレビューを見る/);
+  assert.match(chapterOf('genie'), /設計プレビューは未リリースで、実アプリの録画ではありません/);
+  assert.doesNotMatch(html, /data-v4-stage|data-v4-next-root|class="v4-app-icon"/, 'the home does not present unreleased design assets as a current application');
   assert.doesNotMatch(client, /'実録画 · 約13秒|'STILL · 実録画/, 'the client takes the footage kind from data-kind');
+});
+
+test('built v4 home leads with consultation, brings services forward, and links directly to verified product entries', async () => {
+  const html = await fs.readFile(new URL('../dist/index.html', import.meta.url), 'utf8');
+  const hero = html.match(/<section class="v4-hero">[\s\S]*?<\/section>/)?.[0];
+  assert.ok(hero, 'the built home has its introduction');
+  assert.match(hero, /AIプロダクトの自主開発と、企業向け開発支援/);
+  assert.match(hero, /<a class="v4-btn" href="\/contact\/">開発を相談する/);
+  assert.match(hero, /<a class="v4-link" href="#products">つくったものを見る/);
+  assert.doesNotMatch(hero, /公開情報の確認日/);
+  const reelIndex = html.indexOf('id="reel"'), servicesIndex = html.indexOf('id="services"'), productsIndex = html.indexOf('id="products"');
+  assert.ok(reelIndex >= 0 && servicesIndex > reelIndex && productsIndex > servicesIndex, 'services follow the demonstration and precede the product catalogue');
+  for (const p of products) {
+    const start = html.indexOf(`data-v4-chapter="${p.id}"`);
+    assert.ok(start >= 0, `${p.id} remains in the catalogue`);
+    const chapter = html.slice(start, html.indexOf('</article>', start));
+    const href = p.id === 'genie' ? `/products/${p.id}/#start` : p.id === 'ai-meeting' ? landingExperience[p.id].ja.primary[1] : p.demo.replace(/^https:\/\/reachmade\.com(?=\/)/, '');
+    const label = p.id === 'genie' ? '利用条件・セットアップ' : p.id === 'ai-meeting' ? 'タスク画面を試す' : p.ja.demoLabel;
+    assert.ok(chapter.includes(`<a class="v4-link" href="${esc(href)}"`), `${p.id} links directly to its verified entry`);
+    assert.ok(chapter.includes(`>${esc(label)} <span`), `${p.id} describes what its entry actually opens`);
+    for (const fact of [p.ja.headline, p.ja.outcome, p.ja.status, p.ja.scope, p.ja.license]) assert.ok(chapter.includes(esc(fact)), `${p.id} retains its ledger facts and conditions`);
+  }
+  for (const p of publishedHomeLinks) {
+    const start = html.indexOf(`class="v4-published" id="${p.id}"`);
+    assert.ok(start >= 0, `${p.name} retains its published entry`);
+    const card = html.slice(start, html.indexOf('</article>', start));
+    assert.ok(card.includes(`href="${esc(p.url)}"`) && card.includes(`>${esc(p.label)} <span`));
+    assert.ok(card.includes(esc(p.status)) && card.includes(esc(p.license)));
+  }
 });

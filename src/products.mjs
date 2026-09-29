@@ -249,3 +249,14 @@ export const products = [
     }
   }
 ];
+
+/** Publicly listed on reachmade.com on 2026-09-30. The dedicated Noa page has not
+ * reached this repository, so preserve its verified channel entry without inventing
+ * a local product route, source repository or application availability. */
+export const publishedHomeLinks = Object.freeze([{
+  id: 'noa', name: '夜澄ノア', headline: 'コメントを、声と表情に。',
+  description: 'コメントに、声と表情で返す配信キャラクター。',
+  status: '配信中', license: 'ソース非公開', label: '配信を見る',
+  url: 'https://youtube.com/channel/UCjX52bV1kfUgSuqf3vv_rTQ',
+  source: 'https://reachmade.com/products/noa/', checkedAt: '2026-09-30'
+}]);
