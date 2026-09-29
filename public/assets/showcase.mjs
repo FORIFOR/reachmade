@@ -31,7 +31,7 @@ function enhancePlayer({host,video,play,image,status,source}){
  play.hidden=false;
  play.addEventListener('click',async()=>{
   const thisEpoch=++epoch,url=source();
-  if(!/^\/media\/products\/[a-z0-9-]+\.mp4$/.test(url))return;
+  if(!/^\/media\/(?:products|films)\/[a-z0-9-]+\.mp4$/.test(url))return;
   loading=true;status.hidden=true;play.disabled=true;play.textContent=ja?'読み込み中…':'Loading…';
   host.dataset.mediaState='loading';stopTimer();timer=setTimeout(fail,10000);
   video.src=url;video.hidden=false;video.controls=true;video.muted=true;

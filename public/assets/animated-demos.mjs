@@ -69,8 +69,12 @@ export function mountDemo(figure, initialId, lang = 'ja') {
   let id = initialId, copy, elapsed = 0, previous = null, raf = 0, phase = -1;
   let visible = !('IntersectionObserver' in win), paused = false, mode = 'story', dead = false, pageHidden = false;
   let userPlay = false;
+  // A film served from /media/films/ is produced, not recorded (the Japanese Genie page opens with its TaskDock
+  // reconstruction), so the tab never calls it a recording.
+  const produced = /^\/media\/films\//.test(screen.querySelector('[data-recording-src]')?.dataset.recordingSrc || '');
+  const filmTab = STAGED_FILMS.has(initialId) ? t('紹介映像を見る','Intro film') : produced ? t('再現映像を見る','Reconstruction') : t('実録画を見る','Real recording');
   const toolbar = doc.createElement('div'); toolbar.className = 'rm-demo-toolbar';
-  toolbar.innerHTML = `<div class="rm-demo-modes" role="group" aria-label="${t('デモの種類','Demo type')}"><button type="button" data-mode="story" aria-pressed="true">${t('動きで見る','UI story')}</button><button type="button" data-mode="recording" aria-pressed="false">${STAGED_FILMS.has(initialId)?t('紹介映像を見る','Intro film'):t('実録画を見る','Real recording')}</button></div><span>PRODUCT DEMO</span>`;
+  toolbar.innerHTML = `<div class="rm-demo-modes" role="group" aria-label="${t('デモの種類','Demo type')}"><button type="button" data-mode="story" aria-pressed="true">${t('動きで見る','UI story')}</button><button type="button" data-mode="recording" aria-pressed="false">${filmTab}</button></div><span>PRODUCT DEMO</span>`;
   const root = doc.createElement('div'); root.className = 'rm-live-demo'; root.setAttribute('role','region');
   root.innerHTML = `<div class="rm-demo-visual"></div><div class="rm-demo-controls"><button type="button" data-action="pause"></button><button type="button" data-action="restart" aria-label="${t('最初から見る','Restart story')}">${icon('replay')}</button><label class="rm-demo-scrub"><span class="rm-sr">${t('再生位置','Playback position')}</span><input type="range" min="0" max="18000" step="100" value="0"></label><output>00:00 / 00:18</output></div><div class="rm-chapters" role="group" aria-label="${t('場面を選ぶ','Choose a scene')}"></div><p class="rm-demo-summary"></p><p class="rm-demo-disclosure"></p>`;
   figure.insertBefore(toolbar, screen); screen.append(root);

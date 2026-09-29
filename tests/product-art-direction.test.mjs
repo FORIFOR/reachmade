@@ -35,7 +35,8 @@ for(const [id,direction] of Object.entries(directions))for(const lang of ['ja','
   assert.match(html,/data-art-direction="20260919"/);
   assert.equal((html.match(/<script\b/g)||[]).length,1);
   assert.equal((html.match(/rel="stylesheet"/g)||[]).length,1);
-  assert.match(html,new RegExp(`data-recording-src="/media/products/${id}\\.mp4"`));
+  // The Japanese Genie page opens with the 01 TaskDock reconstruction, labelled as such (tests/genie-lp.test.mjs).
+  assert.ok(html.includes(`data-recording-src="${id==='genie'&&lang==='ja'?'/media/films/genie-taskdock-13s.mp4':`/media/products/${id}.mp4`}"`));
  });
 }
 test('unknown input and changed templates fail closed',()=>{

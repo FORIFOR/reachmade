@@ -13,6 +13,8 @@ const originals=new Map([
  // The Japanese home's clips cut from the owner's 2026-09-30 films (src/home-v4.mjs HOME_REC).
  ['/media/films/home-agent-team-13s.mp4','agent-team'],
  ['/media/films/home-oathra-13s.mp4','oathra'],
+ // Genie's TaskDock reconstruction: the home clip and the product page's top film (2026-09-30).
+ ['/media/films/genie-taskdock-13s.mp4','genie'],
  // 夜澄ノア's introduction film: the owned original is also the film on the Japanese product page.
  ['/media/originals/noa/lp-film.mp4','noa'],
 ]);

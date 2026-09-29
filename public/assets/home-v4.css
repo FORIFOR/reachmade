@@ -39,6 +39,7 @@
 
 /* Shared video screen. The crop trims the macOS menu bar: the box is taller than the frame, anchored to the bottom. */
 [data-home-v4] .v4-screen{position:relative;aspect-ratio:16/9;overflow:hidden;background:var(--dark);color:#eef1ea}
+[data-home-v4] .v4-fit{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;display:block;background:#0c0d0f}
 [data-home-v4] .v4-crop{position:absolute;left:0;bottom:0;width:100%;height:105.5%;object-fit:cover;display:block}
 [data-home-v4] .v4-still{opacity:0;transition:opacity 1.2s ease,transform 7s linear;transform-origin:50% 100%}
 [data-home-v4] .v4-still.is-on{opacity:1}

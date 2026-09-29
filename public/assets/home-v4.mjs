@@ -34,6 +34,8 @@ if (root) {
       const c = choices[i];
       $('[data-v4-reel-index]', frame).textContent = c.dataset.index;
       $('[data-v4-reel-disc]', frame).textContent = c.dataset.disc;
+      // Before playback the tag names what the still is cut from (recording, reconstruction, film).
+      if (!started) tag.textContent = `STILL · ${(c.dataset.kind || '実録画').replace(/（.*$/, '')}から`;
     };
     const fail = () => {
       clearTimeout(timer); started = false; frame.classList.remove('is-started', 'is-playing'); cap.hidden = true; start.hidden = false;
@@ -48,6 +50,7 @@ if (root) {
       video.setAttribute('aria-label', `${c.dataset.name} ${c.dataset.kind || '実録画'}（無音・編集あり）`);
       setTimeout(() => {
         if (thisEpoch !== epoch) return;
+        video.classList.toggle('v4-fit', c.dataset.v4Fit === '1'); video.classList.toggle('v4-crop', c.dataset.v4Fit !== '1');
         video.src = c.dataset.v4Rec;
         clearTimeout(timer); timer = setTimeout(fail, 10000);
         play(video, () => { if (thisEpoch === epoch) fail(); });
@@ -78,7 +81,7 @@ if (root) {
       // Stop when the recording ends. The next product's recording starts only when the visitor chooses it:
       // nothing plays that the visitor did not start.
       started = false; slide = active; frame.classList.remove('is-started', 'is-playing'); cap.hidden = true; start.hidden = false;
-      tag.textContent = 'STILL · 製品映像から'; show(slide);
+      show(slide);
     });
     choices.forEach((c, i) => {
       c.setAttribute('role', 'tab'); c.setAttribute('aria-controls', 'v4-reel-screen');

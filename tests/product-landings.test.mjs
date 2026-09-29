@@ -21,8 +21,11 @@ for (const id of landingIds) for (const lang of ['ja','en']) {
     if (id==='noa' && lang==='ja') { assert.match(await fs.readFile(path.join(root,'dist',route,'index.html'),'utf8'),/data-noa-lp="/); return; }
     const html = await fs.readFile(path.join(root,'dist',route,'index.html'),'utf8');
     assert.match(html,new RegExp(`data-product-id="${id}"`));
-    assert.match(html,new RegExp(`data-recording-src="/media/products/${id}\\.mp4"`));
-    assert.match(html,new RegExp(`poster="/media/products/${id}\\.jpg"`));
+    // The Japanese Genie page opens with the 01 TaskDock reconstruction (owner's choice, 2026-09-30), labelled as such.
+    const film = id==='genie' && lang==='ja' ? {src:'/media/films/genie-taskdock-13s.mp4',poster:'/media/films/genie-taskdock-13s.jpg'} : {src:`/media/products/${id}.mp4`,poster:`/media/products/${id}.jpg`};
+    assert.ok(html.includes(`data-recording-src="${film.src}"`), `${id}/${lang} top film`);
+    assert.ok(html.includes(`poster="${film.poster}"`), `${id}/${lang} poster`);
+    if (id==='genie' && lang==='ja') assert.match(html,/再現映像 · 開発中の次の版[\s\S]*実アプリの録画ではありません。/);
     assert.doesNotMatch(html,/<video[^>]*\ssrc=|<video[^>]*\bautoplay\b|<iframe|<form\b/);
     assert.match(html,/preload="none"/);
     const recomposed = id==='oathra' && lang==='ja';
@@ -36,8 +39,11 @@ for (const id of landingIds) for (const lang of ['ja','en']) {
     assert.ok(html.includes(escaped(x.tryNow)));
     assert.ok(html.includes(escaped(x.actionNote)));
     assert.ok(html.includes(escaped(x.primary[0])));
-    assert.match(html,lang==='ja'?/13秒で実演を見る/:/See it in 13 seconds/);
-    assert.match(html,lang==='ja'?/約13秒.*再生速度は変えていません/:/about 13 seconds; playback speed is unchanged/);
+    if (id==='genie' && lang==='ja') assert.match(html,/13秒で動きを見る/);
+    else {
+      assert.match(html,lang==='ja'?/13秒で実演を見る/:/See it in 13 seconds/);
+      assert.match(html,lang==='ja'?/約13秒.*再生速度は変えていません/:/about 13 seconds; playback speed is unchanged/);
+    }
     if (id==='genie') assert.match(html,lang==='ja'?/現行の製品にはまだ入っていません。実機での動作は未確認です/:/is not in the current product\. It has not been checked on a real Mac/);
     // Products with a next-UI preview (Genie, Agent Team) state in its intro that the frames are renders, not recordings.
     else if (x.nextUi) assert.match(x.nextUi.intro,lang==='ja'?/実アプリの録画ではありません/:/not (a )?recordings? of the app/);

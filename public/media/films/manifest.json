@@ -125,6 +125,24 @@
       "source": "/media/films/home-oathra-13s.mp4",
       "sourceSha256": "7fc7346c504c1269f00e0f043be375efb7051cc5ed2284a922f127f518c9ece6",
       "render": "renderPremiumFilm poster: ffmpeg -ss 0.35 -frames:v 1 -q:v 2"
+    },
+    {
+      "path": "/media/films/genie-taskdock-13s.mp4",
+      "bytes": 268015,
+      "sha256": "602c0f9404a4d414f3a173f8ffed610cc5bc3a2b9296fcb709d0fdb7cd5a3a67",
+      "source": "/products/genie/ 「01 · HOW IT FEELS」 TaskDock reconstruction (src/genie-lp.mjs howFrames: 呼び出す → 必要な情報を渡す → 結果を使う), rendered in headless Chrome at 720x405 CSS px, device scale 1.78",
+      "sourceSha256": "cd4a9a758ed94e118764bd6eaf0cf5c33bd35ed3ae6c46bcec2da54f2c4d5496",
+      "render": "30 fps frames per state, step-name chips hidden (idle 4.0 s static, listen 5.6 s with its CSS animations stepped frame by frame, done 4.6 s), 0.6 s crossfades; libx264 CRF 18 slow, no audio, faststart",
+      "spec": "1280x720, 30 fps, 13.000 s, no audio",
+      "note": "Reconstruction of the next TaskDock (in development) over a still cut from the published product film; demo data. Not a recording of the app. sourceSha256 is the background still (lp-work.jpg)."
+    },
+    {
+      "path": "/media/films/genie-taskdock-13s.jpg",
+      "bytes": 54603,
+      "sha256": "9bbfde25ee18f8740349c6649e461fce103013c35c4b72f18e00bb1c7f14ad3e",
+      "source": "/media/films/genie-taskdock-13s.mp4",
+      "sourceSha256": "602c0f9404a4d414f3a173f8ffed610cc5bc3a2b9296fcb709d0fdb7cd5a3a67",
+      "render": "ffmpeg -ss 0.35 -frames:v 1 -q:v 2"
     }
   ]
 }

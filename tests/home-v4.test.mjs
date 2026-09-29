@@ -121,8 +121,8 @@ test('v4 names each product film for what it is, and shows the ledger conditions
   assert.doesNotMatch(html, /\d本の実録画|REAL RECORDINGS/);
   // 夜澄ノア's footage is an introduction film with recreated screens, never called a recording.
   assert.match(html, /data-v4-chapter="noa" data-kind="紹介映像（画面は再現・演出を含む）"/);
-  // Oathra and Agent Team play the owner's 2026-09-30 films on the home: illustrative, never called a recording.
-  for (const [id, label, src] of [['oathra', 'イメージ映像（演出を含む）', '/media/films/home-oathra-13s.mp4'], ['agent-team', '設計動画（画面は再現・未実装を含む）', '/media/films/home-agent-team-13s.mp4']]) {
+  // Genie, Oathra and Agent Team play produced films on the home (2026-09-30): illustrative, never called a recording.
+  for (const [id, label, src] of [['genie', '再現映像（開発中の次の版）', '/media/films/genie-taskdock-13s.mp4'], ['oathra', 'イメージ映像（演出を含む）', '/media/films/home-oathra-13s.mp4'], ['agent-team', '設計動画（画面は再現・未実装を含む）', '/media/films/home-agent-team-13s.mp4']]) {
     const c = chapterOf(id);
     assert.match(html, new RegExp(`data-v4-chapter="${id}" data-kind="${label.replace(/[()（）]/g, '\\$&')}"`));
     assert.ok(c.includes(`<source src="${src}"`), id);
@@ -130,7 +130,7 @@ test('v4 names each product film for what it is, and shows the ledger conditions
     assert.ok(html.includes(`data-studio-choice="${id}" data-v4-choice data-kind="${label}"`), id);
     // The caption under the clip says what the clip is; the ledger evidence stays in the scope details.
     const note = c.slice(c.indexOf('<span class="v4-proof">'), c.indexOf('</figcaption>'));
-    assert.match(note, /を切り出したもので、実(際の通話|アプリ)の録画ではありません。/, id);
+    assert.match(note, /実(際の通話|アプリ)の録画ではありません。/, id);
     const p = products.find(x => x.id === id);
     assert.ok(c.includes(`<b>EVIDENCE</b>${p.ja.proof}`), `${id} keeps the ledger evidence in the scope details`);
   }
@@ -138,7 +138,7 @@ test('v4 names each product film for what it is, and shows the ledger conditions
   assert.match(html, /Agent Teamの映像は設計ファイルから書き出した設計動画で、未実装の画面を含みます。/);
   assert.doesNotMatch(html, /実際の画面で。/);
   assert.doesNotMatch(client, /\/media\/products\/\$\{/, 'the client takes the footage source from data-v4-rec');
-  for (const p of products.filter(x => !['oathra', 'agent-team'].includes(x.id))) assert.ok(chapterOf(p.id).includes(`<span class="v4-proof">${p.ja.proof.replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#39;')}</span>`), `${p.id} shows its evidence conditions`);
+  for (const p of products.filter(x => !['genie', 'oathra', 'agent-team'].includes(x.id))) assert.ok(chapterOf(p.id).includes(`<span class="v4-proof">${p.ja.proof.replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#39;')}</span>`), `${p.id} shows its evidence conditions`);
   // Each chapter is one row: its own video, labelled, beside its text. No shared stage can show another product's video.
   assert.doesNotMatch(html, /data-v4-stage|v4-staged/);
   assert.doesNotMatch(client, /data-v4-stage|v4-staged/);
