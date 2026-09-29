@@ -70,6 +70,20 @@ def _native_video(video):
     assert video.evaluate('v=>v.paused'), 'Media must start paused'
 
 
+def _wait_media(page, expression, *, phase, selector='.v4-reel-video'):
+    """Keep the native-media assertion, and preserve observable state when it fails."""
+    try:
+        page.wait_for_function(expression)
+    except Exception as exc:
+        state = page.locator(selector).evaluate('''v=>({
+          source:v.currentSrc, time:v.currentTime, duration:v.duration,
+          paused:v.paused, ended:v.ended, seeking:v.seeking, ready:v.readyState,
+          network:v.networkState, error:v.error?.code ?? null,
+          seekable:Array.from({length:v.seekable.length},(_,i)=>[v.seekable.start(i),v.seekable.end(i)])
+        })''')
+        raise AssertionError(f'{phase}: {exc}; media={state}') from exc
+
+
 def _selected(page, choice):
     expect(choice).to_have_attribute('aria-selected', 'true')
     assert page.locator('[data-v4-choice][aria-selected="true"]').count() == 1
@@ -206,7 +220,7 @@ def playback_home_v4(page):
         _selected(page, choice)
         source = choice.get_attribute('data-src')
         page.locator('[data-v4-reel-start]').click()
-        page.wait_for_function('()=>{const v=document.querySelector(".v4-reel-video");return !v.paused && v.currentTime>.25 && v.readyState>=2}')
+        _wait_media(page, '()=>{const v=document.querySelector(".v4-reel-video");return !v.paused && v.currentTime>.25 && v.readyState>=2}', phase=source + ': explicit playback')
         info = video.evaluate('v=>({duration:v.duration,rate:v.playbackRate,src:v.currentSrc,frames:v.getVideoPlaybackQuality().totalVideoFrames,controls:v.controls})')
         assert 12.5 <= info['duration'] <= 13.5 and info['rate'] == 1, info
         assert info['frames'] > 0 and info['controls'], info
@@ -214,9 +228,9 @@ def playback_home_v4(page):
         video.evaluate('v=>v.pause()')
         assert video.evaluate('v=>v.paused')
         video.evaluate('v=>{v.currentTime=Math.min(3,v.duration/2)}')
-        page.wait_for_function('()=>{const v=document.querySelector(".v4-reel-video");return !v.seeking && v.currentTime>=2.9 && v.readyState>=2}')
+        _wait_media(page, '()=>{const v=document.querySelector(".v4-reel-video");return !v.seeking && v.currentTime>=2.9 && v.readyState>=2}', phase=source + ': paused native seek')
         video.evaluate('v=>{v.currentTime=v.duration-.15; return v.play()}')
-        page.wait_for_function('()=>document.querySelector(".v4-reel-video").ended')
+        _wait_media(page, '()=>document.querySelector(".v4-reel-video").ended', phase=source + ': native end after seek')
         page.wait_for_timeout(200)
         _selected(page, choice)
         results.append({'id': choice.get_attribute('data-studio-choice'), **info, 'pause_seek_end': True})
@@ -224,10 +238,10 @@ def playback_home_v4(page):
     scope.locator('summary').click()
     inline = scope.locator('video')
     inline.evaluate('v=>v.play()')
-    page.wait_for_function('()=>document.querySelector("[data-v4-chapter=ai-meeting] video").currentTime>.25')
+    _wait_media(page, '()=>document.querySelector("[data-v4-chapter=ai-meeting] video").currentTime>.25', phase='AI Meeting: inline playback', selector='[data-v4-chapter="ai-meeting"] video')
     scope.locator('summary').click()
     expect(scope).not_to_have_attribute('open', '')
-    page.wait_for_function('()=>document.querySelector("[data-v4-chapter=ai-meeting] video").paused')
+    _wait_media(page, '()=>document.querySelector("[data-v4-chapter=ai-meeting] video").paused', phase='AI Meeting: closing disclosure pauses playback', selector='[data-v4-chapter="ai-meeting"] video')
     return {'films': results, 'closing_scope_pauses': True, 'before_play_network': initial_requests,
             'network': _home_requests(page, before_play=False)}
 
