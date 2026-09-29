@@ -6,6 +6,7 @@ keyboard selection, native controls and no-script access. Chromium and WebKit
 coverage does not claim a physical iPhone or a production deployment.
 """
 from pathlib import Path
+import faulthandler
 import json
 import os
 import ssl
@@ -17,6 +18,18 @@ from verify_home_v4 import assert_home_v4, playback_home_v4, begin_home_v4_reque
 
 BASE = os.environ.get('QA_BASE', 'http://127.0.0.1:8787')
 OUT = Path(os.environ.get('QA_OUTPUT', 'film-qa/lab-signature'))
+
+
+def save_report(report):
+    temporary = OUT / 'report.partial.json'
+    temporary.write_text(json.dumps(report, ensure_ascii=False, indent=2))
+    temporary.replace(OUT / 'report.json')
+
+
+def checkpoint(report, label, phase):
+    report['last_progress'] = {'case': label, 'phase': phase, 'time': time.time()}
+    save_report(report)
+    print(json.dumps({'progress': report['last_progress']}, ensure_ascii=False), flush=True)
 
 
 def allow_self_signed_loopback():
@@ -83,53 +96,62 @@ def run_browser_matrix(report):
             try:
                 for width, height in [(1440,1000), (1024,900), (390,844)]:
                     for lang in ['ja', 'en']:
+                        label = f'{engine}-{lang}-{width}'
                         context = browser.new_context(
                             viewport={'width':width, 'height':height},
                             has_touch=width < 500, is_mobile=width < 500,
                             device_scale_factor=1, ignore_https_errors=local_tls)
                         page = context.new_page()
                         delivery = observe_delivery(page)
-                        begin_home_v4_requests(page)
+                        begin_home_v4_requests(page, progress=lambda phase, label=label: checkpoint(report, label, phase))
                         page.set_default_timeout(12000)
                         errors = []
                         page.on('pageerror', lambda error:errors.append(str(error)))
-                        label = f'{engine}-{lang}-{width}'
                         try:
+                            checkpoint(report, label, 'Open HTTPS Worker page')
                             open_page(page, lang)
                             contract = assert_home_v4(page)
                             playback = playback_home_v4(page) if width in [1440,390] else None
                             page.evaluate('scrollTo(0,0)')
+                            checkpoint(report, label, 'Capture verified page')
                             capture(page, OUT/f'{label}-first.png', report, label)
                             if width == 1440:
                                 capture(page, OUT/f'{label}-full.png', report, label, full_page=True)
                             assert not errors, errors
                             report['cases'].append({'case':label, 'contract':contract,
                                                     'playback':playback})
+                            checkpoint(report, label, 'Passed')
                         except Exception as error:
                             report['errors'].append({'case':label, 'error':str(error),
                                                      'delivery':delivery()})
+                            checkpoint(report, label, 'Failed; capture diagnostics')
                             capture(page, OUT/f'FAILED-{label}.png', report, label)
                         finally:
                             context.close()
+                            save_report(report)
                 for lang in ['ja', 'en']:
+                    label = f'{engine}-{lang}-no-script'
                     context = browser.new_context(java_script_enabled=False,
                                                   viewport={'width':390, 'height':844},
                                                   ignore_https_errors=local_tls)
                     page = context.new_page()
                     delivery = observe_delivery(page)
-                    begin_home_v4_requests(page)
+                    begin_home_v4_requests(page, progress=lambda phase, label=label: checkpoint(report, label, phase))
                     page.set_default_timeout(12000)
-                    label = f'{engine}-{lang}-no-script'
                     try:
+                        checkpoint(report, label, 'Open HTTPS Worker page without JavaScript')
                         open_page(page, lang)
                         contract = assert_home_v4(page, interactive=False)
                         capture(page, OUT/f'{label}.png', report, label)
                         report['cases'].append({'case':label, 'contract':contract})
+                        checkpoint(report, label, 'Passed')
                     except Exception as error:
                         report['errors'].append({'case':label, 'error':str(error),
                                                  'delivery':delivery()})
+                        checkpoint(report, label, 'Failed')
                     finally:
                         context.close()
+                        save_report(report)
             finally:
                 browser.close()
 
@@ -140,6 +162,9 @@ def main():
               'base_url':BASE, 'physical_iphone':False, 'production':False,
               'cases':[], 'errors':[]}
     try:
+        faulthandler.enable()
+        faulthandler.dump_traceback_later(60, repeat=True)
+        checkpoint(report, 'startup', 'Wait for the real local Worker')
         local_tls = allow_self_signed_loopback()
         # This context is used only for the guarded CI loopback readiness check.
         # No default/global TLS policy or production security header is changed.
@@ -158,7 +183,8 @@ def main():
     except Exception as error:
         report['errors'].append({'case':'browser-matrix', 'error':str(error)})
     finally:
-        (OUT/'report.json').write_text(json.dumps(report, ensure_ascii=False, indent=2))
+        faulthandler.cancel_dump_traceback_later()
+        save_report(report)
         print(json.dumps(report, ensure_ascii=False, indent=2))
     raise SystemExit(bool(report['errors']))
 

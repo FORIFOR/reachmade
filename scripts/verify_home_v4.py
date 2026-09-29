@@ -19,18 +19,37 @@ HOME_FILMS = {
     'agent-team': ('/media/films/home-agent-team-13s.mp4', '設計動画（画面は再現・未実装を含む）'),
 }
 HOME_REQUESTS = WeakKeyDictionary()
+HOME_PROGRESS = WeakKeyDictionary()
+NATIVE_REJECTIONS = WeakKeyDictionary()
+NATIVE_REJECTION_PREFIX = 'reachmade-native-rejection:'
 RETIRED_HOME_MODULES = {
     'animated-demos.mjs', 'lab-explorer.mjs', 'lab-signature.mjs', 'outcome-controls.mjs',
 }
 
 
-def begin_home_v4_requests(page):
+def home_v4_phase(page, phase):
+    callback = HOME_PROGRESS.get(page)
+    if callback:
+        callback(phase)
+    else:
+        print(json.dumps({'home_v4_phase': phase, 'url': page.url}), flush=True)
+
+
+def begin_home_v4_requests(page, *, progress=None):
     """Observe real requests before navigation so eager imports/media cannot escape the check."""
     assert page.url == 'about:blank', 'Register home request observation before navigation'
     assert page not in HOME_REQUESTS, 'Do not reset an existing request history'
     requests = []
     by_request = {}
     HOME_REQUESTS[page] = requests
+    HOME_PROGRESS[page] = progress
+    NATIVE_REJECTIONS[page] = []
+
+    def native_rejected(message):
+        if message.type == 'error' and message.text.startswith(NATIVE_REJECTION_PREFIX):
+            rejection = json.loads(message.text[len(NATIVE_REJECTION_PREFIX):])
+            NATIVE_REJECTIONS[page].append(rejection)
+            home_v4_phase(page, 'Native play rejected: ' + json.dumps(rejection))
 
     def requested(request):
         record = {'url': request.url, 'type': request.resource_type,
@@ -48,6 +67,12 @@ def begin_home_v4_requests(page):
     def finished(request):
         record = by_request.get(request)
         if record is not None and urlsplit(request.url).path.endswith('.mp4'):
+            if record.get('status') is None:
+                # WebKit can finish a resource without responseReceived. sizes()
+                # waits for that missing response; leave it explicitly unknown.
+                record['transfer_unavailable'] = 'requestfinished_without_response'
+                return
+            home_v4_phase(page, 'Measure completed media transfer: ' + request.url)
             record['transfer'] = request.sizes()
 
     def failed(request):
@@ -59,6 +84,7 @@ def begin_home_v4_requests(page):
     page.on('response', responded)
     page.on('requestfinished', finished)
     page.on('requestfailed', failed)
+    page.on('console', native_rejected)
 
 
 def _home_requests(page, *, before_play=True):
@@ -117,7 +143,9 @@ def _native_video(video):
 def wait_native_media(page, expression, *, phase, selector='.v4-reel-video'):
     """Keep the native-media assertion, and preserve observable state when it fails."""
     try:
+        home_v4_phase(page, 'Wait for ' + phase)
         page.wait_for_function(expression)
+        assert not NATIVE_REJECTIONS.get(page, []), NATIVE_REJECTIONS.get(page)
     except Exception as exc:
         state = page.locator(selector).evaluate('''v=>({
           source:v.currentSrc, time:v.currentTime, duration:v.duration,
@@ -128,7 +156,18 @@ def wait_native_media(page, expression, *, phase, selector='.v4-reel-video'):
           frame:document.querySelector('[data-v4-reel]')?.className ?? null,
           status:document.querySelector('[data-v4-reel-tag]')?.textContent ?? null
         })''')
-        raise AssertionError(f'{phase}: {exc}; media={state}') from exc
+        raise AssertionError(f'{phase}: {exc}; media={state}; play_rejections={NATIVE_REJECTIONS.get(page, [])}') from exc
+
+
+def start_native_media(page, video, *, phase, near_end=False):
+    """Start the real player without waiting indefinitely for its play promise."""
+    home_v4_phase(page, phase)
+    video.evaluate('''(v, args)=>{
+      if(args.nearEnd) v.currentTime=v.duration-.15;
+      v.play().catch(error=>console.error(args.prefix+JSON.stringify({
+        phase:args.phase,name:error.name,message:error.message,source:v.currentSrc
+      })));
+    }''', {'nearEnd': near_end, 'prefix': NATIVE_REJECTION_PREFIX, 'phase': phase})
 
 
 def _selected(page, choice):
@@ -148,6 +187,7 @@ def _selected(page, choice):
 def assert_home_v4(page, *, interactive=True):
     """Check seven real products, truthful footage, manual selection and no-JS access."""
     products = product_ledger()
+    home_v4_phase(page, 'Check localized home contract' if interactive else 'Check no-script home contract')
     lang = page.locator('html').get_attribute('lang')
     assert lang in ['ja', 'en'], lang
     prefix = '/en' if lang == 'en' else ''
@@ -263,6 +303,7 @@ def playback_home_v4(page):
     video = page.locator('.v4-reel-video')
     results = []
     for choice in page.locator('[data-v4-choice]').all():
+        home_v4_phase(page, 'Select and play ' + choice.get_attribute('data-src'))
         choice.click()
         _selected(page, choice)
         source = choice.get_attribute('data-src')
@@ -276,7 +317,7 @@ def playback_home_v4(page):
         assert video.evaluate('v=>v.paused')
         video.evaluate('v=>{v.currentTime=Math.min(3,v.duration/2)}')
         wait_native_media(page, '()=>{const v=document.querySelector(".v4-reel-video");return !v.seeking && v.currentTime>=2.9 && v.readyState>=2}', phase=source + ': paused native seek')
-        video.evaluate('v=>{v.currentTime=v.duration-.15; return v.play()}')
+        start_native_media(page, video, phase=source + ': resume near end', near_end=True)
         wait_native_media(page, '()=>document.querySelector(".v4-reel-video").ended', phase=source + ': native end after seek')
         page.wait_for_timeout(200)
         _selected(page, choice)
@@ -284,7 +325,7 @@ def playback_home_v4(page):
     scope = page.locator('[data-v4-chapter="ai-meeting"] details')
     scope.locator('summary').click()
     inline = scope.locator('video')
-    inline.evaluate('v=>v.play()')
+    start_native_media(page, inline, phase='AI Meeting: start inline playback')
     wait_native_media(page, '()=>document.querySelector("[data-v4-chapter=ai-meeting] video").currentTime>.25', phase='AI Meeting: inline playback', selector='[data-v4-chapter="ai-meeting"] video')
     scope.locator('summary').click()
     expect(scope).not_to_have_attribute('open', '')
