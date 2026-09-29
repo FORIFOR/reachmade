@@ -3,7 +3,7 @@ export const homeV4Copy = {
   ja: {
     eyebrow: 'AIプロダクトの自主開発と、企業向け開発支援',
     title: ['思いついたら、', '使えるかたちに'], dot: '。',
-    lead: '<span>業務の自動化、音声AI、</span><span>新しいプロダクト。</span><br>動く試作と検証から、<br class="v4-mobile-break">使えるかたちを一緒につくります。',
+    lead: '<span>業務の自動化、音声AI、</span><span>新しいプロダクト。</span><br><span>動く試作と検証から、</span><br class="v4-mobile-break"><span>使えるかたちを一緒につくります。</span>',
     consult: '開発を相談する', seeWork: 'つくったものを見る', heroNote: '構想が固まる前から、相談できます。',
     heroFoot: 'つくる。確かめる。使えるかたちへ。', reelTitle: '実際につくったもの',
     reelLabel: n => `${n}つのプロダクトの映像`, selectFilm: '製品映像を選ぶ',

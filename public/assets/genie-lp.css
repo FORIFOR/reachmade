@@ -6,7 +6,7 @@
 [data-genie-lp] .glp-trace{position:relative;display:inline-block}
 [data-genie-lp] .glp-trace::after{content:"";position:absolute;left:-3%;right:-2%;bottom:-.1em;height:.26em;border-radius:50%;border-top:.075em solid var(--glp-presence);transform:rotate(-1.2deg);transform-origin:left center;opacity:1;transition:opacity .9s ease .5s}
 .js [data-genie-lp]:not(.glp-ready) .glp-trace::after{opacity:0}
-[data-genie-lp] .glp-lead{margin:0;font-size:clamp(16px,1.35vw,18px);line-height:1.9;color:var(--glp-muted);max-width:32em}
+[data-genie-lp] .glp-lead{margin:0;font-size:clamp(16px,1.35vw,18px);line-height:1.9;color:var(--glp-muted);max-width:32em;text-wrap:balance}
 [data-genie-lp] .owned-primary{background:var(--glp-ink);color:var(--glp-paper)}
 [data-genie-lp] .owned-primary:hover{background:var(--glp-blue);color:#fff}
 [data-genie-lp] a:hover{color:var(--glp-blue)}

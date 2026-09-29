@@ -17,7 +17,7 @@ import sys
 import threading
 from urllib.parse import urljoin
 from playwright.sync_api import sync_playwright, expect
-from verify_home_v4 import assert_home_v4, begin_home_v4_requests, product_ledger, playback_home_v4, failure_home_v4
+from verify_home_v4 import assert_home_v4, begin_home_v4_requests, product_ledger, playback_home_v4, failure_home_v4, wait_native_media
 
 IDS = [product['id'] for product in product_ledger()]
 
@@ -125,23 +125,30 @@ def main(home_only=False, output='film-qa/product-landings'):
         assert video.get_attribute('preload') == 'none' and video.evaluate('v=>v.paused')
         if failed:
             # Reload the actual aborted resource. No replacement response or video is supplied.
+            failures = []
             for _ in range(2):
-                with page.expect_request(lambda request: request.url == urljoin(page.url, source)):
+                with page.expect_event('requestfailed', predicate=lambda request: request.url == urljoin(page.url, source)) as failed_request:
                     video.evaluate('v=>{v.load();v.play().catch(()=>{})}')
-                page.wait_for_function('()=>Boolean(document.querySelector(".nlp-film video").error)')
-                assert video.evaluate('v=>v.paused && v.error.code!==0')
+                # A failed <source> candidate reports NETWORK_NO_SOURCE; unlike
+                # a video.src failure it need not set HTMLMediaElement.error or
+                # settle the play promise. Measure failed requests and no frames.
+                wait_native_media(page, '()=>{const v=document.querySelector(".nlp-film video");return (Boolean(v.error) || v.networkState===HTMLMediaElement.NETWORK_NO_SOURCE) && v.readyState===HTMLMediaElement.HAVE_NOTHING && v.currentTime===0}', phase='Noa: aborted native source', selector='.nlp-film video')
+                assert video.evaluate('v=>v.getVideoPlaybackQuality().totalVideoFrames===0')
+                assert failed_request.value.failure
+                failures.append(failed_request.value.failure)
                 expect(video).to_be_visible()
                 expect(page.locator('.nlp-actions .owned-primary')).to_be_visible()
-            return {'native_error': True, 'same_source_retry': True, 'channel_accessible': True}
+            return {'native_error': True, 'same_source_retry': True, 'channel_accessible': True,
+                    'failed_requests': failures, 'decoded_frames': 0}
         video.evaluate('v=>v.play()')
-        page.wait_for_function('()=>{const v=document.querySelector(".nlp-film video");return !v.paused && v.currentTime>.25 && v.readyState>=2}')
+        wait_native_media(page, '()=>{const v=document.querySelector(".nlp-film video");return !v.paused && v.currentTime>.25 && v.readyState>=2}', phase='Noa: explicit native playback', selector='.nlp-film video')
         info = video.evaluate('v=>({duration:v.duration,rate:v.playbackRate,src:v.currentSrc,frames:v.getVideoPlaybackQuality().totalVideoFrames})')
         manifest = json.loads((root/'public/media/originals/manifest.json').read_text())
         original = next(item for item in manifest['files'] if item['path'] == source)
         assert abs(info['duration'] - original['duration']) < .5 and info['rate'] == 1 and info['frames'] > 0, info
         assert info['src'] == urljoin(page.url, source)
         video.evaluate('v=>{v.pause();v.currentTime=3}')
-        page.wait_for_function('()=>{const v=document.querySelector(".nlp-film video");return v.paused && !v.seeking && v.currentTime>=2.9}')
+        wait_native_media(page, '()=>{const v=document.querySelector(".nlp-film video");return v.paused && !v.seeking && v.currentTime>=2.9}', phase='Noa: paused native seek', selector='.nlp-film video')
         return {**info, 'native_pause_seek': True}
 
     with sync_playwright() as pw:
