@@ -140,11 +140,11 @@ def _native_video(video):
     assert video.evaluate('v=>v.paused'), 'Media must start paused'
 
 
-def wait_native_media(page, expression, *, phase, selector='.v4-reel-video'):
+def wait_native_media(page, expression, *, phase, selector='.v4-reel-video', arg=None):
     """Keep the native-media assertion, and preserve observable state when it fails."""
     try:
         home_v4_phase(page, 'Wait for ' + phase)
-        page.wait_for_function(expression)
+        page.wait_for_function(expression, arg=arg)
         assert not NATIVE_REJECTIONS.get(page, []), NATIVE_REJECTIONS.get(page)
     except Exception as exc:
         state = page.locator(selector).evaluate('''v=>({
@@ -159,15 +159,14 @@ def wait_native_media(page, expression, *, phase, selector='.v4-reel-video'):
         raise AssertionError(f'{phase}: {exc}; media={state}; play_rejections={NATIVE_REJECTIONS.get(page, [])}') from exc
 
 
-def start_native_media(page, video, *, phase, near_end=False):
+def start_native_media(page, video, *, phase):
     """Start the real player without waiting indefinitely for its play promise."""
     home_v4_phase(page, phase)
     video.evaluate('''(v, args)=>{
-      if(args.nearEnd) v.currentTime=v.duration-.15;
       v.play().catch(error=>console.error(args.prefix+JSON.stringify({
         phase:args.phase,name:error.name,message:error.message,source:v.currentSrc
       })));
-    }''', {'nearEnd': near_end, 'prefix': NATIVE_REJECTION_PREFIX, 'phase': phase})
+    }''', {'prefix': NATIVE_REJECTION_PREFIX, 'phase': phase})
 
 
 def _selected(page, choice):
@@ -317,11 +316,19 @@ def playback_home_v4(page):
         assert video.evaluate('v=>v.paused')
         video.evaluate('v=>{v.currentTime=Math.min(3,v.duration/2)}')
         wait_native_media(page, '()=>{const v=document.querySelector(".v4-reel-video");return !v.seeking && v.currentTime>=2.9 && v.readyState>=2}', phase=source + ': paused native seek')
-        start_native_media(page, video, phase=source + ': resume near end', near_end=True)
+        # Finish seeking while paused before resuming. Starting only .15s from
+        # the end can reach ended before WebKit settles its play promise.
+        video.evaluate('v=>{v.currentTime=v.duration-2}')
+        wait_native_media(page, '()=>{const v=document.querySelector(".v4-reel-video");return v.paused && !v.seeking && v.readyState>=2 && Math.abs(v.currentTime-(v.duration-2))<.1}', phase=source + ': paused seek near end')
+        resume_from = video.evaluate('v=>({time:v.currentTime,frames:v.getVideoPlaybackQuality().totalVideoFrames})')
+        start_native_media(page, video, phase=source + ': resume near end')
+        wait_native_media(page, '(start)=>{const v=document.querySelector(".v4-reel-video");return !v.paused && !v.seeking && v.readyState>=2 && v.currentTime>start.time+.25 && v.getVideoPlaybackQuality().totalVideoFrames>start.frames}', phase=source + ': resumed time and decoded frames advance', arg=resume_from)
+        resumed = video.evaluate('v=>({time:v.currentTime,frames:v.getVideoPlaybackQuality().totalVideoFrames})')
         wait_native_media(page, '()=>document.querySelector(".v4-reel-video").ended', phase=source + ': native end after seek')
         page.wait_for_timeout(200)
         _selected(page, choice)
-        results.append({'id': choice.get_attribute('data-studio-choice'), **info, 'pause_seek_end': True})
+        results.append({'id': choice.get_attribute('data-studio-choice'), **info, 'pause_seek_end': True,
+                        'resume_from': resume_from, 'resumed': resumed})
     scope = page.locator('[data-v4-chapter="ai-meeting"] details')
     scope.locator('summary').click()
     inline = scope.locator('video')
