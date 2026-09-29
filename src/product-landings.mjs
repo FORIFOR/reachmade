@@ -134,8 +134,12 @@ export const landingExperience = Object.freeze({
       startBody:'Agent Teamは作成・レビュー・修正の役割を分け、成果物と作業記録を結びつけます。公開例には失敗や部分完了も残しており、単一エージェントより高品質だとはまだ主張していません。',
       beats:[['依頼する','目的と成果物を書き、資料を添えます。まとめ役が進め方と完了条件を決めます。'],['つくって、別の担当が確かめる','つくる係が版を公開し、確かめる係がその版を条件ごとに確認します。指摘は次の版で直します。'],['確認済みの版を受け取る','どの版が何に合格したかと未完了の部分を残したまま、選んだ版を記録ごと保存します。']],
       // frames and film: exported from the "Agent Team LP video" design file (Claude design project, 2026-09-29),
-      //   30 s, 1920×1080, silent. The redesign (sidebar, palette, characters) is a patch to Multibot that is not merged;
-      //   the side-by-side workroom and the highlighted passages are not implemented. Labelled as a design preview.
+      //   30 s, 1920×1080, silent. The film was re-supplied as agent-team-lp-ja.mp4 with the 1b shape characters
+      //   (audio removed on import, see public/media/films/manifest.json); the five frames still show the earlier animals.
+      //   On 2026-09-29 Multibot main merged the sidebar and palette (#23) and the 1b characters (#25); the intro below
+      //   still calls them unmerged until the owner approves new copy.
+      //   It also says the side-by-side workroom and the highlighted passages are not implemented (not re-checked
+      //   against main on 2026-09-30). Labelled as a design preview.
       nextUi:{label:'設計プレビュー · 未実装を含む',studyLabel:'別に公開している設計動画（Launchloom）',intro:'サイドバー、会話と成果物を並べる作業室、指摘と修正箇所の表示を見直す設計です。動画と各コマは設計ファイルから書き出した再現図で、実アプリの録画ではありません。依頼・会話・確認の内容は架空の例です。配色・サイドバー・キャラクターは未マージの変更として試作中で、作業室の並列表示と修正箇所のハイライトは未実装です。',
         film:{src:'/media/films/agent-team-design-30s.mp4',poster:'/assets/products/agent-team/next-ui-01.jpg',label:'30秒の設計動画（演出を含む・無音・自動再生しません）'},
         frames:[

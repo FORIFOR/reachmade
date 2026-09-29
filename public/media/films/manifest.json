@@ -83,12 +83,12 @@
     },
     {
       "path": "/media/films/agent-team-design-30s.mp4",
-      "bytes": 7652756,
-      "sha256": "577cff257d9ed48bea2ddee05967dcb2964dff603ab37fe0126e9bb0c5c77e48",
-      "source": "LP Video.mp4 (owner-supplied, 2026-09-29, Japanese, 1920x1080 30 fps 30 s, no audio), copied unchanged",
+      "bytes": 3789358,
+      "sha256": "6f0e5db04440975f7c592ac256ab2d0207e44bc7560e4dc7ec8ce97dfc0648d2",
+      "source": "agent-team-lp-ja.mp4 (owner-supplied, 2026-09-29, Japanese, 1920x1080 30 fps 30.08 s, AAC audio, 9139929 bytes; character design 1b), re-encoded: audio removed, H.264 CRF 17, faststart (SSIM 0.9995 vs the source)",
       "spec": "1920x1080, 30 fps, 30.000 s, no audio",
       "note": "Design film: renders of a design file, not recordings of the app.",
-      "sourceSha256": "577cff257d9ed48bea2ddee05967dcb2964dff603ab37fe0126e9bb0c5c77e48"
+      "sourceSha256": "c09914a3d0c5ad93fdf833601379f92c6c65c98dfd031a91d0d3023a4e6b84b9"
     }
   ]
 }
