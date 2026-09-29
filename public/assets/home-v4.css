@@ -303,3 +303,7 @@
 
 /* 5. Phones: the date line wraps as one phrase. */
 @media (max-width:640px){[data-home-v4] .v4-meta>span{flex-wrap:wrap}}
+
+/* 6. Video overlay (2026-09-30 follow-up): the English discipline is dropped here too, as in the chapters, so the
+      longer footage-kind labels (イメージ映像・設計動画・Launchloomが作った紹介映像) no longer run over it. */
+[data-home-v4] .v4-hud>i,[data-home-v4] .v4-hud>span{display:none}
