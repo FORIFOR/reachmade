@@ -9,6 +9,7 @@ import threading
 from functools import lru_cache, partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
+from urllib.parse import urlsplit
 from playwright.sync_api import sync_playwright, expect
 from verify_home_v4 import assert_home_v4, begin_home_v4_requests, product_ledger
 
@@ -19,6 +20,39 @@ class Handler(SimpleHTTPRequestHandler):
     extensions_map = {**SimpleHTTPRequestHandler.extensions_map, '.mjs': 'text/javascript'}
     def log_message(self, *args):
         pass
+
+    def send_head(self):
+        self._media_record = None
+        if urlsplit(self.path).path.endswith('.mp4'):
+            self._media_record = {'method': self.command, 'path': self.path,
+                                  'range': self.headers.get('Range'),
+                                  'status': None, 'body_bytes_sent': 0}
+            self.server.media_requests.append(self._media_record)
+        return super().send_head()
+
+    def send_response(self, code, message=None):
+        if getattr(self, '_media_record', None) is not None:
+            self._media_record['status'] = code
+        return super().send_response(code, message)
+
+    def copyfile(self, source, outputfile):
+        if self._media_record is None:
+            return super().copyfile(source, outputfile)
+        try:
+            while chunk := source.read(64 * 1024):
+                outputfile.write(chunk)
+                self._media_record['body_bytes_sent'] += len(chunk)
+        except OSError as error:
+            self._media_record['write_error'] = repr(error)
+            raise
+
+
+def assert_no_home_media_http(server, before):
+    """Independently verify actual server traffic, including WebKit's media loader."""
+    records = [dict(record) for record in server.media_requests[before:]]
+    assert not records, ('The real HTTP server must receive no MP4 request before play', records)
+    return {'media_requests': records, 'media_body_bytes_sent': 0,
+            'source': 'actual HTTP handler request and body-write observation'}
 
 @lru_cache(maxsize=1)
 def source_contract():
@@ -91,6 +125,7 @@ def main():
     out = ROOT / 'film-qa' / 'outcome-first' / args.browser
     out.mkdir(parents=True, exist_ok=True)
     server = ThreadingHTTPServer(('127.0.0.1', 0), partial(Handler, directory=str(ROOT / 'dist')))
+    server.media_requests = []
     threading.Thread(target=server.serve_forever, daemon=True).start()
     origin = f'http://127.0.0.1:{server.server_port}'
     report = {'browser': args.browser, 'mode': 'unmodified build over local HTTP', 'production': False,
@@ -113,6 +148,7 @@ def main():
                         errors = []
                         page.on('pageerror', lambda error: errors.append(str(error)))
                         try:
+                            media_before = len(server.media_requests)
                             response = page.goto(origin + route, wait_until='networkidle')
                             assert response.status == 200
                             assert page.locator('body').get_attribute('data-outcome-first') == '20260919-outcome-1'
@@ -123,6 +159,8 @@ def main():
                             page.keyboard.press('Tab')
                             assert page.evaluate('document.activeElement.classList.contains("skip-link")')
                             details = assert_home_v4(page) if product == 'home' else product_checks(page, lang, product, width)
+                            if product == 'home':
+                                details['server_network'] = assert_no_home_media_http(server, media_before)
                             if product == 'genie' and width == 390:
                                 recorded_artifact(context, origin)
                             assert not errors, errors
@@ -143,9 +181,11 @@ def main():
                 page = context.new_page()
                 begin_home_v4_requests(page)
                 try:
+                    media_before = len(server.media_requests)
                     response = page.goto(origin + ('/' if lang == 'ja' else '/en/'))
                     assert response.status == 200
                     details = assert_home_v4(page, interactive=False)
+                    details['server_network'] = assert_no_home_media_http(server, media_before)
                     report['cases'].append({'id': f'{lang}-no-js', 'passed': True, 'contract': details})
                 except Exception as exc:
                     report['errors'].append({'id': f'{lang}-no-js', 'error': repr(exc)})

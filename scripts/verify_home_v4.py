@@ -67,10 +67,28 @@ def _home_requests(page, *, before_play=True):
     retired = [item for item in requests if Path(urlsplit(item['url']).path).name in RETIRED_HOME_MODULES]
     assert not retired, ('Retired home interactions must not be downloaded', retired)
     media = [item for item in requests if urlsplit(item['url']).path.endswith('.mp4')]
+    # WebKit reports a completed resource record for each deferred native video:
+    # GET/other, status 0, no HTTP media headers, and measured body size 0. Keep
+    # those records visible and distinguish them from HTTP responses. This is
+    # browser-reported data; Outcome independently checks the real HTTP server.
+    # A real HTTP response, any transferred body, missing completion/measurement,
+    # or a different request shape must still fail the before-play requirement.
+    deferred = [item for item in media if (
+        item.get('method') == 'GET' and item.get('type') == 'other'
+        and item.get('status') == 0
+        and item.get('range') is None and item.get('content_range') is None
+        and item.get('content_length') is None
+        and item.get('transfer', {}).get('responseBodySize') == 0
+        and not item.get('failure')
+    )]
+    body_sizes = [item.get('transfer', {}).get('responseBodySize') for item in media]
+    measured_bytes = sum(body_sizes) if all(isinstance(size, int) and size >= 0 for size in body_sizes) else None
     if before_play:
-        assert not media, ('Video bytes must not be requested before an explicit play action', media)
+        assert all(item in deferred for item in media), ('Video bodies must stay unloaded before explicit play; unknown transfers also fail', media)
+        assert measured_bytes == 0, ('Before-play video body bytes must be measured as zero', media)
     return {'observed_requests': len(requests), 'retired_module_requests': retired,
-            'media_requests': media, 'before_play': before_play}
+            'media_requests': media, 'deferred_media_records': deferred,
+            'browser_reported_media_body_bytes': measured_bytes, 'before_play': before_play}
 
 
 @lru_cache(maxsize=1)
