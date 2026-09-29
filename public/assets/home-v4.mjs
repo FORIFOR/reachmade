@@ -48,7 +48,7 @@ if (root) {
       video.setAttribute('aria-label', `${c.dataset.name} ${c.dataset.kind || '実録画'}（無音・編集あり）`);
       setTimeout(() => {
         if (thisEpoch !== epoch) return;
-        video.src = `/media/products/${c.dataset.studioChoice}.mp4`;
+        video.src = c.dataset.v4Rec;
         clearTimeout(timer); timer = setTimeout(fail, 10000);
         play(video, () => { if (thisEpoch === epoch) fail(); });
       }, started ? 380 : 0);
@@ -126,6 +126,7 @@ if (root) {
       tag.textContent = film ? '紹介映像 · 演出を含む' : `${c.dataset.kind || '実録画'} · 約13秒 · 1× · 編集あり`;
       { const proof = document.querySelector('[data-v4-stage-proof]'); if (proof) proof.textContent = film ? '15秒の紹介映像です。演出を含み、実録画ではありません。' : (c.dataset.proof || ''); }
       sw.hidden = !c.dataset.v4FilmSrc;
+      modes.forEach(b => { if (b.dataset.v4Mode === 'rec') b.textContent = `${(c.dataset.kind || '実録画').replace(/（.*$/, '')} · 約13秒`; });
       modes.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.v4Mode === mode)));
       v.classList.toggle('v4-crop', !film); v.classList.toggle('v4-full', film);
       v.setAttribute('aria-label', `${c.dataset.name} ${film ? '紹介映像（音声あり・演出を含む）' : `${c.dataset.kind || '実録画'}（無音・編集あり）`}`);
@@ -140,7 +141,7 @@ if (root) {
     const setChap = i => { if (i === cur) return; cur = i; mode = 'rec'; reset(); paint(); };
     const toggle = () => {
       if (!v.paused) return v.pause();
-      const c = ch(), src = isFilm() ? c.dataset.v4FilmSrc : `/media/products/${c.dataset.v4Chapter}.mp4`;
+      const c = ch(), src = isFilm() ? c.dataset.v4FilmSrc : c.dataset.v4Rec;
       if (!v.getAttribute('src')) v.src = src;
       v.muted = !isFilm();
       pauseAll(v); status.hidden = true;

@@ -46,6 +46,9 @@ export const SHOTS = Object.freeze([
   { file: 'home-band-close.png', route: '/', width: 1440, height: 1000, scrollTo: '#faq', state: 'FAQ and contact, reduced motion, real time', reducedMotion: true, realtime: true },
   { file: 'home-m-reel.png', route: '/', width: 390, height: 844, scrollTo: '#reel', state: 'phone, recordings reel, reduced motion, real time', reducedMotion: true, realtime: true },
   { file: 'home-m-chapter.png', route: '/', width: 390, height: 844, scrollTo: '[data-v4-chapter="ai-meeting"]', state: 'phone, AI Meeting chapter, real time', realtime: true },
+  // The two home clips cut from illustrative films (2026-09-30): their label and the caption under the video.
+  { file: 'home-m-chapter-oathra.png', route: '/', width: 390, height: 1100, scrollTo: '[data-v4-chapter="oathra"]', state: 'phone, Oathra chapter (illustrative clip), reduced motion, real time', reducedMotion: true, realtime: true },
+  { file: 'home-m-chapter-agent-team.png', route: '/', width: 390, height: 1100, scrollTo: '[data-v4-chapter="agent-team"]', state: 'phone, Agent Team chapter (design-film clip), reduced motion, real time', reducedMotion: true, realtime: true },
   { file: 'home-m-services.png', route: '/', width: 390, height: 844, scrollTo: '#services', state: 'phone, services band, reduced motion, real time', reducedMotion: true, realtime: true },
   { file: 'home-m-access.png', route: '/', width: 390, height: 844, scrollTo: '#access', state: 'phone, access table, reduced motion, real time', reducedMotion: true, realtime: true },
   // Japanese Genie page (LP re-composition): its sections at a readable size, real time.

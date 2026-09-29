@@ -91,7 +91,7 @@ test('home leads with an explorable product and retains source-aware catalogue r
   assert.ok(at('class="v4-hero')>=0&&at('class="v4-hero')<at('id="reel"')&&at('id="reel"')<at('id="access"')&&at('id="access"')<at('id="products"')&&at('id="products"')<at('id="faq"'));
   assert.equal((html.match(/data-studio-choice=/g)||[]).length,products.length);
   assert.equal((html.match(/data-v4-chapter=/g)||[]).length,products.length);
-  for(const p of products){assert.ok(html.includes(`data-studio-choice="${p.id}"`));assert.ok(html.includes(`href="/products/${p.id}/"`));assert.ok(html.includes(`src="/media/products/${p.id}.mp4"`));}
+  for(const p of products){assert.ok(html.includes(`data-studio-choice="${p.id}"`));assert.ok(html.includes(`href="/products/${p.id}/"`));{const src=['oathra','agent-team'].includes(p.id)?`/media/films/home-${p.id}-13s.mp4`:`/media/products/${p.id}.mp4`;assert.ok(html.includes(`<source src="${src}"`),p.id);}}
   for(const tag of html.match(/<video\b[^>]*>/g)||[])assert.match(tag,/preload="none"/);
  }
  for(const prefix of ['/en/']){
