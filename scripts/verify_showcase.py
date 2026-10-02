@@ -77,6 +77,10 @@ class Handler(SimpleHTTPRequestHandler):
             outputfile.write(chunk)
             remaining -= len(chunk)
 
+# Product pages whose top film is a produced film rather than the product recording, with the
+# sentence its caption must carry. Japanese Genie plays its TaskDock reconstruction (src/genie-lp.mjs, TOP_FILM).
+PAGE_FILMS = {('ja', 'genie'): ('/media/films/genie-taskdock-13s.mp4', '実アプリの録画ではありません')}
+
 def main(home_only=False, output='film-qa/product-landings'):
     root = Path(__file__).resolve().parents[1]
     out = root / output
@@ -182,7 +186,13 @@ def main(home_only=False, output='film-qa/product-landings'):
                             info = video.evaluate('(v)=>({duration:v.duration,rate:v.playbackRate,time:v.currentTime,src:v.currentSrc,frames:v.getVideoPlaybackQuality().totalVideoFrames})')
                             assert 12.5 <= info['duration'] <= 13.5, info
                             assert info['rate'] == 1 and info['frames'] > 0, info
-                            assert info['src'].startswith(origin+'/media/products/'), info
+                            if (lang, product) in PAGE_FILMS:
+                                # A produced film on a product page must be the declared file and say what it is.
+                                assert info['src'] == origin+PAGE_FILMS[(lang, product)][0], info
+                                caption = page.locator(selector+' figcaption').inner_text()
+                                assert PAGE_FILMS[(lang, product)][1] in caption and '実録画' not in page.locator(selector+' .owned-film__bar').inner_text(), caption
+                            else:
+                                assert info['src'].startswith(origin+'/media/products/'), info
                             video.evaluate('(v)=>v.pause()')
                             assert video.evaluate('(v)=>v.paused')
                         report['playback'].append({'case':key,**info})
@@ -215,7 +225,7 @@ def main(home_only=False, output='film-qa/product-landings'):
                             assert page.locator(selector+' .owned-film__status').is_visible()
                             assert button.is_enabled() and button.is_visible()
                             assert page.locator(selector+' figcaption a').first.is_visible()
-                            with page.expect_request('**/media/products/*.mp4'):
+                            with page.expect_request('**'+PAGE_FILMS[(lang, product)][0] if (lang, product) in PAGE_FILMS else '**/media/products/*.mp4'):
                                 button.click()
                             page.wait_for_function('s=>document.querySelector(s).dataset.mediaState==="unavailable"',arg=selector)
                             check_story(page, selector, product)

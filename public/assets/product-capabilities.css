@@ -110,7 +110,8 @@ body[data-lp-editorial].owned-product--ai-meeting .owned-start{background:#eee4d
 body[data-lp-editorial].owned-product--ai-meeting .owned-start p{color:#625749}
 body[data-lp-editorial].owned-product--ai-meeting .owned-start .owned-primary{background:#292822;color:#faf6ed;border-color:#292822}
 body[data-lp-editorial].owned-product--ai-meeting .owned-start .owned-secondary{color:#292822}
-body[data-lp-editorial].owned-product--agent-team .owned-flow{grid-template-columns:1fr!important;gap:32px}
+/* minmax(0,…): WebKit sizes a bare 1fr track to the keep-all heading's full width and overflows narrow screens. */
+body[data-lp-editorial].owned-product--agent-team .owned-flow{grid-template-columns:minmax(0,1fr)!important;gap:32px}
 body[data-lp-editorial].owned-product--agent-team .owned-flow ol{display:grid;grid-template-columns:repeat(3,1fr);gap:34px}
 body[data-lp-editorial].owned-product--agent-team .owned-flow li{border-top:1px solid var(--rule);border-bottom:0;padding:50px 0 0}
 body[data-lp-editorial].owned-product--agent-team .owned-flow li .owned-step-index{top:16px;left:0}

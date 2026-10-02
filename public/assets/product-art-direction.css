@@ -104,7 +104,7 @@ body[data-lp-editorial] .owned-header>.container{min-height:82px}
 body[data-lp-editorial] .owned-header nav a{min-height:44px;display:inline-flex;align-items:center}
 body[data-lp-editorial] .owned-hero-grid.ad-hero{padding-block:clamp(42px,5vw,74px) 56px!important;min-height:0}
 body[data-lp-editorial] .ad-hero h1{font-size:var(--lp-display)!important;line-height:1.17!important;font-weight:580;letter-spacing:-.065em;max-width:15ch!important;margin:0 0 28px!important;text-wrap:balance}
-html[lang=ja] body[data-lp-editorial] .ad-hero h1{max-width:11.5em!important;line-height:1.28!important;letter-spacing:-.055em;word-break:auto-phrase;overflow-wrap:normal}
+html[lang=ja] body[data-lp-editorial] .ad-hero h1{max-width:11.5em!important;line-height:1.28!important;letter-spacing:-.055em;word-break:normal;word-break:auto-phrase;overflow-wrap:normal}
 body[data-lp-editorial] .ad-category{font-size:12px;letter-spacing:.035em;margin-block:0 22px}
 body[data-lp-editorial] .ad-copy>.owned-kicker{font-size:11px;margin-bottom:13px}
 body[data-lp-editorial] .ad-hero .owned-lead{font-size:16px;line-height:1.95;max-width:46ch}
@@ -228,9 +228,10 @@ body[data-lp-editorial] .ad-stage-head :is(.owned-lead,.ad-entry){grid-column:2}
 @media(prefers-reduced-motion:reduce){body[data-lp-editorial] .ad-format__sheet,body[data-lp-editorial] .owned-primary{transition:none;transform:none!important}}
 @media(forced-colors:active){body[data-lp-editorial] :is(.ad-utterance,.ad-task-slip,.ad-role-guide,.ad-format__sheet,.ad-security-routes){border:1px solid CanvasText;box-shadow:none}body[data-lp-editorial] .ad-voice-mark i{background:CanvasText}}
 /* Phrase boundaries stay intact when editorial headings wrap. */
-html[lang=ja] body[data-lp-editorial] .owned-kicker{word-break:auto-phrase}
+html[lang=ja] body[data-lp-editorial] .owned-kicker{word-break:normal;word-break:auto-phrase}
 body[data-lp-editorial] .ad-phrase{display:inline-block}
-html[lang=ja] body[data-lp-editorial] :is(h2,h3){word-break:auto-phrase;overflow-wrap:normal;line-break:strict;text-wrap:balance}
+/* word-break:normal first: browsers without auto-phrase (WebKit) must not inherit an earlier keep-all and overflow. */
+html[lang=ja] body[data-lp-editorial] :is(h2,h3){word-break:normal;word-break:auto-phrase;overflow-wrap:normal;line-break:strict;text-wrap:balance}
 /* The English stage uses explicit rows so inherited grid-area names cannot create empty tracks. */
 @media(min-width:801px){
  body[data-lp-editorial] .ad-stage-head .owned-kicker{grid-row:1}
