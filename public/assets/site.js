@@ -52,8 +52,8 @@
     const caption = heroProof.querySelector('figcaption');
     const captionText = caption?.querySelector('span');
     if (captionText) captionText.textContent = ja
-      ? 'Genie → AI Meeting → Oathra → AI Secure → Agent Team → Launchloom → 夜澄ノア。各2秒を通常速度でつないでいます。夜澄ノアは画面を再現した紹介映像（演出を含む）です。'
-      : 'Genie → AI Meeting → Oathra → AI Secure → Agent Team → Launchloom → 夜澄ノア. Two seconds from each product, at normal speed; the Noa segment is an introduction film with recreated screens.';
+      ? 'Genie → AI Meeting → Oathra → AI Secure → Agent Team → Launchloom → 星藍ノア。各2秒を通常速度でつないでいます。星藍ノアは画面を再現した紹介映像（演出を含む）です。'
+      : 'Genie → AI Meeting → Oathra → AI Secure → Agent Team → Launchloom → 星藍ノア. Two seconds from each product, at normal speed; the Noa segment is an introduction film with recreated screens.';
     const captionLink = caption?.querySelector('a');
     if (captionLink) {
       captionLink.href = ja ? '/products/' : '/en/products/';
@@ -153,7 +153,7 @@
   const status = document.querySelector('.copy-status');
   const fallbackField = document.getElementById('copy-fallback');
   const params = new URLSearchParams(location.search);
-  const productNames = {'genie':'Genie','ai-meeting':'AI Meeting','oathra':'Oathra','aisecure':'AI Secure','agent-team':'Agent Team','launchloom':'Launchloom','noa':'夜澄ノア'};
+  const productNames = {'genie':'Genie','ai-meeting':'AI Meeting','oathra':'Oathra','aisecure':'AI Secure','agent-team':'Agent Team','launchloom':'Launchloom','noa':'星藍ノア'};
   const chosenProduct = productNames[params.get('product')];
   const service = params.get('service');
   if(topic && /^(01|02|03)$/.test(service || '')) topic.selectedIndex = Number(service)-1;

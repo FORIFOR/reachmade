@@ -47,7 +47,7 @@ export async function build() {
   await writeGenieLp(dist,products);
   // Japanese Oathra page only: re-composed from the 2026-09-29 design brief.
   await writeOathraLp(dist,products);
-  // Japanese 夜澄ノア page only: re-composed from the owner's 2026-09-29 patch. Runs after Oathra (each layer owns its CSS marker).
+  // Japanese 星藍ノア page only: re-composed from the owner's 2026-09-29 patch. Runs after Oathra (each layer owns its CSS marker).
   await writeNoaLp(dist,products);
   await writeProductCapabilityStyles(dist);
   const showcaseRoutes = ['', 'en/', ...products.flatMap(p=>[`products/${p.id}/`,`en/products/${p.id}/`])];

@@ -9,7 +9,8 @@
  *  2026-09-29: 夜澄ノア (07) added from the owner's patch 夜澄ノア自己紹介PV制作. Checked against Jev_VTuber_Studio
  *  (private) origin/main a6aa1b7 and release/rc6-voice: comment de-duplication and expiry (src/engine.mjs), fixed-fact
  *  answers (src/talk-engine.mjs), AivisSpeech コハク (docs/VOICE.md), 4 mouth shapes and 22 parts
- *  (public/models/noa/model.json), 6 effects (public/effect-director.mjs). */
+ *  (public/models/noa/model.json), 6 effects (public/effect-director.mjs).
+ *  2026-09-30: renamed 夜澄ノア → 星藍ノア at the owner's request. The introduction film still shows the old name. */
 /** Date the highlights/features of every product were checked against its repository. */
 export const capabilitiesCheckedAt = '2026-09-27';
 export const products = [
@@ -153,7 +154,7 @@ export const products = [
       highlights: [{value:'相関ルール',label:'公開状態・特権ログイン・ファイルアクセスを1件に統合'},{value:'観測 / 仮説 / 不明',label:'根拠のイベントIDを添えて、分けて扱う'},{value:'分析は手元で',label:'デモと分析は外部送信なし。対応実行やOkta連携は設定先へ通信'}],
       features: [
         {code:'F-01 / CORRELATION',title:'散らばった警告を1つの調査ケースに',body:'公開状態・特権ログイン・大量の機密ファイルアクセスを1つのルールで結びつけます。公開している比較は合成ログ上のもので、本番の性能保証ではありません。',tags:['相関ルール','単独ルールとの比較','合成データ']},
-        {code:'F-02 / REASONING',title:'観測・仮説・不明点を分ける',body:'各所見には元になったイベントIDを付け、観測した事実、推論上の仮説、まだ分からないことを別の状態として保持します。',tags:['根拠のID','仮説を分離','過剰対応の抑制']},
+        {code:'F-02 / REASONING',title:'観測・仮説・不明点を分ける',body:'各所見には元になったイベントIDを付け、観測した事実、推論上の仮説、まだ分からないことを別の状態として保持します。',tags:['根拠のID','仮説を分離','不明点を明示']},
         {code:'F-03 / LOCAL',title:'分析は外部に送らない',body:'デモと分析の経路はローカルかつオフラインで動き、アカウントもテレメトリも要りません。任意の対応実行やOkta監視を設定した場合だけ、その送信先へ通信します。',tags:['ローカル実行','テレメトリなし','任意の連携は別']}
       ]
     },
@@ -169,7 +170,7 @@ export const products = [
       highlights: [{value:'Correlation rule',label:'Exposure, privileged login and file access become one case'},{value:'Observed / hypothesis / unknown',label:'Each finding keeps its source event IDs and its status'},{value:'Analysis stays local',label:'Demo and analysis send nothing; optional execute or Okta paths talk to what you configure'}],
       features: [
         {code:'F-01 / CORRELATION',title:'Scattered alerts into one case',body:'One rule links exposure, privileged login and large sensitive-file access. The published comparison runs on synthetic logs and is not a production performance guarantee.',tags:['Correlation rule','Single-rule comparison','Synthetic data']},
-        {code:'F-02 / REASONING',title:'Observed, hypothesis, unknown',body:'Every finding carries the event IDs it was built from and keeps observed facts, inferred hypotheses and unknowns as separate states.',tags:['Source IDs','Separated hypotheses','Fewer over-reactions']},
+        {code:'F-02 / REASONING',title:'Observed, hypothesis, unknown',body:'Every finding carries the event IDs it was built from and keeps observed facts, inferred hypotheses and unknowns as separate states.',tags:['Source IDs','Separated hypotheses','Unknowns stay visible']},
         {code:'F-03 / LOCAL',title:'Analysis without egress',body:'The demo and analysis paths run locally and offline with no account and no telemetry. Only the optional execute and Okta-watch paths send data, and only to the endpoints you configure.',tags:['Local run','No telemetry','Optional connectors']}
       ]
     }
@@ -257,13 +258,16 @@ export const products = [
   {
     // Closed source (the repository is private), so there is no repo, README or document link: the stream and the
     // explainer videos on YouTube are the public record. The film on this site is an introduction film with recreated screens.
-    id: 'noa', name: '夜澄ノア', index: '07', category: 'creation', discipline: 'CHARACTER & LIVE',
+    id: 'noa', name: '星藍ノア', index: '07', category: 'creation', discipline: 'CHARACTER & LIVE',
     // filmKind 'intro': the site film is a produced introduction film (screens recreated, staged), never labelled a recording.
     closedSource: true, filmKind: 'intro', repo: null, labSite: 'https://noa.reachmade.com/', site: 'https://reachmade.com/products/noa/',
     preview: '/assets/products/noa.jpg', previewSource: 'Frame at 5 s of the introduction film Jev Studio LP Video.mp4 (recreated rc.6 screen layout)',
     source: null,
     evidence: 'https://youtube.com/channel/UCjX52bV1kfUgSuqf3vv_rTQ',
-    demo: 'https://youtube.com/channel/UCjX52bV1kfUgSuqf3vv_rTQ', capabilitiesCheckedAt: '2026-09-29',
+    // 2026-10-02: gameplay + chat checked in Jev_VTuber_Studio (private), HEAD 4db1927:
+    // docs/PROGRAMME.md, public/noa-blocks.mjs, src/game-runner.mjs, src/talk-engine.mjs.
+    // Static implementation evidence; not a gameplay-skill or live-stream performance measurement.
+    demo: 'https://youtube.com/channel/UCjX52bV1kfUgSuqf3vv_rTQ', capabilitiesCheckedAt: '2026-10-02',
     ja: {
       headline: 'コメントを、声と表情に。', demoLabel: '配信を見る', previewLabel: '紹介映像の一場面（画面は再現）',
       short: 'コメントに、声と表情で返す配信キャラクター。',
@@ -275,7 +279,7 @@ export const products = [
       consult: 'キャラクターを使った配信、店頭や施設での案内、問い合わせ対応の試作。',
       highlights: [{value:'先にコードで整理',label:'重複・古いコメントはAIに渡さない'},{value:'声はコハク',label:'AivisSpeechの既存音声。専用学習なし'},{value:'演出6種類',label:'声の再生に合わせる。AIの追加呼び出しなし'}],
       features: [
-        {code:'F-01 / JUDGE',title:'AIに渡す前に、コードで整理',body:'同じ内容のコメントや、時間が経ったコメントは返事の対象から外します。決まった答えがある質問は、AIに作文させません。',tags:['重複の除外','古いコメントの除外','決まった文に値を入れる']},
+        {code:'F-01 / GAME & CHAT',title:'ゲームを進めながら、コメントにも返事',body:'ゲーム操作とコメント返信を別々の処理で動かし、プレイ中にも会話できます。ゲームの状況に応じて発話の順番を調整。重複したコメントや古いコメントは返事の対象から外し、決まった答えがある質問には用意した文で答えます。',tags:['ゲーム操作と会話を分離','NOA BLOCKS','Vampire Survivors']},
         {code:'F-02 / VOICE',title:'手元のPCで声を作る',body:'AivisSpeechの「コハク」で読み上げます。音声合成に1回ごとの料金はかかりませんが、会話AIの利用料とPCの電力はかかります。',tags:['AivisSpeech','手元のPCで合成','専用学習なし']},
         {code:'F-03 / FACE',title:'声に合わせて、口と目が動く',body:'口の形4種・まばたき・視線を、再生中の音量に合わせて切り替えます。演出6種類は返事の内容から選び、AIの追加呼び出しはしません。',tags:['口の形4種','画像パーツ22枚','演出6種類']}
       ]
@@ -291,7 +295,7 @@ export const products = [
       consult: 'Character-led streams, guidance in shops and venues, and prototypes for handling enquiries.',
       highlights: [{value:'Sorted in code first',label:'Duplicate and stale comments never reach the AI'},{value:'Kohaku voice',label:'An existing AivisSpeech voice, not trained for Noa'},{value:'Six effects',label:'Timed to the voice, with no extra AI call'}],
       features: [
-        {code:'F-01 / JUDGE',title:'Sorted in code before the AI',body:'Repeated comments and comments that have gone stale are dropped before a reply is chosen. Questions with a fixed answer are not left to the AI to write.',tags:['Duplicate removal','Stale comments dropped','Fixed sentence, correct value']},
+        {code:'F-01 / GAME & CHAT',title:'Playing the game, answering the chat',body:'Game control runs separately from comment replies, so Noa can respond while playing. The game situation helps determine which line she speaks next. Duplicate and stale comments are filtered out, and questions with fixed answers use prepared lines.',tags:['Separate gameplay and replies','NOA BLOCKS','Vampire Survivors']},
         {code:'F-02 / VOICE',title:'The voice is made on the local PC',body:'Replies are read out with the AivisSpeech voice Kohaku. Speech synthesis has no per-call fee, but the conversation AI has usage fees and the PC uses electricity.',tags:['AivisSpeech','Synthesised on the local PC','Not trained for Noa']},
         {code:'F-03 / FACE',title:'Mouth and eyes follow the voice',body:'Four mouth shapes, blinking and gaze change with the volume of the voice as it plays. Six effects are chosen from the reply, with no extra AI call.',tags:['Four mouth shapes','22 image parts','Six effects']}
       ]

@@ -107,3 +107,15 @@ background response150ms, none under reduced motion. No automatic scene animatio
 - ヒットエリア: `.lab-card-actions>a` と `.rm-access-link` を`min-height:44px`へ。
 
 `--task-*`（task picker）と showcase系の`:root`は変更していない。
+
+## Product LP editorial refinement — 2026-10-02
+
+Existing product colors retained. `data-lp-editorial=20261002` scopes the 4 generic JA and 7 EN pages; dedicated JA Genie/Oathra/Noa retain their own scopes.
+
+- `product-art-direction.css`: `--lp-display:clamp(42px,5.1vw,74px)` and `--lp-space:clamp(64px,8vw,112px)`; mobile heading36px (JA29–36px). Headline1.17–1.4 line-height, body14–16px/1.9. No remote fonts.
+- AI Meeting's explanatory paper uses #eee4d5/#292822, muted#625749; task slip#faf7f1. Existing rose accent remains. Diagram is a labelled static usage example, not a product result.
+- Agent Team role register uses #e9dfce/#2d2b28, rules#c7b79f; no invented run status. Launchloom format index uses paper/amber/sage/mauve sheets to explain aspect ratios and formats. Transitions240ms, disabled for reduced motion.
+- `product-capabilities.css`: editorial feature rows/columns and existing source facts; reused --rule/--surface/--ink/--muted. Japanese heading measure uses em, not Latin ch, and phrase-aware wrapping.
+- Dedicated Genie/Oathra tokens remain in their scoped CSS. Noa .nlp-film uses indigo#14173a and warm paper to separate the intro film from the live channel.
+
+These are original project choices, not claimed numerical copies of award-winning sites. Static token contrast checks and browser screenshots are recorded separately.

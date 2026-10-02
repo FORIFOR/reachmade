@@ -17,7 +17,7 @@ test('owned landings cover exactly the seven Reachmade products',()=>{
 for (const id of landingIds) for (const lang of ['ja','en']) {
   test(`${id}/${lang}: product page leads with its real film, first action and honest boundaries`, async () => {
     const p = products.find(p=>p.id===id), route = landingRoute(id,lang), x = landingExperience[id][lang];
-    // The Japanese 夜澄ノア page is re-composed from the owner's patch (src/noa-lp.mjs); tests/noa.test.mjs covers it.
+    // The Japanese 星藍ノア page is re-composed from the owner's patch (src/noa-lp.mjs); tests/noa.test.mjs covers it.
     if (id==='noa' && lang==='ja') { assert.match(await fs.readFile(path.join(root,'dist',route,'index.html'),'utf8'),/data-noa-lp="/); return; }
     const html = await fs.readFile(path.join(root,'dist',route,'index.html'),'utf8');
     assert.match(html,new RegExp(`data-product-id="${id}"`));

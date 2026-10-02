@@ -80,7 +80,7 @@ test('the homepage has one seven-product automatic signature moment and manual l
   assert.match(site,/connection\?\.saveData/);
   // Two seconds from each product at normal speed; the Noa segment comes from an introduction film and says so.
   assert.match(site,/Two seconds from each product, at normal speed; the Noa segment is an introduction film with recreated screens\./);
-  assert.match(site,/夜澄ノアは画面を再現した紹介映像（演出を含む）です。/);
+  assert.match(site,/星藍ノアは画面を再現した紹介映像（演出を含む）です。/);
   assert.match(films,/if \(!isHome\)/);
   assert.match(films,/s\.manual===true\|\|\(s\.autoEligible/);
 });

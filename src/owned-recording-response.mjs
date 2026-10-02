@@ -15,7 +15,7 @@ const originals=new Map([
  ['/media/films/home-oathra-13s.mp4','oathra'],
  // Genie's TaskDock reconstruction: the home clip and the product page's top film (2026-09-30).
  ['/media/films/genie-taskdock-13s.mp4','genie'],
- // 夜澄ノア's introduction film: the owned original is also the film on the Japanese product page.
+ // 星藍ノア's introduction film: the owned original is also the film on the Japanese product page.
  ['/media/originals/noa/lp-film.mp4','noa'],
 ]);
 export async function serveOwnedRecording(request, assets) {

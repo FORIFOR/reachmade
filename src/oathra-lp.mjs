@@ -23,16 +23,16 @@ import path from 'node:path';
 import {products as ledgerProducts} from './products.mjs';
 import {landingExperience} from './product-landings.mjs';
 
-export const OATHRA_LP_VERSION = '20260929-oathra-lp-1';
+export const OATHRA_LP_VERSION = '20261002-oathra-lp-3';
 const CSS_MARK = '/* REACHMADE_OATHRA_LP */';
 const PAGE = 'products/oathra/index.html';
 const A = '/assets/products/oathra/';
 export const FILM = Object.freeze({src: '/media/films/oathra-30s.mp4', poster: '/media/films/oathra-30s.jpg'});
 export const STEPS = Object.freeze([
-  {src: `${A}lp-step-01.jpg`, title: '頼む', body: 'だれに・何をしてほしいかを、ふだんの言葉で書く。', alt: '「電話を頼む」画面。相手に焼肉 たけ、依頼に10月3日（土）19時から2名の予約、任せる範囲の3列が入っている'},
+  {src: `${A}lp-step-01.jpg`, title: '用件を書く', body: '電話の相手と、頼みたいことを、ふだんの言葉で書く。', alt: '「電話を頼む」画面。相手に焼肉 たけ、依頼に10月3日（土）19時から2名の予約、任せる範囲の3列が入っている'},
   {src: `${A}lp-step-02.jpg`, title: '確認して発信', body: '相手・内容・上限の費用・記録の扱いを見て、あなたが承認するまで電話はかからない。', alt: 'AIへの指示書と「相手・頼むこと・費用を確かめました」のチェック、「この内容で電話をかける」ボタン'},
-  {src: `${A}lp-step-03.jpg`, title: '電話中', body: '会話と輪が、その場で進む。いつでも通話を終えられる。', alt: '通話中の画面。輪が3/3で閉じ、日付・時刻・人数の3項目が相手の言葉で確認済みになっている'},
-  {src: `${A}lp-step-04.jpg`, title: '報告', body: '決まったこと、頼んだ内容との違い、あなたがすること。', alt: '「決まりました」の報告画面。日付・時刻・人数と、それぞれの根拠の発言と時刻'}
+  {src: `${A}lp-step-03.jpg`, title: '会話を見守る', body: '相手が答えた項目を、その場で確認する。いつでも通話を終えられる。', alt: '通話中の画面。輪が3/3で閉じ、日付・時刻・人数の3項目が相手の言葉で確認済みになっている'},
+  {src: `${A}lp-step-04.jpg`, title: '決まったことを読む', body: '頼んだ内容との違いと、あなたが引き継ぐことも報告する。', alt: '「決まりました」の報告画面。日付・時刻・人数と、それぞれの根拠の発言と時刻'}
 ]);
 const e = s => String(s).replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
 const arrow = '<span aria-hidden="true">↗</span>';
@@ -70,21 +70,21 @@ function ring(closed) {
 }
 
 function hero(p, x) {
-  return `<section class="container olp-hero" aria-labelledby="olp-title"><div class="olp-hero__copy"><p class="owned-kicker">${e(p.index)} / ${e(p.discipline)} / ${e(p.ja.status)}</p><h1 id="olp-title">「できました」を、<br>根拠にしない。</h1><p class="olp-lead">AIに電話を任せて、結果は相手の言葉で確かめる。日時・人数・金額が決まったかどうかを、相手の発言と時刻に結びつけて報告します。</p><div class="olp-actions">${ext(x.primary[1], x.primary[0], 'owned-primary')}${ext(p.repo, 'GitHubで見る', 'olp-link')}</div><p class="owned-action-note">${e(x.actionNote)}</p></div>`
+  return `<section class="container olp-hero" aria-labelledby="olp-title"><div class="olp-hero__copy"><p class="owned-kicker">${e(p.index)} / ${e(p.discipline)} / ${e(p.ja.status)}</p><h1 id="olp-title">「できました」を、<br>根拠にしない。</h1><p class="olp-lead">その予約、相手は何と言った？ OathraはAIによる電話の結果を、相手の発言と時刻に結びつけて報告します。日時・人数・金額を、あとからたどれます。</p><div class="olp-actions">${ext(x.primary[1], x.primary[0], 'owned-primary')}${ext(p.repo, 'コードをGitHubで読む', 'olp-link')}</div><p class="owned-action-note">${e(x.actionNote)}</p></div>`
     + `<figure class="olp-film"><p class="olp-film__tag">イメージ映像（演出を含む）· 設計画面 · 未リリース</p><div class="olp-film__screen"><video controls playsinline preload="none" poster="${FILM.poster}" width="1920" height="1080" aria-label="Oathraのイメージ映像（30秒・音声なし・演出を含む）"><source src="${FILM.src}" type="video/mp4">この動画は、このブラウザーでは再生できません。</video></div><figcaption>30秒・音声なし・押したときだけ再生。紹介のために作ったイメージ映像です。映像の中の画面はこれから作るアプリの設計で、現行のOathraにはまだありません。</figcaption></figure></section>`;
 }
 
 function ringSection() {
   const cards = [
-    ['確かめる項目の数だけ区切る', '日付・時刻・人数なら3つ。', 0, ''],
-    ['相手の言葉で、一区切り閉じる', '根拠になった発言には緑の下線を引き、ミリ秒単位の区間を記録します。', 1, ' is-closed'],
+    ['まず、確認する項目を決める', '日付・時刻・人数なら、輪を3つに区切ります。', 0, ''],
+    ['相手が答えた項目を閉じる', '根拠になった相手の発言と、その開始・終了時刻を記録します。', 1, ' is-closed'],
     ['AIの言葉では閉じない', 'AIが「予約できました」と言っても、判定には数えません。', 1, ' is-open']
   ];
-  return `<section class="container olp-ring" id="ring" aria-labelledby="olp-ring-title"><div class="olp-head"><p class="owned-kicker">01 · 輪のしくみ</p><h2 id="olp-ring-title">相手の言葉でだけ、<br>輪が閉じる。</h2><p>判定の考え方です。図に使うのは、映像と同じ輪です。</p></div><div class="olp-ring__body"><figure class="olp-ring__figure">${ring(3)}<figcaption>日付・時刻・人数の3項目が、相手の言葉で確認済み</figcaption></figure><ol class="olp-ring__cards">${cards.map(([t, b, , cls]) => `<li class="olp-ring__card${cls}"><strong>${e(t)}</strong><span>${e(b)}</span></li>`).join('')}</ol></div><p class="olp-note">緑は「相手の言葉で確認済み」の意味にだけ使います。ページ内のボタンやリンクの色には使いません。</p></section>`;
+  return `<section class="container olp-ring" id="ring" aria-labelledby="olp-ring-title"><div class="olp-head"><p class="owned-kicker">01 · 輪のしくみ</p><h2 id="olp-ring-title">相手の言葉でだけ、<br>輪が閉じる。</h2><p>日時や人数がそろっていても、AIが言っただけでは確認済みにしません。その判定の考え方を、輪で表しています。</p></div><div class="olp-ring__body"><figure class="olp-ring__figure"><span class="olp-ring__eyebrow">CONFIRMED IN THEIR WORDS</span>${ring(3)}<figcaption>日付・時刻・人数の3項目が、相手の言葉で確認済み</figcaption></figure><ol class="olp-ring__cards">${cards.map(([t, b, count, cls], i) => `<li class="olp-ring__card${cls}"><div class="olp-ring__state" aria-hidden="true">${ring(count)}</div><div class="olp-ring__explanation"><span class="olp-ring__index">0${i + 1} / ${count === 0 ? '確認前' : i === 1 ? '相手が確認' : 'AIの発言'}</span><strong>${e(t)}</strong><span>${e(b)}</span></div></li>`).join('')}</ol></div><p class="olp-note">緑の区切りは、相手の言葉で確認できた項目です。店舗システムに登録されたことまでは示しません。</p></section>`;
 }
 
 function stepsSection(prototypeLink) {
-  return `<section class="container olp-steps" id="steps" aria-labelledby="olp-steps-title"><div class="olp-head"><p class="owned-kicker">02 · 頼んでから報告まで</p><h2 id="olp-steps-title">頼む。承認する。<br>報告を読む。</h2><p>4枚は、上のイメージ映像から切り出した、これから作るアプリの設計画面です。現行のOathra（CLIとシミュレーター）には、この画面はまだありません。</p></div><ol class="olp-steps__list">${STEPS.map((s, i) => `<li class="olp-steps__item"><figure><a href="${s.src}"><img src="${s.src}" width="1600" height="900" loading="lazy" decoding="async" alt="${e(s.alt)}"></a><figcaption><span class="olp-label">開発中の画面 · 未リリース</span><strong>${i + 1}. ${e(s.title)}</strong><span>${e(s.body)}</span></figcaption></figure></li>`).join('')}</ol><p class="olp-note">別公開の設計動画は、次のUIを考えるためのプレビューです。現行製品の実演や、新UIの実装完了を示すものではありません。 ${prototypeLink}</p></section>`;
+  return `<section class="container olp-steps" id="steps" aria-labelledby="olp-steps-title"><div class="olp-head"><p class="owned-kicker">02 · 頼んでから報告まで</p><h2 id="olp-steps-title">電話の前後に、<br>確認したいこと。</h2><p>相手、用件、費用を見てから発信し、終わったら報告を読む。その流れを考えた、これから作るアプリの設計画面です。4枚は上のイメージ映像から切り出しています。現行のOathra（CLIとシミュレーター）には、この画面はまだありません。</p></div><ol class="olp-steps__list">${STEPS.map((s, i) => `<li class="olp-steps__item"><figure><a href="${s.src}"><img src="${s.src}" width="1600" height="900" loading="lazy" decoding="async" alt="${e(s.alt)}"></a><figcaption><span class="olp-label">開発中の画面 · 未リリース</span><strong>${i + 1}. ${e(s.title)}</strong><span>${e(s.body)}</span></figcaption></figure></li>`).join('')}</ol><p class="olp-note">別公開の設計動画は、次のUIを考えるためのプレビューです。現行製品の実演や、新UIの実装完了を示すものではありません。 ${prototypeLink}</p></section>`;
 }
 
 function delegationSection() {
@@ -93,23 +93,23 @@ function delegationSection() {
     ['hold', '△ 決めずに持ち帰る', '例：コースや前金が必要と言われた'],
     ['no', '✕ しない', '支払いの約束、AIであることを隠す']
   ];
-  return `<section class="container olp-trust" id="trust" aria-labelledby="olp-trust-title"><div class="olp-head"><p class="owned-kicker">03 · 任せる範囲と承認</p><h2 id="olp-trust-title">AIに決めさせること、<br>させないこと。</h2><p class="olp-label olp-label--block">設計 · 現行版には未実装</p><p>これから作るアプリでの設計です。現行のOathraには、この3段階の指定、発信前の承認、費用の上限による打ち切り、着信の応対はまだありません。</p></div><div class="olp-trust__cols">${cols.map(([k, t, b]) => `<div class="olp-trust__col olp-trust__col--${k}"><strong>${e(t)}</strong><span>${e(b)}</span></div>`).join('')}</div><p class="olp-note">設計では、本番の電話は毎回承認が必要で、この設定は外せません。費用は1回ごとの上限つきです。電話がかかってきたときは、AIが用件だけを聞きます。</p></section>`;
+  return `<section class="container olp-trust" id="trust" aria-labelledby="olp-trust-title"><div class="olp-head"><p class="owned-kicker">03 · 任せる範囲と承認</p><h2 id="olp-trust-title">任せていいのは、<br>ここまで。</h2><p class="olp-label olp-label--block">設計 · 現行版には未実装</p><p>これから作るアプリでの設計です。現行のOathraには、この3段階の指定、発信前の承認、費用の上限による打ち切り、着信の応対はまだありません。</p></div><div class="olp-trust__cols">${cols.map(([k, t, b]) => `<div class="olp-trust__col olp-trust__col--${k}"><strong>${e(t)}</strong><span>${e(b)}</span></div>`).join('')}</div><p class="olp-note">設計では、本番の電話は毎回承認が必要で、この設定は外せません。費用は1回ごとの上限つきです。電話がかかってきたときは、AIが用件だけを聞きます。</p></section>`;
 }
 
 function recordingsSection(p, heroFilm, film15) {
   const figure15 = outer(film15, '<figure class="rm-film15__figure"', '15-second film figure');
   const note15 = outer(film15, '<p class="rm-film15__note"', '15-second film note');
-  return `<section class="container olp-rec" id="recordings" aria-labelledby="film15-oathra-title"><div class="olp-head"><p class="owned-kicker">04 · 実録画</p><h2 id="film15-oathra-title">一本の電話と、<br>確定を決めた一言。</h2><p>上のイメージ映像と見比べられるよう、現行のOathraの判定画面と通話記録をここにまとめます。</p></div><div class="olp-rec__grid"><div class="olp-rec__item"><p class="olp-rec__kicker">判定画面 · 約13秒の実録画</p><p class="olp-note olp-rec__lead">最初に出るのは、判定の流れを説明する再現です。「実録画を見る」で、13秒の実録画に切り替わります。</p>${heroFilm}</div><div class="olp-rec__item" data-film15="oathra"><p class="olp-rec__kicker">15秒の紹介映像</p>${figure15}${note15}</div></div><p class="olp-note">${ext(p.repo, 'コードと記録をGitHubで見る')}</p></section>`;
+  return `<section class="container olp-rec" id="recordings" aria-labelledby="film15-oathra-title"><div class="olp-head"><p class="owned-kicker">04 · 実録画</p><h2 id="film15-oathra-title">どの一言で、<br>確定と判断したのか。</h2><p>現行版で確認できる判定の流れを、実録画と紹介映像でご覧ください。</p></div><div class="olp-rec__grid"><div class="olp-rec__item"><p class="olp-rec__kicker">判定画面 · 約13秒の実録画</p><p class="olp-note olp-rec__lead">最初に出るのは、判定の流れを説明する再現です。「実録画を見る」で、13秒の実録画に切り替わります。</p>${heroFilm}</div><div class="olp-rec__item" data-film15="oathra"><p class="olp-rec__kicker">15秒の紹介映像</p>${figure15}${note15}</div></div><p class="olp-note">${ext(p.repo, 'コードと記録をGitHubで見る')}</p></section>`;
 }
 
 function statusSection(p, source, access) {
   const [ms, speech, license] = p.ja.highlights;
   const rows = [
-    ['できる', [`会話上の合意の判定 — ${speech.label}`, `根拠の区間の記録 — ${ms.label}`, `${license.value} — 開発者向けに、${license.label}`]],
-    ['条件付き', ['実際の電話（設定と費用が必要）']],
-    ['まだ言わない', ['店舗システムへの登録', '100件の実電話検証']]
+    ['現在できること', [`会話上の合意の判定 — ${speech.label}`, `根拠の区間の記録 — ${ms.label}`, `${license.value} — 開発者向けに、${license.label}`]],
+    ['設定・費用が必要', ['実際の電話（設定と費用が必要）']],
+    ['対象外・検証前', ['店舗システムへの登録', '100件の実電話検証']]
   ];
-  return `<section class="container olp-status" id="status" aria-labelledby="olp-status-title"><div class="olp-head"><p class="owned-kicker">05 · 現在地</p><h2 id="olp-status-title">できること、条件付きのこと、<br>まだ言わないこと。</h2></div><div class="olp-status__table" role="table" aria-label="Oathraの現在地">${rows.map(([h, items]) => `<div class="olp-status__col" role="rowgroup"><p class="olp-status__head" role="columnheader">${e(h)}</p><ul role="row">${items.map(i => `<li role="cell">${e(i)}</li>`).join('')}</ul></div>`).join('')}</div><div class="olp-status__detail">${access}<p>${e(p.ja.proof)}</p>${ext(p.evidence, '検証資料を見る')}</div>${source}</section>`;
+  return `<section class="container olp-status" id="status" aria-labelledby="olp-status-title"><div class="olp-head"><p class="owned-kicker">05 · 現在地</p><h2 id="olp-status-title">会話の合意と、<br>予約の登録は別です。</h2></div><div class="olp-status__table" role="table" aria-label="Oathraの現在地">${rows.map(([h, items]) => `<div class="olp-status__col" role="rowgroup"><p class="olp-status__head" role="columnheader">${e(h)}</p><ul role="row">${items.map(i => `<li role="cell">${e(i)}</li>`).join('')}</ul></div>`).join('')}</div><div class="olp-status__detail">${access}<p>${e(p.ja.proof)}</p>${ext(p.evidence, '検証資料を見る')}</div>${source}</section>`;
 }
 
 export function refineOathraLp(html, products = ledgerProducts) {

@@ -5,7 +5,7 @@ export const CUES = Object.freeze([0, 2600, 6000, 9600, 13600]);
 export const PRODUCTS = Object.freeze(['genie','ai-meeting','oathra','aisecure','agent-team','launchloom','noa']);
 // Products whose site film is a produced introduction film (screens recreated), not a recording of the product in use.
 export const STAGED_FILMS = new Set(['noa']);
-const names = ['Genie','AI Meeting','Oathra','AI Secure','Agent Team','Launchloom','夜澄ノア'];
+const names = ['Genie','AI Meeting','Oathra','AI Secure','Agent Team','Launchloom','星藍ノア'];
 const esc = value => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 export function phaseAt(time) {
   if (!Number.isFinite(time)) return 0;
@@ -149,6 +149,9 @@ export function mountDemo(figure, initialId, lang = 'ja') {
   const mutation = workbench ? new win.MutationObserver(() => { if (workbench.dataset.product !== id) setProduct(workbench.dataset.product); }) : null;
   mutation?.observe(workbench,{attributes:true,attributeFilter:['data-product']});
   setProduct(initialId);
+  // Noa's product page introduces a character. Lead with the labelled intro-film
+  // poster; keep the explanatory story available as a deliberate second view.
+  if (initialId === 'noa' && figure.closest('body[data-lp-editorial]')) setMode('recording');
   return {
     setProduct,
     destroy() { dead = true; stop(); abort.abort(); observer?.disconnect(); mutation?.disconnect(); toolbar.remove(); root.remove(); figure.classList.remove('rm-demo-host'); delete figure.dataset.demoVersion; delete figure.dataset.demoMode; },

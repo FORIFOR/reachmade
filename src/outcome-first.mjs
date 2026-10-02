@@ -24,13 +24,13 @@ export function renderOutcomeHero(lang){
  <div class="outcome-live" id="live-example">${renderRecordedResult(lang)}</div><div class="outcome-bridge"><span>${t('「使えるかたち」を、まずは手元で。','Something real, right in your browser.')}</span><p>${t('実演、保存した作例、導入手順まで。<br>7つの製品を、実物から選べます。','Recording, saved artifact, and setup.<br>Choose between seven products, starting with the real work.')}</p><a href="#explore">${t('プロダクトを見る','Meet the products')} ↓</a></div></section>`;
 }
 const subtitles={
- genie:['自分のモデルで、メモを成果物に。','Your model. A note becomes an artifact.'],
- 'ai-meeting':['会話のあとに、次の一手が残る。','A conversation that leaves a next step.'],
- oathra:['通話の「できた」を、発言で確かめる。','Check the words behind “done.”'],
- aisecure:['送る前も、調べるときも、根拠から。','Before sending. During review. Start with evidence.'],
- 'agent-team':['ひとつの依頼に、違う視点を。','One request. More than one perspective.'],
- launchloom:['つくったものを、伝わる素材に。','You made it. Now make it seen.'],
- noa:['コメントを、声と表情に。','Comments, answered in voice and expression.']
+ genie:['作業中に呼び出せる、MacのAIアシスタント','An AI assistant for the Mac you’re working on'],
+ 'ai-meeting':['AIキャラクターと話す、ひとり会議','Think out loud with an AI character'],
+ oathra:['AI電話の結果を、相手の発言と照合','Check AI call results against the other party’s words'],
+ aisecure:['ログをつないで調べる、AIセキュリティ調査','Trace security signals through the logs'],
+ 'agent-team':['作成・レビュー・修正を分担するAIチーム','AI agents that draft, review and revise'],
+ launchloom:['製品紹介の動画・LP・SNS投稿案をつくる','Videos, pages and posts for your product launch'],
+ noa:['星藍ノア / ゲームも会話も楽しむAIキャラクター','Meet Noa, an AI gamer and streaming character']
 };
 export const DIRECT_STARTS=Object.freeze({
  genie:{url:'/media/originals/genie/orbit.html',enUrl:'/media/originals/genie/orbit.html',ja:['実演で作ったものを動かす','保存済みのHTMLを開きます。新しいAI実行ではありません。'],en:['Open the recorded artifact','Opens the saved Japanese HTML example, not a new AI run.']},
@@ -39,7 +39,7 @@ export const DIRECT_STARTS=Object.freeze({
  aisecure:{url:'https://forifor.github.io/AISecure/try.html',ja:['合成ログの調査を試す','合成データのデモ。実環境の監視・遮断は行いません。'],en:['Investigate a synthetic case','Synthetic-data demo. No monitoring or enforcement.']},
  'agent-team':{url:'https://forifor.github.io/Multibot/ja/',enUrl:'https://forifor.github.io/Multibot/',ja:['実モデルの作業記録を見る','過去の実行記録を開きます。新しいAI実行は始まりません。'],en:['Read a real-model work record','An existing run record, not a new AI execution.']},
  launchloom:{url:'https://forifor.github.io/Launchloom/ja/',enUrl:'https://forifor.github.io/Launchloom/',ja:['生成済みの素材を開く','既存の作例を閲覧。SNSへの投稿は行いません。'],en:['Open generated launch material','Existing examples. Nothing is published to a social account.']},
- noa:{url:'https://youtube.com/channel/UCjX52bV1kfUgSuqf3vv_rTQ',enUrl:'https://youtube.com/channel/UCjX52bV1kfUgSuqf3vv_rTQ',ja:['配信を見る（YouTube）','ソース非公開。配信と動画で動きを確かめられます。'],en:['Watch the stream (YouTube)','Closed source. The stream and videos show how it behaves.']}
+ noa:{url:'https://youtube.com/channel/UCjX52bV1kfUgSuqf3vv_rTQ',enUrl:'https://youtube.com/channel/UCjX52bV1kfUgSuqf3vv_rTQ',ja:['配信を見る（YouTube）','ソース非公開。配信と動画で動きを確かめられます。'],en:['Open the YouTube channel','Closed source. This link opens Noa’s YouTube channel.']}
 });
 export function addDirectStarts(html,lang){
  if(!['ja','en'].includes(lang))throw new TypeError('Unsupported locale');

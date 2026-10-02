@@ -97,3 +97,143 @@ html[lang=ja] body.owned-product--noa[data-art-direction] .ad-hero h1{word-break
 }
 @media(prefers-reduced-motion:reduce){.ad-hero *{animation:none!important;transition:none!important;scroll-behavior:auto}}
 @media(forced-colors:active){.ad-hero :is(.ad-workspace-proof,.ad-room-screen,.ad-ledger,.ad-security-routes,.ad-output-index){border:1px solid CanvasText}.ad-role-list li>span{color:CanvasText}.ad-hero :is(a,button,summary):focus-visible{outline-color:Highlight}}
+
+/* 2026-10-02 editorial compositions. Scoped away from the three dedicated Japanese LPs. */
+body[data-lp-editorial]{--lp-space:clamp(64px,8vw,112px);--lp-display:clamp(42px,5.1vw,74px)}
+body[data-lp-editorial] .owned-header>.container{min-height:82px}
+body[data-lp-editorial] .owned-header nav a{min-height:44px;display:inline-flex;align-items:center}
+body[data-lp-editorial] .owned-hero-grid.ad-hero{padding-block:clamp(42px,5vw,74px) 56px!important;min-height:0}
+body[data-lp-editorial] .ad-hero h1{font-size:var(--lp-display)!important;line-height:1.17!important;font-weight:580;letter-spacing:-.065em;max-width:15ch!important;margin:0 0 28px!important;text-wrap:balance}
+html[lang=ja] body[data-lp-editorial] .ad-hero h1{max-width:11.5em!important;line-height:1.28!important;letter-spacing:-.055em;word-break:auto-phrase;overflow-wrap:normal}
+body[data-lp-editorial] .ad-category{font-size:12px;letter-spacing:.035em;margin-block:0 22px}
+body[data-lp-editorial] .ad-copy>.owned-kicker{font-size:11px;margin-bottom:13px}
+body[data-lp-editorial] .ad-hero .owned-lead{font-size:16px;line-height:1.95;max-width:46ch}
+body[data-lp-editorial] .ad-entry{margin-top:28px}
+body[data-lp-editorial] .ad-entry .owned-actions{display:flex!important;flex-direction:row!important;align-items:center!important;justify-content:flex-start!important;gap:10px 22px!important;margin:0!important}
+body[data-lp-editorial] .ad-entry .owned-actions>a{width:auto!important}
+body[data-lp-editorial] .ad-entry .owned-primary{font-size:13px;min-height:52px;padding:14px 24px;gap:22px}
+body[data-lp-editorial] .ad-entry .owned-action-note{text-align:left;line-height:1.8;max-width:48ch;margin-top:15px!important}
+body[data-lp-editorial] .ad-entry .outcome-product-entry{max-width:100%}
+body[data-lp-editorial] .ad-access-row{margin-top:38px;padding-top:24px}
+body[data-lp-editorial] .ad-hero .owned-film{border-radius:8px!important;overflow:hidden}
+body[data-lp-editorial] .ad-hero .owned-film figcaption{font-size:12px}
+body[data-lp-editorial] .ad-room-head{grid-template-columns:minmax(0,1.13fr) minmax(0,.87fr);gap:clamp(38px,6vw,88px);align-items:center;margin-bottom:56px}
+body[data-lp-editorial] .ad-utterance{background:#eee4d5;color:#292822;border:0;border-radius:4px 36px 4px 4px;padding:clamp(24px,3.2vw,46px);position:relative}
+body[data-lp-editorial] .ad-utterance :is(.ad-label,.ad-note){color:#625749}
+body[data-lp-editorial] .ad-utterance blockquote{font-family:Georgia,'Hiragino Mincho ProN','Yu Mincho',serif;font-size:clamp(28px,3vw,42px);line-height:1.6;letter-spacing:-.03em;margin:23px 0 30px}
+body[data-lp-editorial] .ad-utterance ol{border-top:1px solid #c7b9a6;padding-top:20px;gap:14px;justify-content:space-between}
+body[data-lp-editorial] .ad-utterance li>span{color:#86513e}
+.ad-voice-mark{height:64px;display:flex;align-items:center;gap:5px;margin-top:24px;color:#a75f48}
+.ad-voice-mark i{width:4px;height:22px;background:currentColor;border-radius:3px}
+.ad-voice-mark i:nth-child(3n){height:44px}.ad-voice-mark i:nth-child(3n + 1){height:30px}.ad-voice-mark i:nth-child(4n){height:54px}.ad-voice-mark i:first-child,.ad-voice-mark i:last-child{height:14px}
+.ad-task-slip{display:flex;gap:20px;align-items:center;padding:20px 23px;background:#faf7f1;border:1px solid #d3c6b3;box-shadow:5px 5px 0 #d8c9b5;margin-bottom:24px}
+.ad-task-check{font-size:35px;color:#88513c}.ad-task-slip>div{display:grid;gap:7px}.ad-task-slip small{font:9px/1.6 ui-monospace,monospace;letter-spacing:.08em;color:#6b5c4c}.ad-task-slip strong{font-size:18px;font-weight:550}.ad-task-slip div>span{font-size:12px;color:#6b5c4c}
+body[data-lp-editorial] .ad-room-screen{width:100%;box-sizing:border-box;min-width:0;align-self:stretch;padding:32px 5%;background:#363931;border:1px solid var(--rule)}
+body[data-lp-editorial] .ad-team-head{display:grid;grid-template-columns:minmax(0,1.12fr) minmax(0,.88fr);gap:clamp(36px,7vw,100px);align-items:center}
+body[data-lp-editorial] .ad-team-head .ad-copy{max-width:none}
+body[data-lp-editorial] .ad-team-head h1{max-width:13ch!important}
+body[data-lp-editorial] .ad-role-guide{padding:32px;background:#e9dfce;border:1px solid #d0c0a7;box-shadow:10px 10px 0 #eee6d9}
+body[data-lp-editorial] .ad-role-guide h2{font-family:Georgia,'Hiragino Mincho ProN','Yu Mincho',serif;font-size:30px;letter-spacing:-.025em;margin:16px 0 25px}
+body[data-lp-editorial] .ad-role-list{position:relative}
+body[data-lp-editorial] .ad-role-list li{padding:20px 0;border-color:#c7b79f;gap:20px}
+body[data-lp-editorial] .ad-role-list li>span{width:44px;height:44px;color:#584a35;background:#f7f2e8;border-color:#c7b79f;border-radius:3px}
+body[data-lp-editorial] .ad-role-list h3{font-size:20px}.ad-role-list p{max-width:30ch}
+body[data-lp-editorial] .ad-handoff{display:block;margin-top:56px}
+body[data-lp-editorial] .ad-handoff .owned-film__screen{aspect-ratio:16/8.5}
+body[data-lp-editorial] .ad-hero .owned-film figcaption>span{display:block}
+body[data-lp-editorial] .ad-cinema-head .ad-copy{grid-template-columns:minmax(0,1.13fr) minmax(0,.87fr);gap:0 70px}
+body[data-lp-editorial] .ad-cinema-head h1{max-width:15ch!important}
+html[lang=ja] body[data-lp-editorial] .ad-cinema-head h1{max-width:8em!important}
+body[data-lp-editorial] .ad-output-wall{margin-top:48px;padding:32px 0 0;border-top:1px solid var(--rule)}
+body[data-lp-editorial] .ad-output-wall>h2{font-size:15px;font-weight:500;letter-spacing:.02em;margin-bottom:24px}
+body[data-lp-editorial] .ad-output-index{gap:24px;border:0;align-items:end}
+body[data-lp-editorial] .ad-output-index li{padding:0!important;border:0!important;min-width:0}
+body[data-lp-editorial] .ad-output-index li>span{display:inline-block;margin-top:17px}
+body[data-lp-editorial] .ad-output-index h3{font-size:19px;margin-top:7px}
+body[data-lp-editorial] .ad-output-wall>.ad-note{margin-top:24px;max-width:none;font-size:12px}
+.ad-format{height:160px;display:flex;align-items:flex-end;justify-content:center;overflow:hidden;background:#30372c;padding:20px}
+.ad-format__sheet{position:relative;background:#e1dbb6;color:#3e4b30;border:1px solid #b7b58d;width:100%;height:100%;padding:14px;display:flex;flex-direction:column;justify-content:flex-end;gap:4px;transition:transform 240ms ease}
+.ad-format__sheet b{font:500 38px/1 Georgia,serif;letter-spacing:-.045em;position:absolute;left:14px;top:12px}
+.ad-format__sheet i{display:block;width:62%;height:2px;background:currentColor;opacity:.4}.ad-format__sheet i:last-of-type{width:42%}
+.ad-format--landscape .ad-format__sheet{height:auto;aspect-ratio:16/9}
+.ad-format--portrait{background:#4b4035}.ad-format--portrait .ad-format__sheet{width:auto;aspect-ratio:9/16;background:#e7b88c;transform:rotate(5deg)}
+.ad-format--portrait .ad-format__sheet b{font-size:26px}
+.ad-format--page{background:#353e3b}.ad-format--page .ad-format__sheet{width:76%;background:#dce1d8;transform:rotate(-4deg);height:145px;margin-bottom:-32px;justify-content:center}
+.ad-format--draft{background:#423b40}.ad-format--draft .ad-format__sheet{background:#d0bfd0;height:80%;transform:rotate(3deg)}
+body[data-lp-editorial] .ad-cinema-screen{margin-top:44px}
+body[data-lp-editorial] .ad-secure-head{grid-template-columns:minmax(0,1.2fr) minmax(0,.8fr);gap:clamp(38px,7vw,96px);align-items:center}
+body[data-lp-editorial] .ad-security-routes{padding:10px 30px;border:1px solid #b2c6b7;background:#e5ece5;position:relative}
+body[data-lp-editorial] .ad-security-routes>div{padding:24px 0;border-color:#b2c6b7}
+body[data-lp-editorial] .ad-security-routes>div:last-child{border-bottom:0}
+body[data-lp-editorial] .ad-security-routes h2{font-size:25px}
+body[data-lp-editorial] .ad-investigation{grid-template-columns:minmax(220px,.38fr) minmax(0,1fr);gap:44px;margin-top:55px;padding-top:36px;border-top:2px solid var(--ink)}
+body[data-lp-editorial] .ad-investigation aside h2{font-size:28px;line-height:1.5}
+body[data-lp-editorial] .ad-workspace{grid-template-columns:minmax(0,.95fr) minmax(0,1.05fr);gap:44px;align-items:start}
+body[data-lp-editorial] .ad-workspace-proof{padding:20px;margin-top:12px}
+body[data-lp-editorial] .ad-stage-head .ad-copy{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:0 64px;max-width:none}
+body[data-lp-editorial] .ad-stage-head :is(.owned-kicker,.ad-category){grid-column:1/-1}
+body[data-lp-editorial] .ad-stage-head h1{grid-column:1;grid-row:3/5}
+body[data-lp-editorial] .ad-stage-head :is(.owned-lead,.ad-entry){grid-column:2}
+@media(hover:hover){body[data-lp-editorial] .ad-output-index li:hover .ad-format__sheet{transform:translateY(-5px)}body[data-lp-editorial] .owned-primary:hover{transform:translateY(-2px)}}
+@media(max-width:1100px){
+ body[data-lp-editorial]{--lp-display:clamp(40px,5.4vw,58px)}
+ body[data-lp-editorial] .ad-cinema-head .ad-copy{gap:0 38px}
+ body[data-lp-editorial] .ad-team-head,body[data-lp-editorial] .ad-room-head{gap:36px}
+ body[data-lp-editorial] .ad-role-guide{padding:24px}
+ .ad-format{height:145px;padding:15px}
+}
+@media(max-width:800px){
+ body[data-lp-editorial]{--lp-display:42px;--lp-space:64px}
+ body[data-lp-editorial] .owned-hero-grid.ad-hero{padding-block:32px 40px!important}
+ body[data-lp-editorial] .ad-room-head{display:contents}
+ body[data-lp-editorial] .ad-hero[data-direction=conversation-room] .ad-utterance{order:1;margin:28px 0 0}
+ body[data-lp-editorial] .ad-hero[data-direction=conversation-room] .ad-room-screen{order:2;margin-top:36px}
+ body[data-lp-editorial] :is(.ad-team-head,.ad-secure-head,.ad-investigation,.ad-workspace){display:grid;grid-template-columns:1fr;gap:32px}
+ body[data-lp-editorial] .ad-cinema-head .ad-copy,body[data-lp-editorial] .ad-stage-head .ad-copy{display:block}
+ body[data-lp-editorial] .ad-team-head h1{max-width:18ch!important}
+ body[data-lp-editorial] .ad-role-guide{padding:27px;box-shadow:6px 6px 0 #eee6d9}
+ body[data-lp-editorial] .ad-role-list{display:block}
+ body[data-lp-editorial] .ad-role-list li{display:flex}
+ body[data-lp-editorial] .ad-role-list h3{margin-top:0}
+ body[data-lp-editorial] .ad-room-screen{padding:12px}
+ body[data-lp-editorial] .ad-handoff{margin-top:36px}
+ body[data-lp-editorial] .ad-security-routes{display:block}
+ body[data-lp-editorial] .ad-investigation>aside{max-width:none}
+ body[data-lp-editorial] .ad-output-index{gap:20px;grid-template-columns:1fr 1fr}
+ .ad-format{height:150px}
+}
+@media(max-width:500px){
+ body[data-lp-editorial]{--lp-display:36px}
+ body[data-lp-editorial] .ad-hero h1{font-size:var(--lp-display)!important;line-height:1.2!important;letter-spacing:-.055em;margin-bottom:22px!important}
+ html[lang=ja] body[data-lp-editorial] .ad-hero h1{line-height:1.4!important;max-width:none!important;font-size:clamp(29px,9vw,36px)!important}
+ body[data-lp-editorial] .ad-copy>.owned-kicker{font-size:10px}
+ body[data-lp-editorial] .ad-hero .owned-lead{font-size:14px;line-height:1.9}
+ body[data-lp-editorial] .ad-entry .owned-actions{display:grid!important;justify-items:start;gap:4px!important}
+ body[data-lp-editorial] .ad-entry .owned-primary{min-height:50px;padding:13px 20px;font-size:12px}
+ body[data-lp-editorial] .ad-utterance{padding:25px;border-radius:3px 25px 3px 3px}
+ body[data-lp-editorial] .ad-utterance blockquote{font-size:29px;margin-block:20px}
+ .ad-task-slip{padding:17px;gap:13px}.ad-voice-mark{height:40px}.ad-voice-mark i{max-height:38px}
+ body[data-lp-editorial] .ad-utterance ol{gap:8px}
+ body[data-lp-editorial] .ad-utterance li{font-size:10px}
+ body[data-lp-editorial] .ad-output-wall{margin-top:32px;padding-top:24px}
+ body[data-lp-editorial] .ad-output-index{gap:24px 14px}
+ .ad-format{height:125px;padding:12px}.ad-format__sheet b{font-size:28px}.ad-format--portrait .ad-format__sheet b{font-size:20px}.ad-format--page .ad-format__sheet{height:120px}
+ body[data-lp-editorial] .ad-output-index h3{font-size:17px}
+ body[data-lp-editorial] .ad-output-index p{font-size:11px;line-height:1.7}
+ body[data-lp-editorial] .ad-output-wall>.ad-note{font-size:11px;line-height:1.9}
+ body[data-lp-editorial] .ad-security-routes{padding:4px 23px}
+ body[data-lp-editorial] .ad-investigation{gap:22px;margin-top:36px;padding-top:25px}
+ body[data-lp-editorial] .ad-stage-head .ad-copy h1{max-width:14ch!important}
+}
+@media(prefers-reduced-motion:reduce){body[data-lp-editorial] .ad-format__sheet,body[data-lp-editorial] .owned-primary{transition:none;transform:none!important}}
+@media(forced-colors:active){body[data-lp-editorial] :is(.ad-utterance,.ad-task-slip,.ad-role-guide,.ad-format__sheet,.ad-security-routes){border:1px solid CanvasText;box-shadow:none}body[data-lp-editorial] .ad-voice-mark i{background:CanvasText}}
+/* Phrase boundaries stay intact when editorial headings wrap. */
+body[data-lp-editorial] .ad-phrase{display:inline-block}
+html[lang=ja] body[data-lp-editorial] :is(h2,h3){word-break:auto-phrase;overflow-wrap:normal;line-break:strict;text-wrap:balance}
+/* The English stage uses explicit rows so inherited grid-area names cannot create empty tracks. */
+@media(min-width:801px){
+ body[data-lp-editorial] .ad-stage-head .owned-kicker{grid-row:1}
+ body[data-lp-editorial] .ad-stage-head .ad-category{grid-row:2}
+ body[data-lp-editorial] .ad-stage-head .owned-lead{grid-row:3}
+ body[data-lp-editorial] .ad-stage-head .ad-entry{grid-row:4}
+}

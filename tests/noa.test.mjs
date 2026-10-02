@@ -14,10 +14,10 @@ const read = p => fs.readFile(path.join(root, 'dist', p), 'utf8');
 const noa = products.find(p => p.id === 'noa');
 const mainOf = html => html.slice(html.indexOf('<main'), html.indexOf('</main>'));
 
-test('the seventh product is 夜澄ノア: closed source, with its limits stated in the ledger', () => {
+test('the seventh product is 星藍ノア: closed source, with its limits stated in the ledger', () => {
   assert.equal(products.length, 7);
   assert.equal(noa.index, '07');
-  assert.equal(noa.name, '夜澄ノア');
+  assert.equal(noa.name, '星藍ノア');
   // The repository is private: no repository or README link anywhere, and the ledger says why.
   assert.equal(noa.closedSource, true);
   assert.equal(noa.repo, null);
@@ -40,12 +40,12 @@ test('the film is the owner\'s introduction film with a verified hash, and the s
   assert.ok(!manifest.files.some(f => f.path.includes('/vtuber/')), 'the withdrawn demo recording is gone');
 });
 
-test('ja: the page follows the delivered order, labels the film and links no repository', async () => {
+test('ja: the page keeps the reviewed order, labels the film and links no repository', async () => {
   const html = await read('products/noa/index.html');
   assert.match(html, new RegExp(`data-noa-lp="${NOA_LP_VERSION}"`));
   assert.equal((html.match(/<h1[\s>]/g) || []).length, 1);
   const at = s => { const i = html.indexOf(s); assert.ok(i >= 0, s); return i; };
-  const order = ['id="recording"', 'id="flow"', 'id="features"', 'id="bug"', 'id="watch"', 'id="status"', 'class="container owned-consult"', 'class="container owned-footer"'].map(at);
+  const order = ['id="recording"', 'id="flow"', 'id="features"', 'id="watch"', 'id="status"', 'class="container owned-consult"', 'class="container owned-footer"'].map(at);
   assert.deepEqual([...order].sort((a, b) => a - b), order);
   const main = mainOf(html);
   assert.doesNotMatch(main, /github\.com|README/);
@@ -57,7 +57,8 @@ test('ja: the page follows the delivered order, labels the film and links no rep
   for (const tag of html.match(/<video\b[^>]*>/g) || []) { assert.match(tag, /preload="none"/); assert.doesNotMatch(tag, /autoplay/); }
   assert.match(main, /ソース非公開 · 声：AivisSpeech「コハク」（オズチャット）/);
   assert.match(main, /※ 動画のリンクは現在チャンネルのトップを指しています。/);
-  assert.match(html, /<a href="#bug">不具合の記録<\/a><a href="#watch">見る<\/a>/);
+  assert.match(html, /<a href="#watch">見る<\/a>/);
+  assert.doesNotMatch(html, /id="bug"|不具合の記録|第4章/, 'the unverified bug story is not presented as a documented event');
   for (const a of [FILM.src, FILM.poster]) await fs.access(path.join(root, 'dist', a));
 });
 
@@ -69,18 +70,18 @@ test('en: the generic page is honest about closed source and the staged film', a
   assert.match(main, /The source is not public\./);
   assert.match(main, /not a recording of a live stream/);
   assert.match(main, /INTRO FILM · RECREATED SCREENS \/ ~13 SEC \/ 1×/);
-  assert.match(main, /aria-label="夜澄ノア introduction film \(recreated screens\)"/);
+  assert.match(main, /aria-label="星藍ノア introduction film \(recreated screens\)"/);
   assert.doesNotMatch(main, /REAL PRODUCT/);
   assert.match(main, />Source film <span aria-hidden="true">↗<\/span><\/a>/);
   assert.doesNotMatch(main, /Source recording|>Real recording<|REAL PRODUCT/);
-  assert.match(html, /Source: the private repository · checked on 2026-09-29/);
+  assert.match(html, /Source: the private repository · checked on 2026-10-02/);
 });
 
 test('the home names Noa\'s clip for what it is and links the explainer section', async () => {
   const html = await read('index.html');
   assert.match(html, /data-v4-chapter="noa" data-kind="紹介映像（画面は再現・演出を含む）"/);
   assert.match(html, /href="\/products\/noa\/#watch">5:48の解説（演出を含む）を見る/);
-  assert.match(html, /夜澄ノアは画面を再現した紹介映像です。これらは実アプリや配信の実録画ではありません。/);
+  assert.match(html, /星藍ノアは画面を再現した紹介映像です。これらは実アプリや配信の実録画ではありません。/);
   // The revised hero describes the lab and consultation; Noa remains a full catalogue product with its own film.
   assert.match(html, /AIプロダクトの自主開発と、企業向け開発支援/);
   assert.equal((html.match(/data-v4-chapter=/g) || []).length, products.length);
@@ -88,7 +89,7 @@ test('the home names Noa\'s clip for what it is and links the explainer section'
   const chapter = html.slice(start, html.indexOf('</article>', start));
   assert.ok(chapter.includes(`<source src="/media/products/noa.mp4"`) && chapter.includes(`poster="/media/products/noa.jpg"`));
   assert.ok(chapter.includes(`href="${CHANNEL}"`) && chapter.includes('>配信を見る '));
-  assert.match(html, /夜澄ノアはソース非公開のため、YouTubeの配信と解説動画で動きを確かめられます。/);
+  assert.match(html, /星藍ノアはソース非公開のため、YouTubeの配信と解説動画で動きを確かめられます。/);
 });
 
 test('the illustrative scene is labelled as a reconstruction', () => {
@@ -113,4 +114,16 @@ test('the Noa pass is idempotent and fails closed', async () => {
   const layer = await fs.readFile(path.join(root, 'public/assets/noa-lp.css'), 'utf8');
   assert.doesNotMatch(layer, /@import|url\(|linear-gradient|radial-gradient|backdrop-filter/);
   assert.match(layer, /forced-colors/);
+});
+
+test('the old name 夜澄ノア is gone from every built page, script and stylesheet', async () => {
+  // Renamed to 星藍ノア on 2026-09-30. The introduction film still shows the old name in its frames; text cannot fix that.
+  const dist = path.join(root, 'dist');
+  const hits = [];
+  for (const entry of await fs.readdir(dist, { recursive: true, withFileTypes: true })) {
+    if (!entry.isFile() || !/\.(html|js|mjs|css|json|txt|xml|webmanifest)$/.test(entry.name)) continue;
+    const file = path.join(entry.parentPath, entry.name);
+    if ((await fs.readFile(file, 'utf8')).includes('夜澄')) hits.push(path.relative(dist, file));
+  }
+  assert.deepEqual(hits, []);
 });

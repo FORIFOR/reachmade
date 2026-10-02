@@ -8,7 +8,7 @@
     const video = film.querySelector('video'), button = film.querySelector('.owned-film__play'), status = film.querySelector('.owned-film__status');
     if (!video || !button || !status) continue;
     let pending = false;
-    // 夜澄ノア's film is a produced introduction film (screens recreated), so its status text never calls it a recording.
+    // 星藍ノア's film is a produced introduction film (screens recreated), so its status text never calls it a recording.
     const staged = /\/media\/products\/noa\.mp4$/.test(video.dataset.recordingSrc || '');
     const failed = () => {
       pending = false; button.disabled = false; button.hidden = false;

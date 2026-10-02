@@ -14,11 +14,11 @@ test('Genie LP composes once, keeps its anchors in order and fails closed', () =
   assert.ok(once.includes(`data-genie-lp="${GENIE_LP_VERSION}"`));
   assert.equal(refineGenieLp(once, products), once);
   assert.equal((once.match(/<h1\b/g) || []).length, 1);
-  assert.match(once, /<h1><img class="owned-product-icon" src="\/assets\/products\/genie\/icon-128\.png" width="128" height="128" alt="">頼むだけで、<br>仕事が/);
+  assert.match(once, /<h1><img class="owned-product-icon" src="\/assets\/products\/genie\/icon-128\.png" width="128" height="128" alt="">作業の途中で、<br>Genieを<span class="glp-trace">呼び出す<\/span>。/);
   const at = s => once.indexOf(s);
   assert.ok(at('id="features"') < at('id="demos"') && at('id="demos"') < at('id="artifacts"') && at('id="artifacts"') < at('data-film15="genie"'));
   assert.ok(at('data-film15="genie"') < at('id="flow"') && at('id="flow"') < at('id="trust"') && at('id="trust"') < at('id="start"'));
-  assert.match(once, /最初の仕事は、<br>小さくていい。/);
+  assert.match(once, /まずは、<br>手元のメモから。/);
   assert.throws(() => refineGenieLp(shell.replace('lang="ja"', 'lang="en"'), products), /Japanese Genie/);
   assert.throws(() => refineGenieLp(shell.replace('主要機能・できること', 'x'), products), /features heading/);
   assert.throws(() => refineGenieLp(shell.replace('data-recording-src="/media/products/genie.mp4"', ''), products), /top recording/);

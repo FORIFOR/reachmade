@@ -54,3 +54,104 @@
 @media (forced-colors:active){.owned-product .owned-next-ui__film video{border:1px solid CanvasText}}
 /* Agent Team: keep Japanese phrases whole ('確かめた／版', '確／認済みの版', a lone 'ら'). */
 html[lang=ja] body[data-art-direction].owned-product--agent-team .ad-hero h1,.owned-product--agent-team h1,.owned-product--agent-team .owned-flow h2,.owned-product--agent-team .owned-hero-badges li span{word-break:keep-all;overflow-wrap:anywhere}
+
+/* The editorial LPs use the same facts, with page-specific pacing instead of repeated cards. */
+body[data-lp-editorial] :is(.owned-features,.owned-flow,.owned-boundaries){padding-block:var(--lp-space)}
+body[data-lp-editorial] .owned-hero-badges-bar{padding-block:28px;background:transparent}
+body[data-lp-editorial] .owned-hero-badges{gap:40px}
+body[data-lp-editorial] .owned-hero-badges li{border-left:0;padding-left:0;gap:10px}
+body[data-lp-editorial] .owned-hero-badges li strong{font-size:clamp(17px,1.7vw,23px);font-weight:550;letter-spacing:-.035em}
+body[data-lp-editorial] .owned-hero-badges li span{font-size:12px;line-height:1.9;max-width:36ch}
+body[data-lp-editorial] .owned-section-head h2{font-size:clamp(30px,3.7vw,50px);font-weight:550;line-height:1.4;letter-spacing:-.05em;text-wrap:balance;max-width:18ch}
+body[data-lp-editorial] .owned-features__grid{gap:36px;margin-top:48px}
+body[data-lp-editorial] .owned-feature-card{background:transparent;border:0;border-top:1px solid var(--rule);border-radius:0;padding:25px 0 0;gap:20px;min-width:0}
+body[data-lp-editorial] .owned-feature-card h3{font-size:clamp(21px,2vw,27px);line-height:1.5;font-weight:550;letter-spacing:-.035em}
+body[data-lp-editorial] .owned-feature-card p{font-size:14px;line-height:1.95}
+body[data-lp-editorial] .owned-feature-card__tags{gap:8px 14px;margin-top:6px}
+body[data-lp-editorial] .owned-feature-card__tags li{background:none;border:0;border-radius:0;padding:0;font-size:11px;line-height:1.8;color:var(--muted)}
+body[data-lp-editorial] .owned-feature-card__tags li::before{content:'—';padding-right:6px;color:var(--accent)}
+body[data-lp-editorial] .owned-features__source{margin-top:36px;font-size:11px}
+body[data-lp-editorial] .owned-features__source a{min-height:44px;display:inline-flex;align-items:center}
+body[data-lp-editorial] .owned-flow{border-top:1px solid var(--rule);gap:clamp(36px,8vw,110px);align-items:start}
+body[data-lp-editorial] .owned-flow ol{margin:0}
+body[data-lp-editorial] .owned-flow li{border-bottom:1px solid var(--rule);padding-block:25px}
+body[data-lp-editorial] .owned-flow li:first-child{padding-top:0}
+body[data-lp-editorial] .owned-flow li:first-child .owned-step-index{top:0}
+body[data-lp-editorial] .owned-flow h3{font-size:25px;letter-spacing:-.03em;font-weight:550}
+body[data-lp-editorial] .owned-flow li p{font-size:14px;line-height:1.9}
+body[data-lp-editorial] .owned-start{margin-block:12px 0;padding:clamp(30px,5vw,64px);background:var(--surface);border:1px solid var(--rule);border-radius:0;gap:50px;align-items:center}
+body[data-lp-editorial] .owned-start h2{font-size:clamp(29px,3.7vw,48px);font-weight:550;line-height:1.4;letter-spacing:-.045em;max-width:19ch;text-wrap:balance}
+body[data-lp-editorial] .owned-start p:not(.owned-kicker){font-size:14px;line-height:1.9;max-width:55ch}
+body[data-lp-editorial] .owned-start__actions{align-items:flex-start}
+body[data-lp-editorial] .owned-boundaries__grid{gap:48px;margin-top:40px}
+body[data-lp-editorial] .owned-boundaries article{border-top:1px solid var(--rule);padding-top:24px}
+body[data-lp-editorial] .owned-boundaries h3{font-size:20px;font-weight:550}
+body[data-lp-editorial] .owned-boundaries article p{font-size:13px;line-height:1.95}
+body[data-lp-editorial] .owned-consult{padding-block:56px;gap:42px}
+body[data-lp-editorial] .owned-consult h2{font-size:clamp(27px,3vw,40px);font-weight:550;line-height:1.45;letter-spacing:-.04em}
+body[data-lp-editorial] .owned-consult p:not(.owned-kicker){font-size:14px;line-height:1.9}
+body[data-lp-editorial] .studio-related nav{gap:28px}
+body[data-lp-editorial] .studio-related nav a{padding-block:20px;transition:padding 180ms ease}
+body[data-lp-editorial] .studio-related nav strong{font-size:25px;letter-spacing:-.045em}
+body[data-lp-editorial] .owned-footer{padding-block:32px 40px}
+body[data-lp-editorial] .owned-footer small{font-size:11px;line-height:1.8}
+/* Security reads as an evidence register; launch production reads as a format manual. */
+body[data-lp-editorial].owned-product--aisecure .owned-features,
+body[data-lp-editorial].owned-product--launchloom .owned-features{display:grid;grid-template-columns:minmax(0,.75fr) minmax(0,1.25fr);gap:0 72px}
+body[data-lp-editorial].owned-product--aisecure .owned-features__grid,
+body[data-lp-editorial].owned-product--launchloom .owned-features__grid{display:block;margin-top:0}
+body[data-lp-editorial].owned-product--aisecure .owned-feature-card,
+body[data-lp-editorial].owned-product--launchloom .owned-feature-card{margin-bottom:30px;padding-top:23px;gap:13px}
+body[data-lp-editorial].owned-product--aisecure .owned-features__source,
+body[data-lp-editorial].owned-product--launchloom .owned-features__source{grid-column:2;margin-top:0}
+body[data-lp-editorial].owned-product--aisecure .owned-start{background:#e5ece5;color:#213129}
+body[data-lp-editorial].owned-product--aisecure .owned-start p{color:#54655b}
+body[data-lp-editorial].owned-product--ai-meeting .owned-start{background:#eee4d5;border-color:#c7b9a6;color:#292822}
+body[data-lp-editorial].owned-product--ai-meeting .owned-start p{color:#625749}
+body[data-lp-editorial].owned-product--ai-meeting .owned-start .owned-primary{background:#292822;color:#faf6ed;border-color:#292822}
+body[data-lp-editorial].owned-product--ai-meeting .owned-start .owned-secondary{color:#292822}
+body[data-lp-editorial].owned-product--agent-team .owned-flow{grid-template-columns:1fr!important;gap:32px}
+body[data-lp-editorial].owned-product--agent-team .owned-flow ol{display:grid;grid-template-columns:repeat(3,1fr);gap:34px}
+body[data-lp-editorial].owned-product--agent-team .owned-flow li{border-top:1px solid var(--rule);border-bottom:0;padding:50px 0 0}
+body[data-lp-editorial].owned-product--agent-team .owned-flow li .owned-step-index{top:16px;left:0}
+@media(hover:hover){body[data-lp-editorial] .studio-related nav a:hover{padding-left:10px}}
+@media(max-width:900px){
+ body[data-lp-editorial].owned-product--aisecure .owned-features,body[data-lp-editorial].owned-product--launchloom .owned-features{grid-template-columns:1fr;gap:32px}
+ body[data-lp-editorial].owned-product--aisecure .owned-features__source,body[data-lp-editorial].owned-product--launchloom .owned-features__source{grid-column:auto}
+ body[data-lp-editorial] .owned-start{gap:24px}
+}
+@media(max-width:800px){
+ body[data-lp-editorial] .owned-hero-badges{grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}
+ body[data-lp-editorial] .owned-hero-badges li strong{font-size:17px}
+ body[data-lp-editorial] .owned-features__grid{margin-top:30px;gap:28px}
+ body[data-lp-editorial] .owned-feature-card h3{font-size:23px}
+ body[data-lp-editorial] .owned-section-head h2{max-width:100%}
+ body[data-lp-editorial] .owned-boundaries__grid{gap:32px}
+ body[data-lp-editorial].owned-product--agent-team .owned-flow ol{gap:22px}
+}
+@media(max-width:500px){
+ body[data-lp-editorial] :is(.owned-features,.owned-flow,.owned-boundaries){padding-block:52px}
+ body[data-lp-editorial] .owned-hero-badges{grid-template-columns:1fr;gap:0}
+ body[data-lp-editorial] .owned-hero-badges li{padding:16px 0;gap:6px;border-bottom:1px solid var(--rule)}
+ body[data-lp-editorial] .owned-hero-badges li:last-child{border-bottom:0}
+ body[data-lp-editorial] .owned-hero-badges-bar{padding-block:6px}
+ body[data-lp-editorial] .owned-hero-badges li span{max-width:none}
+ body[data-lp-editorial] .owned-section-head h2{font-size:29px}
+ body[data-lp-editorial] .owned-start{padding:28px 23px;gap:24px}
+ body[data-lp-editorial] .owned-start h2{font-size:28px;max-width:none}
+ body[data-lp-editorial] .owned-start__actions{display:flex;flex-direction:column;gap:8px}
+ body[data-lp-editorial] .owned-boundaries__grid{margin-top:28px}
+ body[data-lp-editorial] .owned-consult{padding-block:42px}
+ body[data-lp-editorial] .owned-consult h2{font-size:27px}
+ body[data-lp-editorial].owned-product--agent-team .owned-flow ol{grid-template-columns:1fr;gap:26px}
+ body[data-lp-editorial].owned-product--agent-team .owned-flow li{padding:22px 0 0 35px}
+ body[data-lp-editorial].owned-product--agent-team .owned-flow li .owned-step-index{top:24px}
+ body[data-lp-editorial] .studio-related nav strong{font-size:22px}
+}
+@media(prefers-reduced-motion:reduce){body[data-lp-editorial] .studio-related nav a{transition:none}}
+@media(forced-colors:active){body[data-lp-editorial] :is(.owned-start,.owned-feature-card,.owned-boundaries article){border-color:CanvasText}}
+/* Review round 2: Japanese measures count full characters, not Latin ch units. */
+html[lang=ja] body[data-lp-editorial] :is(.owned-section-head,.owned-start) h2{max-width:18em}
+html[lang=ja] body[data-lp-editorial] .owned-consult h2{max-width:18em;text-wrap:balance}
+body[data-lp-editorial].owned-product--launchloom .owned-flow li:first-child{padding-top:25px}
+body[data-lp-editorial].owned-product--launchloom .owned-flow li .owned-step-index{position:static;margin-bottom:18px}

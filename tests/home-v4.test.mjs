@@ -174,7 +174,7 @@ test('v4 names each product film for what it is, and shows the ledger conditions
     const p = products.find(x => x.id === id);
     assert.ok(c.includes(`<p><b>公開している記録</b><br>${esc(p.ja.proof)}</p>`), `${id} keeps the separate ledger evidence in its scope details`);
   }
-  assert.match(html, /Oathraはイメージ映像、Agent Teamは未実装の画面を含む設計動画、夜澄ノアは画面を再現した紹介映像です。これらは実アプリや配信の実録画ではありません。/);
+  assert.match(html, /Oathraはイメージ映像、Agent Teamは未実装の画面を含む設計動画、星藍ノアは画面を再現した紹介映像です。これらは実アプリや配信の実録画ではありません。/);
   assert.doesNotMatch(html, /実際の画面で。/);
   assert.doesNotMatch(client, /\/media\/products\/\$\{/, 'the client takes each footage source from data-v4-rec');
   for (const p of products) {

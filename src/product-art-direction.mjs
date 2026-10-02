@@ -19,41 +19,41 @@ const copy = {
   scope:'試す前に知っておくこと', cue:'録画の見どころ', sample:'使い方の例 · 実際の発言ログではありません',
   request:'メモから始める。', requestBody:'何を作りたいかを伝えて、結果を開く。依頼と成果物を、同じ作業場所に。',
   output:['メモ・依頼','計画・下書き・HTML'],
-  voice:'「メール返信は、明日にして。」', voiceBody:'会話の内容を、確認できるタスクの変更へ。',
+  voice:'「やっぱり、メール返信は明日にして。」', voiceBody:'言い直した内容を確認して、タスクを更新。',
   voiceSteps:['話す','変更を確かめる','タスクを残す'],
   call:'相手は、何と言った？', callBody:'結果から発言まで、同じ画面で辿る。',
   evidence:[['01','発言','AIの返答ではなく、相手側の言葉。'],['02','条件','日時・金額・確定表現を見比べる。'],['03','判定','会話上の合意と、外部への登録を分ける。']],
   pre:'AIへ送る前', preBody:'内容・送信先・操作を確認する。', preLink:'送信前チェックの説明へ',
   post:'兆候を調べる', postBody:'観測・仮説・不明点を分ける。', postLink:'調査の録画を見る',
   investigation:'ここで見るのは、調査側の実演。', investigationBody:'この録画は合成ログの調査デモです。送信前チェックや実環境の遮断を示すものではありません。',
-  handoff:'作る。確かめる。磨く。', roleLabel:'役割の案内 · 実行中の状態ではありません',
+  handoff:'書く。読み直す。直す。', roleLabel:'役割の案内 · 実行中の状態ではありません',
   stageLabel:'ひとつのコメントが通る道', stage:'コメント → 判定 → 声・表情',
   stageSteps:[['01','返事','Jevが判定して、返事を決める'],['02','声','コハクの声で読み上げる'],['03','見た目','画像を重ねて、表情を動かす']],
   stageNote:'サイトの映像は、画面構成を再現した紹介映像（演出を含む）です。配信の実録画ではありません。',
-  roles:[['01','作成','まず、成果物の初稿を。'],['02','レビュー','確かめる視点を変える。'],['03','修正','指摘は作成担当に戻り、次の版で直す。']],
+  roles:[['01','作成','依頼と資料から、最初の版を書く。'],['02','レビュー','別のAIが、資料と照らし合わせる。'],['03','修正','指摘された箇所を、次の版で直す。']],
   teamNote:'作業記録を読む前に、何ができたかを見る。未完了の部分も残します。',
-  cinema:'一つの素材。伝え方は、いくつも。', cinemaNote:'出力形式の案内です。生成済みの作例は上の録画・元資料で確認できます。',
+  cinema:'見せる場所に合わせて、4つのかたち。', cinemaNote:'出力形式の案内です。生成済みの作例は、この先の実録画と元資料で確認できます。',
   formats:[['01','横動画','製品を紹介する'],['02','縦動画','モバイルへ届ける'],['03','LP','価値を一ページに'],['04','投稿案','公開前に見直す']]
  },
  en: {
   category: {genie:'A Mac AI workspace for your own model','ai-meeting':'Voice-driven task management',oathra:'AI phone calls with evidence-led results',aisecure:'Preflight checks and evidence-led investigation','agent-team':'Agent Team / Multibot — an AI work app for code and documents',launchloom:'A local production workflow, from recording to launch material',noa:'A streaming character who answers comments with voice and expression'},
   scope:'Before you try it', cue:'WHAT TO LOOK FOR', sample:'Usage example · not an actual conversation log',
-  request:'Start with a note.', requestBody:'Describe the output. Open the result. Keep the request and the artifact in one place.',
+  request:'Watch a note become a draft.', requestBody:'Open the result, copy what you need, and get back to what you were doing.',
   output:['Notes & requests','Plans, drafts & HTML'],
-  voice:'“Move the email reply to tomorrow.”', voiceBody:'Turn a conversation into a task change you can review.', voiceSteps:['Speak','Review the change','Keep the task'],
+  voice:'“Actually, move the email reply to tomorrow.”', voiceBody:'Review the change before it becomes your plan.', voiceSteps:['Speak','Review the change','Keep the task'],
   call:'What did the other party say?', callBody:'Follow the result back to the words that support it.',
   evidence:[['01','Words','The other party’s words, not the agent’s claim.'],['02','Terms','Compare dates, amounts and confirmation.'],['03','Result','Separate spoken agreement from external registration.']],
   pre:'Before sending to AI',preBody:'Review content, destination and action.',preLink:'Explore preflight checks',
   post:'Investigate a signal',postBody:'Separate observations, hypotheses and unknowns.',postLink:'Watch the investigation',
   investigation:'This recording shows investigation.',investigationBody:'A synthetic-log investigation demo. It does not demonstrate preflight checks or enforcement in a live environment.',
   handoff:'Draft. Review. Refine.',roleLabel:'Role guide · not a live execution status',
-  stageLabel:'The path one comment takes', stage:'Comment → judgement → voice and expression',
-  stageSteps:[['01','Reply','Jev judges the comment and decides the reply'],['02','Voice','Read out in the Kohaku voice'],['03','Look','Image layers are switched to move the face']],
+  stageLabel:'WHEN A COMMENT COMES IN', stage:'Noa replies. You hear it. Her expression changes.',
+  stageSteps:[['01','A comment','A viewer leaves a message in the stream.'],['02','A reply','Noa responds in a voice you can hear.'],['03','An expression','Her face changes as she speaks.']],
   stageNote:'The film on this site is an introduction film with recreated screens (staged), not a recording of a live stream.',
-  roles:[['01','Draft','Make the first artifact.'],['02','Review','Look at it from another angle.'],['03','Revise','Findings go back to the maker for the next revision.']],
+  roles:[['01','Draft','Write a first version from the request and source.'],['02','Review','Another agent checks it against the source.'],['03','Revise','Take the findings back into the next draft.']],
   teamNote:'See what was made, then inspect the work behind it. Unfinished work stays visible.',
-  cinema:'One source. More ways to show it.',cinemaNote:'An index of output formats, not four newly generated artifacts. Inspect the recording and source for published examples.',
-  formats:[['01','Landscape film','Introduce the product'],['02','Vertical cut','Made for mobile'],['03','Landing page','Put the value on a page'],['04','Social draft','Review before publishing']]
+  cinema:'Four formats. A place for each.',cinemaNote:'An index of output formats, not four newly generated artifacts. Inspect the recording and source for published examples.',
+  formats:[['01','Landscape video','Introduce the product'],['02','Vertical video','Made for mobile'],['03','Landing page','Put the value on a page'],['04','Social draft','Review before publishing']]
  }
 };
 const paragraph = (text, cls='ad-note') => `<p class="${cls}">${escapeHTML(text)}</p>`;
@@ -65,6 +65,14 @@ function required(html, pattern, label) {
 }
 function rail(items, cls) {
  return `<ol class="${cls}">${items.map(([index,title,body])=>`<li><span aria-hidden="true">${escapeHTML(index)}</span><div><h3>${escapeHTML(title)}</h3><p>${escapeHTML(body)}</p></div></li>`).join('')}</ol>`;
+}
+function formats(items) {
+ const types=['landscape','portrait','page','draft'];
+ return `<ol class="ad-output-index">${items.map(([index,title,body],i)=>`<li><div class="ad-format ad-format--${types[i]}" aria-hidden="true"><div class="ad-format__sheet"><i></i><i></i><i></i><b>${['16:9','9:16','Aa','#'][i]}</b></div></div><span aria-hidden="true">${index}</span><div><h3>${escapeHTML(title)}</h3><p>${escapeHTML(body)}</p></div></li>`).join('')}</ol>`;
+}
+function conversation(t,lang) {
+ const ja=lang==='ja';
+ return `<aside class="ad-utterance" aria-label="${escapeHTML(t.sample)}">${paragraph(t.sample,'ad-label')}<div class="ad-voice-mark" aria-hidden="true">${[18,31,44,23,56,38,26,48,64,37,21,42,29,17,35].map(n=>`<i class="ad-voice-mark__${n}"></i>`).join('')}</div><blockquote>${escapeHTML(t.voice)}</blockquote><div class="ad-task-slip"><span class="ad-task-check" aria-hidden="true">↳</span><div><small>${ja?'確認する変更の例':'EXAMPLE CHANGE TO REVIEW'}</small><strong>${ja?'メール返信':'Reply to email'}</strong><span>${ja?'期限：明日':'Due: tomorrow'}</span></div></div>${paragraph(t.voiceBody)}<ol>${t.voiceSteps.map((s,i)=>`<li><span aria-hidden="true">0${i+1}</span>${escapeHTML(s)}</li>`).join('')}</ol></aside>`;
 }
 /** Transform only the known generated hero. Everything after it remains untouched. */
 export function artDirectProductHero(html, product, lang) {
@@ -88,7 +96,7 @@ export function artDirectProductHero(html, product, lang) {
    scene=`<div class="ad-workspace">${intro}<div class="ad-workspace-proof"><div class="ad-paper-edge">${paragraph(t.cue,'ad-label')}<strong>${escapeHTML(t.request)}</strong></div>${film}<div class="ad-workspace-result"><span>${escapeHTML(t.output[0])}</span><span aria-hidden="true">→</span><strong>${escapeHTML(t.output[1])}</strong></div></div></div>${paragraph(t.requestBody,'ad-afterword')}`;
    break;
   case 'ai-meeting':
-   scene=`<div class="ad-room-head">${intro}<aside class="ad-utterance" aria-label="${escapeHTML(t.sample)}">${paragraph(t.sample,'ad-label')}<blockquote>${escapeHTML(t.voice)}</blockquote>${paragraph(t.voiceBody)}<ol>${t.voiceSteps.map((s,i)=>`<li><span aria-hidden="true">0${i+1}</span>${escapeHTML(s)}</li>`).join('')}</ol></aside></div><div class="ad-room-screen">${film}</div>`;
+   scene=`<div class="ad-room-head">${intro}${conversation(t,lang)}</div><div class="ad-room-screen">${film}</div>`;
    break;
   case 'oathra':
    scene=`<div class="ad-call-head">${intro}<div class="ad-call-question">${paragraph(t.cue,'ad-label')}<p>${escapeHTML(t.call)}</p>${paragraph(t.callBody)}</div></div><div class="ad-ledger">${film}<aside class="ad-evidence">${rail(t.evidence,'ad-evidence-list')}</aside></div>`;
@@ -99,18 +107,20 @@ export function artDirectProductHero(html, product, lang) {
    break;
   }
   case 'agent-team':
-   scene=`<div class="ad-team-head">${intro}</div><div class="ad-handoff">${film}<aside class="ad-role-guide">${paragraph(t.roleLabel,'ad-label')}<h2>${escapeHTML(t.handoff)}</h2>${rail(t.roles,'ad-role-list')}${paragraph(t.teamNote)}</aside></div>`;
+   scene=`<div class="ad-team-head">${intro}<aside class="ad-role-guide">${paragraph(t.roleLabel,'ad-label')}<h2>${lang==='ja'?t.handoff.split('。').filter(Boolean).map(s=>`<span class="ad-phrase">${escapeHTML(s)}。</span>`).join(''):escapeHTML(t.handoff)}</h2>${rail(t.roles,'ad-role-list')}${paragraph(t.teamNote)}</aside></div><div class="ad-handoff">${film}</div>`;
    break;
   case 'noa':
    scene=`<div class="ad-stage-head">${intro}</div><div class="ad-stage">${film}<aside class="ad-stage-guide">${paragraph(t.stageLabel,'ad-label')}<h2>${escapeHTML(t.stage)}</h2>${rail(t.stageSteps,'ad-role-list')}${paragraph(t.stageNote)}</aside></div>`;
    break;
   case 'launchloom':
-   scene=`<div class="ad-cinema-head">${intro}</div><div class="ad-cinema-screen">${film}</div><div class="ad-output-wall"><h2>${escapeHTML(t.cinema)}</h2>${rail(t.formats,'ad-output-index')}${paragraph(t.cinemaNote)}</div>`;
+   scene=`<div class="ad-cinema-head">${intro}</div><div class="ad-output-wall"><h2>${escapeHTML(t.cinema)}</h2>${formats(t.formats)}${paragraph(t.cinemaNote)}</div><div class="ad-cinema-screen">${film}</div>`;
    break;
  }
  const scope=`<div class="ad-access-row">${tryNow}${access}</div>`;
  const next=`<section class="container owned-hero-grid ad-hero" data-direction="${directions[id]}">${scene}${scope}</section>`;
- return html.replace(section,()=>next).replace('<body ', '<body data-art-direction="20260919" ');
+ const editorial=lang==='en'||!['genie','oathra','noa'].includes(id);
+ const result=html.replace(section,()=>next).replace('<body ', `<body ${editorial?'data-lp-editorial="20261002" ':''}data-art-direction="20260919" `);
+ return editorial&&lang==='ja' ? result.replace('<h2>いま確かめられる、<br>主な機能。</h2>','<h2>いま試せる、<br>主な機能。</h2>') : result;
 }
 /** One delivered stylesheet. Read the canonical sources so repeated builds do not append twice. */
 export async function writeArtDirectionStyles(dist) {

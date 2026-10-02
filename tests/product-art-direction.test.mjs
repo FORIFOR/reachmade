@@ -29,7 +29,7 @@ for(const [id,direction] of Object.entries(directions))for(const lang of ['ja','
   const html=await fs.readFile(path.join(root,'dist',lang==='en'?'en':'','products',id,'index.html'),'utf8');
   // The Japanese Oathra page uses the 2026-09-29 brief's first view instead of the art-directed hero.
   if(id==='oathra'&&lang==='ja') assert.match(html,/data-oathra-lp="/);
-  // The Japanese 夜澄ノア page is re-composed from the owner's patch; its film is the introduction film (tests/noa.test.mjs).
+  // The Japanese 星藍ノア page is re-composed from the owner's patch; its film is the introduction film (tests/noa.test.mjs).
   else if(id==='noa'&&lang==='ja') { assert.match(html,/data-noa-lp="/); return; }
   else assert.match(html,new RegExp(`data-direction="${direction}"`));
   assert.match(html,/data-art-direction="20260919"/);
