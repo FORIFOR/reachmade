@@ -80,9 +80,14 @@ test('the home names Noa\'s clip for what it is and links the explainer section'
   const html = await read('index.html');
   assert.match(html, /data-v4-chapter="noa" data-kind="紹介映像（画面は再現・演出を含む）"/);
   assert.match(html, /href="\/products\/noa\/#watch">5:48の解説（演出を含む）を見る/);
-  assert.match(html, /夜澄ノアの映像は、画面構成を再現した紹介映像（演出を含む）です。/);
-  // The 2026-09-30 readability patch shortened the hero lead to three phrases; Noa's phrase is no longer in it.
-  assert.match(html, /<span class="v4-ph">録画を紹介素材に。<\/span>/);
+  assert.match(html, /夜澄ノアは画面を再現した紹介映像です。これらは実アプリや配信の実録画ではありません。/);
+  // The revised hero describes the lab and consultation; Noa remains a full catalogue product with its own film.
+  assert.match(html, /AIプロダクトの自主開発と、企業向け開発支援/);
+  assert.equal((html.match(/data-v4-chapter=/g) || []).length, products.length);
+  const start = html.indexOf('data-v4-chapter="noa"');
+  const chapter = html.slice(start, html.indexOf('</article>', start));
+  assert.ok(chapter.includes(`<source src="/media/products/noa.mp4"`) && chapter.includes(`poster="/media/products/noa.jpg"`));
+  assert.ok(chapter.includes(`href="${CHANNEL}"`) && chapter.includes('>配信を見る '));
   assert.match(html, /夜澄ノアはソース非公開のため、YouTubeの配信と解説動画で動きを確かめられます。/);
 });
 

@@ -1,4 +1,4 @@
-/* Japanese home v4 — progressive enhancement only. Nothing plays by itself; no storage, tracking or network calls besides
+/* Localized home v4 — progressive enhancement only. Nothing plays by itself; no storage, tracking or network calls besides
  * the video files a visitor asks to play. Without this file every video keeps its native controls. */
 const root = document.querySelector('[data-home-v4-root]');
 if (root) {
@@ -8,6 +8,8 @@ if (root) {
   const fmt = s => { s = Math.max(0, Math.floor(s || 0)); return `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`; };
   const pauseAll = except => document.querySelectorAll('video').forEach(v => { if (v !== except && !v.paused) v.pause(); });
   const play = (v, onFail) => { const p = v.play(); if (p) p.catch(onFail); };
+  // A native player started by the visitor pauses any other recording on this page.
+  document.querySelectorAll('video').forEach(video => video.addEventListener('play', () => pauseAll(video)));
   requestAnimationFrame(() => requestAnimationFrame(() => root.classList.add('is-ready')));
 
   /* Scroll reveal */
@@ -18,107 +20,123 @@ if (root) {
     reveal.forEach(el => io.observe(el));
   }
 
-  /* Reel: six recordings behind one tab rail. */
+  /* Reel: choose a still first, then start its recording explicitly. */
   const frame = $('[data-v4-reel]');
   if (frame) {
     const video = $('.v4-reel-video', frame), start = $('[data-v4-reel-start]', frame), cap = $('[data-v4-reel-cap]', frame);
     const tag = $('[data-v4-reel-tag] span', frame), rail = $('.v4-rail', frame), choices = $$('[data-v4-choice]', frame), stills = $$('[data-v4-still]', frame);
-    const SLIDE_MS = 4200;
-    let slide = 0, active = 0, started = false, timer, slideTimer, epoch = 0;
-    video.removeAttribute('controls'); video.removeAttribute('poster');
+    const panel = $('#v4-reel-panel', frame);
+    let selected = 0, started = false, timer, epoch = 0;
+    video.controls = true;
+    video.tabIndex = -1;
+    if (saveData) video.preload = 'none';
     start.hidden = false;
+    tag.setAttribute('role', 'status');
     rail.setAttribute('role', 'tablist');
+    panel.setAttribute('role', 'tabpanel');
     const show = i => {
-      stills.forEach((s, k) => s.classList.toggle('is-on', k === i));
-      choices.forEach((c, k) => { const on = k === i; c.classList.toggle('is-on', on); c.setAttribute('aria-selected', String(on)); c.tabIndex = on ? 0 : -1; if (!started) c.style.setProperty('--fill', '0'); });
       const c = choices[i];
+      stills.forEach((s, k) => s.classList.toggle('is-on', k === i));
+      choices.forEach((choice, k) => {
+        const on = k === i;
+        choice.classList.toggle('is-on', on);
+        choice.setAttribute('aria-selected', String(on));
+        choice.tabIndex = on ? 0 : -1;
+        choice.style.setProperty('--fill', '0');
+      });
+      panel.setAttribute('aria-labelledby', c.id);
+      video.poster = c.dataset.poster || stills[i].currentSrc || stills[i].getAttribute('src');
       $('[data-v4-reel-index]', frame).textContent = c.dataset.index;
       $('[data-v4-reel-disc]', frame).textContent = c.dataset.disc;
-      // Before playback the tag names what the still is cut from (recording, reconstruction, film).
-      if (!started) tag.textContent = `STILL · ${(c.dataset.kind || '実録画').replace(/（.*$/, '')}から`;
+      $('[data-v4-reel-name]', frame).textContent = c.dataset.name;
+      $('[data-v4-reel-proof]').textContent = c.dataset.proof;
+      $('[data-v4-reel-clip]', frame).textContent = c.dataset.clip;
+      $('[data-v4-reel-time]', frame).textContent = '00:00 / 00:--';
+      video.setAttribute('aria-label', c.dataset.videoLabel);
+      start.setAttribute('aria-label', c.dataset.playLabel);
+      $('strong', start).textContent = c.dataset.playCopy;
+    };
+    const reset = () => {
+      ++epoch;
+      clearTimeout(timer);
+      started = false;
+      video.pause();
+      video.tabIndex = -1;
+      frame.classList.remove('is-started', 'is-playing');
+      video.classList.remove('is-fading');
+      cap.hidden = false;
+      start.hidden = false;
+    };
+    const select = i => {
+      reset();
+      selected = i;
+      show(i);
+      tag.textContent = choices[i].dataset.stillLabel;
     };
     const fail = () => {
-      clearTimeout(timer); started = false; frame.classList.remove('is-started', 'is-playing'); cap.hidden = true; start.hidden = false;
-      tag.textContent = '読み込めませんでした · 下の各製品から再生できます';
+      reset();
+      tag.textContent = root.dataset.reelError;
+      if (document.activeElement === video) start.focus({preventScroll: true});
     };
-    const load = i => {
-      const thisEpoch = ++epoch; active = i; show(i);
-      const c = choices[i];
-      video.classList.add('is-fading');
-      $('[data-v4-reel-name]', frame).textContent = c.dataset.name;
-      $('[data-v4-reel-clip]', frame).textContent = c.dataset.clip;
-      video.setAttribute('aria-label', `${c.dataset.name} ${c.dataset.kind || '実録画'}（無音・編集あり）`);
-      setTimeout(() => {
-        if (thisEpoch !== epoch) return;
-        video.classList.toggle('v4-fit', c.dataset.v4Fit === '1'); video.classList.toggle('v4-crop', c.dataset.v4Fit !== '1');
-        video.src = c.dataset.v4Rec;
-        clearTimeout(timer); timer = setTimeout(fail, 10000);
-        play(video, () => { if (thisEpoch === epoch) fail(); });
-      }, started ? 380 : 0);
-    };
-    const begin = i => {
+    const begin = () => {
+      const thisEpoch = ++epoch, c = choices[selected];
+      const source = c.dataset.src || c.dataset.v4Rec;
+      if (!source) { fail(); return; }
       pauseAll(video);
-      started = true; frame.classList.add('is-started'); start.hidden = true; cap.hidden = false;
-      tag.textContent = `${(choices[i] && choices[i].dataset.kind) || '実録画'} · 編集あり`;
-      load(i);
+      started = true;
+      frame.classList.add('is-started');
+      start.hidden = true;
+      cap.hidden = false;
+      video.tabIndex = 0;
+      tag.textContent = c.dataset.playingLabel;
+      video.src = source;
+      clearTimeout(timer); timer = setTimeout(fail, 10000);
+      play(video, () => { if (thisEpoch === epoch) fail(); });
+      video.focus({preventScroll: true});
     };
-    const toggle = () => {
-      if (!started) return begin(slide);
-      if (video.paused) { pauseAll(video); play(video, fail); } else video.pause();
-    };
-    start.addEventListener('click', () => begin(slide));
-    video.addEventListener('click', toggle);
-    video.addEventListener('playing', () => { clearTimeout(timer); video.classList.remove('is-fading'); frame.classList.add('is-playing'); });
-    video.addEventListener('pause', () => frame.classList.remove('is-playing'));
-    video.addEventListener('waiting', () => { clearTimeout(timer); timer = setTimeout(fail, 10000); });
+    start.addEventListener('click', begin);
+    // Native controls own play, pause, seeking and full screen; never intercept video clicks.
+    video.addEventListener('playing', () => { clearTimeout(timer); if (started) frame.classList.add('is-playing'); });
+    video.addEventListener('pause', () => { clearTimeout(timer); frame.classList.remove('is-playing'); });
+    video.addEventListener('waiting', () => { if (started && !video.paused) { clearTimeout(timer); timer = setTimeout(fail, 10000); } });
     video.addEventListener('error', () => { if (started) fail(); });
     video.addEventListener('timeupdate', () => {
-      if (!video.duration) return;
-      choices.forEach((c, k) => c.style.setProperty('--fill', k === active ? String(video.currentTime / video.duration) : k < active ? '1' : '0'));
+      if (!started || !Number.isFinite(video.duration) || !video.duration) return;
+      choices[selected].style.setProperty('--fill', String(video.currentTime / video.duration));
       $('[data-v4-reel-time]', frame).textContent = `${fmt(video.currentTime)} / ${fmt(video.duration)}`;
     });
     video.addEventListener('ended', () => {
-      // Stop when the recording ends. The next product's recording starts only when the visitor chooses it:
-      // nothing plays that the visitor did not start.
-      started = false; slide = active; frame.classList.remove('is-started', 'is-playing'); cap.hidden = true; start.hidden = false;
-      show(slide);
+      // Keep the native controls available for replay and seeking. No next recording starts.
+      clearTimeout(timer);
+      frame.classList.remove('is-playing');
     });
     choices.forEach((c, i) => {
-      c.setAttribute('role', 'tab'); c.setAttribute('aria-controls', 'v4-reel-screen');
-      c.addEventListener('click', e => { if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return; e.preventDefault(); begin(i); });
+      c.id ||= `v4-reel-choice-${i}`;
+      c.setAttribute('role', 'tab'); c.setAttribute('aria-controls', 'v4-reel-panel');
+      c.addEventListener('click', e => {
+        if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+        e.preventDefault(); select(i);
+      });
       c.addEventListener('keydown', e => {
         const move = {ArrowRight: 1, ArrowLeft: -1}[e.key];
-        if (move) { e.preventDefault(); const n = (i + move + choices.length) % choices.length; if (started) begin(n); else { slide = n; show(n); } choices[n].focus(); }
+        const n = e.key === 'Home' ? 0 : e.key === 'End' ? choices.length - 1 : move ? (i + move + choices.length) % choices.length : e.key === ' ' ? i : null;
+        if (n !== null) { e.preventDefault(); select(n); choices[n].focus(); }
       });
     });
     const heroPlay = $('[data-v4-play]');
     heroPlay?.addEventListener('click', e => {
       e.preventDefault();
       window.scrollTo({top: frame.getBoundingClientRect().top + scrollY - 84, behavior: reduced ? 'auto' : 'smooth'});
-      begin(slide);
+      begin();
     });
-    show(0);
-    // Still-image slideshow before the first press: skipped for reduced motion and data saver.
-    if (!reduced && !saveData) {
-      const fillTo = () => { const c = choices[slide], f = $('.v4-fill', c); f.style.transition = 'none'; c.style.setProperty('--fill', '0'); requestAnimationFrame(() => requestAnimationFrame(() => { if (started) return; f.style.transition = `width ${SLIDE_MS}ms linear`; c.style.setProperty('--fill', '1'); })); };
-      fillTo();
-      slideTimer = setInterval(() => { if (started || document.hidden) return; slide = (slide + 1) % choices.length; show(slide); fillTo(); }, SLIDE_MS);
-      video.addEventListener('play', () => choices.forEach(c => { const f = $('.v4-fill', c); f.style.transition = 'width .25s linear'; }), {once: false});
-    }
+    select(0);
+    frame.classList.add('is-enhanced');
   }
 
-  /* Product chapters: each row plays its own inline native player; one video plays at a time. */
-  $$('[data-v4-chapter] video').forEach(v => v.addEventListener('play', e => pauseAll(e.target)));
-
-  /* TaskDock design preview frames */
-  const next = $('[data-v4-next-root]');
-  if (next) {
-    const items = $$('li', next), desc = $('[data-v4-next-desc]', next);
-    const pick = i => {
-      items.forEach((li, k) => { li.classList.toggle('is-on', k === i); $('button', li).setAttribute('aria-pressed', String(k === i)); });
-      desc.innerHTML = $('p', items[i]).innerHTML;
-    };
-    desc.hidden = false; pick(0);
-    items.forEach((li, i) => $('button', li).addEventListener('click', () => pick(i)));
-  }
+  /* Closing a product's native disclosure also stops its now-hidden recording. */
+  $$('[data-v4-chapter] details').forEach(details => {
+    details.addEventListener('toggle', () => {
+      if (!details.open) $$('video', details).forEach(video => video.pause());
+    });
+  });
 }

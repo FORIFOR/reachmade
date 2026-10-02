@@ -1,4 +1,4 @@
-"""Compatibility acceptance for the active outcome-first site.
+"""Acceptance for the current v4 homes and seven published product pages.
 
 Run the current, full-build local-HTTP layout suite, then independently test
 real packaged playback, native errors/retry, UI-story stillness and no-script
@@ -11,17 +11,71 @@ from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 import json
+import re
 import subprocess
 import sys
 import threading
-from playwright.sync_api import sync_playwright
+from urllib.parse import urljoin
+from playwright.sync_api import sync_playwright, expect
+from verify_home_v4 import assert_home_v4, begin_home_v4_requests, product_ledger, playback_home_v4, failure_home_v4, wait_native_media
 
-IDS = ['genie','ai-meeting','oathra','aisecure','agent-team','launchloom']
+IDS = [product['id'] for product in product_ledger()]
 
 class Handler(SimpleHTTPRequestHandler):
     extensions_map = {**SimpleHTTPRequestHandler.extensions_map, '.mjs':'text/javascript'}
     def log_message(self, *args):
         pass
+
+    def send_head(self):
+        # The production Worker supports byte ranges. Native browser seeking
+        # needs the same HTTP contract; SimpleHTTPRequestHandler ignores Range.
+        self._media_range = None
+        path = Path(self.translate_path(self.path))
+        if path.suffix != '.mp4' or not path.is_file():
+            return super().send_head()
+        size = path.stat().st_size
+        start, end = 0, size - 1
+        requested = self.headers.get('Range')
+        if requested:
+            match = re.fullmatch(r'bytes=(\d*)-(\d*)', requested)
+            if not match or not any(match.groups()):
+                self.send_error(416, 'Unsatisfiable byte range')
+                return None
+            first, last = match.groups()
+            if first:
+                start = int(first)
+                end = min(int(last), end) if last else end
+            else:
+                start = max(0, size - int(last))
+            if start > end or start >= size:
+                self.send_response(416)
+                self.send_header('Content-Range', f'bytes */{size}')
+                self.send_header('Content-Length', '0')
+                self.end_headers()
+                return None
+        stream = path.open('rb')
+        self._media_range = (start, end)
+        self.send_response(206 if requested else 200)
+        self.send_header('Content-Type', 'video/mp4')
+        self.send_header('Accept-Ranges', 'bytes')
+        self.send_header('Content-Length', str(end - start + 1))
+        if requested:
+            self.send_header('Content-Range', f'bytes {start}-{end}/{size}')
+        self.end_headers()
+        return stream
+
+    def copyfile(self, source, outputfile):
+        if self._media_range is None:
+            return super().copyfile(source, outputfile)
+        start, end = self._media_range
+        source.seek(start)
+        remaining = end - start + 1
+        while remaining:
+            chunk = source.read(min(64 * 1024, remaining))
+            if not chunk:
+                break
+            outputfile.write(chunk)
+            remaining -= len(chunk)
 
 def main(home_only=False, output='film-qa/product-landings'):
     root = Path(__file__).resolve().parents[1]
@@ -60,6 +114,43 @@ def main(home_only=False, output='film-qa/product-landings'):
         page.wait_for_timeout(160)
         assert story.locator('.rm-demo-scrub input').input_value() == position
 
+    def native_noa(page, failed=False):
+        """Noa's Japanese page has an explicitly labelled native film, not a story widget."""
+        figure = page.locator('.nlp-film')
+        video = figure.locator('video')
+        source = video.locator('source').get_attribute('src')
+        assert source == '/media/originals/noa/lp-film.mp4'
+        expect(figure.locator('figcaption')).to_contain_text('配信の実録画ではありません')
+        assert video.get_attribute('controls') is not None and video.get_attribute('autoplay') is None
+        assert video.get_attribute('preload') == 'none' and video.evaluate('v=>v.paused')
+        if failed:
+            # Reload the actual aborted resource. No replacement response or video is supplied.
+            failures = []
+            for _ in range(2):
+                with page.expect_event('requestfailed', predicate=lambda request: request.url == urljoin(page.url, source)) as failed_request:
+                    video.evaluate('v=>{v.load();v.play().catch(()=>{})}')
+                # A failed <source> candidate reports NETWORK_NO_SOURCE; unlike
+                # a video.src failure it need not set HTMLMediaElement.error or
+                # settle the play promise. Measure failed requests and no frames.
+                wait_native_media(page, '()=>{const v=document.querySelector(".nlp-film video");return (Boolean(v.error) || v.networkState===HTMLMediaElement.NETWORK_NO_SOURCE) && v.readyState===HTMLMediaElement.HAVE_NOTHING && v.currentTime===0}', phase='Noa: aborted native source', selector='.nlp-film video')
+                assert video.evaluate('v=>v.getVideoPlaybackQuality().totalVideoFrames===0')
+                assert failed_request.value.failure
+                failures.append(failed_request.value.failure)
+                expect(video).to_be_visible()
+                expect(page.locator('.nlp-actions .owned-primary')).to_be_visible()
+            return {'native_error': True, 'same_source_retry': True, 'channel_accessible': True,
+                    'failed_requests': failures, 'decoded_frames': 0}
+        video.evaluate('v=>v.play()')
+        wait_native_media(page, '()=>{const v=document.querySelector(".nlp-film video");return !v.paused && v.currentTime>.25 && v.readyState>=2}', phase='Noa: explicit native playback', selector='.nlp-film video')
+        info = video.evaluate('v=>({duration:v.duration,rate:v.playbackRate,src:v.currentSrc,frames:v.getVideoPlaybackQuality().totalVideoFrames})')
+        manifest = json.loads((root/'public/media/originals/manifest.json').read_text())
+        original = next(item for item in manifest['files'] if item['path'] == source)
+        assert abs(info['duration'] - original['duration']) < .5 and info['rate'] == 1 and info['frames'] > 0, info
+        assert info['src'] == urljoin(page.url, source)
+        video.evaluate('v=>{v.pause();v.currentTime=3}')
+        wait_native_media(page, '()=>{const v=document.querySelector(".nlp-film video");return v.paused && !v.seeking && v.currentTime>=2.9}', phase='Noa: paused native seek', selector='.nlp-film video')
+        return {**info, 'native_pause_seek': True}
+
     with sync_playwright() as pw:
         browser = pw.chromium.launch()
         try:
@@ -70,23 +161,30 @@ def main(home_only=False, output='film-qa/product-landings'):
                     key = lang+'-'+product
                     context = browser.new_context(viewport={'width':1440,'height':1000}, reduced_motion='reduce')
                     page = context.new_page()
+                    if product == 'home':
+                        begin_home_v4_requests(page)
                     page.set_default_timeout(20000)
                     try:
                         page.goto(origin+route, wait_until='networkidle')
-                        page.wait_for_selector(selector+' [data-mode="recording"]')
-                        check_story(page, selector, 'genie' if product=='home' else product)
-                        enter_recording(page, selector)
-                        video = page.locator(selector+' video')
-                        assert video.evaluate('(v)=>v.paused && v.currentTime===0')
-                        assert video.get_attribute('src') is None, 'A recording must not be fetched before play'
-                        page.locator(selector).locator('.studio-play,.owned-film__play').click()
-                        page.wait_for_function('s=>{const v=document.querySelector(s+" video");return !v.paused && v.currentTime>.25 && v.readyState>=2;}',arg=selector)
-                        info = video.evaluate('(v)=>({duration:v.duration,rate:v.playbackRate,time:v.currentTime,src:v.currentSrc,frames:v.getVideoPlaybackQuality().totalVideoFrames})')
-                        assert 12.5 <= info['duration'] <= 13.5, info
-                        assert info['rate'] == 1 and info['frames'] > 0, info
-                        assert info['src'].startswith(origin+'/media/products/'), info
-                        video.evaluate('(v)=>v.pause()')
-                        assert video.evaluate('(v)=>v.paused')
+                        if product == 'home':
+                            info = playback_home_v4(page)
+                        elif lang == 'ja' and product == 'noa':
+                            info = native_noa(page)
+                        else:
+                            page.wait_for_selector(selector+' [data-mode="recording"]')
+                            check_story(page, selector, product)
+                            enter_recording(page, selector)
+                            video = page.locator(selector+' video')
+                            assert video.evaluate('(v)=>v.paused && v.currentTime===0')
+                            assert video.get_attribute('src') is None, 'A recording must not be fetched before play'
+                            page.locator(selector).locator('.owned-film__play').click()
+                            page.wait_for_function('s=>{const v=document.querySelector(s+" video");return !v.paused && v.currentTime>.25 && v.readyState>=2;}',arg=selector)
+                            info = video.evaluate('(v)=>({duration:v.duration,rate:v.playbackRate,time:v.currentTime,src:v.currentSrc,frames:v.getVideoPlaybackQuality().totalVideoFrames})')
+                            assert 12.5 <= info['duration'] <= 13.5, info
+                            assert info['rate'] == 1 and info['frames'] > 0, info
+                            assert info['src'].startswith(origin+'/media/products/'), info
+                            video.evaluate('(v)=>v.pause()')
+                            assert video.evaluate('(v)=>v.paused')
                         report['playback'].append({'case':key,**info})
                     except Exception as exc:
                         report['errors'].append({'case':'playback-'+key,'error':str(exc)})
@@ -95,41 +193,64 @@ def main(home_only=False, output='film-qa/product-landings'):
                     # A fresh page really aborts the HTTP media request. This is
                     # neither a mocked video element nor an injected DOM error.
                     context = browser.new_context(viewport={'width':390,'height':844}, reduced_motion='reduce')
-                    context.route('**/media/products/*.mp4', lambda route:route.abort('failed'))
+                    context.route('**/media/**/*.mp4', lambda route:route.abort('failed'))
                     page = context.new_page()
+                    if product == 'home':
+                        begin_home_v4_requests(page)
                     page.set_default_timeout(20000)
                     try:
                         page.goto(origin+route, wait_until='networkidle')
-                        page.wait_for_selector(selector+' [data-mode="recording"]')
-                        enter_recording(page, selector)
-                        button = page.locator(selector).locator('.studio-play,.owned-film__play')
-                        button.click()
-                        page.wait_for_function('s=>document.querySelector(s).dataset.mediaState==="unavailable"',arg=selector)
-                        assert page.locator(selector+' video').is_hidden()
-                        assert page.locator(selector+' .studio-player-screen>img,'+selector+' .owned-film__screen>img').is_visible()
-                        assert page.locator(selector+' .studio-media-status,'+selector+' .owned-film__status').is_visible()
-                        assert button.is_enabled() and button.is_visible()
-                        assert page.locator(selector+' figcaption a').first.is_visible()
-                        # Retry must issue the same guarded recording request,
-                        # then expose the same safe fallback when it fails.
-                        with page.expect_request('**/media/products/*.mp4'):
+                        if product == 'home':
+                            details = failure_home_v4(page)
+                        elif lang == 'ja' and product == 'noa':
+                            details = native_noa(page, failed=True)
+                        else:
+                            page.wait_for_selector(selector+' [data-mode="recording"]')
+                            enter_recording(page, selector)
+                            button = page.locator(selector).locator('.owned-film__play')
                             button.click()
-                        page.wait_for_function('s=>document.querySelector(s).dataset.mediaState==="unavailable"',arg=selector)
-                        check_story(page, selector, 'genie' if product=='home' else product)
-                        report['failure_recovery'].append({'case':key,'network_aborted':True,'retry':True,'return_to_story':True})
+                            page.wait_for_function('s=>document.querySelector(s).dataset.mediaState==="unavailable"',arg=selector)
+                            assert page.locator(selector+' video').is_hidden()
+                            assert page.locator(selector+' .owned-film__screen>img').is_visible()
+                            assert page.locator(selector+' .owned-film__status').is_visible()
+                            assert button.is_enabled() and button.is_visible()
+                            assert page.locator(selector+' figcaption a').first.is_visible()
+                            with page.expect_request('**/media/products/*.mp4'):
+                                button.click()
+                            page.wait_for_function('s=>document.querySelector(s).dataset.mediaState==="unavailable"',arg=selector)
+                            check_story(page, selector, product)
+                            details = {'network_aborted':True,'retry':True,'return_to_story':True}
+                        report['failure_recovery'].append({'case':key,**details})
                     except Exception as exc:
                         report['errors'].append({'case':'failure-'+key,'error':str(exc)})
                     finally:
                         context.close()
-            for product in ([] if home_only else ['genie','launchloom']):
+            for lang, route in [('ja', '/'), ('en', '/en/')]:
+                context = browser.new_context(java_script_enabled=False, viewport={'width':390,'height':844})
+                page = context.new_page()
+                begin_home_v4_requests(page)
+                try:
+                    page.goto(origin+route, wait_until='networkidle')
+                    details = assert_home_v4(page, interactive=False)
+                    report['no_javascript'].append({'case':lang+'-home',**details})
+                except Exception as exc:
+                    report['errors'].append({'case':'no-js-'+lang+'-home','error':repr(exc)})
+                finally:
+                    context.close()
+            for product in ([] if home_only else ['genie','launchloom','noa']):
                 context = browser.new_context(java_script_enabled=False,viewport={'width':390,'height':844})
                 page = context.new_page()
                 try:
                     page.goto(origin+'/products/'+product+'/',wait_until='networkidle')
                     assert page.locator('.owned-primary').first.is_visible()
-                    assert page.locator('.owned-film__screen>img').is_visible()
-                    assert page.locator('.owned-film figcaption a').first.is_visible()
-                    assert page.locator('.owned-film__play').is_hidden()
+                    if product == 'noa':
+                        expect(page.locator('.nlp-film video')).to_be_visible()
+                        assert page.locator('.nlp-film video').evaluate('v=>v.controls && v.paused')
+                        expect(page.locator('.nlp-film figcaption')).to_contain_text('配信の実録画ではありません')
+                    else:
+                        assert page.locator('.owned-film__screen>img').is_visible()
+                        assert page.locator('.owned-film figcaption a').first.is_visible()
+                        assert page.locator('.owned-film__play').is_hidden()
                     report['no_javascript'].append(product)
                 except Exception as exc:
                     report['errors'].append({'case':'no-js-'+product,'error':str(exc)})
