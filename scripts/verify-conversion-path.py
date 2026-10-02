@@ -18,7 +18,9 @@ def local_only(route):
 
 with sync_playwright() as pw:
     try:
-        browser=pw.chromium.launch(executable_path=os.environ.get('CHROME_BIN','/usr/bin/chromium'),args=['--no-sandbox'])
+        launch_options={'args':['--no-sandbox']}
+        if os.environ.get('CHROME_BIN'): launch_options['executable_path']=os.environ['CHROME_BIN']
+        browser=pw.chromium.launch(**launch_options)
     except Exception as error:
         report['status']='BLOCKED';report['blocked'].append('Browser startup: '+str(error))
         (OUT/'browser-report.json').write_text(json.dumps(report,ensure_ascii=False,indent=2))
@@ -105,6 +107,10 @@ with sync_playwright() as pw:
                 expect(page.locator('#inquiry-submit')).to_be_disabled()
                 # New independent page lifecycle for synthetic accepted/reset scenario.
                 page.goto(BASE+prefix+'/contact/#product-noa',wait_until='networkidle')
+                # A fragment-only goto does not create a new document or clear the
+                # intentionally unresolved form state. Reload this synthetic fixture.
+                page.reload(wait_until='networkidle')
+                expect(page.locator('#inquiry-submit')).to_be_enabled()
                 page.locator('#inquiry-use-template').click();mode['status']=201
                 page.locator('[name=name]').fill('Conversion QA')
                 page.locator('[name=email]').fill('qa@example.invalid')
@@ -164,7 +170,8 @@ with sync_playwright() as pw:
         try:
             page.goto(BASE+prefix+'/services/');expect(page.locator('#ai-character a.button')).to_be_visible()
             page.locator('#ai-character a.button').click()
-            expect(page.locator('noscript')).to_contain_text('JavaScript')
+            expect(page.locator('noscript')).to_be_visible()
+            assert 'JavaScript' in (page.locator('noscript').text_content() or '')
             expect(page.locator('#inquiry-submit')).to_be_disabled()
             report['checks'].append({'language':language,'noJsLinksAndExplanation':True})
         except Exception as error: report['errors'].append({'language':language,'noJs':str(error)})
