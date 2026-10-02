@@ -4,7 +4,7 @@
 
 ## 今あるもの / まだないもの
 
-- あるもの: 購入済み`reachmade.com`、Cloudflare DNS、`FORIFOR/reachmade`のソース、Workers Static Assetsへのデプロイ、`reachmade.com`と`www.reachmade.com`のWorker接続、台帳に登録した各プロダクト用サブドメイン（現在6件）。
+- あるもの: 購入済み`reachmade.com`、Cloudflare DNS、`FORIFOR/reachmade`のソース、Workers Static Assetsへのデプロイ、`reachmade.com`と`www.reachmade.com`のWorker接続、台帳に登録した各プロダクト用サブドメイン（現在7件。noa.reachmade.comは2026-09-29にAPIで追加）。
 - まだないもの: 専用のReachmadeメールボックス、問い合わせ受信・実機表示の確認。
 - Namecheapの登録・更新は継続します。ネームサーバーを元に戻したり、有料のホスティングを追加契約したりする手順ではありません。
 
@@ -90,7 +90,7 @@ launchloom.reachmade.com
 
 `worker.js`が`www`→apexの301転送を行います。**wwwをこのWorkerに接続しないと転送ルールも実行されません。** HTTPからHTTPSへの転送はCloudflareのSSL/TLS → Edge Certificates → Always Use HTTPSも確認してください。
 
-プロダクト用サブドメインは、現時点では各製品の既存公開先へ302転送する入口です（現在6件）。製品サイト自体をこのWorkerへ移したわけではありません。新しい製品を追加するときは、`src/products.mjs`に`labSite`と`site`を持つレコードを追加し、そのサブドメインをCloudflareのカスタムドメインへ一度接続します。Workerは同じ台帳から転送先を組み立てます。
+プロダクト用サブドメインは、現時点では各製品の既存公開先へ302転送する入口です（現在7件）。製品サイト自体をこのWorkerへ移したわけではありません。新しい製品を追加するときは、`src/products.mjs`に`labSite`と`site`を持つレコードを追加し、そのサブドメインをCloudflareのカスタムドメインへ一度接続します。Workerは同じ台帳から転送先を組み立てます。
 
 名前解決が有効でも、SSL証明書と実コンテンツの公開完了は別です。ブラウザで実際のページを確認してください。
 

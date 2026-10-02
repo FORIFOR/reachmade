@@ -145,3 +145,27 @@ timeline unit tests remain for the existing reusable scene module.
   browser Back returns to the page. No custom script required, including reduced motion.
 - Compare two real-content component layouts before choosing; inspect actual screenshots
   and request independent scoped review. Evidence: artifacts/ui/hero-redesign/.
+
+## 全製品LPの反復改善 — 2026-10-02
+
+対象はJA/EN各7LP。受賞の認定・人間の嗜好評価とは別の内部基準。
+
+| ID | 条件 | 証拠 |
+|---|---|---|
+| LP1 | 7製品の主要な見せ場が用途に対応し、色替えだけにならない | 各製品の広幅画像・独立画像レビュー |
+| LP2 | 実録画・再現図・将来の設計・静的説明のラベルと出典を維持 | 既存テスト、画面・リンク確認 |
+| LP3 | 日英14ページの320/390/768/1440/1920幅で横溢れ・見出し欠落・主操作の重なりなし | ブラウザ寸法検査、代表画像 |
+| LP4 | 主操作、動画切替、サンプル、条件details、言語切替を操作できる | CUAで主導線を実操作、JSなし/reduced-motion別途検査 |
+| LP5 | スクロールを奪わず、外部フォント・追跡・自動動画再生・新規依存を追加しない | source、ビルドテスト、通信・video属性確認 |
+| LP6 | 文字組み、カード反復、スマホ構成の指摘を再撮影で解消 | before/round-1/最終画像と差分記録 |
+| LP7 | 全既存テスト通過、実装担当以外が最新画像を確認 | npm run check、独立レビュー。未実施項目を合格にしない |
+
+証拠はartifacts/ui/lp-awards-20261002/。通常ブラウザを使った操作と、headlessラボチェックを区別する。実機Safari/VoiceOver/人間の初見試験・審査員の受賞評価は未検証として残す。
+
+### 2026-10-02 コピー改稿の確認条件
+
+- 7製品×日英の14LPすべてで見出し・説明・入口の文言を読んで確認する。Oathraの既存の強い主見出しは維持可能。
+- 共通の抽象語で全製品を言い換えず、その製品を使う場面が浮かぶこと。見出しの直下に同義の見出しを重ねない。
+- 音声/文字UI、セットアップ/即時実行、作業記録/新規AI実行、公開チャンネル/個別動画、再現/実録画を混同させない。
+- PCとモバイルで長い見出し・CTA・句読点の折り返しを確認し、320pxを含む主要幅で横にはみ出さない。
+- 訪問者の反応は未測定。独立レビューと画面検査を、受賞・CVRの保証として扱わない。

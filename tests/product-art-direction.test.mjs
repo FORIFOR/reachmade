@@ -7,9 +7,9 @@ import {directions,artDirectProductHero,writeArtDirectionStyles} from '../src/pr
 const root=path.resolve(import.meta.dirname,'..');
 const fixture=id=>`<!doctype html><html><head><title>Test</title></head><body class="owned-product owned-product--${id}"><main><section class="container owned-hero-grid"><p class="owned-kicker">Preview</p><h1>A real product</h1><p class="owned-lead">Description</p><div class="owned-actions"><a class="owned-primary" href="https://example.org/setup">Set up the product</a></div><p class="owned-action-note">Setup, not instant execution.</p><p class="owned-try-now"><span>Try first</span><strong>Make one thing.</strong></p><details class="owned-access"><summary>Conditions</summary><p class="owned-requirements">No guarantee.</p></details><figure class="owned-film owned-film--hero" id="recording"><div class="owned-film__screen"><img src="/assets/products/${id}.jpg" alt="Existing screenshot"><video controls muted playsinline preload="none" data-recording-src="/media/products/${id}.mp4"></video><button class="owned-film__play" type="button">Play</button></div><figcaption>Original proof; no success claim. <a href="https://example.org/source">Source</a></figcaption><p class="owned-film__status" role="status" hidden></p></figure></section><section id="flow">Unchanged lower page.</section></main></body></html>`;
 
-test('six compositions have distinct structure, not only different colors',()=>{
- assert.equal(Object.keys(directions).length,6);
- assert.equal(new Set(Object.values(directions)).size,6);
+test('seven compositions have distinct structure, not only different colors',()=>{
+ assert.equal(Object.keys(directions).length,7);
+ assert.equal(new Set(Object.values(directions)).size,7);
 });
 for(const [id,direction] of Object.entries(directions))for(const lang of ['ja','en']){
  test(`render ${id}/${lang}: original evidence, one CTA and accessible native player survive`,()=>{
@@ -28,11 +28,15 @@ for(const [id,direction] of Object.entries(directions))for(const lang of ['ja','
  test(`integration ${id}/${lang}: final built page contains the active composition`,async()=>{
   const html=await fs.readFile(path.join(root,'dist',lang==='en'?'en':'','products',id,'index.html'),'utf8');
   // The Japanese Oathra page uses the 2026-09-29 brief's first view instead of the art-directed hero.
-  if(id==='oathra'&&lang==='ja') assert.match(html,/data-oathra-lp="/); else assert.match(html,new RegExp(`data-direction="${direction}"`));
+  if(id==='oathra'&&lang==='ja') assert.match(html,/data-oathra-lp="/);
+  // The Japanese 星藍ノア page is re-composed from the owner's patch; its film is the introduction film (tests/noa.test.mjs).
+  else if(id==='noa'&&lang==='ja') { assert.match(html,/data-noa-lp="/); return; }
+  else assert.match(html,new RegExp(`data-direction="${direction}"`));
   assert.match(html,/data-art-direction="20260919"/);
   assert.equal((html.match(/<script\b/g)||[]).length,1);
   assert.equal((html.match(/rel="stylesheet"/g)||[]).length,1);
-  assert.match(html,new RegExp(`data-recording-src="/media/products/${id}\\.mp4"`));
+  // The Japanese Genie page opens with the 01 TaskDock reconstruction, labelled as such (tests/genie-lp.test.mjs).
+  assert.ok(html.includes(`data-recording-src="${id==='genie'&&lang==='ja'?'/media/films/genie-taskdock-13s.mp4':`/media/products/${id}.mp4`}"`));
  });
 }
 test('unknown input and changed templates fail closed',()=>{

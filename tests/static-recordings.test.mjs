@@ -24,8 +24,8 @@ test('failed premium batches preserve the prior packaged files',async()=>{
   await fs.writeFile(path.join(dir,'index.html'),'ok');
   const good=async()=>new Response(mp4(),{headers:{'Content-Type':'video/mp4'}});
   const report=await prepareMedia({sourceReader: async()=>null,dist:dir,fetcher:good,renderer:fakeRenderer,signatureRenderer:fakeSignatureRenderer});
-  assert.equal(report.recordings.length,6);assert.equal(report.schema,3);assert.equal(report.mode,'premium-site-edits');
-  assert.equal(report.signature.duration,12);assert.equal(report.signature.speed,1);assert.equal(report.signature.transition,'hard-cut');
+  assert.equal(report.recordings.length,7);assert.equal(report.schema,3);assert.equal(report.mode,'premium-site-edits');
+  assert.equal(report.signature.duration,14);assert.equal(report.signature.speed,1);assert.equal(report.signature.transition,'hard-cut');
   assert.equal((await fs.readFile(path.join(dir,'assets/reachmade-signature.mp4'))).length,mp4().length);
   const before=await fs.readFile(path.join(dir,'media/products/manifest.json'),'utf8');let count=0;
   await assert.rejects(prepareMedia({sourceReader: async()=>null,dist:dir,renderer:fakeRenderer,signatureRenderer:fakeSignatureRenderer,fetcher:async()=>{if(++count>2)throw Error('offline');return good();}}),/Deployment stopped/);

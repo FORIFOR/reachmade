@@ -3,8 +3,8 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import { recordings, serveRecording } from '../src/films.mjs';
 const request=(path,init)=>new Request('https://reachmade.com'+path,init);
-test('six explicit, HTTPS recordings',()=>{
- assert.equal(Object.keys(recordings).length,6);
+test('seven explicit, HTTPS recordings',()=>{
+ assert.equal(Object.keys(recordings).length,7);
  for(const url of Object.values(recordings)){assert.equal(new URL(url).protocol,'https:');assert.match(url,/\.mp4$/);}
 });
 test('unrelated pages bypass the media proxy',async()=>assert.equal(await serveRecording(request('/products/')),null));

@@ -40,24 +40,24 @@
   placeHeroProof();
   narrowHero.addEventListener?.('change', placeHeroProof);
 
-  /* One signature moment only: a 12-second hard-cut reel generated from the six
+  /* One signature moment only: a 14-second hard-cut reel generated from the seven
    * real product recordings. No synthetic frames, no speed changes, no tracking.
    */
   const signatureHost = heroProof?.querySelector('.hero-proof-image');
   if (hero && heroProof && signatureHost) {
     const head = heroProof.querySelector('.study-head');
     const headParts = head?.querySelectorAll('span');
-    if (headParts?.[0]) headParts[0].textContent = 'SIGNATURE FILM / 6 REAL PRODUCTS';
-    if (headParts?.[1]) headParts[1].textContent = '12 SEC / 1×';
+    if (headParts?.[0]) headParts[0].textContent = 'SIGNATURE FILM / 7 REAL PRODUCTS';
+    if (headParts?.[1]) headParts[1].textContent = '14 SEC / 1×';
     const caption = heroProof.querySelector('figcaption');
     const captionText = caption?.querySelector('span');
     if (captionText) captionText.textContent = ja
-      ? 'Genie → AI Meeting → Oathra → AI Secure → Agent Team → Launchloom。各2秒の実録画を通常速度でつないでいます。'
-      : 'Genie → AI Meeting → Oathra → AI Secure → Agent Team → Launchloom. Two real seconds from each product, at normal speed.';
+      ? 'Genie → AI Meeting → Oathra → AI Secure → Agent Team → Launchloom → 星藍ノア。各2秒を通常速度でつないでいます。星藍ノアは画面を再現した紹介映像（演出を含む）です。'
+      : 'Genie → AI Meeting → Oathra → AI Secure → Agent Team → Launchloom → 星藍ノア. Two seconds from each product, at normal speed; the Noa segment is an introduction film with recreated screens.';
     const captionLink = caption?.querySelector('a');
     if (captionLink) {
       captionLink.href = ja ? '/products/' : '/en/products/';
-      captionLink.textContent = ja ? '6製品を見る' : 'Explore all six';
+      captionLink.textContent = ja ? '7製品を見る' : 'Explore all seven';
       captionLink.removeAttribute('target');
       captionLink.removeAttribute('rel');
     }
@@ -66,11 +66,11 @@
     const video = document.createElement('video'); video.className = 'rm-signature-video';
     video.muted = true; video.defaultMuted = true; video.playsInline = true; video.loop = true; video.preload = 'none';
     video.poster = '/assets/reachmade-signature.jpg';
-    video.setAttribute('aria-label', ja ? 'Reachmade 6製品の実録画12秒リール' : 'Reachmade 12-second reel of six real product recordings');
+    video.setAttribute('aria-label', ja ? 'Reachmade 7製品の映像14秒リール' : 'Reachmade 14-second reel of seven product films');
     const play = document.createElement('button'); play.type = 'button'; play.className = 'rm-signature-play';
-    const initialPlayLabel = ja ? '12秒の実演を見る ▶' : 'Watch the 12-second reel ▶';
+    const initialPlayLabel = ja ? '14秒の実演を見る ▶' : 'Watch the 14-second reel ▶';
     const resumeLabel = ja ? '再開 ▶' : 'Resume ▶';
-    const fallbackLabel = ja ? '6製品を見る' : 'Explore all six';
+    const fallbackLabel = ja ? '7製品を見る' : 'Explore all seven';
     const fallbackHref = ja ? '/products/' : '/en/products/';
     play.textContent = initialPlayLabel;
     stage.append(video, play); signatureHost.replaceChildren(stage); heroProof.dataset.signatureReady = 'true';
@@ -153,7 +153,7 @@
   const status = document.querySelector('.copy-status');
   const fallbackField = document.getElementById('copy-fallback');
   const params = new URLSearchParams(location.search);
-  const productNames = {'genie':'Genie','ai-meeting':'AI Meeting','oathra':'Oathra','aisecure':'AI Secure','agent-team':'Agent Team','launchloom':'Launchloom'};
+  const productNames = {'genie':'Genie','ai-meeting':'AI Meeting','oathra':'Oathra','aisecure':'AI Secure','agent-team':'Agent Team','launchloom':'Launchloom','noa':'星藍ノア'};
   const chosenProduct = productNames[params.get('product')];
   const service = params.get('service');
   if(topic && /^(01|02|03)$/.test(service || '')) topic.selectedIndex = Number(service)-1;
@@ -188,8 +188,8 @@
       if (!hero) return;
       const hint = document.querySelector('.selected-work .rm-film-hint');
       if (hint) hint.textContent = ja
-        ? '自動で動くのはトップの12秒Signature Filmだけです。個別製品の実録画は再生ボタンから確認できます。'
-        : 'Only the 12-second Signature Film moves automatically. Individual product recordings remain manual.';
+        ? '自動で動くのはトップの14秒Signature Filmだけです。個別製品の実録画は再生ボタンから確認できます。'
+        : 'Only the 14-second Signature Film moves automatically. Individual product recordings remain manual.';
     });
     document.head.append(films);
   }

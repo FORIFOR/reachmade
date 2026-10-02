@@ -80,6 +80,69 @@
       "source": "/media/films/oathra-30s.mp4",
       "sourceSha256": "fd93f105a370a5fe1d0273e852ccb7498c27bb2ac7fcfec3b79aac339e6ae720",
       "render": "ffmpeg -ss 18.0 -frames:v 1, crop=1564:880:0:0 (above the burned caption, ring closed at 3/3), scale=1280:720 -q:v 3"
+    },
+    {
+      "path": "/media/films/agent-team-design-30s.mp4",
+      "bytes": 3789358,
+      "sha256": "6f0e5db04440975f7c592ac256ab2d0207e44bc7560e4dc7ec8ce97dfc0648d2",
+      "source": "agent-team-lp-ja.mp4 (owner-supplied, 2026-09-29, Japanese, 1920x1080 30 fps 30.08 s, AAC audio, 9139929 bytes; character design 1b), re-encoded: audio removed, H.264 CRF 17, faststart (SSIM 0.9995 vs the source)",
+      "spec": "1920x1080, 30 fps, 30.000 s, no audio",
+      "note": "Design film: renders of a design file, not recordings of the app.",
+      "sourceSha256": "c09914a3d0c5ad93fdf833601379f92c6c65c98dfd031a91d0d3023a4e6b84b9"
+    },
+    {
+      "path": "/media/films/home-agent-team-13s.mp4",
+      "bytes": 993502,
+      "sha256": "a4adbdb51d2307bad2b4ad16cd3e415b2276264f9c23f6dbec8d277d5bb1f676",
+      "source": "LP読みやすさの改善指摘.zip → patch/media/agent-team.mp4 (owner-supplied, 2026-09-30, 1920x1080 30 fps 30.08 s, AAC audio, 9145804 bytes; design film with the 1b characters)",
+      "sourceSha256": "5aa5335a69395d8761ac1630a5034d8bd386e2fe18414af8a3c267482dabf182",
+      "render": "scripts/prepare-media.mjs renderPremiumFilm, premium policy (1280x720, 30 fps, CRF 18, no audio, speed 1), clips [[6,11],[17,24]]",
+      "spec": "1280x720, 30 fps, 12.933 s, no audio",
+      "note": "Design film: renders of a design file, not recordings of the app. Labelled 設計動画 on the home."
+    },
+    {
+      "path": "/media/films/home-agent-team-13s.jpg",
+      "bytes": 38094,
+      "sha256": "9ee50fc092ea124481808d466e48a4fad6c2a4d7e5c4c718d005e5a831e08b23",
+      "source": "/media/films/home-agent-team-13s.mp4",
+      "sourceSha256": "a4adbdb51d2307bad2b4ad16cd3e415b2276264f9c23f6dbec8d277d5bb1f676",
+      "render": "renderPremiumFilm poster: ffmpeg -ss 0.35 -frames:v 1 -q:v 2"
+    },
+    {
+      "path": "/media/films/home-oathra-13s.mp4",
+      "bytes": 1819403,
+      "sha256": "7fc7346c504c1269f00e0f043be375efb7051cc5ed2284a922f127f518c9ece6",
+      "source": "LP読みやすさの改善指摘.zip → patch/media/oathra.mp4 (owner-supplied, 2026-09-30, 1920x1080 30 fps 30.00 s, no audio, 13766932 bytes; marked イメージ映像（演出を含む） in frame)",
+      "sourceSha256": "fdb9c995a7d26cda9bf469ca05fc292dbf5fa57de484cb2e2492043cb09800d4",
+      "render": "scripts/prepare-media.mjs renderPremiumFilm, premium policy (1280x720, 30 fps, CRF 18, no audio, speed 1), clips [[10,15],[18,25]]",
+      "spec": "1280x720, 30 fps, 12.933 s, no audio",
+      "note": "Illustrative film, not a recording of a call. Labelled イメージ映像（演出を含む） on the home."
+    },
+    {
+      "path": "/media/films/home-oathra-13s.jpg",
+      "bytes": 43296,
+      "sha256": "72433905f81535a59ef13c45554b7659797c147836b3dfd4339dbb15595d4a0d",
+      "source": "/media/films/home-oathra-13s.mp4",
+      "sourceSha256": "7fc7346c504c1269f00e0f043be375efb7051cc5ed2284a922f127f518c9ece6",
+      "render": "renderPremiumFilm poster: ffmpeg -ss 0.35 -frames:v 1 -q:v 2"
+    },
+    {
+      "path": "/media/films/genie-taskdock-13s.mp4",
+      "bytes": 268015,
+      "sha256": "602c0f9404a4d414f3a173f8ffed610cc5bc3a2b9296fcb709d0fdb7cd5a3a67",
+      "source": "/products/genie/ 「01 · HOW IT FEELS」 TaskDock reconstruction (src/genie-lp.mjs howFrames: 呼び出す → 必要な情報を渡す → 結果を使う), rendered in headless Chrome at 720x405 CSS px, device scale 1.78",
+      "sourceSha256": "cd4a9a758ed94e118764bd6eaf0cf5c33bd35ed3ae6c46bcec2da54f2c4d5496",
+      "render": "30 fps frames per state, step-name chips hidden (idle 4.0 s static, listen 5.6 s with its CSS animations stepped frame by frame, done 4.6 s), 0.6 s crossfades; libx264 CRF 18 slow, no audio, faststart",
+      "spec": "1280x720, 30 fps, 13.000 s, no audio",
+      "note": "Reconstruction of the next TaskDock (in development) over a still cut from the published product film; demo data. Not a recording of the app. sourceSha256 is the background still (lp-work.jpg)."
+    },
+    {
+      "path": "/media/films/genie-taskdock-13s.jpg",
+      "bytes": 54603,
+      "sha256": "9bbfde25ee18f8740349c6649e461fce103013c35c4b72f18e00bb1c7f14ad3e",
+      "source": "/media/films/genie-taskdock-13s.mp4",
+      "sourceSha256": "602c0f9404a4d414f3a173f8ffed610cc5bc3a2b9296fcb709d0fdb7cd5a3a67",
+      "render": "ffmpeg -ss 0.35 -frames:v 1 -q:v 2"
     }
   ]
 }

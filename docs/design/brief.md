@@ -105,3 +105,34 @@ The original CSS/client files with pre-existing user edits remain unchanged.
 製品カードの角丸化（`outcome-first.css`が意図的に`border-radius:0`）、発光グラデーション、
 巨大ゴーストワードマーク（3配置を撮って確認したが、ヒーロー下端が空いていないと成立しない）。
 採否の全一覧は `docs/design/references/README.md` に記録した。
+
+## 2026-10-02 — 全7製品LPの品質改善
+
+ユーザーの明示依頼: 全プロダクトLPをAwwwards / Webby Awards / FWAの受賞を目指す品質へ、実画面を見ながら反復改善する。対象は日英14ページ。受賞可能性そのものを自己採点で証明しない。
+
+主タスクは「この製品で得られるものを理解し、録画・サンプル・実物の入口を選べること」。製品台帳・配信先・価格・機能・実績は増やさない。既存の3専用JA構成（Genie/Oathra/ノア）を維持し、他の4製品とEN7ページを編集的に改善する。frontend-designは利用可能スキルにないため導入を増やさず、world-class-uiとoutcome-first-uxを使用。
+
+構成比較: Launchloomを見本にA「文章と全幅映像が先、形式一覧は後」、B「左に価値・右に入口、4つの出力形式を先に見せ、実演へ続ける」を比較する。Bを実装者判断で選択。形式図は説明図と明記し、4件の実際の新規出力とは扱わない。映画だけを全面に敷くC案は再生しない状態で何を得られるか不明なため採用しない。人間の承認・利用者試験とは区別する。
+
+各製品の一箇所: Genie=呼び出しと成果物、AI Meeting=発言から確認する変更、Oathra=0/3→1/3→1/3の根拠説明、AISecure=送信前と調査の入口、Agent Team=作成/確認/修正の役割、Launchloom=4形式の形、ノア=キャラクターを映す番組の舞台。共通のカード反復を減らし、下部まで文字・余白・罫線の関係を揃える。
+
+参考原理と出典（2026-10-02、別担当が公式ページ・掲載画像を確認）:
+- Awwwards: Design40 / Usability30 / Creativity20 / Content10。https://www.awwwards.com/about-evaluation/
+- Webby: content / structure-navigation / visual design / functionality / interactivity / innovation / overall experience。https://www.webbyawards.com/judging-criteria/
+- FWA公式の創造性・独創性・技術的完成度の説明。未確認の配点は作らない。https://thefwa.com/FWA25/25.html
+- Superlist SOTM April2021:価値を表す主役と細部の操作・性能を両立する原理。3D・配色は複製しない。https://www.awwwards.com/superlist-by-gc-studio-wins-site-of-the-month-april-2021.html
+- Dala SOTD2021-12-25:抽象的な技術を意味のある主役で表す原理。脳や粒子は転用しない。https://www.awwwards.com/sites/dala
+
+## 2026-10-02 — 調査を踏まえた全製品LPのコピー改稿
+
+ユーザーの「そちらで修正してください」に基づき、全7製品の日英LPのコピーを改稿。広告調査は `artifacts/research/copy-commercials-20261002/` に保存。抽象的な「XをYに」の反復を減らし、Genie=作業中に呼ぶ、AI Meeting=言い直す、Oathra=相手の発言へ戻る、AI Secure=兆候の前後をたどる、Agent Team=別のAIが原典と照合する、Launchloom=作った後の紹介準備、ノア=返事を聞きに訪れる、という異なる場面に置く。
+
+見出しは欲しくなる瞬間、説明は実際の動作、CTAは遷移先を担当する。既存の公開条件・未実装表記・再現映像ラベル・台帳を維持。JA Genieの2つのテスト内コピー期待値はユーザーの改稿依頼に合わせて更新し、動作・出典・誠実性の検査は緩めない。独立したコピー編集とPC/モバイル実画面で再点検する。賞・売上・反響の達成は今回のテスト結果から推定しない。
+
+独立レビューで追加修正: AI Secureの未測定の「過剰対応抑制」タグを観測可能な「不明点を明示」へ変更。ノアは出典が一致しない不具合エピソードを削除し、節順/ナビのテストを実際の構成に更新。Agent Teamの古い未マージ/未実装断定は設計画像だけでは現在の状態を証明しない表記に修正。作例CTAは確認済みの外部 #proof へ直接接続。
+
+## 2026-10-02 — 星藍ノアのゲームとコメント返信
+
+ユーザー提供の事実「ゲームをこなしながらコメントを返せる仕組み」をNoaの日英LPへ反映。Jev_VTuber_Studio (private) HEAD 4db1927のdocs/PROGRAMME.md、public/noa-blocks.mjs、src/game-runner.mjs、src/talk-engine.mjsで静的照合した。NOA BLOCKSのStage側操作とVampire Survivorsの別プロセス操作は、返信生成と分かれて動く。実況は状況/鮮度を確認して選択。勝率や上手さ、常時無停止・全コメント即答は今回測定していない。
+
+冒頭は「プレイ中も、話しかけて。」、説明と最初の機能節にゲーム＋コメント返信を置き、対応例2件を示す。従来の3機能枠はF01にコメント整理とゲーム処理をまとめ、声/表情を維持。台帳のNoa照合日と英語の出典日テストを今回の日付へ更新する。既存の紹介映像・未公開通し実録画の説明は維持。変更対象はNoaの2LP、CSS/動作は変更しない。

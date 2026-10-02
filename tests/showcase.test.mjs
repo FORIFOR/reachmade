@@ -37,11 +37,13 @@ for(const lang of ['ja','en']){
   assert.equal((html.match(/<script\b/g)||[]).length,1);
   assert.equal((html.match(/rel="stylesheet"/g)||[]).length,1);
   assert.match(html,/src="\/assets\/showcase.mjs"/);
-  assert.match(html,/class="owned-access"/);
   assert.match(html,/class="owned-action-note"/);
-  assert.ok(html.includes(escapeHTML(p.preview)));
   assert.ok(html.includes(escapeHTML(p.evidence)));
-  assert.match(html,/data-recording-src="\/media\/products\//);
+  // The Japanese 星藍ノア page follows the owner's patch: its first view is the introduction film, not the 13-second edit.
+  if(lang==='ja'&&p.id==='noa') assert.match(html,/data-noa-lp="/);
+  // The Japanese Genie page opens with the 01 TaskDock reconstruction instead of the recording (tests/genie-lp.test.mjs).
+  else if(lang==='ja'&&p.id==='genie') { assert.match(html,/class="owned-access"/); assert.match(html,/data-recording-src="\/media\/films\/genie-taskdock-13s\.mp4"/); }
+  else { assert.match(html,/class="owned-access"/); assert.ok(html.includes(escapeHTML(p.preview))); assert.match(html,/data-recording-src="\/media\/products\//); }
   assert.match(html,/rel="canonical"/);
   assert.ok(hasClass(html,'studio-related'),'Related-product section must exist in the generated page');
  });

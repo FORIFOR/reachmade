@@ -4,23 +4,28 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { root } from '../scripts/build.mjs';
 import { products } from '../src/products.mjs';
-import { landingIds, landingRoute, renderProductLanding, landingExperience } from '../src/product-landings.mjs';
+import { landingIds, landingRoute, renderProductLanding, landingExperience, DESIGN_STUDIES } from '../src/product-landings.mjs';
 import { productNavigation } from '../src/site-experience.mjs';
 const config = JSON.parse(await fs.readFile(path.join(root,'site.config.json'),'utf8'));
 const escaped = s => String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#39;');
 
-test('owned landings cover exactly the six Reachmade products',()=>{
+test('owned landings cover exactly the seven Reachmade products',()=>{
   assert.deepEqual([...landingIds].sort(),products.map(p=>p.id).sort());
-  assert.equal(landingIds.length,6);
+  assert.equal(landingIds.length,7);
 });
 
 for (const id of landingIds) for (const lang of ['ja','en']) {
   test(`${id}/${lang}: product page leads with its real film, first action and honest boundaries`, async () => {
     const p = products.find(p=>p.id===id), route = landingRoute(id,lang), x = landingExperience[id][lang];
+    // The Japanese 星藍ノア page is re-composed from the owner's patch (src/noa-lp.mjs); tests/noa.test.mjs covers it.
+    if (id==='noa' && lang==='ja') { assert.match(await fs.readFile(path.join(root,'dist',route,'index.html'),'utf8'),/data-noa-lp="/); return; }
     const html = await fs.readFile(path.join(root,'dist',route,'index.html'),'utf8');
     assert.match(html,new RegExp(`data-product-id="${id}"`));
-    assert.match(html,new RegExp(`data-recording-src="/media/products/${id}\\.mp4"`));
-    assert.match(html,new RegExp(`poster="/media/products/${id}\\.jpg"`));
+    // The Japanese Genie page opens with the 01 TaskDock reconstruction (owner's choice, 2026-09-30), labelled as such.
+    const film = id==='genie' && lang==='ja' ? {src:'/media/films/genie-taskdock-13s.mp4',poster:'/media/films/genie-taskdock-13s.jpg'} : {src:`/media/products/${id}.mp4`,poster:`/media/products/${id}.jpg`};
+    assert.ok(html.includes(`data-recording-src="${film.src}"`), `${id}/${lang} top film`);
+    assert.ok(html.includes(`poster="${film.poster}"`), `${id}/${lang} poster`);
+    if (id==='genie' && lang==='ja') assert.match(html,/再現映像 · 開発中の次の版[\s\S]*実アプリの録画ではありません。/);
     assert.doesNotMatch(html,/<video[^>]*\ssrc=|<video[^>]*\bautoplay\b|<iframe|<form\b/);
     assert.match(html,/preload="none"/);
     const recomposed = id==='oathra' && lang==='ja';
@@ -34,9 +39,16 @@ for (const id of landingIds) for (const lang of ['ja','en']) {
     assert.ok(html.includes(escaped(x.tryNow)));
     assert.ok(html.includes(escaped(x.actionNote)));
     assert.ok(html.includes(escaped(x.primary[0])));
-    assert.match(html,lang==='ja'?/13秒で実演を見る/:/See it in 13 seconds/);
-    assert.match(html,lang==='ja'?/約13秒.*再生速度は変えていません/:/about 13 seconds; playback speed is unchanged/);
+    if (id==='genie' && lang==='ja') assert.match(html,/13秒で動きを見る/);
+    else {
+      assert.match(html,lang==='ja'?/13秒で実演を見る/:/See it in 13 seconds/);
+      assert.match(html,lang==='ja'?/約13秒.*再生速度は変えていません/:/about 13 seconds; playback speed is unchanged/);
+    }
     if (id==='genie') assert.match(html,lang==='ja'?/現行の製品にはまだ入っていません。実機での動作は未確認です/:/is not in the current product\. It has not been checked on a real Mac/);
+    // Products with a next-UI preview (Genie, Agent Team) state in its intro that the frames are renders, not recordings.
+    else if (x.nextUi) assert.match(x.nextUi.intro,lang==='ja'?/実アプリの録画ではありません/:/not (a )?recordings? of the app/);
+    // A product without a published design study shows neither the study link nor its disclaimer.
+    else if (!DESIGN_STUDIES.has(id)) assert.doesNotMatch(html,/Launchloom\/design\/|次のUI設計|Proposed interface design/);
     else assert.match(html,lang==='ja'?/現行製品の実演や、新UIの実装完了を示すものではありません/:/not a demonstration of the current product/);
     if (!recomposed) assert.equal((html.match(/class="owned-hero-badges"/g)||[]).length,1);
     if (!recomposed) assert.equal((html.match(/<li><strong>/g)||[]).length,3);
@@ -44,8 +56,9 @@ for (const id of landingIds) for (const lang of ['ja','en']) {
     if (!recomposed) for (const h of p[lang].highlights) { assert.ok(html.includes(escaped(h.value))); assert.ok(html.includes(escaped(h.label))); }
     else for (const h of p[lang].highlights) assert.equal(html.split(escaped(h.label)).length-1, 1, `${h.value} stated once`);
     assert.equal((html.match(/class="owned-features__source"/g)||[]).length,1);
-    assert.ok(html.includes(`href="${escaped(p.source)}"`));
-    assert.ok(html.includes(lang==='ja'?'にリポジトリと照合':'checked against the repository on'));
+    // A closed-source product names the private repository instead of linking a README.
+    if (p.closedSource) assert.match(html,lang==='ja'?/出典: 非公開のリポジトリ ・ \d{4}-\d{2}-\d{2}に照合/:/Source: the private repository · checked on \d{4}-\d{2}-\d{2}/);
+    else { assert.ok(html.includes(`href="${escaped(p.source)}"`)); assert.ok(html.includes(lang==='ja'?'にリポジトリと照合':'checked against the repository on')); }
     if (!recomposed) for (const fc of p[lang].features) { assert.ok(html.includes(escaped(fc.title))); assert.ok(html.includes(escaped(fc.body))); for (const t of fc.tags) assert.ok(html.includes(escaped(t))); }
     assert.equal(productNavigation(p,lang).site,config.origin+route);
   });
@@ -77,7 +90,7 @@ test('every product CTA states a concrete action and sets click expectations',()
     assert.doesNotMatch(label,/^(見る|開く|詳しく見る|Learn more|Open|View)$/i);
     productDestinations.add(id);
   }
-  assert.equal(productDestinations.size,6);
+  assert.equal(productDestinations.size,7);
 });
 
 test('landing player has no telemetry, persistence, form or model transport',async()=>{
@@ -138,7 +151,7 @@ test('Genie shows five labelled next-UI design frames and its app icon; the othe
     assert.match(html,/<h1><img class="owned-product-icon" src="\/assets\/products\/genie\/icon-128\.png" width="128" height="128" alt="">/);
     await fs.access(path.join(root,'dist',x.icon));
   }
-  for (const id of landingIds.filter(id=>id!=='genie')) for (const lang of ['ja','en']) {
+  for (const id of landingIds.filter(id=>!landingExperience[id].ja.nextUi&&DESIGN_STUDIES.has(id))) for (const lang of ['ja','en']) {
     const html=await fs.readFile(path.join(root,'dist',landingRoute(id,lang),'index.html'),'utf8');
     assert.doesNotMatch(html,/owned-next-ui|owned-product-icon|owned-icon-note/,`${id}/${lang} keeps its current boundaries`);
     assert.match(html,lang==='ja'?/別公開の設計動画は、次のUIを考えるためのプレビューです/:/The separate design film is a proposal for a future interface/);
@@ -151,4 +164,30 @@ test('a missing Genie next-UI frame stops the build instead of shipping a broken
   const tmp=await fs.mkdtemp(path.join((await import('node:os')).tmpdir(),'landing-'));
   try { await assert.rejects(writeProductLandings(tmp,products,config,recordings),/Missing landing asset for genie\/ja/); }
   finally { await fs.rm(tmp,{recursive:true,force:true}); }
+});
+
+test('Agent Team shows its next-UI design as labelled renders, and the Japanese design film never autoplays',async()=>{
+  for (const lang of ['ja','en']) {
+    const x=landingExperience['agent-team'][lang];
+    const html=await fs.readFile(path.join(root,'dist',landingRoute('agent-team',lang),'index.html'),'utf8');
+    assert.equal((html.match(/class="owned-next-ui__frame"/g)||[]).length,5);
+    assert.equal(html.split(escaped(x.nextUi.label)).length-1,x.nextUi.film?6:5,'each frame, and the film when there is one, carries the design-preview label');
+    assert.match(x.nextUi.intro,lang==='ja'?/架空の例です/:/fictional/);
+    for (const f of x.nextUi.frames) await fs.access(path.join(root,'dist',f.src));
+    const film=html.match(/<figure class="owned-next-ui__film">[\s\S]*?<\/figure>/);
+    if (lang==='ja') {
+      assert.ok(film,'the Japanese page carries the design film');
+      assert.match(film[0],/<video controls muted playsinline preload="none"[^>]*><source src="\/media\/films\/agent-team-design-30s\.mp4" type="video\/mp4">/);
+      assert.doesNotMatch(film[0],/autoplay|<video[^>]*\ssrc=/);
+      assert.match(film[0],/演出を含む/);
+      assert.ok(film[0].includes(escaped(x.nextUi.label)),'the film carries the same preview label as the frames');
+    } else assert.equal(film,null,'no English design film until one is delivered');
+  }
+});
+
+test('the Agent Team illustration uses the ledger roles, and the maker fixes the finding', async () => {
+  const js = await fs.readFile(path.join(root, 'public/assets/animated-demos.mjs'), 'utf8');
+  const scene = js.slice(js.indexOf("id === 'agent-team'"), js.indexOf("id === 'launchloom'"));
+  assert.doesNotMatch(scene, /WRITER|EDITOR|'Writer'|'Editor'|なおす/, 'no roles the product does not have');
+  assert.match(scene, /BUILDER · V1/); assert.match(scene, /BUILDER · V2/); assert.match(scene, /Reviewer/);
 });

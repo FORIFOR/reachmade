@@ -33,7 +33,7 @@ for (const lang of LANGS) {
     for (const id of ['ai-meeting','agent-team','launchloom']) assert.ok(html.includes(`${lang === 'ja' ? '' : '/en'}/products/${id}/`));
     assert.match(html, /href="#explore"/);
     // The promise that has to survive without JavaScript.
-    assert.match(html, lang === 'ja' ? /6つの製品を、実物から選べます/ : /Choose between six products/);
+    assert.match(html, lang === 'ja' ? /7つの製品を、実物から選べます/ : /Choose between seven products/);
     assert.doesNotMatch(html, /<script|<iframe|\bautoplay\b|\bonclick=/);
     assert.doesNotMatch(html, /10x|customers|導入企業|ユーザー数|満足度|No\.1/i);
     // Counts are derived from the ledger, never typed in.

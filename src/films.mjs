@@ -8,6 +8,9 @@ export const recordings = Object.freeze({
   aisecure: 'https://forifor.github.io/AISecure/media/intro.mp4',
   'agent-team': 'https://forifor.github.io/Multibot/media/real-walkthrough-ja-silent.mp4',
   launchloom: 'https://forifor.github.io/Launchloom/film.mp4',
+  // Introduction film supplied by the owner as 「Jev Studio LP Video.mp4」 (35.5 s, 16:9, silent, sha256 b2d462e9…a0e9),
+  // transcoded for the web. Its studio screens recreate the rc.6 layout and its comments are examples (stated in the film).
+  noa: 'https://reachmade.com/media/originals/noa/lp-film.mp4',
 });
 
 export async function serveRecording(request, fetcher = fetch) {
