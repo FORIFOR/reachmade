@@ -1,7 +1,7 @@
 /** Public interface for page copy and entry points. Original copy remains separate. */
 import { productNavigation as originalNavigation, improveCopy as originalCopy } from './site-content.mjs';
 import { landingIds, landingRoute } from './product-landings.mjs';
-export { contactDestination, productIndex, caseStudies, serviceExamples, profileProof } from './site-content.mjs';
+export { contactDestination, productIndex, caseStudies, serviceExamples, feasibilityOffer, serviceRouteFor, profileProof } from './site-content.mjs';
 export function improveCopy(original) {
   const copy = originalCopy(original);
   Object.assign(copy.ja, {

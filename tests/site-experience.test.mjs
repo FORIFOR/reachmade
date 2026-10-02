@@ -22,7 +22,8 @@ for(const language of ['ja','en']) {
  });
  test(`${language}: inquiry is on-page, consented and has a localized owned destination`,async()=>{
   const html=await read(prefix+'contact/index.html');
-  assert.ok(html.includes(escape(contactDestination(config,language))));
+  assert.match(html,/href="#reachmade-inquiry"/);
+  assert.equal(new URL('#reachmade-inquiry',`https://reachmade.com/${prefix}contact/`).href,contactDestination(config,language));
   assert.match(html,/id="reachmade-inquiry"/);
   assert.match(html,new RegExp(`data-language="${language}"`));
   assert.match(html,/action="\/api\/inquiries"/);

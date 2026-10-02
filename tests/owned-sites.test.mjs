@@ -49,7 +49,10 @@ test('contact stays localized on the owned form without changing its submission 
  const config=JSON.parse(await fs.readFile(new URL('../site.config.json',import.meta.url),'utf8'));
  for(const lang of ['ja','en']){
   const html=renderInquiry(lang),url=contactDestination(config,lang);
-  assert.ok(html.includes(url)); assert.ok(url.startsWith('https://reachmade.com/'));
+  const anchor=html.match(/<a class="text-link" href="([^"]+)"/)[1];
+  assert.equal(anchor,'#reachmade-inquiry');
+  assert.equal(new URL(anchor,`https://reachmade.com${lang==='en'?'/en':''}/contact/`).href,url);
+  assert.doesNotMatch(html,/<a[^>]+href="#reachmade-inquiry"[^>]+target=/);
   assert.ok(html.includes('method="post" action="/api/inquiries"'));
   assert.ok(html.includes('name="consent" type="checkbox" required'));
   assert.ok(!html.includes('chatgpt.site'));

@@ -72,6 +72,22 @@ export function caseStudies(products, language) {
     return `<article><p class="eyebrow">${escape(p.name)}</p><h3>${escape(title)}</h3><dl>${details.map((text, i) => `<dt>${labels[i]}</dt><dd>${escape(text)}</dd>`).join('')}</dl><a class="text-link" href="${escape(p.evidence)}" target="_blank" rel="noopener noreferrer">${language === 'ja' ? '公開記録を確認する' : 'Inspect the public record'} ↗</a></article>`;
   }).join('')}</div></section>`;
 }
+export function serviceRouteFor(productId) {
+  if (productId === 'noa') return 'ai-character';
+  if (['ai-meeting','oathra'].includes(productId)) return 'voice-ai';
+  return ['genie','agent-team','aisecure'].includes(productId) ? 'service-01' : 'service-03';
+}
+export function feasibilityOffer(language) {
+  const ja = language === 'ja';
+  const options = ja ? [
+    ['voice-ai','音声AIを、ひとつの会話から。','練習・研修、音声入力、受付など。対象をひとつに絞り、聞き違い、応答の待ち時間、人に引き継ぐ場面を試します。','会話の流れ / 動く試作 / 評価項目と検証記録','ai-meeting','AI Meetingの開発・検証記録'],
+    ['ai-character','キャラクターとの対話を、試せる形に。','配信、店頭・施設の案内、問い合わせ対応など。返事・声・表情のつながりと、答えない条件を小さなデモで確かめます。','体験シナリオ / 声・表情を含む試作 / 利用条件と残る課題','noa','星藍ノアの開発・検証記録'],
+  ] : [
+    ['voice-ai','Start with one voice conversation.','Choose one scenario: practice, training, voice input or intake. Test misheard words, response delays and when a person should take over.','Conversation flow / working prototype / evaluation criteria and findings','ai-meeting','AI Meeting development and evaluation'],
+    ['ai-character','Make a character experience you can try.','For streams, venue guidance or inquiry handling. Use a small demo to test how replies, voice and expression connect, and when it should not answer.','Experience scenario / voice-and-expression prototype / requirements and open issues','noa','Noa development and evaluation'],
+  ];
+  return `<section class="container service-examples feasibility-offer" id="feasibility" aria-labelledby="feasibility-title"><p class="eyebrow">ONE SCENARIO, THEN A DECISION</p><h2 id="feasibility-title">${ja?'音声AI・AIキャラクターの実現性検証。':'Voice AI and AI character feasibility.'}</h2><p>${ja?'構想を小さな試作で確かめ、次に開発する範囲を決めるための相談です。最初に、試す場面・成功条件・人が判断する範囲を合わせます。':'A scoped prototype can help decide what to build next. We start by agreeing on a scenario, success criteria and the decisions that stay with a person.'}</p><div class="story-grid feasibility-options">${options.map(([id,title,body,outputs,product,proof])=>`<article id="${id}"><h3>${title}</h3><p>${body}</p><dl><dt>${ja?'相談する成果物の例':'Possible deliverables to scope'}</dt><dd>${outputs}</dd></dl><a class="text-link" href="${route(language,'work')}#${product}">${proof} →</a><a class="button button-outline" href="${route(language,'contact')}#service-${id}">${ja?'この試作を相談する':'Discuss this prototype'} →</a></article>`).join('')}</div><p class="feasibility-boundary">${ja?'掲載例は自主開発で、顧客への導入実績ではありません。費用・期間・納品範囲は個別に合意します。実電話・本番導入、キャラクター素材・声の利用許諾、データの送信先・保持期間は別途確認します。':'These are independent development examples, not client deployments. Fees, timing and deliverables are agreed individually. Live calls, production use, character and voice rights, data destinations and retention need separate review.'}</p></section>`;
+}
 export function serviceExamples(language) {
   const ja = language === 'ja';
   const examples = ja ? [

@@ -1,9 +1,32 @@
 import './site.js';
+import { inquiryContext, canInsertInquiryTemplate } from './inquiry-context.mjs';
 const form=document.querySelector('#reachmade-inquiry');
 if (form) {
   const ja=form.dataset.language==='ja', t=(a,b)=>ja?a:b;
   const submit=document.querySelector('#inquiry-submit'), readiness=document.querySelector('#inquiry-readiness'), result=document.querySelector('#inquiry-result'), reconnect=document.querySelector('#inquiry-reconnect'), fields=form.querySelector('fieldset');
   let available=false, busy=false, checking=false, previous=null, unresolved=false;
+  const entry=document.querySelector('#inquiry-entry'), entryLabel=document.querySelector('#inquiry-entry-label'), templateButton=document.querySelector('#inquiry-use-template'), templateStatus=document.querySelector('#inquiry-template-status');
+  let context=null;
+  const updateContext=()=>{
+    const next=inquiryContext(location.hash,location.search,ja?'ja':'en');
+    // A normal jump to the form must not discard the chosen starting point.
+    if(location.hash==='#reachmade-inquiry'&&context)return;
+    context=next;
+    entry.hidden=!context;
+    entryLabel.textContent=context?t(`相談のきっかけ：${context.label}`,`Starting point: ${context.label}`):'';
+    templateStatus.textContent='';
+  };
+  updateContext();
+  window.addEventListener('hashchange',updateContext);
+  templateButton.addEventListener('click',()=>{
+    const message=form.elements.namedItem('message'), topic=form.elements.namedItem('useCase');
+    if(!context||!canInsertInquiryTemplate({message:message.value,useCase:topic.value,busy,unresolved,accepted:form.dataset.state==='accepted'})){
+      templateStatus.textContent=t('入力済みの内容はそのまま残しています。相談したいことを続けて記入してください。','Your existing input is unchanged. Continue writing your inquiry.');return;
+    }
+    message.value=context.message;topic.value=context.useCase;
+    templateStatus.textContent=t('例文を入れました。ご自身の内容を追記してください。まだ送信していません。','Starting brief added. Fill in your details; nothing has been sent.');
+    message.focus();
+  });
   const say=(message)=>{result.textContent=message;result.focus();};
   async function check() {
     if(checking||busy)return;
