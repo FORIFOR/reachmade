@@ -205,7 +205,7 @@ body[data-lp-editorial] .ad-stage-head :is(.owned-lead,.ad-entry){grid-column:2}
 @media(max-width:500px){
  body[data-lp-editorial]{--lp-display:36px}
  body[data-lp-editorial] .ad-hero h1{font-size:var(--lp-display)!important;line-height:1.2!important;letter-spacing:-.055em;margin-bottom:22px!important}
- html[lang=ja] body[data-lp-editorial] .ad-hero h1{line-height:1.4!important;max-width:none!important;font-size:clamp(29px,9vw,36px)!important}
+ html[lang=ja] body[data-lp-editorial] .ad-hero h1{line-height:1.4!important;max-width:none!important;font-size:clamp(30px,9vw,36px)!important}
  body[data-lp-editorial] .ad-copy>.owned-kicker{font-size:10px}
  body[data-lp-editorial] .ad-hero .owned-lead{font-size:14px;line-height:1.9}
  body[data-lp-editorial] .ad-entry .owned-actions{display:grid!important;justify-items:start;gap:4px!important}

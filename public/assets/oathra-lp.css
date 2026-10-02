@@ -103,7 +103,7 @@
 [data-oathra-lp] .olp-ring__card strong{font-size:17px}
 }
 @media (max-width:400px){
-[data-oathra-lp] .olp-hero h1{font-size:29px;letter-spacing:-.05em}
+[data-oathra-lp] .olp-hero h1{font-size:30px;letter-spacing:-.05em}
 [data-oathra-lp] .olp-ring__figure{grid-template-columns:105px minmax(0,1fr);padding:20px;gap:16px}
 }
 @media (forced-colors:active){
