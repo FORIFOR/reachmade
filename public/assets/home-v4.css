@@ -66,6 +66,8 @@
 [data-home-v4] .v4-choice-meta{display:none}
 [data-home-v4] .v4-choice strong{font-size:14px;white-space:normal;overflow-wrap:anywhere;font-weight:650}
 [data-home-v4] .v4-choice small{display:block;font-size:12px;line-height:1.5;color:var(--quiet)}
+/* Subtitles wrap at phrase boundaries, so a lone particle never drops to its own line. */
+[data-home-v4] .v4-choice small{word-break:auto-phrase;text-wrap:balance}
 [data-home-v4] .v4-fill{display:none}
 [data-home-v4] .v4-reel-proof{font-size:13px;line-height:1.8;color:var(--quiet);margin-top:14px}
 [data-home-v4] .v4-reel-notes{margin-top:12px;color:var(--quiet);font-size:13px}

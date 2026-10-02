@@ -228,6 +228,7 @@ body[data-lp-editorial] .ad-stage-head :is(.owned-lead,.ad-entry){grid-column:2}
 @media(prefers-reduced-motion:reduce){body[data-lp-editorial] .ad-format__sheet,body[data-lp-editorial] .owned-primary{transition:none;transform:none!important}}
 @media(forced-colors:active){body[data-lp-editorial] :is(.ad-utterance,.ad-task-slip,.ad-role-guide,.ad-format__sheet,.ad-security-routes){border:1px solid CanvasText;box-shadow:none}body[data-lp-editorial] .ad-voice-mark i{background:CanvasText}}
 /* Phrase boundaries stay intact when editorial headings wrap. */
+html[lang=ja] body[data-lp-editorial] .owned-kicker{word-break:auto-phrase}
 body[data-lp-editorial] .ad-phrase{display:inline-block}
 html[lang=ja] body[data-lp-editorial] :is(h2,h3){word-break:auto-phrase;overflow-wrap:normal;line-break:strict;text-wrap:balance}
 /* The English stage uses explicit rows so inherited grid-area names cannot create empty tracks. */
