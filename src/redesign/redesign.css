@@ -92,6 +92,8 @@ body[data-rd] .rd-ctas{display:flex;gap:12px;flex-wrap:wrap}
 body[data-rd] .rd-forest{background:var(--rd-forest);color:var(--rd-forest-text)}
 body[data-rd] .rd-forest .rd-kicker{color:var(--rd-forest-meta)}
 body[data-rd] .rd-forest a:hover{color:var(--rd-amber)}
+/* Wrapping flex rows: let long Japanese headings shrink to the line instead of widening the page. */
+body[data-rd] :is(.rd-feat-side,.rd-feat-list,.rd-consult-row>*,.rd-pr-side,.rd-pr-list,.rd-sec-head>*,.rd-scope-head>*,.rd-next-copy,.rd-hero-foot>*,.rd-records>*,.rd-meta>*){min-width:0}
 body[data-rd] .rd-sticky{position:sticky;top:120px;display:flex;flex-direction:column;gap:26px}
 
 /* ---- Home hero ---- */
