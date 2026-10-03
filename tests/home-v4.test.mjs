@@ -11,6 +11,9 @@ import {esc} from '../public/assets/lab-core.mjs';
 const root = path.resolve(import.meta.dirname, '..');
 const fixtures = () => structuredClone(products);
 const shell = `<!doctype html><html lang="ja"><head><title>t</title></head><body data-home-flagship="x" id="top"><main id="main"><section>old</section></main><footer class="site-footer rm-footer"><a href="#access">a</a><a href="#faq">f</a></footer></body></html>`;
+// The 2026-10 redesign (src/redesign.mjs) composes the deployed homes. The v4 checks below still hold on the v4 layer's
+// own output, so the module keeps its honesty rules; tests/redesign.test.mjs covers the deployed homes.
+const v4Page = lang => refineHomeV4(shell.replace('lang="ja"', `lang="${lang}"`), products, lang);
 
 test('v4 home: one h1, seven products, no autoplay, preload none, safe external links', () => {
   const html = renderHomeV4(fixtures(), 'ja');
@@ -105,8 +108,8 @@ test('v4 assets stay dependency-free and respect visitor settings', async () => 
 });
 
 test('both built homes use the same v4 architecture with their real localized facts', async () => {
-  const ja = await fs.readFile(path.join(root, 'dist/index.html'), 'utf8');
-  const en = await fs.readFile(path.join(root, 'dist/en/index.html'), 'utf8');
+  const ja = v4Page('ja');
+  const en = v4Page('en');
   assert.match(ja, new RegExp(`data-home-v4="${HOME_V4_VERSION}"`));
   assert.match(en, new RegExp(`data-home-v4="${HOME_V4_VERSION}"`));
   assert.match(en, /href="\/en\/contact\/"/);
@@ -146,7 +149,7 @@ test('v4 home retains the public-source check date, and recordings never chain i
 
 test('v4 names each product film for what it is, and shows the ledger conditions under it', async () => {
   const client = await fs.readFile(new URL('../public/assets/home-v4.mjs', import.meta.url), 'utf8');
-  const html = await fs.readFile(new URL('../dist/index.html', import.meta.url), 'utf8');
+  const html = v4Page('ja');
   const chapterOf = id => html.slice(html.indexOf(`data-v4-chapter="${id}"`), html.indexOf('</article>', html.indexOf(`data-v4-chapter="${id}"`)));
   // Launchloom's footage is a film the tool made about itself (ledger: 自身で作った紹介映像), never a recording.
   const launchloom = chapterOf('launchloom');
@@ -204,7 +207,7 @@ test('v4 names each product film for what it is, and shows the ledger conditions
 });
 
 test('built v4 home leads with consultation, brings services forward, and links directly to verified product entries', async () => {
-  const html = await fs.readFile(new URL('../dist/index.html', import.meta.url), 'utf8');
+  const html = v4Page('ja');
   const hero = html.match(/<section class="v4-hero">[\s\S]*?<\/section>/)?.[0];
   assert.ok(hero, 'the built home has its introduction');
   assert.match(hero, /AIプロダクトの自主開発と、企業向け開発支援/);

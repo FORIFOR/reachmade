@@ -45,7 +45,8 @@ for(const lang of ['ja','en']){
   else if(lang==='ja'&&p.id==='genie') { assert.match(html,/class="owned-access"/); assert.match(html,/data-recording-src="\/media\/films\/genie-taskdock-13s\.mp4"/); }
   else { assert.match(html,/class="owned-access"/); assert.ok(html.includes(escapeHTML(p.preview))); assert.match(html,/data-recording-src="\/media\/products\//); }
   assert.match(html,/rel="canonical"/);
-  assert.ok(hasClass(html,'studio-related'),'Related-product section must exist in the generated page');
+  // 2026-10 redesign: related products are the 01–07 switcher and the next-product link.
+  assert.ok(hasClass(html,'studio-related')||(html.includes('class="rd-next')&&html.includes('class="main-nav rd-nav rd-switcher"')),'Related-product section must exist in the generated page');
  });
 }
 test('dynamic strings are escaped, not treated as HTML',()=>{

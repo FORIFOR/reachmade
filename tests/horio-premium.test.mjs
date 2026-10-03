@@ -1,4 +1,5 @@
 import test from 'node:test';
+import { refineHomeV4 } from '../src/home-v4.mjs';
 import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import path from 'node:path';
@@ -15,6 +16,10 @@ const films = await fs.readFile(path.join(root,'public/assets/product-films.js')
 const site = await fs.readFile(path.join(root,'public/assets/site.js'),'utf8');
 const home = await fs.readFile(path.join(root,'dist/index.html'),'utf8');
 const en = await fs.readFile(path.join(root,'dist/en/index.html'),'utf8');
+// The 2026-10 redesign (src/redesign.mjs) composes the deployed homes. The v4 checks below still hold on the v4 layer's
+// own output, so the module keeps its honesty rules; tests/redesign.test.mjs covers the deployed homes.
+const v4Shell = lang => `<!doctype html><html lang="${lang}"><head><title>t</title></head><body data-home-flagship="x" id="top"><main id="main"><section>old</section></main><footer class="site-footer rm-footer"><a href="#access">a</a><a href="#faq">f</a></footer></body></html>`;
+const v4Page = lang => refineHomeV4(v4Shell(lang), products, lang);
 
 test('Horio Premium avoids generic AI visual shortcuts',()=>{
   assert.doesNotMatch(declarations,/linear-gradient|radial-gradient|conic-gradient|backdrop-filter|glassmorphism|particles?|bento/i);
@@ -41,7 +46,7 @@ test('all design layers are imported before any CSS declarations',()=>{
 test('both homes lead with a clear promise, real footage and localized actions before enhancement',()=>{
   // The old flagship hero is replaced in both locales. Preserve the actual
   // promise -> footage -> product evidence journey with native no-script access.
-  for (const [html,lang,prefix] of [[home,'ja',''],[en,'en','/en']]) {
+  for (const [html,lang,prefix] of [[v4Page('ja'),'ja',''],[v4Page('en'),'en','/en']]) {
     assert.match(html,/data-home-v4="/);
     assert.equal((html.match(/<h1[\s>]/g)||[]).length,1);
     assert.equal((html.match(/data-studio-choice=/g)||[]).length,products.length);
@@ -67,7 +72,8 @@ test('both homes lead with a clear promise, real footage and localized actions b
   assert.match(en,/Independent AI products and development for companies/);
   assert.match(en,/From an idea\./);
   assert.match(en,/To something useful/);
-  assert.match(en,/not recordings of the live apps or stream/);
+  // The per-product footage note belongs to the v4 composition; the deployed reel states its own kind (redesign.test.mjs).
+  assert.match(v4Page('en'),/not recordings of the live apps or stream/);
   assert.match(rhythm,/CLAIM  →  PROOF/);
 });
 

@@ -1,4 +1,5 @@
 import test from 'node:test';
+import { refineHomeV4 } from '../src/home-v4.mjs';
 import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import os from 'node:os';
@@ -10,6 +11,9 @@ import { premiumFilmCuts } from '../src/premium-film-cuts.mjs';
 import { demoCopy, STAGED_FILMS } from '../public/assets/animated-demos.mjs';
 import { NOA_LP_VERSION, FILM, CHANNEL, refineNoaLp, writeNoaLp } from '../src/noa-lp.mjs';
 
+// The 2026-10 redesign (src/redesign.mjs) composes the deployed homes. The v4 checks below still hold on the v4 layer's
+// own output, so the module keeps its honesty rules; tests/redesign.test.mjs covers the deployed homes.
+const v4Page = lang => refineHomeV4(`<!doctype html><html lang="${lang}"><head><title>t</title></head><body data-home-flagship="x" id="top"><main id="main"><section>old</section></main><footer class="site-footer rm-footer"><a href="#access">a</a><a href="#faq">f</a></footer></body></html>`, products, lang);
 const read = p => fs.readFile(path.join(root, 'dist', p), 'utf8');
 const noa = products.find(p => p.id === 'noa');
 const mainOf = html => html.slice(html.indexOf('<main'), html.indexOf('</main>'));
@@ -45,19 +49,22 @@ test('ja: the page keeps the reviewed order, labels the film and links no reposi
   assert.match(html, new RegExp(`data-noa-lp="${NOA_LP_VERSION}"`));
   assert.equal((html.match(/<h1[\s>]/g) || []).length, 1);
   const at = s => { const i = html.indexOf(s); assert.ok(i >= 0, s); return i; };
-  const order = ['id="recording"', 'id="flow"', 'id="features"', 'id="watch"', 'id="status"', 'class="container owned-consult"', 'class="container owned-footer"'].map(at);
+  const order = ['id="recording"', 'id="flow"', 'id="features"', 'id="watch"', 'id="status"', 'id="consult"', 'class="rd-footer'].map(at); // 2026-10 redesign: consult and footer
   assert.deepEqual([...order].sort((a, b) => a - b), order);
   const main = mainOf(html);
   assert.doesNotMatch(main, /github\.com|README/);
   assert.doesNotMatch(html, /\sstyle="/, 'no inline styles: the CSP is style-src self');
-  assert.equal((main.match(/class="owned-primary"/g) || []).length, 2, 'one in the first view, one in consult');
+  // 2026-10 redesign: the kept first view has one primary button; the consult section has its own CTA.
+  assert.equal((main.match(/class="owned-primary"/g) || []).length, 1, 'one in the first view');
+  assert.match(main, /<a class="rd-btn rd-btn--amber rd-btn--xl" href="\/contact\/#product-noa">/);
   assert.match(main, /紹介映像（約35秒・無音・画面は再現・演出を含む）/);
   assert.match(main, /スタジオの画面はrc.6の画面構成を再現したもので、コメントと返事は例です。配信の実録画ではありません。/);
   assert.ok(main.includes(`<source src="${FILM.src}" type="video/mp4">`) && main.includes(`poster="${FILM.poster}"`));
   for (const tag of html.match(/<video\b[^>]*>/g) || []) { assert.match(tag, /preload="none"/); assert.doesNotMatch(tag, /autoplay/); }
   assert.match(main, /ソース非公開 · 声：AivisSpeech「コハク」（オズチャット）/);
   assert.match(main, /※ 動画のリンクは現在チャンネルのトップを指しています。/);
-  assert.match(html, /<a href="#watch">見る<\/a>/);
+  // 2026-10 redesign: the page-section header nav became the 01–07 switcher; the kept first view still links #watch.
+  assert.match(html, /<a class="nlp-secondary" href="#watch">/);
   assert.doesNotMatch(html, /id="bug"|不具合の記録|第4章/, 'the unverified bug story is not presented as a documented event');
   for (const a of [FILM.src, FILM.poster]) await fs.access(path.join(root, 'dist', a));
 });
@@ -78,7 +85,7 @@ test('en: the generic page is honest about closed source and the staged film', a
 });
 
 test('the home names Noa\'s clip for what it is and links the explainer section', async () => {
-  const html = await read('index.html');
+  const html = v4Page('ja');
   assert.match(html, /data-v4-chapter="noa" data-kind="紹介映像（画面は再現・演出を含む）"/);
   assert.match(html, /href="\/products\/noa\/#watch">5:48の解説（演出を含む）を見る/);
   assert.match(html, /星藍ノアは画面を再現した紹介映像です。これらは実アプリや配信の実録画ではありません。/);

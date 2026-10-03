@@ -52,7 +52,8 @@ for (const id of landingIds) for (const lang of ['ja','en']) {
     else assert.match(html,lang==='ja'?/現行製品の実演や、新UIの実装完了を示すものではありません/:/not a demonstration of the current product/);
     if (!recomposed) assert.equal((html.match(/class="owned-hero-badges"/g)||[]).length,1);
     if (!recomposed) assert.equal((html.match(/<li><strong>/g)||[]).length,3);
-    if (!recomposed) assert.equal((html.match(/class="owned-feature-card"/g)||[]).length,3);
+    // 2026-10 redesign: the ledger features render once, as the three .rd-feat entries of #capabilities.
+    if (!recomposed) assert.equal((html.match(/class="rd-feat"/g)||[]).length,3);
     if (!recomposed) for (const h of p[lang].highlights) { assert.ok(html.includes(escaped(h.value))); assert.ok(html.includes(escaped(h.label))); }
     else for (const h of p[lang].highlights) assert.equal(html.split(escaped(h.label)).length-1, 1, `${h.value} stated once`);
     assert.equal((html.match(/class="owned-features__source"/g)||[]).length,1);
@@ -148,7 +149,8 @@ test('Genie shows five labelled next-UI design frames and its app icon; the othe
       assert.ok(html.includes(`<a href="${f.src}"><img src="${f.src}" width="1600" height="900" loading="lazy" decoding="async" alt="${escaped(f.alt)}">`));
       await fs.access(path.join(root,'dist',f.src));
     }
-    assert.match(html,/<h1><img class="owned-product-icon" src="\/assets\/products\/genie\/icon-128\.png" width="128" height="128" alt="">/);
+    // The redesign keeps the original hero (with this icon and its note) below the new title, so its heading is an h2.
+    assert.match(html,/<h[12]><img class="owned-product-icon" src="\/assets\/products\/genie\/icon-128\.png" width="128" height="128" alt="">/);
     await fs.access(path.join(root,'dist',x.icon));
   }
   for (const id of landingIds.filter(id=>!landingExperience[id].ja.nextUi&&DESIGN_STUDIES.has(id))) for (const lang of ['ja','en']) {
