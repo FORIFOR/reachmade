@@ -136,3 +136,9 @@ The original CSS/client files with pre-existing user edits remain unchanged.
 ユーザー提供の事実「ゲームをこなしながらコメントを返せる仕組み」をNoaの日英LPへ反映。Jev_VTuber_Studio (private) HEAD 4db1927のdocs/PROGRAMME.md、public/noa-blocks.mjs、src/game-runner.mjs、src/talk-engine.mjsで静的照合した。NOA BLOCKSのStage側操作とVampire Survivorsの別プロセス操作は、返信生成と分かれて動く。実況は状況/鮮度を確認して選択。勝率や上手さ、常時無停止・全コメント即答は今回測定していない。
 
 冒頭は「プレイ中も、話しかけて。」、説明と最初の機能節にゲーム＋コメント返信を置き、対応例2件を示す。従来の3機能枠はF01にコメント整理とゲーム処理をまとめ、声/表情を維持。台帳のNoa照合日と英語の出典日テストを今回の日付へ更新する。既存の紹介映像・未公開通し実録画の説明は維持。変更対象はNoaの2LP、CSS/動作は変更しない。
+
+## 2026-10-02 — 実演から企業向け相談への小修正
+
+既存の企業向け支援の位置付け、トップ構成、映像を保ち、製品→検証記録→試作相談をつなぐ。音声AI・AIキャラクターは個別スコープの実現性検証として記述し、未測定の実績・費用・納期を作らない。静かな既存の編集的レイアウト、既存配色・フォントを再使用する。大規模リデザインではないため複数案の制作は省略。
+
+相談は任意のローカル例文から始める。クリックがなければ入力しない。既存の文章・製品選択・同意を変更せず、追跡・自動送信を増やさない。frontend-designはスキル一覧にないため追加導入せず、既存UI craftとHorio Premiumの基準を使用。実画面検証は環境のブラウザー起動制約でBLOCKED。Node fixtureは実画面の代替合格としない。詳細はdocs/CONVERSION_MEASUREMENT_2026-10-02.ja.md。

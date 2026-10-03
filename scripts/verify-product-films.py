@@ -4,11 +4,14 @@ import functools
 import hashlib
 import http.server
 import json
+import os
 import subprocess
 import threading
 from playwright.sync_api import sync_playwright
+from product_film_contract import load_expected_product_ids, validate_directory, validate_manifest
 
 ROOT = Path(__file__).resolve().parents[1]
+expected_products = load_expected_product_ids(ROOT)
 OUT = ROOT / 'film-qa'
 OUT.mkdir(exist_ok=True)
 MEDIA = ROOT / 'dist/media/products'
@@ -16,9 +19,7 @@ manifest = json.loads((MEDIA / 'manifest.json').read_text())
 report = {'scope': 'Rendered premium product films and locally built product directory. Not production or Safari.', 'media': [], 'browser': [], 'errors': []}
 
 try:
-    assert manifest['schema'] == 2 and manifest['mode'] == 'premium-site-edits'
-    assert manifest['policy']['speed'] == 1 and manifest['policy']['audio'] is False
-    assert len(manifest['recordings']) == 6
+    validate_manifest(manifest, expected_products)
 except Exception as error:
     report['errors'].append('manifest: ' + str(error))
 
@@ -56,12 +57,13 @@ threading.Thread(target=server.serve_forever, daemon=True).start()
 base = 'http://127.0.0.1:' + str(server.server_port)
 try:
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=True)
+        options = {'executable_path': os.environ['QA_CHROMIUM']} if os.environ.get('QA_CHROMIUM') else {}
+        browser = p.chromium.launch(headless=True, **options)
         context = browser.new_context(viewport={'width': 1440, 'height': 1000}, reduced_motion='reduce')
         page = context.new_page(); page.set_default_timeout(20000)
         page.on('pageerror', lambda error: report['errors'].append('page: ' + str(error)))
         page.goto(base + '/products/', wait_until='networkidle')
-        assert page.locator('.rm-film').count() == 6
+        validate_directory(page, expected_products, '/products/')
         assert page.locator('.rm-film-preview[src]').count() == 0
         for item in manifest['recordings']:
             product = item['id']
@@ -88,12 +90,12 @@ try:
             pg.on('request', lambda r: requests.append(r.url) if '/media/products/' in r.url and r.resource_type == 'media' else None)
             for route in ['/products/', '/en/products/']:
                 pg.goto(base + route, wait_until='networkidle')
-                assert pg.locator('.rm-film').count() == 6, route
+                validate_directory(pg, expected_products, route)
                 assert pg.locator('.rm-film-preview[src]').count() == 0, 'Reduced-motion must not preload media'
                 assert pg.evaluate('document.documentElement.scrollWidth <= innerWidth'), 'Horizontal overflow: ' + route
                 label = route.strip('/').replace('/', '-')
                 pg.screenshot(path=str(OUT / (label + '-' + str(width) + '.png')))
-                report['browser'].append({'route': route, 'width': width, 'films': 6, 'overflow': False, 'reduced_motion_autoload': False})
+                report['browser'].append({'route': route, 'width': width, 'films': len(expected_products), 'overflow': False, 'reduced_motion_autoload': False})
             assert not requests, 'Reduced-motion initiated media requests'
             ctx.close()
         browser.close()

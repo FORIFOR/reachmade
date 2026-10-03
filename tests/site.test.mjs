@@ -120,7 +120,9 @@ test('product previews use real local project assets',async()=>{
  for(const p of products){assert.ok(p.preview);await fs.access(path.join(root,'public',p.preview));assert.match(html,new RegExp(`src="${p.preview.replaceAll('/','\\/') }"`));}
 });
 test('private inquiry is localized, explicit and uses the owned contact destination',()=>{
- const html=htmlByPath.get('/contact/');assert.ok(html.includes(contactDestination(config,'ja').replaceAll('&','&amp;')));
+ const html=htmlByPath.get('/contact/');assert.match(html,/href="#reachmade-inquiry"/);
+ assert.equal(new URL('#reachmade-inquiry','https://reachmade.com/contact/').href,contactDestination(config,'ja'));
+ assert.doesNotMatch(html,/<a[^>]+href="#reachmade-inquiry"[^>]+target=/);
  assert.match(html,/送信ボタンを押すまで/);assert.match(html,/保存が完了した後/);
  assert.match(html,/name="consent" type="checkbox" required/);
  assert.doesNotMatch(html,/name="consent"[^>]*checked|id="copy-brief"/);

@@ -70,7 +70,7 @@ body[data-lab-experience]:not(.owned-product){--paper:var(--lab-paper);--ink:var
 .lab-hands-heading{display:flex;flex-direction:column;gap:7px}
 .lab-hands-heading>span{font:10px/1.6 ui-monospace,monospace;color:var(--muted,#657067);letter-spacing:.06em}
 .lab-hands-heading>b{font-size:15px;line-height:1.7;font-weight:600}
-.lab-hands>p{font-size:12px;line-height:1.8;color:var(--muted,#657067);margin-top:7px}
+.lab-hands>p,.lab-operation-content>p{font-size:12px;line-height:1.8;color:var(--muted,#657067);margin-top:7px}
 .lab-decisions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:13px}
 .lab-decisions button{padding:11px 12px;border:1px solid var(--rule,#dce1d9);border-radius:7px;min-height:49px;line-height:1.65;text-align:left;background:transparent;color:inherit;font-size:12px}
 .lab-decisions button:hover{border-color:var(--accent,#345b42)}
@@ -201,3 +201,13 @@ body[data-lab-experience]:not(.owned-product){--paper:var(--lab-paper);--ink:var
 .lab-hands-actions>button:disabled{opacity:.6;cursor:not-allowed}
 .lab-hands [data-cancel-import][hidden]{display:none}
 .lab-hands[data-import-state=reading] [data-draft-status]{font-weight:600;color:var(--ink,#202822)}
+/* Event-driven local operation: one existing sample surface, never a story-clock completion. */
+.lab-hands[data-operation-phase]{border:1px solid #cbd3cd;border-radius:20px;transition:border-color 220ms cubic-bezier(.2,.75,.2,1),border-radius 420ms cubic-bezier(.2,.75,.2,1);background:#fff}
+.lab-hands[data-operation-phase=running],.lab-hands[data-operation-phase=verifying]{border-color:#526d88}
+.lab-hands[data-operation-phase=done]{border-color:#53745c}
+.lab-hands[data-operation-phase=error]{border-color:#9a5840}
+.lab-operation-status{font-size:12px;line-height:1.6;font-weight:600;color:#324b3b;margin:0 0 14px;min-height:20px;overflow-wrap:anywhere}
+.lab-hands[data-operation-phase=error] .lab-operation-status{color:#7f3b26}
+.lab-operation-status[hidden]{display:none}
+@media(prefers-reduced-motion:reduce){.lab-hands[data-operation-phase]{transition:none}}
+@media(forced-colors:active){.lab-hands[data-operation-phase]{border-color:CanvasText}.lab-operation-status{color:CanvasText}}
