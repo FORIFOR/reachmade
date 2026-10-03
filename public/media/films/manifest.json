@@ -20,28 +20,6 @@
       "render": "ffmpeg -ss 3.2 -frames:v 1 -vf scale=1280:-1 -q:v 3"
     },
     {
-      "path": "/media/films/genie-15s.mp4",
-      "bytes": 4324898,
-      "sha256": "a81954445aa06687106b9984a7b4150d9c7ecc418d5e333b00f191f6a77ac37a",
-      "source": "reachmade_genie_oathra_source.zip → genie/film.html",
-      "sourceSha256": "e55b52a81af266f3812e54e947e0c5b309a683c445904c47d5c9f87c0d77aff8",
-      "render": "prepass.py (sheet:2.74 win:11.0); render2.py; genie/audio.py; master.py; ffmpeg -framerate 60 -i frames/f%04d.png -i soundtrack.wav -vf \"scale=out_color_matrix=bt709:out_range=tv,format=yuv420p\" -c:v libx264 -preset slow -crf 20 -tune animation -c:a aac -b:a 192k -movflags +faststart -t 15",
-      "spec": "1920x1080, 60 fps, 15.000 s, AAC stereo, -14 LUFS master",
-      "edits": [
-        "End card tagline replaced with the ledger short \"自分のAIモデルと作る、Macのワークスペース。\".",
-        "Label \"イメージ　元のメモを再現\" became \"イメージ　メモと入力画面を再現\" (the input panel is also recreated)."
-      ],
-      "editedSourceSha256": "4f76e11ea304b94c10ffc8c60573df2835f6ae2cbf8f47d7a23ffec7ba83fdc3"
-    },
-    {
-      "path": "/media/films/genie-15s.jpg",
-      "bytes": 64987,
-      "sha256": "6b85edd1124ca74b0478fe74f36a23a70fa40fec06cc9b924c6521b6dc56a04f",
-      "source": "/media/films/genie-15s.mp4",
-      "sourceSha256": "a81954445aa06687106b9984a7b4150d9c7ecc418d5e333b00f191f6a77ac37a",
-      "render": "ffmpeg -ss 6.6 -frames:v 1 -vf scale=1280:-1 -q:v 3"
-    },
-    {
       "path": "/media/films/oathra-15s.mp4",
       "bytes": 1626443,
       "sha256": "4ed0d27d63a5a8fc69d619c1b09b6c08a8f92834fb51062c6d4747e4e375edf6",
@@ -143,6 +121,24 @@
       "source": "/media/films/genie-taskdock-13s.mp4",
       "sourceSha256": "602c0f9404a4d414f3a173f8ffed610cc5bc3a2b9296fcb709d0fdb7cd5a3a67",
       "render": "ffmpeg -ss 0.35 -frames:v 1 -q:v 2"
+    },
+    {
+      "path": "/media/films/genie-30s.mp4",
+      "bytes": 5380504,
+      "sha256": "07f3a50fc7b77c89c3c3b159e13c82746e2ee7d912dafe0886f79a4fd18f02cf",
+      "source": "Genie Film 30s.mp4 (owner-supplied, 2026-10-04, 1920x1080 30 fps 30.000 s, no audio track, 20085452 bytes)",
+      "sourceSha256": "b3e777de72616e8927fb7b75cf49c6186e7629b7a80b5f177444a5aa602f27ed",
+      "render": "ffmpeg -an -c:v libx264 -preset slow -crf 20 -pix_fmt yuv420p -movflags +faststart (SSIM 0.9989 vs the source)",
+      "spec": "1920x1080, 30 fps, 30.000 s, no audio",
+      "note": "Introduction film. Frames are labelled 現行製品・再現イメージ (recreation of the current product) and 次のUI・設計プレビュー（未実装） (design preview, not shipped); not a recording of the app."
+    },
+    {
+      "path": "/media/films/genie-30s.jpg",
+      "bytes": 52997,
+      "sha256": "2939696d8205985be282a63d97524bc4907a26de74c89945db8f7854a6450fad",
+      "source": "/media/films/genie-30s.mp4",
+      "sourceSha256": "07f3a50fc7b77c89c3c3b159e13c82746e2ee7d912dafe0886f79a4fd18f02cf",
+      "render": "ffmpeg -ss 4 -frames:v 1 -vf scale=1280:-1 -q:v 3"
     }
   ]
 }

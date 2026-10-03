@@ -6,7 +6,7 @@ const originals=new Map([
  // The fifteen-second films (src/fifteen-second-films.mjs). The ID only admits the path to the
  // tested Range route; the file served is the film itself. Safari needs 206 to play video.
  ['/media/films/reachmade-15s.mp4','genie'],
- ['/media/films/genie-15s.mp4','genie'],
+ ['/media/films/genie-30s.mp4','genie'],
  ['/media/films/oathra-15s.mp4','oathra'],
  ['/media/films/oathra-30s.mp4','oathra'],
  ['/media/films/agent-team-design-30s.mp4','agent-team'],
