@@ -38,7 +38,7 @@ export const FRAMES = Object.freeze({
   result: {src: `${A}lp-result.jpg`, alt: 'コピーと保存のボタンがある回答画面'},
   save: {src: `${A}lp-save.jpg`, alt: '回答をMarkdownファイルとして保存するダイアログ'},
   proposal: {src: `${A}lp-proposal.jpg`, alt: '「ともに、未来へ。」という見出しのWebページと、依頼の説明'},
-  orbit: {src: `${A}lp-orbit.jpg`, alt: 'Genieが生成した、惑星が公転するHTML'},
+  orbit: {src: `${A}lp-orbit.jpg`, alt: 'Genieへの依頼から作り始め、完成版はCodexで仕上げた、惑星が公転するHTML'},
   // 01 の背景。TaskDock が写っていない実画面（紹介映像から切り出し）。
   work: {src: `${A}lp-work.jpg`, alt: '作業中のダッシュボード（Pulse）の画面'},
   // Genie の印（白）。GenieMark-source.png を切り詰めたもの。197×120。
