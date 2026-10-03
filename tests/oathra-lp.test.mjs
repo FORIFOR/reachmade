@@ -14,7 +14,7 @@ test('the Japanese Oathra page follows the brief order and states the status of 
   assert.match(html, new RegExp(`data-oathra-lp="${OATHRA_LP_VERSION}"`));
   assert.equal((html.match(/<h1[\s>]/g) || []).length, 1);
   const at = s => { const i = html.indexOf(s); assert.ok(i >= 0, s); return i; };
-  const order = ['class="container olp-hero"', 'id="ring"', 'id="steps"', 'id="trust"', 'id="recordings"', 'id="status"', 'id="start"', 'class="container owned-consult"', 'class="container studio-related"'].map(at);
+  const order = ['class="container olp-hero"', 'id="ring"', 'id="steps"', 'id="trust"', 'id="recordings"', 'id="status"', 'id="start"', 'id="consult"', 'class="rd-next'].map(at); // 2026-10 redesign: consult and next-product sections
   assert.deepEqual([...order].sort((a, b) => a - b), order, 'sections follow the brief');
   // First view: one primary button, one-line note, the 30-second image film labelled as such, never autoplaying.
   const hero = html.slice(order[0], order[1]);

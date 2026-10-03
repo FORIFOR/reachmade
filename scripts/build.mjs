@@ -20,6 +20,7 @@ import { writeHomeV4 } from '../src/home-v4.mjs';
 import { writeGenieLp } from '../src/genie-lp.mjs';
 import { writeOathraLp } from '../src/oathra-lp.mjs';
 import { writeNoaLp } from '../src/noa-lp.mjs';
+import { writeRedesign } from '../src/redesign.mjs';
 export { root, escapeHTML, validateConfig } from './build-core.mjs';
 
 export async function build() {
@@ -50,6 +51,9 @@ export async function build() {
   // Japanese 星藍ノア page only: re-composed from the owner's 2026-09-29 patch. Runs after Oathra (each layer owns its CSS marker).
   await writeNoaLp(dist,products);
   await writeProductCapabilityStyles(dist);
+  // 2026-10 redesign: the final composition of the home and every product page. Keeps the access table, FAQ and the
+  // product sections the new template does not replace.
+  await writeRedesign(dist,products);
   const showcaseRoutes = ['', 'en/', ...products.flatMap(p=>[`products/${p.id}/`,`en/products/${p.id}/`])];
   const cssVersion = createHash('sha256').update(await fs.readFile(path.join(dist,'assets/showcase.css'))).digest('hex').slice(0,16);
   for (const route of showcaseRoutes) {

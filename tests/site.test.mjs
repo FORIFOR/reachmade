@@ -1,4 +1,5 @@
 import test from 'node:test';
+import { refineHomeV4 } from '../src/home-v4.mjs';
 import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import path from 'node:path';
@@ -9,6 +10,9 @@ import { contactDestination } from '../src/site-experience.mjs';
 const dist=path.join(root,'dist');
 const config=JSON.parse(await fs.readFile(path.join(root,'site.config.json'),'utf8'));
 const routes=JSON.parse(await fs.readFile(path.join(root,'docs/routes.json'),'utf8'));
+// The 2026-10 redesign (src/redesign.mjs) composes the deployed homes. The v4 checks below still hold on the v4 layer's
+// own output, so the module keeps its honesty rules; tests/redesign.test.mjs covers the deployed homes.
+const v4Page=lang=>refineHomeV4(`<!doctype html><html lang="${lang}"><head><title>t</title></head><body data-home-flagship="x" id="top"><main id="main"><section>old</section></main><footer class="site-footer rm-footer"><a href="#access">a</a><a href="#faq">f</a></footer></body></html>`,products,lang);
 const htmlByPath=new Map();
 for (const r of routes) htmlByPath.set(r.route,await fs.readFile(path.join(dist,r.route,'index.html'),'utf8'));
 const clone=()=>structuredClone(config);
@@ -85,7 +89,7 @@ test('each product is rendered exactly once in each product directory',()=>{
 test('home leads with an explorable product and retains source-aware catalogue routes',()=>{
  // Both homes: claim + reel → services → products → optional access table → FAQ; every product stays reachable without script.
  for(const [lang,prefix] of [['ja','/'],['en','/en/']]){
-  const html=htmlByPath.get(prefix);
+  const html=v4Page(lang);
   const at=s=>html.indexOf(s);
   assert.match(html,/data-home-v4="/);
   assert.ok(at('class="v4-hero')>=0&&at('class="v4-hero')<at('id="reel"')&&at('id="reel"')<at('id="services"')&&at('id="services"')<at('id="products"')&&at('id="products"')<at('id="access"')&&at('id="access"')<at('id="faq"'));
