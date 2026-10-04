@@ -36,3 +36,12 @@ test('Noa JA and EN proof/demo paths distinguish an edited test from the intro f
     }
   }
 });
+
+test('long access labels wrap on phones and changed Noa views require screenshots', async () => {
+  const css = await fs.readFile(new URL('../public/assets/home-flagship.css', import.meta.url), 'utf8');
+  assert.match(css, /@media\(max-width:760px\)[\s\S]*?\.rm-access-link\{[^}]*white-space:normal;overflow-wrap:anywhere/);
+  const config = JSON.parse(await fs.readFile(new URL('../ui-quality.config.json', import.meta.url), 'utf8'));
+  for (const file of ['noa-watch-desktop.png', 'noa-watch-mobile.png', 'noa-scope-en-desktop.png', 'noa-scope-en-mobile.png', 'home-en-m-access.png', 'home-narrow-access.png']) {
+    assert.ok(config.requiredImages.includes(`artifacts/ui/${file}`), file);
+  }
+});

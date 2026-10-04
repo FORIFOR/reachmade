@@ -48,7 +48,7 @@ labels/descriptions, not an independent full runtime review of the character.
 - Reproduction before the change: build plus `node --test
   tests/noa-watch-links.test.mjs` failed both new tests on the missing individual
   destinations.
-- After the change: `npm run check` passed all 498 Node tests, zero skipped.
+- After the link change: `npm run check` passed all 498 Node tests, zero skipped.
   New tests cover direct links, matching video types/durations, JA/EN demo and
   evidence paths, removal of pending copy, and the full-run caveat.
 - Local browser preview: **BLOCKED**. CUA could not open
@@ -58,3 +58,19 @@ labels/descriptions, not an independent full runtime review of the character.
   build. Physical Safari/iPhone and VoiceOver are also unverified.
 - CI and independent review status belong to the draft PR checks/discussion;
   a passing code suite is not evidence of more views, inquiries or paid work.
+
+## CI follow-up
+
+On `7369cbb8c7a84949fecbe9cc6d42ecd197f0c395`, the required-image job captured
+and uploaded the actual screenshots but failed for horizontal overflow in the
+390px expanded access table (`home-m-access.png`). Inspection of that image
+showed the shared entry-link style did not wrap, including the existing Genie
+entry. The mobile-only rule now permits wrapping instead of hiding overflow or
+removing the edited-test qualification from the label.
+
+The required capture set now includes the changed Noa Japanese watch section
+and English scope links at desktop/phone sizes, plus expanded English-phone
+and Japanese-320px access tables. The local suite after this follow-up passes
+499 tests. No thresholds were relaxed. Inspect the latest CI images and checks
+before treating the visual follow-up as passed; the initial capture does not
+prove the later fix.
