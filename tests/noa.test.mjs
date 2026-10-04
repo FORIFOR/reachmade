@@ -10,6 +10,7 @@ import { recordings } from '../src/films.mjs';
 import { premiumFilmCuts } from '../src/premium-film-cuts.mjs';
 import { demoCopy, STAGED_FILMS } from '../public/assets/animated-demos.mjs';
 import { NOA_LP_VERSION, FILM, CHANNEL, refineNoaLp, writeNoaLp } from '../src/noa-lp.mjs';
+import {noaVideos} from '../src/noa-videos.mjs';
 
 // The 2026-10 redesign (src/redesign.mjs) composes the deployed homes. The v4 checks below still hold on the v4 layer's
 // own output, so the module keeps its honesty rules; tests/redesign.test.mjs covers the deployed homes.
@@ -26,12 +27,14 @@ test('the seventh product is 星藍ノア: closed source, with its limits stated
   assert.equal(noa.closedSource, true);
   assert.equal(noa.repo, null);
   assert.equal(noa.source, null);
-  assert.equal(noa.evidence, CHANNEL);
+  assert.equal(noa.evidence, noaVideos.explainer);
+  assert.equal(noa.demo, noaVideos.gameplay);
   assert.equal(noa.ja.license, 'ソース非公開');
   assert.match(noa.ja.scope, /不適切な返事を絶対に出さない仕組みではありません。/);
   assert.match(noa.ja.scope, /配信の通し運転の実録画は未公開です。/);
   // The film on the site is an introduction film with recreated screens, never called a recording of the stream.
-  assert.equal(noa.ja.proof, '解説用に作った映像。配信の実録画ではありません。');
+  assert.match(noa.ja.proof, /紹介映像は配信の実録画ではありません。/);
+  assert.match(noa.ja.proof, /待ち時間をカットしたゲームのテスト収録/);
   assert.match(noa.en.proof, /not a recording of a live stream/);
 });
 
@@ -62,7 +65,8 @@ test('ja: the page keeps the reviewed order, labels the film and links no reposi
   assert.ok(main.includes(`<source src="${FILM.src}" type="video/mp4">`) && main.includes(`poster="${FILM.poster}"`));
   for (const tag of html.match(/<video\b[^>]*>/g) || []) { assert.match(tag, /preload="none"/); assert.doesNotMatch(tag, /autoplay/); }
   assert.match(main, /ソース非公開 · 声：AivisSpeech「コハク」（オズチャット）/);
-  assert.match(main, /※ 動画のリンクは現在チャンネルのトップを指しています。/);
+  assert.match(main, /それぞれの動画をYouTubeで開きます。/);
+  assert.doesNotMatch(main, /個別の動画リンクは準備中/);
   // 2026-10 redesign: the page-section header nav became the 01–07 switcher; the kept first view still links #watch.
   assert.match(html, /<a class="nlp-secondary" href="#watch">/);
   assert.doesNotMatch(html, /id="bug"|不具合の記録|第4章/, 'the unverified bug story is not presented as a documented event');
@@ -95,7 +99,7 @@ test('the home names Noa\'s clip for what it is and links the explainer section'
   const start = html.indexOf('data-v4-chapter="noa"');
   const chapter = html.slice(start, html.indexOf('</article>', start));
   assert.ok(chapter.includes(`<source src="/media/products/noa.mp4"`) && chapter.includes(`poster="/media/products/noa.jpg"`));
-  assert.ok(chapter.includes(`href="${CHANNEL}"`) && chapter.includes('>配信を見る '));
+  assert.ok(chapter.includes(`href="${noaVideos.gameplay}"`) && chapter.includes('>ゲームのテスト収録を見る（編集版） '));
   assert.match(html, /星藍ノアはソース非公開のため、YouTubeの配信と解説動画で動きを確かめられます。/);
 });
 

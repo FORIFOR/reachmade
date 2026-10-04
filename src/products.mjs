@@ -11,6 +11,7 @@
  *  answers (src/talk-engine.mjs), AivisSpeech コハク (docs/VOICE.md), 4 mouth shapes and 22 parts
  *  (public/models/noa/model.json), 6 effects (public/effect-director.mjs).
  *  2026-09-30: renamed 夜澄ノア → 星藍ノア at the owner's request. The introduction film still shows the old name. */
+import {noaVideos} from './noa-videos.mjs';
 /** Date the highlights/features of every product were checked against its repository. */
 export const capabilitiesCheckedAt = '2026-09-27';
 export const products = [
@@ -263,19 +264,20 @@ export const products = [
     closedSource: true, filmKind: 'intro', repo: null, labSite: 'https://noa.reachmade.com/', site: 'https://reachmade.com/products/noa/',
     preview: '/assets/products/noa.jpg', previewSource: 'Frame at 5 s of the introduction film Jev Studio LP Video.mp4 (recreated rc.6 screen layout)',
     source: null,
-    evidence: 'https://youtube.com/channel/UCjX52bV1kfUgSuqf3vv_rTQ',
+    evidence: noaVideos.explainer,
     // 2026-10-02: gameplay + chat checked in Jev_VTuber_Studio (private), HEAD 4db1927:
     // docs/PROGRAMME.md, public/noa-blocks.mjs, src/game-runner.mjs, src/talk-engine.mjs.
     // Static implementation evidence; not a gameplay-skill or live-stream performance measurement.
-    demo: 'https://youtube.com/channel/UCjX52bV1kfUgSuqf3vv_rTQ', capabilitiesCheckedAt: '2026-10-02',
+    // Public video destinations checked 2026-10-04; implementation-check date is unchanged.
+    demo: noaVideos.gameplay, capabilitiesCheckedAt: '2026-10-02',
     ja: {
-      headline: 'コメントを、声と表情に。', demoLabel: '配信を見る', previewLabel: '紹介映像の一場面（画面は再現）',
+      headline: 'コメントを、声と表情に。', demoLabel: 'ゲームのテスト収録を見る（編集版）', evidenceLabel: '返答・声・表情の解説を見る', previewLabel: '紹介映像の一場面（画面は再現）',
       short: 'コメントに、声と表情で返す配信キャラクター。',
       description: '返事・声・見た目は別々の仕組み。その間をつなぎ、配信のコメントに声と表情で返します。',
       status: '配信中', license: 'ソース非公開',
       outcome: 'コメント → 判定 → 声・表情',
       scope: '不適切な返事を絶対に出さない仕組みではありません。会話AIの利用料と電力がかかります。配信の通し運転の実録画は未公開です。',
-      proof: '解説用に作った映像。配信の実録画ではありません。',
+      proof: '紹介映像は配信の実録画ではありません。別に、待ち時間をカットしたゲームのテスト収録を公開しています。',
       consult: 'キャラクターを使った配信、店頭や施設での案内、問い合わせ対応の試作。',
       highlights: [{value:'先にコードで整理',label:'重複・古いコメントはAIに渡さない'},{value:'声はコハク',label:'AivisSpeechの既存音声。専用学習なし'},{value:'演出6種類',label:'声の再生に合わせる。AIの追加呼び出しなし'}],
       features: [
@@ -285,13 +287,13 @@ export const products = [
       ]
     },
     en: {
-      headline: 'Comments, answered in voice and expression.', demoLabel: 'Watch the stream', previewLabel: 'A scene from the introduction film (recreated screen)',
+      headline: 'Comments, answered in voice and expression.', demoLabel: 'Watch the edited gameplay test', evidenceLabel: 'Watch the reply, voice and face explainer', previewLabel: 'A scene from the introduction film (recreated screen)',
       short: 'A streaming character who answers comments with a voice and a face.',
       description: 'The reply, the voice and the look are separate systems. Noa joins them and answers stream comments with voice and expression.',
       status: 'Streaming', license: 'Closed source',
       outcome: 'Comment → judgement → voice and expression',
       scope: 'It is not a system that can never give an inappropriate reply. The conversation AI has usage fees, and running it uses electricity. A recording of a full live run has not been published.',
-      proof: 'A film made to explain Noa; not a recording of a live stream.',
+      proof: 'The introduction film is not a recording of a live stream. A separate gameplay test recording is available with waiting time edited out.',
       consult: 'Character-led streams, guidance in shops and venues, and prototypes for handling enquiries.',
       highlights: [{value:'Sorted in code first',label:'Duplicate and stale comments never reach the AI'},{value:'Kohaku voice',label:'An existing AivisSpeech voice, not trained for Noa'},{value:'Six effects',label:'Timed to the voice, with no extra AI call'}],
       features: [

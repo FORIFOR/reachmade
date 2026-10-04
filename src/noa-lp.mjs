@@ -11,7 +11,8 @@
  * The first-view still (15 stacked image parts) is replaced, at the owner's request (2026-09-29), by the introduction
  * film 「Jev Studio LP Video.mp4」. The film states that its studio screens recreate the rc.6 layout and that its
  * comments are examples; the caption says the same, and that it is not a recording of a live stream.
- * The channel is linked; the two named videos are described without links until their individual URLs are known.
+ * The channel and individual public videos are linked. Gameplay is labelled as an edited test recording;
+ * the explainer and introduction remain distinct from a full live-run record.
  *
  * Checked against Jev_VTuber_Studio (private) origin/main a6aa1b7 and release/rc6-voice on 2026-09-29.
  * 2026-10-02: removed the supplied bug-fix anecdote: the repository did not substantiate it and the supplied
@@ -22,8 +23,9 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import {products as ledgerProducts} from './products.mjs';
+import {noaVideos} from './noa-videos.mjs';
 
-export const NOA_LP_VERSION = '20261002-noa-gameplay-1';
+export const NOA_LP_VERSION = '20261004-noa-watch-links-1';
 const CSS_MARK = '/* REACHMADE_NOA_LP */';
 const PAGE = 'products/noa/index.html';
 export const CHANNEL = 'https://youtube.com/channel/UCjX52bV1kfUgSuqf3vv_rTQ';
@@ -58,14 +60,14 @@ const FEATURES = [
 const features = () => `<section class="container nlp-section nlp-feature-section" id="features"><div class="nlp-head"><p class="nlp-label">配信の裏側</p><h2>プレイと会話を支える、<br>三つの仕組み。</h2></div><div class="nlp-features">${FEATURES.map(([c, h, b, tags]) => `<article><span class="nlp-code">${c}</span><div class="nlp-feature-copy"><h3>${h}</h3><p>${b}</p><ul class="nlp-tags">${tags.map(t => `<li>${t}</li>`).join('')}</ul></div></article>`).join('')}</div></section>`;
 
 const WATCH = [
-  ['LIVE · 配信', 'YouTubeチャンネル', '実際の配信。コメントへの返事はその場で作られます。'],
-  ['5:48 · 解説（演出を含む）', '私の中身、見せます。', 'ひとつのコメントが返事・声・表情になるまでを、6章で説明します。'],
-  ['0:30 · 自己紹介PV（演出を含む）', '星藍ノア 自己紹介', '声と口の動きは、実際の読み上げ音声に合わせています。']
+  ['4:08 · ゲームのテスト収録（編集版）', '武器選びから、反省会まで。', 'Vampire Survivorsのテスト収録から、会話・武器選び・振り返りをまとめた編集版。待ち時間をカットしています。', noaVideos.gameplay],
+  ['5:49 · 解説（演出を含む）', '返答・声・表情の仕組み。', 'コメントが返事になるまでと、会話モデル・音声合成・表情の役割分担を紹介します。', noaVideos.explainer],
+  ['0:34 · 自己紹介PV（演出を含む）', 'はじめまして、星藍ノアです。', 'ノアの自己紹介映像。ゲームや雑談を楽しむキャラクターを紹介します。', noaVideos.introduction]
 ];
-const watch = () => `<section class="container nlp-section nlp-watch-section" id="watch"><div class="nlp-head"><p class="nlp-label">見る</p><h2>配信と、<br>ノアのつくり方。</h2></div><div class="nlp-watch">${WATCH.map(([k, h, b], i) => {
-  const content = `<span class="nlp-code">${k}</span><strong>${h}</strong><span class="nlp-watch__description">${b}${i ? '<span class="nlp-watch__availability">個別の動画リンクは準備中</span>' : ''}</span>`;
-  return i ? `<article class="nlp-watch__pending">${content}</article>` : ext(CHANNEL, `${content}<span class="nlp-watch__arrow" aria-hidden="true">↗</span>`);
-}).join('')}</div><p class="nlp-note">※ 動画のリンクは現在チャンネルのトップを指しています。解説と自己紹介PVの個別リンクは、確認でき次第掲載します。</p></section>`;
+const watch = () => `<section class="container nlp-section nlp-watch-section" id="watch"><div class="nlp-head"><p class="nlp-label">見る</p><h2>動画で見る、<br>ノアの動きとつくり方。</h2></div><div class="nlp-watch">${WATCH.map(([k, h, b, href]) => {
+  const content = `<span class="nlp-code">${k}</span><strong>${h}</strong><span class="nlp-watch__description">${b}</span>`;
+  return ext(href, `${content}<span class="nlp-watch__arrow" aria-hidden="true">↗</span>`);
+}).join('')}</div><p class="nlp-note">それぞれの動画をYouTubeで開きます。ゲーム動画は待ち時間をカットしたテスト収録で、配信の通し運転の実録画ではありません。</p><p class="nlp-note">${ext(noaVideos.judgementShort, `28秒で、ゲーム中の3つの判断を見る${arrowOut}`)} · ${ext(CHANNEL, `チャンネルの動画一覧を見る${arrowOut}`)}</p></section>`;
 
 const status = () => `<section class="container nlp-section nlp-status" id="status"><div class="nlp-head"><p class="nlp-label">現在地</p><h2>できることと、まだ言わないこと。</h2></div><div class="nlp-status__cols"><div><h3>いま動いていること</h3><ul><li>ゲームをプレイしながら、YouTubeのコメントに声と表情で返事をする</li><li>重複・古いコメントの除外、決まった答えの差し込み</li><li>声に合わせた口・目・視線と、6種類の演出</li></ul></div><div><h3>まだ言わないこと</h3><ul><li>不適切な返事を絶対に出さない、とは言えません</li><li>配信の通し運転を記録した実録画は、まだ公開していません</li><li>無料で動くわけではありません。会話AIの利用料と電力がかかります</li></ul></div></div><p class="nlp-terms"><strong>動作条件・ライセンス</strong><span>ソース非公開 · 声：AivisSpeech「コハク」（オズチャット）· 各素材は配布元の規約に従って使用</span></p></section>`;
 

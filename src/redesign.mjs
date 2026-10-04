@@ -285,7 +285,7 @@ function productMain(p, list, lang, {kept, figure, source, filmAnchor}) {
   const links = [
     ['demo', nav.demo, nav.demoLabel],
     ...(p.closedSource || !p.repo ? [] : [['source', p.repo, r.sourceLabel]]),
-    ['evidence', p.evidence, r.evidenceLabel]
+    ['evidence', p.evidence, t.evidenceLabel || r.evidenceLabel]
   ].map(([kind, url, label]) => { const href = local(url); return `<li><a class="rd-link-row" href="${esc(href)}"${ext(href)}><span class="rd-link-kind">${r.linkKinds[kind]}</span><span class="rd-link-label">${esc(label)}</span><span class="rd-link-host">${esc(external(href) ? host(href) : 'reachmade.com')} <span aria-hidden="true">↗</span></span></a></li>`; }).join('');
   // A moved figure carries its own labels (a recording block may open on its reconstruction view), so the
   // "recording" label is not repeated beside it. Non-recording kinds are always stated.
