@@ -2,6 +2,7 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { capabilitiesCheckedAt } from './products.mjs';
+import {noaVideos} from './noa-videos.mjs';
 const e = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 export const landingIds = Object.freeze(['genie','ai-meeting','oathra','aisecure','agent-team','launchloom','noa']);
 export function landingRoute(id, lang) {
@@ -234,11 +235,11 @@ export const landingExperience = Object.freeze({
       title:'プレイ中も、話しかけて。',
       lead:'ゲームを進めながら、コメントには声と表情で返事。星藍ノアは、プレイとおしゃべりをいっしょに届けるAIキャラクターです。',
       primary:['配信を見る（YouTube）','https://youtube.com/channel/UCjX52bV1kfUgSuqf3vv_rTQ'],
-      secondary:['解説・自己紹介の動画を見る','https://youtube.com/channel/UCjX52bV1kfUgSuqf3vv_rTQ'],
+      secondary:['返答・声・表情の解説を見る',noaVideos.explainer],
       tryNow:'YouTubeの配信で、コメントへの返事と声・表情を見る。',
       actionNote:'ソースは公開していません。配信とYouTubeの動画で、実際の動きを確かめられます。',
       startTitle:'動いているところは、配信と動画で。',
-      startBody:'実際の配信では、コメントへの返事はその場で作られます。解説（5:48）と自己紹介PV（0:30）は、演出を含む映像です。',
+      startBody:'ゲームのテスト収録は待ち時間をカットした編集版です。返答・声・表情の解説と自己紹介PVは、演出を含む映像です。いずれも配信の通し運転を証明するものではありません。',
       beats:[['返事','Jevが判定して、返事を決める'],['声','コハクの声で読み上げる'],['見た目','画像を重ねて、表情を動かす']]
     },
     en: {
@@ -247,12 +248,12 @@ export const landingExperience = Object.freeze({
       featuresTitle:'Gameplay and conversation, side by side.',
       flowTitle:'From your comment to Noa’s response.',
       consultTitle:'Bring your own character to the screen.',
-      primary:['Open the YouTube channel','https://youtube.com/channel/UCjX52bV1kfUgSuqf3vv_rTQ'],
-      secondary:['Watch the introduction film','#recording'],
-      tryNow:'Open Noa’s YouTube channel to explore streams and videos.',
-      actionNote:'The source is not public. This link opens Noa’s YouTube channel.',
-      startTitle:'Explore Noa’s streams and videos.',
-      startBody:'The channel is available below. Direct links to the explainer (5:48) and introduction film (0:30) will be added once confirmed. Both films include staging.',
+      primary:['Watch the edited gameplay test',noaVideos.gameplay],
+      secondary:['Watch the reply, voice and face explainer',noaVideos.explainer],
+      tryNow:'Watch Noa’s conversation, weapon choices and post-game reflection in an edited gameplay test.',
+      actionNote:'The source is not public. This opens a Japanese test recording with waiting time edited out, not a full live-run record.',
+      startTitle:'Watch the gameplay test.',
+      startBody:'The 4-minute gameplay video is an edited test recording. The explainer and introduction film include staging. These videos do not establish uninterrupted live operation.',
       beats:[['Reply','Jev judges the comment and decides the reply'],['Voice','The reply is read out in the Kohaku voice'],['Look','Image layers are switched to move the face']]
     }
   }
@@ -294,7 +295,7 @@ export function renderProductLanding(product, lang, config, recordingSource) {
 <section class="container owned-flow" id="flow" aria-labelledby="flow-title"><div class="owned-section-head"><p class="owned-kicker">${ja?'この実演で見ること':'WHAT THE FILM SHOWS'}</p><h2 id="flow-title">${e(x.flowTitle || p.outcome)}</h2></div><ol>${x.beats.map(([title,body],i)=>`<li><span class="owned-step-index" aria-hidden="true">0${i+1}</span><h3>${e(title)}</h3><p>${e(body)}</p></li>`).join('')}</ol></section>
 <section class="container owned-outcome"><p class="owned-kicker">${ja?'この製品の役割':'THE PRODUCT ROLE'}</p><h2>${e(p.headline)}</h2><p>${e(p.short)} ${e(x.lead || p.description)}</p></section>
 <section class="container owned-start" id="start"><div><p class="owned-kicker">${ja?'試す':'TRY IT'}</p><h2>${e(x.startTitle)}</h2><p>${e(x.startBody)}</p></div><div class="owned-start__actions">${external(x.primary[1],x.primary[0],'owned-primary')}${external(product.repo,ja?'GitHubで確認する':'Inspect on GitHub','owned-secondary')}</div></section>
-<section class="container owned-boundaries"><div class="owned-section-head"><p class="owned-kicker">${ja?'現在地':'CURRENT BOUNDARIES'}</p><h2>${ja?'利用条件と開発状況。':'Availability and development.'}</h2></div><div class="owned-boundaries__grid"><article><h3>${ja?'現在の範囲':'Current scope'}</h3><p>${e(p.scope)}</p><p>${e(p.license)}</p>${x.iconNote?`<p class="owned-icon-note">${e(x.iconNote)}</p>`:''}${external(product.evidence,product.closedSource?(ja?'YouTubeチャンネルを開く':'Open Noa’s YouTube channel'):(ja?'検証資料を見る':'Read the evidence'))}</article>${x.nextUi?nextUiArticle(x.nextUi,ja,external(prototype,x.nextUi.studyLabel)):!hasDesignStudy?'':`<article><h3>${ja?'次のUI設計':'Proposed interface design'}</h3><p>${ja?'別公開の設計動画は、次のUIを考えるためのプレビューです。現行製品の実演や、新UIの実装完了を示すものではありません。':'The separate design film is a proposal for a future interface. It is not a demonstration of the current product or proof that the proposed UI has shipped.'}</p>${external(prototype,ja?'ラベル付き設計プレビュー':'Open the labelled design study')}</article>`}</div></section>
+<section class="container owned-boundaries"><div class="owned-section-head"><p class="owned-kicker">${ja?'現在地':'CURRENT BOUNDARIES'}</p><h2>${ja?'利用条件と開発状況。':'Availability and development.'}</h2></div><div class="owned-boundaries__grid"><article><h3>${ja?'現在の範囲':'Current scope'}</h3><p>${e(p.scope)}</p><p>${e(p.license)}</p>${x.iconNote?`<p class="owned-icon-note">${e(x.iconNote)}</p>`:''}${external(product.evidence,p.evidenceLabel || (product.closedSource?(ja?'YouTubeチャンネルを開く':'Open Noa’s YouTube channel'):(ja?'検証資料を見る':'Read the evidence')))}</article>${x.nextUi?nextUiArticle(x.nextUi,ja,external(prototype,x.nextUi.studyLabel)):!hasDesignStudy?'':`<article><h3>${ja?'次のUI設計':'Proposed interface design'}</h3><p>${ja?'別公開の設計動画は、次のUIを考えるためのプレビューです。現行製品の実演や、新UIの実装完了を示すものではありません。':'The separate design film is a proposal for a future interface. It is not a demonstration of the current product or proof that the proposed UI has shipped.'}</p>${external(prototype,ja?'ラベル付き設計プレビュー':'Open the labelled design study')}</article>`}</div></section>
 <section class="container owned-consult"><div><p class="owned-kicker">${ja?'業務への応用':'BUILD WITH IT'}</p><h2>${e(x.consultTitle || (ja?'この仕組みを、実際の業務に合わせる。':'Adapt the mechanism to a real workflow.'))}</h2><p>${e(p.consult)}</p></div><a class="owned-primary" href="${home}contact/">${ja?'開発を相談する':'Discuss a project'} <span aria-hidden="true">→</span></a></section>
 <footer class="container owned-footer"><p><a href="${home}products/">${ja?'すべてのプロダクト':'All products'}</a>${external(product.site,ja?'製品サイト':'Product site')}${external(product.repo,'GitHub')}</p><small>Reachmade / Shuhei Horio · ${ja?'実製品・実録画・設計案を区別して公開しています。':'Current products, real recordings and design proposals are labelled separately.'}</small></footer></main></body></html>\n`;
 }
