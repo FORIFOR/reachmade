@@ -273,8 +273,14 @@ def assert_home_v4(page, *, interactive=True):
         for fact in ['headline', 'outcome', 'status']:
             assert t[fact] in text, (identifier, fact)
         preview = row.get_attribute('data-rd-preview')
-        assert preview == p['preview'] and (ROOT / 'dist' / preview.lstrip('/')).is_file(), identifier
-        assert t['previewLabel'] in row.get_attribute('data-rd-label'), identifier
+        # Agent Team uses a labelled frame of its design film (src/redesign.mjs STILLS); the others their preview.
+        if identifier == 'agent-team':
+            assert preview == '/assets/products/agent-team/film-still.jpg', preview
+            assert re.search('設計動画|design film', row.get_attribute('data-rd-label')), identifier
+        else:
+            assert preview == p['preview'], identifier
+            assert t['previewLabel'] in row.get_attribute('data-rd-label'), identifier
+        assert (ROOT / 'dist' / preview.lstrip('/')).is_file(), identifier
         expect(page.locator(f'.rd-records a[href="{prefix}/work/#{identifier}"]')).to_be_attached()
         if identifier == 'agent-team':
             assert row.get_attribute('data-rd-film') == AGENT_TEAM_FILM

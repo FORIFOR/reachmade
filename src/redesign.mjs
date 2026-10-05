@@ -38,6 +38,11 @@ const JS_END = '// END_REACHMADE_REDESIGN';
 /** Owner-supplied Agent Team film (agent-team-lp-ja.mp4, sha256 c09914a3…) as already imported: audio removed. */
 export const AGENT_TEAM_FILM = Object.freeze({src: '/media/films/agent-team-design-30s.mp4', poster: '/assets/products/agent-team/next-ui-01.jpg'});
 const REEL = Object.freeze({src: '/media/films/reachmade-15s.mp4', poster: '/media/films/reachmade-15s.jpg'});
+/** Owner's choice (2026-10-05): Agent Team's image in the redesign is a frame of its design film (21 s, 「4つとも、合格です」),
+ * not the older run-record screenshot. p.preview stays the still of the kept real-recording block, so a design frame
+ * never stands in for the recording. */
+export const STILLS = Object.freeze({'agent-team': '/assets/products/agent-team/film-still.jpg'});
+export const stillOf = (p, lang) => (Object.hasOwn(STILLS, p.id) ? {src: STILLS[p.id], label: redesignCopyFor(lang).stillLabels[p.id]} : {src: p.preview, label: p[lang].previewLabel});
 
 /** The film each product page shows in its #film section, and what kind of footage it is. */
 export function productFilm(id) {
@@ -166,10 +171,10 @@ function homeMain(products, lang, kept) {
   const first = products[0];
   const marqueeOnce = products.map(p => `<span class="rd-mq-item"><span class="rd-mq-index">${esc(p.index)}</span><span class="rd-mq-name">${esc(displayName(p, lang))}</span><span class="rd-mq-disc">${esc(p.discipline.toLowerCase())}</span><i></i></span>`).join('');
   const rows = products.map(p => {
-    const t = p[lang], isAT = p.id === 'agent-team';
+    const t = p[lang], isAT = p.id === 'agent-team', still = stillOf(p, lang);
     const film = isAT ? ` data-rd-film="${AGENT_TEAM_FILM.src}" data-rd-film-label="${esc(`${p.index} — ${r.filmKinds['agent-team']}`)}"` : '';
     const choice = p.id === 'genie' ? ' data-studio-choice="genie"' : '';
-    return `<li><a class="rd-row" href="${route(p.id, lang)}" data-rd-row data-rd-preview="${esc(p.preview)}" data-rd-label="${esc(`${p.index} — ${t.previewLabel}`)}"${film}${choice}><span class="rd-row-index">${esc(p.index)}</span><span class="rd-row-name">${esc(displayName(p, lang))}</span><span class="rd-row-copy"><span class="rd-row-headline">${esc(t.headline)}</span><span class="rd-row-outcome">${esc(t.outcome)}</span></span><span class="rd-row-meta"><span>${esc(p.discipline)}</span><span class="rd-row-status">${esc(t.status)}</span></span><span class="rd-row-go" aria-hidden="true">↗</span></a></li>`;
+    return `<li><a class="rd-row" href="${route(p.id, lang)}" data-rd-row data-rd-preview="${esc(still.src)}" data-rd-label="${esc(`${p.index} — ${still.label}`)}"${film}${choice}><span class="rd-row-index">${esc(p.index)}</span><span class="rd-row-name">${esc(displayName(p, lang))}</span><span class="rd-row-copy"><span class="rd-row-headline">${esc(t.headline)}</span><span class="rd-row-outcome">${esc(t.outcome)}</span></span><span class="rd-row-meta"><span>${esc(p.discipline)}</span><span class="rd-row-status">${esc(t.status)}</span></span><span class="rd-row-go" aria-hidden="true">↗</span></a></li>`;
   }).join('');
   const [svcFirst, svcSecond = ''] = c.servicesTitle.split('<br>');
   // Every product keeps a no-script route to its evidence record, and the two 15-second films stay one click away.
@@ -179,7 +184,7 @@ function homeMain(products, lang, kept) {
   const principles = c.principles.map(([title, body], i) => `<article class="rd-pr" data-rd-reveal><span class="rd-pr-num">/0${i + 1}</span><div><h3>${esc(title)}</h3><p>${esc(body)}</p></div></article>`).join('');
   return `<section class="rd-hero">
 <div class="rd-meta"><span>${esc(r.meta[0])}</span><span>${esc(r.meta[1](n))}</span><span class="rd-meta-jp">${esc(c.eyebrow)}</span></div>
-<h1 class="rd-h1"><span class="rd-line"><span data-rd-line>${esc(c.title[0])}</span></span><span class="rd-arrow" aria-hidden="true"><span class="rd-arrow-line" data-rd-arrow></span><span class="rd-capsule" data-rd-capsule><img src="${esc(first.preview)}" alt="" data-rd-cap-img></span><span class="rd-capsule-label" data-rd-capsule data-rd-cap-label>${esc(`${first.index} ${displayName(first, lang)}`)}</span>${arrowHead(22, 30)}</span><span class="rd-line rd-line--end"><span data-rd-line>${esc(c.title[1])}<em>${esc(c.dot)}</em></span></span></h1>
+<h1 class="rd-h1"><span class="rd-line"><span data-rd-line>${esc(c.title[0])}</span></span><span class="rd-arrow" aria-hidden="true"><span class="rd-arrow-line" data-rd-arrow></span><span class="rd-capsule" data-rd-capsule><img src="${esc(stillOf(first, lang).src)}" alt="" data-rd-cap-img></span><span class="rd-capsule-label" data-rd-capsule data-rd-cap-label>${esc(`${first.index} ${displayName(first, lang)}`)}</span>${arrowHead(22, 30)}</span><span class="rd-line rd-line--end"><span data-rd-line>${esc(c.title[1])}<em>${esc(c.dot)}</em></span></span></h1>
 <div class="rd-hero-foot"><p class="rd-lead" data-rd-fade>${c.lead}</p><div class="rd-ctas" data-rd-fade><a class="rd-btn rd-btn--ink" href="${contactHref(lang)}">${esc(c.consult)}<span aria-hidden="true">↗</span></a><a class="rd-btn rd-btn--line" href="#products">${esc(c.seeWork)}<span aria-hidden="true">↓</span></a></div><p class="rd-scroll" data-rd-fade>${esc(r.scroll[0])}<br>${esc(r.scroll[1])}</p></div>
 </section>
 <div class="rd-marquee" aria-hidden="true"><div class="rd-mq-track">${marqueeOnce}${marqueeOnce}</div></div>
@@ -276,7 +281,7 @@ function splitProductMain(main, film, {filmInPlace = false} = {}) {
 
 function productMain(p, list, lang, {kept, figure, source, filmAnchor}) {
   const r = redesignCopyFor(lang), t = p[lang], name = displayName(p, lang), n = list.length;
-  const film = productFilm(p.id), nav = productNavigation(p, lang);
+  const film = productFilm(p.id), nav = productNavigation(p, lang), still = stillOf(p, lang);
   const long = name.length > 8 || p.id === 'noa';
   const steps = t.outcome.split(' → ');
   const outcome = steps.map((s, i) => `<li><span>${esc(s)}</span>${i < steps.length - 1 ? `<span class="rd-step-arrow" aria-hidden="true"><i></i>${arrowHead(12, 18)}</span>` : ''}</li>`).join('');
@@ -299,7 +304,7 @@ function productMain(p, list, lang, {kept, figure, source, filmAnchor}) {
   return `<section class="rd-phero">
 <div class="rd-meta"><span>${esc(r.productOf(p.index, n))}</span><span>${esc(p.discipline)}</span><span class="rd-status"><i aria-hidden="true"></i>${esc(t.status)} · ${esc(t.license)}</span></div>
 <h1 class="rd-pname${long ? ' rd-pname--long' : ''}"><span data-rd-line>${esc(name)}<em aria-hidden="true">.</em></span></h1>
-<div class="rd-phero-body"><div class="rd-phero-copy" data-rd-fade><p class="rd-headline">${esc(t.headline)}</p><p class="rd-desc">${esc(t.description)}</p><div class="rd-ctas"><a class="rd-btn rd-btn--ink" href="#film">${esc(lang === 'ja' ? '映像を見る' : 'Watch the film')}<span aria-hidden="true">↓</span></a><a class="rd-btn rd-btn--line" href="${contactHref(lang, `#product-${p.id}`)}">${esc(r.consultHero)}<span aria-hidden="true">↗</span></a></div></div><figure class="rd-fig" data-rd-fade><div class="rd-fig-frame"><img src="${esc(p.preview)}" alt="${esc(t.previewLabel)}" fetchpriority="high"></div><figcaption><span>${r.fig} ${esc(p.index)}</span><span>${esc(t.previewLabel)}</span></figcaption></figure></div>
+<div class="rd-phero-body"><div class="rd-phero-copy" data-rd-fade><p class="rd-headline">${esc(t.headline)}</p><p class="rd-desc">${esc(t.description)}</p><div class="rd-ctas"><a class="rd-btn rd-btn--ink" href="#film">${esc(lang === 'ja' ? '映像を見る' : 'Watch the film')}<span aria-hidden="true">↓</span></a><a class="rd-btn rd-btn--line" href="${contactHref(lang, `#product-${p.id}`)}">${esc(r.consultHero)}<span aria-hidden="true">↗</span></a></div></div><figure class="rd-fig" data-rd-fade><div class="rd-fig-frame"><img src="${esc(still.src)}" alt="${esc(still.label)}" fetchpriority="high"></div><figcaption><span>${r.fig} ${esc(p.index)}</span><span>${esc(still.label)}</span></figcaption></figure></div>
 </section>
 <section class="rd-outcome" aria-label="${esc(r.whatItDoes)}"><p class="rd-kicker">${esc(r.whatItDoes)}</p><ol class="rd-steps">${outcome}</ol></section>
 <section class="rd-film rd-reel" id="film" data-rd-reel data-rd-film-scale=".55" aria-labelledby="rd-film-title"><div class="rd-reel-stage">${figure ? `<div class="rd-reel-frame rd-reel-frame--figure" data-rd-frame>${figure}</div>` : filmAnchor ? `<a class="rd-reel-frame rd-film-link" data-rd-frame href="#${esc(filmAnchor)}"><img src="${esc(film.poster)}" alt="" loading="lazy"><span>${esc(r.filmBelow)} <span aria-hidden="true">↓</span></span></a>` : `<div class="rd-reel-frame" data-rd-frame>${video({...film, label: `${name} — ${kind}`}, lang)}</div>`}<div class="rd-reel-cap"><span id="rd-film-title">${esc(r.film(name))}</span>${figure && film.kind === 'recording' ? '' : `<span><b>${esc(filmAnchor ? r.stillKind : kind)}</b>${figure || filmAnchor ? '' : ` ${esc(note)}`}${extra}</span>`}</div></div></section>
@@ -308,7 +313,7 @@ ${kept.length ? `<div class="rd-kept rd-kept--product"><p class="rd-kicker rd-ke
 <section class="rd-features rd-forest" id="capabilities" aria-labelledby="rd-feat-title"><div class="rd-feat-side"><div class="rd-sticky"><p class="rd-kicker">${esc(r.features)}</p><h2 id="rd-feat-title">${esc(t.short)}</h2>${source ? source : `<p class="rd-feat-note">${esc(r.featuresNote(capabilitiesCheckedAt))}</p>`}</div></div><div class="rd-feat-list">${features}</div></section>
 <section class="rd-scope rd-forest" id="scope" aria-labelledby="rd-scope-title"><div class="rd-card"><div class="rd-scope-head"><div><p class="rd-kicker">${esc(r.scopeKicker)}</p><h2 id="rd-scope-title">${r.scopeTitle}</h2></div><p>${esc(r.scopeNote(sourcesCheckedAt))}</p></div><div class="rd-scope-cols"><div data-rd-reveal><p class="rd-scope-label">${esc(r.scopeLabel)}</p><p>${esc(t.scope)}</p></div><div data-rd-reveal><p class="rd-scope-label">${esc(r.proofLabel)}</p><p>${esc(t.proof)}</p></div></div><ul class="rd-links">${links}</ul></div></section>
 <section class="rd-consult rd-forest" id="consult" aria-labelledby="rd-consult-title"><p class="rd-kicker">${esc(r.consultKicker)}</p><div class="rd-consult-row"><h2 id="rd-consult-title" data-rd-reveal>${esc(t.consult)}</h2><a class="rd-btn rd-btn--amber rd-btn--xl" href="${contactHref(lang, `#product-${p.id}`)}">${esc(r.consultCta)}<span aria-hidden="true">↗</span></a></div></section>
-<nav class="rd-next rd-forest" aria-label="${esc(r.next)}"><a class="rd-next-link" href="${route(next.id, lang)}"><span class="rd-next-copy"><span class="rd-next-meta">${r.next} — ${esc(next.index)} / ${esc(next.discipline)}</span><span class="rd-next-name">${esc(displayName(next, lang))} <span aria-hidden="true">→</span></span><span class="rd-next-headline">${esc(next[lang].headline)}</span></span><span class="rd-next-thumb"><img src="${esc(next.preview)}" alt="" loading="lazy"></span></a></nav>`;
+<nav class="rd-next rd-forest" aria-label="${esc(r.next)}"><a class="rd-next-link" href="${route(next.id, lang)}"><span class="rd-next-copy"><span class="rd-next-meta">${r.next} — ${esc(next.index)} / ${esc(next.discipline)}</span><span class="rd-next-name">${esc(displayName(next, lang))} <span aria-hidden="true">→</span></span><span class="rd-next-headline">${esc(next[lang].headline)}</span></span><span class="rd-next-thumb"><img src="${esc(stillOf(next, lang).src)}" alt="" loading="lazy"></span></a></nav>`;
 }
 
 function productFooter(p, lang) {
@@ -364,7 +369,7 @@ function replaceLayer(existing, start, end, layer) {
 
 export async function writeRedesign(dist, products) {
   const list = ledger(products), assets = path.join(dist, 'assets');
-  const required = [REEL.src, REEL.poster, AGENT_TEAM_FILM.src, AGENT_TEAM_FILM.poster, '/assets/mark.svg', '/assets/redesign.mjs',
+  const required = [REEL.src, REEL.poster, AGENT_TEAM_FILM.src, AGENT_TEAM_FILM.poster, '/assets/mark.svg', '/assets/redesign.mjs', ...Object.values(STILLS),
     ...list.flatMap(p => { const f = productFilm(p.id); return [p.preview, f.poster, ...(f.src.startsWith('/media/products/') ? [] : [f.src])]; })];
   for (const asset of required) await fs.access(path.join(dist, asset)).catch(() => { throw new Error(`Redesign: missing ${asset}`); });
   const pages = [];
