@@ -174,7 +174,7 @@ function homeMain(products, lang, kept) {
   const [svcFirst, svcSecond = ''] = c.servicesTitle.split('<br>');
   // Every product keeps a no-script route to its evidence record, and the two 15-second films stay one click away.
   const FILM15 = ['genie', 'oathra'];
-  const records = `<div class="rd-records"><p class="rd-kicker">${esc(r.records)}</p><ul>${products.map(p => `<li><span>${esc(p.index)} ${esc(displayName(p, lang))}</span><a href="${base(lang)}/work/#${p.id}">${esc(r.recordLink)}</a>${lang === 'ja' && FILM15.includes(p.id) ? `<a href="/products/${p.id}/#film15-${p.id}-title">${esc(c.film15)}</a>` : ''}</li>`).join('')}</ul></div>`;
+  const records = `<div class="rd-records"><p class="rd-kicker">${esc(r.records)}</p><ul>${products.map(p => `<li><span>${esc(p.index)} ${esc(displayName(p, lang))}</span><a href="${base(lang)}/work/#${p.id}">${esc(r.recordLink)}</a>${lang === 'ja' && FILM15.includes(p.id) ? `<a href="/products/${p.id}/#film15-${p.id}-title">${esc(c.filmLabels[p.id] || c.film15)}</a>` : ''}</li>`).join('')}</ul></div>`;
   const services = c.services.map(([title, body, related], i) => `<article class="rd-svc" data-rd-reveal><div class="rd-svc-top"><span class="rd-svc-num">0${i + 1}</span><span class="rd-svc-rel">${esc(related)}</span></div><h3>${esc(title)}</h3><p>${esc(body)}</p></article>`).join('');
   const principles = c.principles.map(([title, body], i) => `<article class="rd-pr" data-rd-reveal><span class="rd-pr-num">/0${i + 1}</span><div><h3>${esc(title)}</h3><p>${esc(body)}</p></div></article>`).join('');
   return `<section class="rd-hero">
