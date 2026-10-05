@@ -24,6 +24,7 @@ export const redesignCopy = {
     lang: ['LANG', '日本語', 'English'],
     copyright: '© 2026 REACHMADE LAB', top: 'BACK TO TOP ↑', homeLink: '← REACHMADE HOME',
     preview: '製品の画面',
+    stillLabels: {'agent-team': '設計動画の一場面（画面は再現・未実装を含む）'},
     // Product page
     productOf: (i, n) => `Product ${i} / ${String(n).padStart(2, '0')}`,
     allProducts: 'すべてのプロダクト', consultNav: '相談', consultHero: 'この技術で相談する',
@@ -67,6 +68,7 @@ export const redesignCopy = {
     lang: ['LANG', '日本語', 'English'],
     copyright: '© 2026 REACHMADE LAB', top: 'BACK TO TOP ↑', homeLink: '← REACHMADE HOME',
     preview: 'Product screen',
+    stillLabels: {'agent-team': 'A frame from the design film (recreated screens, partly not implemented)'},
     productOf: (i, n) => `Product ${i} / ${String(n).padStart(2, '0')}`,
     allProducts: 'All products', consultNav: 'Contact', consultHero: 'Discuss this technology',
     whatItDoes: 'What it does', film: name => `(03) ${name} — Film`,
