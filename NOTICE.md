@@ -23,4 +23,9 @@ own licenses. A full-site fork must audit/replace excluded assets and branding;
 the portable sample core can be used without those assets. No rights are granted
 over content that a contributor did not have authority to license.
 
+`public/demos/oathra/` distributes a built simulation from `FORIFOR/oathra` under
+Apache-2.0, including Zod under MIT. It is not relicensed under Reachmade's MIT
+grant. Its `LICENSE`, `THIRD_PARTY_NOTICES.txt`, and `source-manifest.json` record
+the applicable terms, source hashes and the limited HTML path adaptations.
+
 `.agents/skills/` contains the user-supplied OSS Quality Kit 2.0.0-draft, copied unchanged for local use. It is not relicensed under this repository’s MIT grant. The supplied bundle has no separate redistribution license; retain its provenance and resolve redistribution rights before distributing it.

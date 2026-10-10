@@ -94,6 +94,18 @@ npm run dev
 
 保存が始まらない場合は、画面の全文を選択しCtrl+C / ⌘Cでコピーしてください。4,000文字まで。読み戻しにはこのサンプルのUTF-8書き出し形式を使います。読込中は取り消し可能で、不正なファイルでも編集内容は残ります。実アプリの能力確認は、同じ製品ページの実録画・保存済み作例・導入条件から進めます。
 
+## Oathra / RingZero の用途別構想デモ
+
+日本語の [Oathra紹介ページ](https://reachmade.com/products/oathra/#concept-demos) から、飲食店予約、型番指定の在庫確認・無償取り置き、19時から20時への予約変更を試せます。3本の操作動画と、操作できる [構想デモ](https://reachmade.com/demos/oathra/) を並べています。
+
+**構想デモ・実際の発信/予約は行いません。** 合成データ、架空の店舗・電話番号・予約番号のみを使い、購入・課金も行いません。現行の判定エンジンや過去の実通話開発記録とは区別しています。デモ本体の正本は `FORIFOR/oathra` です。
+
+ローカル確認は `npm run check` の後に `PORT=4183 npm run preview` を実行し、`http://127.0.0.1:4183/products/oathra/#concept-demos` を開きます。動画は同一オリジンの `public/media/films/use-case-{restaurant,stock,modify}.mp4` に配置し、Workerでは既存のRange/HEAD応答を使います。元映像・撮影方法とSHA-256は `public/media/films/manifest.json` に記録します。
+
+インストール済みChromeでの確認は `node scripts/verify-oathra-demos.mjs`。幅1440/1024/390/320pxの表示と、JavaScript無効の導線、3動画の実再生を確認し、画像と結果を `artifacts/ui/oathra-demos/` に保存します。実機Safariや実電話の検証ではありません。
+
+デモ本体の配布用ビルドも `/demos/oathra/` に同梱しているため、Reachmadeのプレビューだけで全フローを操作できます。Oathra側のソース変更から同期する手順と権利表記は [デモの配布・検証手順](docs/OATHRA_DEMOS.md) を参照してください。`npm run deploy:check` はdry-runで、公開プレビューを作りません。下書きPRの時点では本番反映を主張せず、Cloudflareのデプロイ／プレビュー処理が返した実URLを使って確認してください。
+
 ## 開発者向け：小さなCoreを組み込む
 
 ```sh

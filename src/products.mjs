@@ -101,15 +101,20 @@ export const products = [
     preview: '/assets/products/oathra.jpg', previewSource: 'oathra/docs/media/arena-confirmed.png', featured: true,
     source: 'https://github.com/FORIFOR/oathra/blob/main/README.md',
     evidence: 'https://github.com/FORIFOR/oathra/blob/main/docs/ENTERPRISE_READINESS.md',
-    demo: 'https://forifor.github.io/oathra/check.html',
+    demo: 'https://reachmade.com/demos/oathra/',
+    conceptDemos: [
+      {id:'restaurant', durationSeconds:50, title:'近くのお店に、予約を頼む。', body:'予算・日時・人数を確認。電話先と伝える情報を承認してから、模擬通話の結果を確かめます。', linkLabel:'飲食店予約を試す', href:'/demos/oathra/?flow=restaurant', src:'/media/films/use-case-restaurant.mp4', poster:'/media/films/use-case-restaurant.jpg', result:'予約の成立を確認（模擬）。実際の予約は行っていません。', steps:['合成の近隣候補からお店を選び、予算・日時・人数を確認します。','架空の電話先、開示する情報、予約を任せる範囲を承認します。','模擬通話の相手の返答と、予約の条件が合ったかを結果画面で確認します。']},
+      {id:'stock', durationSeconds:50, title:'この型番を、取り置きできる？', body:'型番・価格・受取期限を確認。費用も購入義務もない範囲の取り置きを、模擬通話で依頼します。', linkLabel:'在庫確認を試す', href:'/demos/oathra/?flow=stock', src:'/media/films/use-case-stock.mp4', poster:'/media/films/use-case-stock.jpg', result:'無料の取り置きを確認（模擬）。型番AZ1000・6,800円・受取期限までの条件を確認します。購入義務はありません。', steps:['合成データの型番と店舗を確認します。','価格の上限、受取期限、費用・購入義務なしの取り置きだけを承認します。','模擬通話を進め、型番・価格・期限と取り置き結果を確認します。']},
+      {id:'modify', durationSeconds:50, title:'19時の予約を、20時へ。', body:'変更できなければ、元の19時を維持。希望の変更と、成立しなかった結果を分けて確認します。', linkLabel:'予約変更を試す', href:'/demos/oathra/?flow=modify', src:'/media/films/use-case-modify.mp4', poster:'/media/films/use-case-modify.jpg', result:'相手の拒否で変更は成立せず、元の19時の予約を維持（模擬）。通話が終わっても変更成功とは表示しません。', steps:['架空の予約番号と現在の19時の予約を確認します。','20時への変更を依頼し、不可なら元の予約を維持する条件を承認します。','模擬通話の返答を読み、変更成立と元の予約の状態を分けて確認します。']}
+    ],
     ja: {
-      headline: '電話の結果に、確かめられる根拠を。', demoLabel: 'サンプルログを検証する', previewLabel: '完了判定の画面',
+      headline: '電話の結果に、確かめられる根拠を。', demoLabel: '用途別の構想デモを試す', previewLabel: '完了判定の画面',
       short: 'AIの「できました」を、完了の根拠にしない。',
       description: 'AIの電話交渉と、その結果を確認するための基盤。日時・金額・確定の根拠を、相手側の発言と結びつけます。',
       status: '開発版', license: 'Apache-2.0',
       outcome: '通話 → 発言の根拠 → 結果',
       scope: '会話上の合意と、店舗システムへの登録は別です。シミュレーターと実電話の検証も区別します。実電話には設定と費用が必要です。',
-      proof: '文字起こしの判定画面、シミュレーター（組み込みAI・GPT-4o mini・Gemini Flashが電話した記録）、実通話の開発記録。100件の実電話検証は未完了です。',
+      proof: '用途別の構想デモは、架空データを使う操作可能なシミュレーションです。実際の発信・予約・購入は行いません。別途、文字起こしの判定画面、シミュレーター（組み込みAI・GPT-4o mini・Gemini Flashが電話した記録）、実通話の開発記録を公開しています。100件の実電話検証は未完了です。',
       consult: '電話業務の試作、既存音声AIへの完了判定の組み込み、同意と人への引き継ぎの設計。',
       highlights: [{value:'ミリ秒で紐付け',label:'確認済みの項目を、相手の発言区間に結びつける'},{value:'発言だけが証拠',label:'検証は会話上の合意まで。システム登録は検証しない'},{value:'Apache-2.0',label:'ランタイム・CLI・評価ハーネスを公開'}],
       features: [
