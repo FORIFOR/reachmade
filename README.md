@@ -230,3 +230,9 @@ python tests/browser-check.py
 ## プロジェクトの品質Skill
 
 提供されたOSS Quality Kit v2の5 Skillを `.agents/skills/` に導入しています。[配置・出所・使い方](docs/QUALITY_SKILLS.md)を参照してください。自動検出は次のターンから確認できます。Skillsの存在は製品品質の認定や本番操作の許可を意味しません。
+
+<!-- omm-scan-2026-10-11 -->
+
+## 構成図・依存関係
+
+[日本語の構成図と説明を見る](docs/architecture/omm-scan-2026-10-11/README.md)（2026-10-11 初回解析）。解析範囲と未検証事項はリンク先に記載しています。
