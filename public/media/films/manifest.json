@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "note": "Fifteen-second introduction films rendered from supplied source packages (render(t) HTML films). Source zips are not in this repository; their hashes are recorded here.",
+  "note": "Introduction films and recorded fictional UI demonstrations. Each file states its source, capture or render method, and hash. A simulation recording is not a real call.",
   "files": [
     {
       "path": "/media/films/reachmade-15s.mp4",
@@ -139,6 +139,63 @@
       "source": "/media/films/genie-30s.mp4",
       "sourceSha256": "07f3a50fc7b77c89c3c3b159e13c82746e2ee7d912dafe0886f79a4fd18f02cf",
       "render": "ffmpeg -ss 4 -frames:v 1 -vf scale=1280:-1 -q:v 3"
+    },
+    {
+      "path": "/media/films/use-case-restaurant.mp4",
+      "bytes": 809292,
+      "sha256": "e77550764a22150bbd8a541fc0ffce7e2b6fef94271eaeefaa89370f96e28fe4",
+      "source": "FORIFOR/oathra docs/media/use-case-restaurant.mp4",
+      "sourceSha256": "e77550764a22150bbd8a541fc0ffce7e2b6fef94271eaeefaa89370f96e28fe4",
+      "render": "Copied without re-encoding. Original: Chrome Page.startScreencast live UI JPEG frames and native timestamps; FFmpeg holds captured frames to 25 fps, H.264/yuv420p, faststart, no audio.",
+      "note": "Fictional, operable simulation UI. Persistent label: 構想デモ・実際の発信/予約は行いません. No real call, booking, purchase, third-party voice or likeness.",
+      "spec": "1440x900, 16:10, 25 fps, 50.000 s, 1250 frames, no audio"
+    },
+    {
+      "path": "/media/films/use-case-restaurant.jpg",
+      "bytes": 148714,
+      "sha256": "0c4f2f9696df17c63526f7bb23f0b6a393983d29d5ad70406e6cb9566e6fa5ef",
+      "source": "/media/films/use-case-restaurant.mp4",
+      "sourceSha256": "e77550764a22150bbd8a541fc0ffce7e2b6fef94271eaeefaa89370f96e28fe4",
+      "render": "Poster extracted from the corresponding continuous UI recording; copied without modification.",
+      "note": "Fictional, operable simulation UI. Persistent label: 構想デモ・実際の発信/予約は行いません. No real call, booking, purchase, third-party voice or likeness."
+    },
+    {
+      "path": "/media/films/use-case-stock.mp4",
+      "bytes": 847897,
+      "sha256": "209850cf8cba048f6b9267433848ac958d0eee69a780768fbbfa7979c303497a",
+      "source": "FORIFOR/oathra docs/media/use-case-stock.mp4",
+      "sourceSha256": "209850cf8cba048f6b9267433848ac958d0eee69a780768fbbfa7979c303497a",
+      "render": "Copied without re-encoding. Original: Chrome Page.startScreencast live UI JPEG frames and native timestamps; FFmpeg holds captured frames to 25 fps, H.264/yuv420p, faststart, no audio.",
+      "note": "Fictional, operable simulation UI. Persistent label: 構想デモ・実際の発信/予約は行いません. No real call, booking, purchase, third-party voice or likeness.",
+      "spec": "1440x900, 16:10, 25 fps, 50.000 s, 1250 frames, no audio"
+    },
+    {
+      "path": "/media/films/use-case-stock.jpg",
+      "bytes": 149580,
+      "sha256": "178c57226353895789fe359b64f2a0ebaf56957e2b958689680718511494af19",
+      "source": "/media/films/use-case-stock.mp4",
+      "sourceSha256": "209850cf8cba048f6b9267433848ac958d0eee69a780768fbbfa7979c303497a",
+      "render": "Poster extracted from the corresponding continuous UI recording; copied without modification.",
+      "note": "Fictional, operable simulation UI. Persistent label: 構想デモ・実際の発信/予約は行いません. No real call, booking, purchase, third-party voice or likeness."
+    },
+    {
+      "path": "/media/films/use-case-modify.mp4",
+      "bytes": 785713,
+      "sha256": "228d9426330c12c238840dacf14243fd7ad441f9fbf109f0cdc39a358e9b913c",
+      "source": "FORIFOR/oathra docs/media/use-case-modify.mp4",
+      "sourceSha256": "228d9426330c12c238840dacf14243fd7ad441f9fbf109f0cdc39a358e9b913c",
+      "render": "Copied without re-encoding. Original: Chrome Page.startScreencast live UI JPEG frames and native timestamps; FFmpeg holds captured frames to 25 fps, H.264/yuv420p, faststart, no audio.",
+      "note": "Fictional, operable simulation UI. Persistent label: 構想デモ・実際の発信/予約は行いません. No real call, booking, purchase, third-party voice or likeness.",
+      "spec": "1440x900, 16:10, 25 fps, 50.000 s, 1250 frames, no audio"
+    },
+    {
+      "path": "/media/films/use-case-modify.jpg",
+      "bytes": 152937,
+      "sha256": "adee0e1528cdaf074c578c1cce0f6409e247b4a091f7e45b085ec4da66c76b12",
+      "source": "/media/films/use-case-modify.mp4",
+      "sourceSha256": "228d9426330c12c238840dacf14243fd7ad441f9fbf109f0cdc39a358e9b913c",
+      "render": "Poster extracted from the corresponding continuous UI recording; copied without modification.",
+      "note": "Fictional, operable simulation UI. Persistent label: 構想デモ・実際の発信/予約は行いません. No real call, booking, purchase, third-party voice or likeness."
     }
   ]
 }

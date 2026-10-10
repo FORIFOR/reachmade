@@ -4,7 +4,7 @@ const route = (language, page) => `${language === 'en' ? '/en' : ''}/${page}/`;
 const entries = {
   genie: { ja: ['https://genie.reachmade.com/ja.html', 'https://reachmade.com/products/genie/demos/#prototype', '操作動画を見る'], en: ['https://genie.reachmade.com/?lang=en', 'https://reachmade.com/en/products/genie/demos/#prototype', 'Watch the workflow'] },
   'ai-meeting': { ja: ['https://reachmade.com/products/ai-meeting/guide/', 'https://ai-meeting.web.app/#tasks', '文字入力でタスクを試す'], en: ['https://reachmade.com/products/ai-meeting/guide/', 'https://ai-meeting.web.app/#tasks', 'Try text tasks (Japanese UI)'] },
-  oathra: { ja: ['https://oathra.reachmade.com/', 'https://oathra.reachmade.com/#sim', 'ブラウザーで判定を試す'], en: ['https://oathra.reachmade.com/en/', 'https://oathra.reachmade.com/en/#sim', 'Try the evidence engine'] },
+  oathra: { ja: ['https://oathra.reachmade.com/', 'https://reachmade.com/demos/oathra/', '用途別の構想デモを試す'], en: ['https://oathra.reachmade.com/en/', 'https://oathra.reachmade.com/en/#sim', 'Try the evidence engine'] },
   aisecure: { ja: ['https://aisecure.reachmade.com/index.ja.html', 'https://aisecure.reachmade.com/index.ja.html#case', 'サンプル事例を調べる'], en: ['https://aisecure.reachmade.com/', 'https://aisecure.reachmade.com/#case', 'Inspect a sample case'] },
   'agent-team': { ja: ['https://multibot.reachmade.com/ja/', 'https://multibot.reachmade.com/ja/#guide', '3ステップの使い方を見る'], en: ['https://multibot.reachmade.com/', 'https://multibot.reachmade.com/#workflow', 'See the three-step workflow'] },
   launchloom: { ja: ['https://launchloom.reachmade.com/ja/', 'https://launchloom.reachmade.com/ja/#kit', '完成した公開素材を見る'], en: ['https://launchloom.reachmade.com/', 'https://launchloom.reachmade.com/#kit', 'Explore the launch kit'] },

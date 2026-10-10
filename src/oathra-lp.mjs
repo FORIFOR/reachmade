@@ -23,7 +23,8 @@ import path from 'node:path';
 import {products as ledgerProducts} from './products.mjs';
 import {landingExperience} from './product-landings.mjs';
 
-export const OATHRA_LP_VERSION = '20261002-oathra-lp-3';
+export const OATHRA_LP_VERSION = '20261010-oathra-lp-4';
+export const CONCEPT_DISCLAIMER = '構想デモ・実際の発信/予約は行いません';
 const CSS_MARK = '/* REACHMADE_OATHRA_LP */';
 const PAGE = 'products/oathra/index.html';
 const A = '/assets/products/oathra/';
@@ -83,6 +84,11 @@ function ringSection() {
   return `<section class="container olp-ring" id="ring" aria-labelledby="olp-ring-title"><div class="olp-head"><p class="owned-kicker">01 · 輪のしくみ</p><h2 id="olp-ring-title">相手の言葉でだけ、<br>輪が閉じる。</h2><p>日時や人数がそろっていても、AIが言っただけでは確認済みにしません。その判定の考え方を、輪で表しています。</p></div><div class="olp-ring__body"><figure class="olp-ring__figure"><span class="olp-ring__eyebrow">CONFIRMED IN THEIR WORDS</span>${ring(3)}<figcaption>日付・時刻・人数の3項目が、相手の言葉で確認済み</figcaption></figure><ol class="olp-ring__cards">${cards.map(([t, b, count, cls], i) => `<li class="olp-ring__card${cls}"><div class="olp-ring__state" aria-hidden="true">${ring(count)}</div><div class="olp-ring__explanation"><span class="olp-ring__index">0${i + 1} / ${count === 0 ? '確認前' : i === 1 ? '相手が確認' : 'AIの発言'}</span><strong>${e(t)}</strong><span>${e(b)}</span></div></li>`).join('')}</ol></div><p class="olp-note">緑の区切りは、相手の言葉で確認できた項目です。店舗システムに登録されたことまでは示しません。</p></section>`;
 }
 
+export function conceptDemosSection(p) {
+  if (!Array.isArray(p.conceptDemos) || p.conceptDemos.length !== 3) throw new Error('Oathra LP: expected three concept demos');
+  return `<section class="container olp-demos" id="concept-demos" aria-labelledby="olp-demos-title"><div class="olp-head"><p class="owned-kicker">OATHRA / RINGZERO · 操作できる構想デモ</p><h2 id="olp-demos-title">電話を頼む前に、<br>ひとつ、試してみる。</h2><p>条件を決める。任せる範囲を承認する。相手の返答と結果を確かめる。3つの用件を、ブラウザーで操作できます。</p><p class="olp-demos__notice"><strong>${CONCEPT_DISCLAIMER}</strong><span>合成データ・架空の店舗、電話番号、予約番号のみ。料金・購入義務も発生しません。</span></p></div><div class="olp-demos__list">${p.conceptDemos.map((demo, i) => `<article class="olp-demo" aria-labelledby="olp-demo-${e(demo.id)}"><div class="olp-demo__copy"><p class="olp-demo__index">0${i + 1} / ${i === 0 ? '飲食店予約' : i === 1 ? '在庫と取り置き' : '予約の時間変更'}</p><h3 id="olp-demo-${e(demo.id)}">${e(demo.title)}</h3><p>${e(demo.body)}</p>${ext(demo.href, demo.linkLabel, 'olp-demo__action')}</div><figure class="olp-demo__film"><video controls playsinline preload="none" poster="${e(demo.poster)}" width="1440" height="900" aria-label="${e(demo.title)} 構想デモの操作動画・日本語字幕・音声なし"><source src="${e(demo.src)}" type="video/mp4">このブラウザーでは動画を再生できません。${ext(demo.src, '動画ファイルを開く')}</video><figcaption><strong>${CONCEPT_DISCLAIMER}</strong><span>${demo.durationSeconds}秒 · 操作できるデモUIの連続収録 · 日本語字幕 · 音声なし</span>${ext(demo.src, '動画ファイルを開く', 'olp-demo__file')}<details class="olp-demo__text"><summary>操作の流れをテキストで読む</summary><ol>${demo.steps.map(step => `<li>${e(step)}</li>`).join('')}</ol><p><strong>動画の結果：</strong>${e(demo.result)}</p><p>すべて架空データによる模擬の結果です。実際の発信・予約・購入は行いません。</p></details></figcaption></figure></article>`).join('')}</div><p class="olp-note">動画と操作画面は、合成の相手応答を使うシミュレーションです。下の従来の設計映像・判定記録とは別のデモで、実電話や店舗システムへの登録を検証したものではありません。条件外の費用、不通、拒否、曖昧な返答は、成功と分けて扱います。</p></section>`;
+}
+
 function stepsSection(prototypeLink) {
   return `<section class="container olp-steps" id="steps" aria-labelledby="olp-steps-title"><div class="olp-head"><p class="owned-kicker">02 · 頼んでから報告まで</p><h2 id="olp-steps-title">電話の前後に、<br>確認したいこと。</h2><p>相手、用件、費用を見てから発信し、終わったら報告を読む。その流れを考えた、これから作るアプリの設計画面です。4枚は上のイメージ映像から切り出しています。現行のOathra（CLIとシミュレーター）には、この画面はまだありません。</p></div><ol class="olp-steps__list">${STEPS.map((s, i) => `<li class="olp-steps__item"><figure><a href="${s.src}"><img src="${s.src}" width="1600" height="900" loading="lazy" decoding="async" alt="${e(s.alt)}"></a><figcaption><span class="olp-label">開発中の画面 · 未リリース</span><strong>${i + 1}. ${e(s.title)}</strong><span>${e(s.body)}</span></figcaption></figure></li>`).join('')}</ol><p class="olp-note">別公開の設計動画は、次のUIを考えるためのプレビューです。現行製品の実演や、新UIの実装完了を示すものではありません。 ${prototypeLink}</p></section>`;
 }
@@ -93,7 +99,7 @@ function delegationSection() {
     ['hold', '△ 決めずに持ち帰る', '例：コースや前金が必要と言われた'],
     ['no', '✕ しない', '支払いの約束、AIであることを隠す']
   ];
-  return `<section class="container olp-trust" id="trust" aria-labelledby="olp-trust-title"><div class="olp-head"><p class="owned-kicker">03 · 任せる範囲と承認</p><h2 id="olp-trust-title">任せていいのは、<br>ここまで。</h2><p class="olp-label olp-label--block">設計 · 現行版には未実装</p><p>これから作るアプリでの設計です。現行のOathraには、この3段階の指定、発信前の承認、費用の上限による打ち切り、着信の応対はまだありません。</p></div><div class="olp-trust__cols">${cols.map(([k, t, b]) => `<div class="olp-trust__col olp-trust__col--${k}"><strong>${e(t)}</strong><span>${e(b)}</span></div>`).join('')}</div><p class="olp-note">設計では、本番の電話は毎回承認が必要で、この設定は外せません。費用は1回ごとの上限つきです。電話がかかってきたときは、AIが用件だけを聞きます。</p></section>`;
+  return `<section class="container olp-trust" id="trust" aria-labelledby="olp-trust-title"><div class="olp-head"><p class="owned-kicker">03 · 任せる範囲と承認</p><h2 id="olp-trust-title">任せていいのは、<br>ここまで。</h2><p class="olp-label olp-label--block">設計 · 実電話フローには未実装</p><p>従来の設計案です。実電話フローには、この3段階の指定、発信前の承認、費用の上限による打ち切り、着信の応対はまだありません。上の操作できる構想デモでは、承認と条件の確認をシミュレーション内で試せます。</p></div><div class="olp-trust__cols">${cols.map(([k, t, b]) => `<div class="olp-trust__col olp-trust__col--${k}"><strong>${e(t)}</strong><span>${e(b)}</span></div>`).join('')}</div><p class="olp-note">設計では、本番の電話は毎回承認が必要で、この設定は外せません。費用は1回ごとの上限つきです。電話がかかってきたときは、AIが用件だけを聞きます。</p></section>`;
 }
 
 function recordingsSection(p, heroFilm, film15) {
@@ -133,7 +139,7 @@ export function refineOathraLp(html, products = ledgerProducts) {
   if (!prototypeLink) throw new Error('Oathra LP: expected the design-study link');
   const startWithTry = start.replace('</div><div class="owned-start__actions">', `${tryNow}</div><div class="owned-start__actions">`);
   if (startWithTry === start) throw new Error('Oathra LP: expected the start actions');
-  const composed = `<main id="main">${hero(p, x)}${ringSection()}${stepsSection(prototypeLink[0])}${delegationSection()}${recordingsSection(p, heroFilm, film15)}${statusSection(p, source, access.replace('<details class="owned-access">', '<details class="owned-access" open>').replace(`>${e(p.ja.license)} · `, '>'))}${startWithTry}${consult}${related}${footer}`;
+  const composed = `<main id="main">${hero(p, x)}${conceptDemosSection(p)}${ringSection()}${stepsSection(prototypeLink[0])}${delegationSection()}${recordingsSection(p, heroFilm, film15)}${statusSection(p, source, access.replace('<details class="owned-access">', '<details class="owned-access" open>').replace(`>${e(p.ja.license)} · `, '>'))}${startWithTry}${consult}${related}${footer}`;
   let out = html.slice(0, mainStart) + composed + html.slice(mainEnd);
   out = out.replace('<body ', `<body data-oathra-lp="${OATHRA_LP_VERSION}" `);
   // Header links follow the new sections.
@@ -143,7 +149,7 @@ export function refineOathraLp(html, products = ledgerProducts) {
 }
 
 export async function writeOathraLp(dist, products = ledgerProducts) {
-  for (const asset of [FILM.src, FILM.poster, ...STEPS.map(s => s.src)]) await fs.access(path.join(dist, asset)).catch(() => { throw new Error(`Oathra LP: missing ${asset}`); });
+  for (const asset of [FILM.src, FILM.poster, ...STEPS.map(s => s.src), ...oathra(products).conceptDemos.flatMap(demo => [demo.src, demo.poster])]) await fs.access(path.join(dist, asset)).catch(() => { throw new Error(`Oathra LP: missing ${asset}`); });
   const file = path.join(dist, PAGE);
   await fs.writeFile(file, refineOathraLp(await fs.readFile(file, 'utf8'), products));
   const assets = path.join(dist, 'assets');

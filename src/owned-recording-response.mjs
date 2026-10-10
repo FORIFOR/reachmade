@@ -9,6 +9,10 @@ const originals=new Map([
  ['/media/films/genie-30s.mp4','genie'],
  ['/media/films/oathra-15s.mp4','oathra'],
  ['/media/films/oathra-30s.mp4','oathra'],
+ // Operated fictional use-case demos; never real telephone calls.
+ ['/media/films/use-case-restaurant.mp4','oathra'],
+ ['/media/films/use-case-stock.mp4','oathra'],
+ ['/media/films/use-case-modify.mp4','oathra'],
  ['/media/films/agent-team-design-30s.mp4','agent-team'],
  // The Japanese home's clips cut from the owner's 2026-09-30 films (src/home-v4.mjs HOME_REC).
  ['/media/films/home-agent-team-13s.mp4','agent-team'],
