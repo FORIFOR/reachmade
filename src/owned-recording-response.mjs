@@ -13,6 +13,9 @@ const originals=new Map([
  ['/media/films/use-case-restaurant.mp4','oathra'],
  ['/media/films/use-case-stock.mp4','oathra'],
  ['/media/films/use-case-modify.mp4','oathra'],
+ // Illustrated product-experience films with synthetic narration, not real calls.
+ ['/media/films/oathra-voiced-ja-v3.mp4','oathra'],
+ ['/media/films/oathra-voiced-en-v3.mp4','oathra'],
  ['/media/films/agent-team-design-30s.mp4','agent-team'],
  // The Japanese home's clips cut from the owner's 2026-09-30 films (src/home-v4.mjs HOME_REC).
  ['/media/films/home-agent-team-13s.mp4','agent-team'],

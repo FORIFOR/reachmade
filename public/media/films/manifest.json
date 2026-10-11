@@ -196,6 +196,44 @@
       "sourceSha256": "228d9426330c12c238840dacf14243fd7ad441f9fbf109f0cdc39a358e9b913c",
       "render": "Poster extracted from the corresponding continuous UI recording; copied without modification.",
       "note": "Fictional, operable simulation UI. Persistent label: 構想デモ・実際の発信/予約は行いません. No real call, booking, purchase, third-party voice or likeness."
+    },
+    {
+      "path": "/media/films/oathra-voiced-ja-v3.mp4",
+      "bytes": 4202283,
+      "sha256": "aa746b01f8e2c73cab161c839990118cbccdc9d2e5f8aabce6fd930c3249c2a1",
+      "source": "Owner-supplied Oathra bilingual introduction v3 / oathra-voiced-ja-v3.mp4",
+      "sourceSha256": "aa746b01f8e2c73cab161c839990118cbccdc9d2e5f8aabce6fd930c3249c2a1",
+      "render": "Copied without modification. Remotion illustrative UI and edited stock-footage montage with Kokoro narration.",
+      "note": "Illustrative experience, not real calls, bookings or customer endorsements. Voice and footage sources: oathra-voiced-v3-credits.txt.",
+      "spec": "1920x1080, 25 fps, 24.000 s, 600 frames, H.264/yuv420p, AAC 48kHz mono; Japanese jf_alpha"
+    },
+    {
+      "path": "/media/films/oathra-voiced-ja-v3-poster.jpg",
+      "bytes": 141909,
+      "sha256": "a37e1eabf1f6a4deabf71009e3fa7ded14b59b3149b625ab14e0b22c14995369",
+      "source": "Owner-supplied Oathra bilingual introduction v3 / oathra-voiced-ja-v3-poster.jpg",
+      "sourceSha256": "a37e1eabf1f6a4deabf71009e3fa7ded14b59b3149b625ab14e0b22c14995369",
+      "render": "Matching owner-supplied poster; copied without modification.",
+      "note": "Illustrative experience, not real calls, bookings or customer endorsements. Voice and footage sources: oathra-voiced-v3-credits.txt."
+    },
+    {
+      "path": "/media/films/oathra-voiced-en-v3.mp4",
+      "bytes": 4218089,
+      "sha256": "3fcac8d55612ac0d7cb767651ceda0281d45d7f912a002efd9005b0d38b0eee5",
+      "source": "Owner-supplied Oathra bilingual introduction v3 / oathra-voiced-en-v3.mp4",
+      "sourceSha256": "3fcac8d55612ac0d7cb767651ceda0281d45d7f912a002efd9005b0d38b0eee5",
+      "render": "Copied without modification. Remotion illustrative UI and edited stock-footage montage with Kokoro narration.",
+      "note": "Illustrative experience, not real calls, bookings or customer endorsements. Voice and footage sources: oathra-voiced-v3-credits.txt.",
+      "spec": "1920x1080, 25 fps, 24.000 s, 600 frames, H.264/yuv420p, AAC 48kHz mono; English af_heart"
+    },
+    {
+      "path": "/media/films/oathra-voiced-en-v3-poster.jpg",
+      "bytes": 132580,
+      "sha256": "3f3acf60cf0afad6d4ac8fd09e72272537fc6a06868daf69c6a9b0e938b5db45",
+      "source": "Owner-supplied Oathra bilingual introduction v3 / oathra-voiced-en-v3-poster.jpg",
+      "sourceSha256": "3f3acf60cf0afad6d4ac8fd09e72272537fc6a06868daf69c6a9b0e938b5db45",
+      "render": "Matching owner-supplied poster; copied without modification.",
+      "note": "Illustrative experience, not real calls, bookings or customer endorsements. Voice and footage sources: oathra-voiced-v3-credits.txt."
     }
   ]
 }

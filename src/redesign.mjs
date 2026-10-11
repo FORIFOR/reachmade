@@ -26,6 +26,7 @@ import {redesignCopyFor} from './redesign-copy.mjs';
 import {capabilitiesCheckedAt} from './products.mjs';
 import {productNavigation} from './site-experience.mjs';
 import {recordings} from './films.mjs';
+import {oathraExperienceFilm} from './oathra-experience-films.mjs';
 
 const {checkedAt: sourcesCheckedAt} = JSON.parse(await fs.readFile(new URL('../site.config.json', import.meta.url), 'utf8'));
 
@@ -305,9 +306,10 @@ function productMain(p, list, lang, {kept, figure, source, filmAnchor}) {
   return `<section class="rd-phero">
 <div class="rd-meta"><span>${esc(r.productOf(p.index, n))}</span><span>${esc(p.discipline)}</span><span class="rd-status"><i aria-hidden="true"></i>${esc(t.status)} · ${esc(t.license)}</span></div>
 <h1 class="rd-pname${long ? ' rd-pname--long' : ''}"><span data-rd-line>${esc(name)}<em aria-hidden="true">.</em></span></h1>
-<div class="rd-phero-body"><div class="rd-phero-copy" data-rd-fade><p class="rd-headline">${esc(t.headline)}</p><p class="rd-desc">${esc(t.description)}</p><div class="rd-ctas"><a class="rd-btn rd-btn--ink" href="${conceptEntry ? '#concept-demos' : '#film'}"${conceptEntry ? ' aria-describedby="oathra-demo-boundary"' : ''}>${esc(conceptEntry ? '用途別デモを試す' : lang === 'ja' ? '映像を見る' : 'Watch the film')}<span aria-hidden="true">↓</span></a><a class="rd-btn rd-btn--line" href="${contactHref(lang, `#product-${p.id}`)}">${esc(r.consultHero)}<span aria-hidden="true">↗</span></a></div>${conceptEntry ? '<p class="olp-entry-note" id="oathra-demo-boundary">構想デモ・実際の発信/予約は行いません</p>' : ''}</div><figure class="rd-fig" data-rd-fade><div class="rd-fig-frame"><img src="${esc(still.src)}" alt="${esc(still.label)}" fetchpriority="high"></div><figcaption><span>${r.fig} ${esc(p.index)}</span><span>${esc(still.label)}</span></figcaption></figure></div>
+<div class="rd-phero-body"><div class="rd-phero-copy" data-rd-fade><p class="rd-headline">${esc(t.headline)}</p><p class="rd-desc">${esc(t.description)}</p><div class="rd-ctas"><a class="rd-btn rd-btn--ink" href="${conceptEntry ? '#concept-demos' : '#film'}"${conceptEntry ? ' aria-describedby="oathra-demo-boundary"' : ''}>${esc(conceptEntry ? '用途別デモを試す' : lang === 'ja' ? '映像を見る' : 'Watch the film')}<span aria-hidden="true">↓</span></a><a class="rd-btn rd-btn--line" href="${contactHref(lang, `#product-${p.id}`)}">${esc(r.consultHero)}<span aria-hidden="true">↗</span></a></div>${conceptEntry ? '<p class="olp-entry-note" id="oathra-demo-boundary">構想デモ・実際の発信/予約は行いません</p>' : ''}${p.id === 'oathra' ? `<a class="rd-experience-entry" href="#experience-film">${lang === 'ja' ? '24秒で利用イメージを見る' : 'Watch the 24-second introduction'} <span aria-hidden="true">↓</span></a>` : ''}</div><figure class="rd-fig" data-rd-fade><div class="rd-fig-frame"><img src="${esc(still.src)}" alt="${esc(still.label)}" fetchpriority="high"></div><figcaption><span>${r.fig} ${esc(p.index)}</span><span>${esc(still.label)}</span></figcaption></figure></div>
 </section>
 <section class="rd-outcome" aria-label="${esc(r.whatItDoes)}"><p class="rd-kicker">${esc(r.whatItDoes)}</p><ol class="rd-steps">${outcome}</ol></section>
+${oathraExperienceFilm(p, lang)}
 <section class="rd-film rd-reel" id="film" data-rd-reel data-rd-film-scale=".55" aria-labelledby="rd-film-title"><div class="rd-reel-stage">${figure ? `<div class="rd-reel-frame rd-reel-frame--figure" data-rd-frame>${figure}</div>` : filmAnchor ? `<a class="rd-reel-frame rd-film-link" data-rd-frame href="#${esc(filmAnchor)}"><img src="${esc(film.poster)}" alt="" loading="lazy"><span>${esc(r.filmBelow)} <span aria-hidden="true">↓</span></span></a>` : `<div class="rd-reel-frame" data-rd-frame>${video({...film, label: `${name} — ${kind}`}, lang)}</div>`}<div class="rd-reel-cap"><span id="rd-film-title">${esc(r.film(name))}</span>${figure && film.kind === 'recording' ? '' : `<span><b>${esc(filmAnchor ? r.stillKind : kind)}</b>${figure || filmAnchor ? '' : ` ${esc(note)}`}${extra}</span>`}</div></div></section>
 ${showHighlights ? `<section class="rd-highlights" aria-labelledby="rd-hl-title"><p class="rd-kicker" id="rd-hl-title">${esc(r.highlights)}</p><div class="rd-hl-grid">${highlights}</div></section>` : ''}
 ${kept.length ? `<div class="rd-kept rd-kept--product"><p class="rd-kicker rd-kept-kicker">${esc(r.detailKicker)}</p>${keptHtml}</div>` : ''}
@@ -371,6 +373,7 @@ function replaceLayer(existing, start, end, layer) {
 export async function writeRedesign(dist, products) {
   const list = ledger(products), assets = path.join(dist, 'assets');
   const required = [REEL.src, REEL.poster, AGENT_TEAM_FILM.src, AGENT_TEAM_FILM.poster, '/assets/mark.svg', '/assets/redesign.mjs', ...Object.values(STILLS),
+    ...list.filter(p => p.id === 'oathra').flatMap(p => Object.values(p.experienceFilms || {}).flatMap(f => [f.src, f.poster])),
     ...list.flatMap(p => { const f = productFilm(p.id); return [p.preview, f.poster, ...(f.src.startsWith('/media/products/') ? [] : [f.src])]; })];
   for (const asset of required) await fs.access(path.join(dist, asset)).catch(() => { throw new Error(`Redesign: missing ${asset}`); });
   const pages = [];
