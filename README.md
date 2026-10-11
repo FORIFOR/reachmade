@@ -96,6 +96,8 @@ npm run dev
 
 ## Oathra / RingZero の用途別構想デモ
 
+日常の場面から描く24秒の紹介映像を、[日本語音声・字幕](https://reachmade.com/products/oathra/#experience-film) と [English narration and captions](https://reachmade.com/en/products/oathra/#experience-film) でご覧いただけます。**映像は利用イメージ。機能・利用条件はサービス案内をご確認ください。** 実発信・実予約の記録ではありません。音声・ストック素材の出典と公開範囲は [紹介映像の配布・検証手順](docs/OATHRA_INTRO_FILMS.md) に記録しています。
+
 日本語の [Oathra紹介ページ](https://reachmade.com/products/oathra/#concept-demos) から、飲食店予約、型番指定の在庫確認・無償取り置き、19時から20時への予約変更を試せます。3本の操作動画と、操作できる [構想デモ](https://reachmade.com/demos/oathra/) を並べています。
 
 **構想デモ・実際の発信/予約は行いません。** 合成データ、架空の店舗・電話番号・予約番号のみを使い、購入・課金も行いません。現行の判定エンジンや過去の実通話開発記録とは区別しています。デモ本体の正本は `FORIFOR/oathra` です。
