@@ -150,6 +150,11 @@
     "page": "ai-meeting-guide"
   },
   {
+    "route": "/products/oathra/guide/",
+    "lang": "ja",
+    "page": "oathra-guide"
+  },
+  {
     "route": "/en/products/genie/demos/",
     "lang": "en",
     "page": "genie-demos"
@@ -158,5 +163,10 @@
     "route": "/en/products/ai-meeting/guide/",
     "lang": "en",
     "page": "ai-meeting-guide"
+  },
+  {
+    "route": "/en/products/oathra/guide/",
+    "lang": "en",
+    "page": "oathra-guide"
   }
 ]

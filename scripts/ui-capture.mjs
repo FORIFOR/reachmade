@@ -25,6 +25,14 @@ const PORT = Number(process.env.UI_CAPTURE_PORT || 4179);
 const ORIGIN = `http://127.0.0.1:${PORT}`;
 
 export const SHOTS = Object.freeze([
+  { file: 'oathra-guide-ja-desktop.png', route: '/products/oathra/guide/', width: 1440, height: 1000, state: 'implementation checklist, reduced motion, real time', reducedMotion: true, realtime: true, fullPage: true },
+  { file: 'oathra-guide-ja-tablet.png', route: '/products/oathra/guide/', width: 1024, height: 900, state: 'implementation checklist, reduced motion, real time', reducedMotion: true, realtime: true, fullPage: true },
+  { file: 'oathra-guide-ja-mobile.png', route: '/products/oathra/guide/', width: 390, height: 844, state: 'implementation checklist, reduced motion, real time', reducedMotion: true, realtime: true, fullPage: true },
+  { file: 'oathra-guide-ja-narrow.png', route: '/products/oathra/guide/', width: 320, height: 900, state: 'implementation checklist, reduced motion, real time', reducedMotion: true, realtime: true, fullPage: true },
+  { file: 'oathra-guide-en-desktop.png', route: '/en/products/oathra/guide/', width: 1440, height: 1000, state: 'implementation checklist, reduced motion, real time', reducedMotion: true, realtime: true, fullPage: true },
+  { file: 'oathra-guide-en-tablet.png', route: '/en/products/oathra/guide/', width: 1024, height: 900, state: 'implementation checklist, reduced motion, real time', reducedMotion: true, realtime: true, fullPage: true },
+  { file: 'oathra-guide-en-mobile.png', route: '/en/products/oathra/guide/', width: 390, height: 844, state: 'implementation checklist, reduced motion, real time', reducedMotion: true, realtime: true, fullPage: true },
+  { file: 'oathra-guide-en-narrow.png', route: '/en/products/oathra/guide/', width: 320, height: 900, state: 'implementation checklist, reduced motion, real time', reducedMotion: true, realtime: true, fullPage: true },
   // The Japanese and English homes share seven product cards, a manual reel and native details.
   // Real-time CDP capture scrolls and clicks the unmodified build as a visitor would.
   // fullPage scrolls through once first so lazy images and intersection observers advance.
