@@ -26,6 +26,14 @@
     }
   ],
   "requiredImages": [
+    "artifacts/ui/oathra-guide-ja-desktop.png",
+    "artifacts/ui/oathra-guide-ja-tablet.png",
+    "artifacts/ui/oathra-guide-ja-mobile.png",
+    "artifacts/ui/oathra-guide-ja-narrow.png",
+    "artifacts/ui/oathra-guide-en-desktop.png",
+    "artifacts/ui/oathra-guide-en-tablet.png",
+    "artifacts/ui/oathra-guide-en-mobile.png",
+    "artifacts/ui/oathra-guide-en-narrow.png",
     "artifacts/ui/home-desktop.png",
     "artifacts/ui/home-mobile.png",
     "artifacts/ui/home-reduced-motion.png",
@@ -54,15 +62,7 @@
     "artifacts/ui/home-band-services.png",
     "artifacts/ui/home-m-reel.png",
     "artifacts/ui/home-m-chapter.png",
-    "artifacts/ui/home-m-services.png",
-    "artifacts/ui/oathra-guide-ja-desktop.png",
-    "artifacts/ui/oathra-guide-ja-tablet.png",
-    "artifacts/ui/oathra-guide-ja-mobile.png",
-    "artifacts/ui/oathra-guide-ja-narrow.png",
-    "artifacts/ui/oathra-guide-en-desktop.png",
-    "artifacts/ui/oathra-guide-en-tablet.png",
-    "artifacts/ui/oathra-guide-en-mobile.png",
-    "artifacts/ui/oathra-guide-en-narrow.png"
+    "artifacts/ui/home-m-services.png"
   ],
   "reviewFile": "artifacts/ui/review.json",
   "timeoutSeconds": 600,
