@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "note": "Fifteen-second introduction films rendered from supplied source packages (render(t) HTML films). Source zips are not in this repository; their hashes are recorded here.",
+  "note": "Introduction films and recorded fictional UI demonstrations. Each file states its source, capture or render method, and hash. A simulation recording is not a real call.",
   "files": [
     {
       "path": "/media/films/reachmade-15s.mp4",
@@ -18,28 +18,6 @@
       "source": "/media/films/reachmade-15s.mp4",
       "sourceSha256": "3235a87ff28db57b8c8256f73793bde1c90c27accca6a2cbebdcfb1b62bdfd24",
       "render": "ffmpeg -ss 3.2 -frames:v 1 -vf scale=1280:-1 -q:v 3"
-    },
-    {
-      "path": "/media/films/genie-15s.mp4",
-      "bytes": 4324898,
-      "sha256": "a81954445aa06687106b9984a7b4150d9c7ecc418d5e333b00f191f6a77ac37a",
-      "source": "reachmade_genie_oathra_source.zip → genie/film.html",
-      "sourceSha256": "e55b52a81af266f3812e54e947e0c5b309a683c445904c47d5c9f87c0d77aff8",
-      "render": "prepass.py (sheet:2.74 win:11.0); render2.py; genie/audio.py; master.py; ffmpeg -framerate 60 -i frames/f%04d.png -i soundtrack.wav -vf \"scale=out_color_matrix=bt709:out_range=tv,format=yuv420p\" -c:v libx264 -preset slow -crf 20 -tune animation -c:a aac -b:a 192k -movflags +faststart -t 15",
-      "spec": "1920x1080, 60 fps, 15.000 s, AAC stereo, -14 LUFS master",
-      "edits": [
-        "End card tagline replaced with the ledger short \"自分のAIモデルと作る、Macのワークスペース。\".",
-        "Label \"イメージ　元のメモを再現\" became \"イメージ　メモと入力画面を再現\" (the input panel is also recreated)."
-      ],
-      "editedSourceSha256": "4f76e11ea304b94c10ffc8c60573df2835f6ae2cbf8f47d7a23ffec7ba83fdc3"
-    },
-    {
-      "path": "/media/films/genie-15s.jpg",
-      "bytes": 64987,
-      "sha256": "6b85edd1124ca74b0478fe74f36a23a70fa40fec06cc9b924c6521b6dc56a04f",
-      "source": "/media/films/genie-15s.mp4",
-      "sourceSha256": "a81954445aa06687106b9984a7b4150d9c7ecc418d5e333b00f191f6a77ac37a",
-      "render": "ffmpeg -ss 6.6 -frames:v 1 -vf scale=1280:-1 -q:v 3"
     },
     {
       "path": "/media/films/oathra-15s.mp4",
@@ -143,6 +121,119 @@
       "source": "/media/films/genie-taskdock-13s.mp4",
       "sourceSha256": "602c0f9404a4d414f3a173f8ffed610cc5bc3a2b9296fcb709d0fdb7cd5a3a67",
       "render": "ffmpeg -ss 0.35 -frames:v 1 -q:v 2"
+    },
+    {
+      "path": "/media/films/genie-30s.mp4",
+      "bytes": 5380504,
+      "sha256": "07f3a50fc7b77c89c3c3b159e13c82746e2ee7d912dafe0886f79a4fd18f02cf",
+      "source": "Genie Film 30s.mp4 (owner-supplied, 2026-10-04, 1920x1080 30 fps 30.000 s, no audio track, 20085452 bytes)",
+      "sourceSha256": "b3e777de72616e8927fb7b75cf49c6186e7629b7a80b5f177444a5aa602f27ed",
+      "render": "ffmpeg -an -c:v libx264 -preset slow -crf 20 -pix_fmt yuv420p -movflags +faststart (SSIM 0.9989 vs the source)",
+      "spec": "1920x1080, 30 fps, 30.000 s, no audio",
+      "note": "Introduction film. Frames are labelled 現行製品・再現イメージ (recreation of the current product) and 次のUI・設計プレビュー（未実装） (design preview, not shipped); not a recording of the app."
+    },
+    {
+      "path": "/media/films/genie-30s.jpg",
+      "bytes": 52997,
+      "sha256": "2939696d8205985be282a63d97524bc4907a26de74c89945db8f7854a6450fad",
+      "source": "/media/films/genie-30s.mp4",
+      "sourceSha256": "07f3a50fc7b77c89c3c3b159e13c82746e2ee7d912dafe0886f79a4fd18f02cf",
+      "render": "ffmpeg -ss 4 -frames:v 1 -vf scale=1280:-1 -q:v 3"
+    },
+    {
+      "path": "/media/films/use-case-restaurant.mp4",
+      "bytes": 809292,
+      "sha256": "e77550764a22150bbd8a541fc0ffce7e2b6fef94271eaeefaa89370f96e28fe4",
+      "source": "FORIFOR/oathra docs/media/use-case-restaurant.mp4",
+      "sourceSha256": "e77550764a22150bbd8a541fc0ffce7e2b6fef94271eaeefaa89370f96e28fe4",
+      "render": "Copied without re-encoding. Original: Chrome Page.startScreencast live UI JPEG frames and native timestamps; FFmpeg holds captured frames to 25 fps, H.264/yuv420p, faststart, no audio.",
+      "note": "Fictional, operable simulation UI. Persistent label: 構想デモ・実際の発信/予約は行いません. No real call, booking, purchase, third-party voice or likeness.",
+      "spec": "1440x900, 16:10, 25 fps, 50.000 s, 1250 frames, no audio"
+    },
+    {
+      "path": "/media/films/use-case-restaurant.jpg",
+      "bytes": 148714,
+      "sha256": "0c4f2f9696df17c63526f7bb23f0b6a393983d29d5ad70406e6cb9566e6fa5ef",
+      "source": "/media/films/use-case-restaurant.mp4",
+      "sourceSha256": "e77550764a22150bbd8a541fc0ffce7e2b6fef94271eaeefaa89370f96e28fe4",
+      "render": "Poster extracted from the corresponding continuous UI recording; copied without modification.",
+      "note": "Fictional, operable simulation UI. Persistent label: 構想デモ・実際の発信/予約は行いません. No real call, booking, purchase, third-party voice or likeness."
+    },
+    {
+      "path": "/media/films/use-case-stock.mp4",
+      "bytes": 847897,
+      "sha256": "209850cf8cba048f6b9267433848ac958d0eee69a780768fbbfa7979c303497a",
+      "source": "FORIFOR/oathra docs/media/use-case-stock.mp4",
+      "sourceSha256": "209850cf8cba048f6b9267433848ac958d0eee69a780768fbbfa7979c303497a",
+      "render": "Copied without re-encoding. Original: Chrome Page.startScreencast live UI JPEG frames and native timestamps; FFmpeg holds captured frames to 25 fps, H.264/yuv420p, faststart, no audio.",
+      "note": "Fictional, operable simulation UI. Persistent label: 構想デモ・実際の発信/予約は行いません. No real call, booking, purchase, third-party voice or likeness.",
+      "spec": "1440x900, 16:10, 25 fps, 50.000 s, 1250 frames, no audio"
+    },
+    {
+      "path": "/media/films/use-case-stock.jpg",
+      "bytes": 149580,
+      "sha256": "178c57226353895789fe359b64f2a0ebaf56957e2b958689680718511494af19",
+      "source": "/media/films/use-case-stock.mp4",
+      "sourceSha256": "209850cf8cba048f6b9267433848ac958d0eee69a780768fbbfa7979c303497a",
+      "render": "Poster extracted from the corresponding continuous UI recording; copied without modification.",
+      "note": "Fictional, operable simulation UI. Persistent label: 構想デモ・実際の発信/予約は行いません. No real call, booking, purchase, third-party voice or likeness."
+    },
+    {
+      "path": "/media/films/use-case-modify.mp4",
+      "bytes": 785713,
+      "sha256": "228d9426330c12c238840dacf14243fd7ad441f9fbf109f0cdc39a358e9b913c",
+      "source": "FORIFOR/oathra docs/media/use-case-modify.mp4",
+      "sourceSha256": "228d9426330c12c238840dacf14243fd7ad441f9fbf109f0cdc39a358e9b913c",
+      "render": "Copied without re-encoding. Original: Chrome Page.startScreencast live UI JPEG frames and native timestamps; FFmpeg holds captured frames to 25 fps, H.264/yuv420p, faststart, no audio.",
+      "note": "Fictional, operable simulation UI. Persistent label: 構想デモ・実際の発信/予約は行いません. No real call, booking, purchase, third-party voice or likeness.",
+      "spec": "1440x900, 16:10, 25 fps, 50.000 s, 1250 frames, no audio"
+    },
+    {
+      "path": "/media/films/use-case-modify.jpg",
+      "bytes": 152937,
+      "sha256": "adee0e1528cdaf074c578c1cce0f6409e247b4a091f7e45b085ec4da66c76b12",
+      "source": "/media/films/use-case-modify.mp4",
+      "sourceSha256": "228d9426330c12c238840dacf14243fd7ad441f9fbf109f0cdc39a358e9b913c",
+      "render": "Poster extracted from the corresponding continuous UI recording; copied without modification.",
+      "note": "Fictional, operable simulation UI. Persistent label: 構想デモ・実際の発信/予約は行いません. No real call, booking, purchase, third-party voice or likeness."
+    },
+    {
+      "path": "/media/films/oathra-voiced-ja-v3.mp4",
+      "bytes": 4202283,
+      "sha256": "aa746b01f8e2c73cab161c839990118cbccdc9d2e5f8aabce6fd930c3249c2a1",
+      "source": "Owner-supplied Oathra bilingual introduction v3 / oathra-voiced-ja-v3.mp4",
+      "sourceSha256": "aa746b01f8e2c73cab161c839990118cbccdc9d2e5f8aabce6fd930c3249c2a1",
+      "render": "Copied without modification. Remotion illustrative UI and edited stock-footage montage with Kokoro narration.",
+      "note": "Illustrative experience, not real calls, bookings or customer endorsements. Voice and footage sources: oathra-voiced-v3-credits.txt.",
+      "spec": "1920x1080, 25 fps, 24.000 s, 600 frames, H.264/yuv420p, AAC 48kHz mono; Japanese jf_alpha"
+    },
+    {
+      "path": "/media/films/oathra-voiced-ja-v3-poster.jpg",
+      "bytes": 141909,
+      "sha256": "a37e1eabf1f6a4deabf71009e3fa7ded14b59b3149b625ab14e0b22c14995369",
+      "source": "Owner-supplied Oathra bilingual introduction v3 / oathra-voiced-ja-v3-poster.jpg",
+      "sourceSha256": "a37e1eabf1f6a4deabf71009e3fa7ded14b59b3149b625ab14e0b22c14995369",
+      "render": "Matching owner-supplied poster; copied without modification.",
+      "note": "Illustrative experience, not real calls, bookings or customer endorsements. Voice and footage sources: oathra-voiced-v3-credits.txt."
+    },
+    {
+      "path": "/media/films/oathra-voiced-en-v3.mp4",
+      "bytes": 4218089,
+      "sha256": "3fcac8d55612ac0d7cb767651ceda0281d45d7f912a002efd9005b0d38b0eee5",
+      "source": "Owner-supplied Oathra bilingual introduction v3 / oathra-voiced-en-v3.mp4",
+      "sourceSha256": "3fcac8d55612ac0d7cb767651ceda0281d45d7f912a002efd9005b0d38b0eee5",
+      "render": "Copied without modification. Remotion illustrative UI and edited stock-footage montage with Kokoro narration.",
+      "note": "Illustrative experience, not real calls, bookings or customer endorsements. Voice and footage sources: oathra-voiced-v3-credits.txt.",
+      "spec": "1920x1080, 25 fps, 24.000 s, 600 frames, H.264/yuv420p, AAC 48kHz mono; English af_heart"
+    },
+    {
+      "path": "/media/films/oathra-voiced-en-v3-poster.jpg",
+      "bytes": 132580,
+      "sha256": "3f3acf60cf0afad6d4ac8fd09e72272537fc6a06868daf69c6a9b0e938b5db45",
+      "source": "Owner-supplied Oathra bilingual introduction v3 / oathra-voiced-en-v3-poster.jpg",
+      "sourceSha256": "3f3acf60cf0afad6d4ac8fd09e72272537fc6a06868daf69c6a9b0e938b5db45",
+      "render": "Matching owner-supplied poster; copied without modification.",
+      "note": "Illustrative experience, not real calls, bookings or customer endorsements. Voice and footage sources: oathra-voiced-v3-credits.txt."
     }
   ]
 }

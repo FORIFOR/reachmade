@@ -19,7 +19,7 @@ test('the Japanese Oathra page follows the brief order and states the status of 
   // First view: one primary button, one-line note, the 30-second image film labelled as such, never autoplaying.
   const hero = html.slice(order[0], order[1]);
   assert.equal((hero.match(/class="owned-primary"/g) || []).length, 1);
-  assert.match(hero, /照合するのは公開サンプルだけです。電話はかからず、お店のシステムにも登録しません。/);
+  assert.match(hero, /構想デモ・実際の発信\/予約は行いません。合成データだけで、承認から結果までを試せます。/);
   assert.match(hero, /イメージ映像（演出を含む）/);
   assert.match(hero, /現行のOathraにはまだありません/);
   assert.ok(hero.includes(`poster="${FILM.poster}"`) && hero.includes(`<source src="${FILM.src}"`));
@@ -29,7 +29,7 @@ test('the Japanese Oathra page follows the brief order and states the status of 
   assert.equal(steps.split('開発中の画面 · 未リリース').length - 1, STEPS.length);
   assert.match(steps, /現行のOathra（CLIとシミュレーター）には、この画面はまだありません/);
   const trust = html.slice(order[3], order[4]);
-  assert.match(trust, /設計 · 現行版には未実装/);
+  assert.match(trust, /設計 · 実電話フローには未実装/);
   assert.match(trust, /この3段階の指定、発信前の承認、費用の上限による打ち切り、着信の応対はまだありません/);
   // 4: the existing 13-second recording and the 15-second film, moved not rewritten.
   const rec = html.slice(order[4], order[5]);

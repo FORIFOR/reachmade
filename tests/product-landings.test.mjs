@@ -85,7 +85,8 @@ test('every product CTA states a concrete action and sets click expectations',()
     const x=landingExperience[id][lang];
     const [label,href]=x.primary;
     assert.ok(label.length>=8,`${id}/${lang} primary CTA too vague`);
-    assert.equal(new URL(href).protocol,'https:');
+    assert.match(href,/^(?:https:\/\/|\/(?!\/))/,'CTA must be HTTPS or an origin-relative preview-safe path');
+    assert.equal(new URL(href,'https://reachmade.com').protocol,'https:');
     assert.ok(x.tryNow.length>=18,`${id}/${lang} missing first-task description`);
     assert.ok(x.actionNote.length>=24,`${id}/${lang} missing post-click expectation`);
     assert.doesNotMatch(label,/^(見る|開く|詳しく見る|Learn more|Open|View)$/i);

@@ -1,0 +1,37 @@
+Oathra — 24-second Japanese / English introduction, v3
+
+映像は利用イメージ。機能・利用条件はサービス案内をご確認ください。
+This film illustrates a possible experience. See the service information for
+features and conditions of use.
+
+画面・店舗は例示で、実際の発信・予約の記録ではありません。
+実写の人物はストック素材の出演者で、顧客の体験談・推薦ではありません。
+結果の管理は、AIとの会話内での参照を表します。
+Screens and venues are examples, not real calls or reservations. The people are
+stock-footage performers, not customer testimonials or endorsements. Managing
+results means referring to them within an AI conversation.
+
+Synthetic narration / 合成音声
+Kokoro-82M v1.0 — Japanese jf_alpha; English af_heart.
+Kokoro implementation 0.9.4 and model: Apache-2.0.
+Model revision: f3ff3571791e39611d31c381e3a41a3af07b4987
+https://huggingface.co/hexgrad/Kokoro-82M/blob/f3ff3571791e39611d31c381e3a41a3af07b4987/README.md
+https://huggingface.co/hexgrad/Kokoro-82M/blob/f3ff3571791e39611d31c381e3a41a3af07b4987/VOICES.md
+https://github.com/hexgrad/kokoro/blob/main/LICENSE
+Preset synthetic voices; no speaker cloning or customer recording.
+The Apache-2.0 reference applies to the model and software, not to the stock
+footage or the finished film as a whole. Model weights and runtime are not included.
+
+Stock footage / 実写素材
+Vlada Karpovich / Pexels — A Man Lying Down on Sofa While Using His Smartphone
+https://www.pexels.com/video/a-man-lying-down-on-sofa-while-using-his-smartphone-5271685/
+Ron Lach / Pexels — Group of Friends Having Dinner Together
+https://www.pexels.com/video/group-of-friends-having-dinner-together-8922355/
+Pexels License: https://www.pexels.com/license/
+The film is an edited montage with illustrative UI and narration. Raw stock files
+are not distributed here. No endorsement by the performers or creators is implied.
+
+Production / 制作
+Remotion composition, H.264 video + AAC narration, 1920×1080, 25 fps, 24 seconds.
+Captions are embedded in the image. SHA-256 values are in manifest.json.
+Brand, footage and films are excluded from the repository's MIT code license.

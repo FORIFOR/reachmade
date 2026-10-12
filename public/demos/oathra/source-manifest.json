@@ -1,0 +1,48 @@
+{
+  "schema": 1,
+  "sourceRepository": "https://github.com/FORIFOR/oathra",
+  "sourceRevision": "bab79f2f31e17605ea5278f9649c4408cd65c586",
+  "sourceWorkingTree": "clean",
+  "scope": "Built local simulation only. No telephony, credential, provider or live-store integration is included.",
+  "adaptations": [
+    "index.html: bundle path ./use-cases.js; brand link /products/oathra/; three media links /media/films/. CSS and JavaScript copied byte-for-byte."
+  ],
+  "license": "Apache-2.0 for Oathra; bundled Zod MIT. See LICENSE and THIRD_PARTY_NOTICES.txt.",
+  "files": [
+    {
+      "source": "site/demos/index.html",
+      "path": "/demos/oathra/index.html",
+      "sourceSha256": "d02d705d722b0020ded14a8200dbd8c2d1aeb79a00d3e91b7c217bb68b96f5aa",
+      "sha256": "0539b764e782369f24da5d8c3d59839c2f96c2500b112b22a806577363a0dec3",
+      "bytes": 4978
+    },
+    {
+      "source": "site/demos/demo.css",
+      "path": "/demos/oathra/demo.css",
+      "sourceSha256": "63e9e5b63b7c476a2d4b91cf911587053bfbc22d39c11fe904a804d72e8ca869",
+      "sha256": "63e9e5b63b7c476a2d4b91cf911587053bfbc22d39c11fe904a804d72e8ca869",
+      "bytes": 10616
+    },
+    {
+      "source": "site/use-cases.js",
+      "path": "/demos/oathra/use-cases.js",
+      "sourceSha256": "f66c25247fdc53f6cb42a723e051773a8e254a71607ea4ba836cf7b4757852ec",
+      "sha256": "f66c25247fdc53f6cb42a723e051773a8e254a71607ea4ba836cf7b4757852ec",
+      "bytes": 174169
+    },
+    {
+      "source": "LICENSE",
+      "path": "/demos/oathra/LICENSE",
+      "sourceSha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+      "bytes": 11358
+    },
+    {
+      "source": "Zod 3.25.76 LICENSE",
+      "path": "/demos/oathra/THIRD_PARTY_NOTICES.txt",
+      "sourceSha256": "3f1189b28e3866e0d979968d466b78f813f76827cfdca1fbb124cc0a5c8841f8",
+      "sha256": "34c4c3ee9e45fdba65ed57ef1949513bb71c61d259588f7204a12c9cf546aa80",
+      "bytes": 1144
+    }
+  ]
+}

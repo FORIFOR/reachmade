@@ -1,4 +1,4 @@
-/** Fifteen-second introduction films: one film each on the Japanese Genie and Oathra pages.
+/** Short introduction films (Genie 30 s, Oathra 15 s): one film each on the Japanese Genie and Oathra pages.
  * (The Japanese home offers the same two films inside its product stage — see home-v4.mjs.) They are edited films with motion graphics,
  * so every placement says so beside the player, and says which parts are real. Native controls
  * only: nothing autoplays, nothing downloads before a press, and the page needs no script. */
@@ -10,15 +10,20 @@ const MARK = '/* fifteen-second films */';
 const SECTION = 'data-film15';
 
 export const FILMS = Object.freeze({
+  // Owner-supplied 「Genie Film 30s.mp4」 (2026-10-04, sha256 b3e777de…27ed, silent), re-encoded for the web. Its frames
+  // label themselves: the first half 「現行製品・再現イメージ」, the rest 「次のUI・設計プレビュー（未実装）」. It replaces the
+  // earlier 15-second film whose burned-in caption called the Codex-finished HTML "Genie-generated".
   genie: Object.freeze({
     page: 'products/genie/index.html',
     before: '<section class="container owned-flow" id="flow"',
-    src: '/media/films/genie-15s.mp4',
-    poster: '/media/films/genie-15s.jpg',
-    label: 'Genieの15秒紹介映像',
-    kicker: '15秒の紹介映像',
-    title: ['ひとつの依頼が、', '動くHTMLになるまで。'],
-    note: '紹介のために編集した映像です。0〜5.6秒のメモと入力画面は再現（イメージ）、5.6〜10.9秒は、Genieへの依頼から作り始め、完成版をCodexで仕上げたコードとHTMLの実物をそのまま動かしています。それ以降は演出です。映像内の「Genieが生成した」という表記は、完成版にCodexを使ったことを省いています。音声「小さな宇宙にして」はGenie紹介映像のナレーションからの抜粋です。',
+    src: '/media/films/genie-30s.mp4',
+    poster: '/media/films/genie-30s.jpg',
+    label: 'Genieの30秒紹介映像',
+    audio: '音声なし',
+    meta: '30秒 · 音声なし · 押したときだけ再生 · 再現イメージと設計プレビューを含む紹介映像',
+    kicker: '30秒の紹介映像',
+    title: ['呼び出して、頼んで、', '結果を受け取るまで。'],
+    note: '紹介のために作った映像です。前半は現行製品の操作を再現したイメージで、「ここからは、次のUIの設計です」以降は次のUIの設計プレビューです。設計プレビューの機能はまだ実装されていません。どちらも実アプリの録画ではなく、メモやページの内容は架空の例です。',
   }),
   oathra: Object.freeze({
     page: 'products/oathra/index.html',
@@ -26,6 +31,8 @@ export const FILMS = Object.freeze({
     src: '/media/films/oathra-15s.mp4',
     poster: '/media/films/oathra-15s.jpg',
     label: 'Oathraの15秒紹介映像',
+    audio: '音声あり',
+    meta: '15秒 · 音声あり · 押したときだけ再生 · 演出を含む編集映像',
     kicker: '15秒の紹介映像',
     title: ['一本の電話と、', '確定を決めた一言。'],
     note: '公開シミュレーター（ホテル・リンゴ）との通話記録から、音声を自然な間で切り出して編集した映像です。再生速度は変えていません。画面の時刻は、この動画の再生位置です。',
@@ -38,7 +45,7 @@ export function filmSection(id) {
   const f = film(id);
   if (!f) throw new Error(`Unknown film: ${id}`);
   const heading = `film15-${id}-title`;
-  return `<section class="container rm-film15 rm-film15--${id}" ${SECTION}="${id}" aria-labelledby="${heading}"><div class="rm-film15__head"><p class="rm-film15__kicker">${e(f.kicker)}</p><h2 id="${heading}">${f.title.map(e).join('<br>')}</h2><p class="rm-film15__note">${e(f.note)}</p></div><figure class="rm-film15__figure"><video controls playsinline preload="none" poster="${f.poster}" aria-label="${e(f.label)}（音声あり）"><source src="${f.src}" type="video/mp4">この動画は、このブラウザーでは再生できません。</video><figcaption>15秒 · 音声あり · 押したときだけ再生 · 演出を含む編集映像</figcaption></figure></section>`;
+  return `<section class="container rm-film15 rm-film15--${id}" ${SECTION}="${id}" aria-labelledby="${heading}"><div class="rm-film15__head"><p class="rm-film15__kicker">${e(f.kicker)}</p><h2 id="${heading}">${f.title.map(e).join('<br>')}</h2><p class="rm-film15__note">${e(f.note)}</p></div><figure class="rm-film15__figure"><video controls playsinline preload="none" poster="${f.poster}" aria-label="${e(f.label)}（${e(f.audio)}）"><source src="${f.src}" type="video/mp4">この動画は、このブラウザーでは再生できません。</video><figcaption>${e(f.meta)}</figcaption></figure></section>`;
 }
 
 // Insert once, before the anchor. Fails closed when the page no longer has the anchor,

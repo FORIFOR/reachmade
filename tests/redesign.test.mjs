@@ -4,7 +4,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import {products} from '../src/products.mjs';
 import {esc} from '../public/assets/lab-core.mjs';
-import {REDESIGN_VERSION, AGENT_TEAM_FILM, productFilm, redesignHome, redesignProduct, topLevel} from '../src/redesign.mjs';
+import {REDESIGN_VERSION, AGENT_TEAM_FILM, STILLS, stillOf, productFilm, redesignHome, redesignProduct, topLevel} from '../src/redesign.mjs';
 import {redesignCopyFor} from '../src/redesign-copy.mjs';
 import {recordings} from '../src/films.mjs';
 
@@ -49,7 +49,8 @@ test('the deployed homes: ledger facts, honest reel label and routes to evidence
       const row = main.match(new RegExp(`<a class="rd-row" href="${b}/products/${p.id}/"[^>]*>[\\s\\S]*?</a>`))?.[0];
       assert.ok(row, `${lang}/${p.id} row`);
       for (const fact of ['headline', 'outcome', 'status']) assert.ok(row.includes(esc(t[fact])), `${lang}/${p.id} ${fact}`);
-      assert.ok(row.includes(`data-rd-label="${esc(`${p.index} — ${t.previewLabel}`)}"`), `${lang}/${p.id} preview label`);
+      const still = stillOf(p, lang);
+      assert.ok(row.includes(`data-rd-preview="${esc(still.src)}" data-rd-label="${esc(`${p.index} — ${still.label}`)}"`), `${lang}/${p.id} preview and its label`);
       assert.ok(main.includes(`href="${b}/work/#${p.id}"`), `${lang}/${p.id} evidence record`);
     }
     // The cursor preview names the Agent Team film as a design film, never a recording.
@@ -107,6 +108,22 @@ test('the owner-supplied Agent Team film is the design film, labelled as such, w
   // agent-team-lp-ja.mp4 as supplied on 2026-09-29, re-encoded without audio for the site.
   assert.equal(entry.sourceSha256, 'c09914a3d0c5ad93fdf833601379f92c6c65c98dfd031a91d0d3023a4e6b84b9');
   assert.match(entry.note, /not recordings of the app/);
+});
+
+test('Agent Team shows a labelled design-film frame; its kept recording block keeps the recording still', async () => {
+  const p = products.find(x => x.id === 'agent-team');
+  await fs.access(path.join(root, 'public', STILLS['agent-team']));
+  for (const lang of ['ja', 'en']) {
+    const label = redesignCopyFor(lang).stillLabels['agent-team'];
+    assert.match(label, lang === 'ja' ? /設計動画.*再現/ : /design film.*recreated/);
+    const html = await read(`${lang === 'en' ? 'en/' : ''}products/agent-team/index.html`);
+    const fig = html.match(/<figure class="rd-fig"[\s\S]*?<\/figure>/)[0];
+    assert.ok(fig.includes(`src="${STILLS['agent-team']}" alt="${esc(label)}"`) && fig.includes(`<span>${esc(label)}</span>`));
+    // The real-recording block (REAL PRODUCT, data-recording-src) still opens on the recording's own still.
+    const rec = html.match(/<figure class="owned-film owned-film--hero"[\s\S]*?<\/figure>/)[0];
+    assert.match(rec, /data-recording-src="\/media\/products\/agent-team\.mp4"/);
+    assert.ok(rec.includes(`src="${p.preview}"`) && !rec.includes(STILLS['agent-team']));
+  }
 });
 
 test('fonts are self-hosted, licensed and never requested from a third party', async () => {

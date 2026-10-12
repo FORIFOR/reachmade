@@ -1,0 +1,50 @@
+{
+  "repo": "FORIFOR/reachmade",
+  "branch": "main",
+  "tree_sha": "1321243eae3a411f0513f0ee62ec36d2c6d28c06",
+  "tree_files": 607,
+  "read_files": [
+    {
+      "path": "README.md",
+      "sha": "8a6ef8a658b1b4e252df8c25cc3dca8948711f7f"
+    },
+    {
+      "path": "package.json",
+      "sha": "6e207b930061c86195e84f02aa254d460bfb66ab"
+    },
+    {
+      "path": "worker.js",
+      "sha": "4d0f9bd91f377161c9784857f507b44ff01e7b36"
+    },
+    {
+      "path": "scripts/add-proof.mjs",
+      "sha": "ef47b1a719dbc46e5c5ce325045dc10e7f66bb34"
+    },
+    {
+      "path": "src/owned-recording-response.mjs",
+      "sha": "9263087437ccc1394a1d7b926a3a3158e2d73c18"
+    },
+    {
+      "path": "src/owned-aliases.mjs",
+      "sha": "8ba3ced962f98d0bbfa911a1c720bd00f28811ad"
+    },
+    {
+      "path": "src/products.mjs",
+      "sha": "1be47c857f32cb53b5ad3a68f3c1f69ef9e5d791"
+    },
+    {
+      "path": "src/static-recordings.mjs",
+      "sha": "c8001ade5e8b2c7496bbfae668d92f19d218a37d"
+    },
+    {
+      "path": "src/inquiries.mjs",
+      "sha": "b8767272321cccfbcd08a11daf64a0b28646e14a"
+    },
+    {
+      "path": "src/proof-registry.mjs",
+      "sha": "37bf1b2141adb5e9e83d98786f05f946e5fa36ee"
+    }
+  ],
+  "not_read_count": 597,
+  "scope": "initial entry-point and direct-import analysis; not exhaustive semantic scan"
+}

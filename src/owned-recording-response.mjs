@@ -6,9 +6,16 @@ const originals=new Map([
  // The fifteen-second films (src/fifteen-second-films.mjs). The ID only admits the path to the
  // tested Range route; the file served is the film itself. Safari needs 206 to play video.
  ['/media/films/reachmade-15s.mp4','genie'],
- ['/media/films/genie-15s.mp4','genie'],
+ ['/media/films/genie-30s.mp4','genie'],
  ['/media/films/oathra-15s.mp4','oathra'],
  ['/media/films/oathra-30s.mp4','oathra'],
+ // Operated fictional use-case demos; never real telephone calls.
+ ['/media/films/use-case-restaurant.mp4','oathra'],
+ ['/media/films/use-case-stock.mp4','oathra'],
+ ['/media/films/use-case-modify.mp4','oathra'],
+ // Illustrated product-experience films with synthetic narration, not real calls.
+ ['/media/films/oathra-voiced-ja-v3.mp4','oathra'],
+ ['/media/films/oathra-voiced-en-v3.mp4','oathra'],
  ['/media/films/agent-team-design-30s.mp4','agent-team'],
  // The Japanese home's clips cut from the owner's 2026-09-30 films (src/home-v4.mjs HOME_REC).
  ['/media/films/home-agent-team-13s.mp4','agent-team'],

@@ -1,0 +1,27 @@
+実在パス: `public/media`。72ファイル。
+
+- `public/media/derived/genie/orbit-poster-en.jpg`
+- `public/media/derived/manifest.json`
+- `public/media/derived/sample/sample-16x9-en.mp4`
+- `public/media/derived/sample/sample-16x9.mp4`
+- `public/media/derived/sample/sample-9x16-en.mp4`
+- `public/media/derived/sample/sample-9x16.mp4`
+- `public/media/derived/sample/sample-poster-en.jpg`
+- `public/media/derived/sample/sample-poster.jpg`
+- `public/media/films/agent-team-design-30s.mp4`
+- `public/media/films/genie-30s.jpg`
+- `public/media/films/genie-30s.mp4`
+- `public/media/films/genie-taskdock-13s.jpg`
+- `public/media/films/genie-taskdock-13s.mp4`
+- `public/media/films/home-agent-team-13s.jpg`
+- `public/media/films/home-agent-team-13s.mp4`
+- `public/media/films/home-oathra-13s.jpg`
+- `public/media/films/home-oathra-13s.mp4`
+- `public/media/films/manifest.json`
+- `public/media/films/oathra-15s.jpg`
+- `public/media/films/oathra-15s.mp4`
+- `public/media/films/oathra-30s.jpg`
+- `public/media/films/oathra-30s.mp4`
+- `public/media/films/reachmade-15s.jpg`
+- `public/media/films/reachmade-15s.mp4`
+- `public/media/originals/ai-meeting/avatar-room.png`

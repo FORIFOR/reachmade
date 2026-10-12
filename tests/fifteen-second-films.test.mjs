@@ -38,12 +38,18 @@ test('players never autoplay, never preload, and say what they are', async () =>
     assert.doesNotMatch(html, /<video[^>]*\ssrc=/, 'the file is a <source>, like the other players');
     assert.match(html, new RegExp(`<source src="${FILMS[id].src}" type="video/mp4">`));
     assert.doesNotMatch(html, /autoplay|loop|muted/);
-    assert.match(html, /音声あり/);
-    assert.match(html, /演出を含む/);
+    // Each player states its own length and sound, as measured from the file (Genie 30 s silent, Oathra 15 s with sound).
+    assert.ok(html.includes(`<figcaption>${FILMS[id].meta}</figcaption>`));
+    assert.ok(html.includes(`（${FILMS[id].audio}）"`));
+    assert.match(FILMS[id].meta, /演出を含む|再現イメージ/);
     assert.equal((html.match(/<h2 /g) || []).length, 1);
     assert.doesNotMatch(html, /<h1|<script|href=/);
   }
-  assert.match(FILMS.genie.note, /0〜5\.6秒.*再現.*5\.6〜10\.9秒.*実物.*演出/);
+  // The owner's 30-second Genie film labels its halves itself: a recreation, then an unshipped design preview.
+  assert.match(FILMS.genie.meta, /^30秒 · 音声なし/);
+  assert.match(FILMS.genie.note, /再現したイメージ.*設計プレビュー.*まだ実装されていません.*実アプリの録画ではなく/);
+  assert.doesNotMatch(FILMS.genie.note, /Genieが生成/);
+  assert.match(FILMS.oathra.meta, /^15秒 · 音声あり/);
   assert.match(FILMS.oathra.note, /公開シミュレーター.*再生速度は変えていません/);
 });
 

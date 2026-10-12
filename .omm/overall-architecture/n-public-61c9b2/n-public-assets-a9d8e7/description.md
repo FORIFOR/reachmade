@@ -1,0 +1,27 @@
+実在パス: `public/assets`。349ファイル。
+
+- `public/assets/animated-demos.css`
+- `public/assets/animated-demos.mjs`
+- `public/assets/brand-rhythm.css`
+- `public/assets/draft-operation.mjs`
+- `public/assets/fifteen-second-films.css`
+- `public/assets/fonts/LICENSE.md`
+- `public/assets/fonts/geist-58a6b173d5.woff2`
+- `public/assets/fonts/geist-6129fc8571.woff2`
+- `public/assets/fonts/geist-9b6f5ff45b.woff2`
+- `public/assets/fonts/geist-b7a545bbb0.woff2`
+- `public/assets/fonts/geist-f689f638f2.woff2`
+- `public/assets/fonts/geist-mono-16e1d48b6d.woff2`
+- `public/assets/fonts/geist-mono-5f3d6ad60f.woff2`
+- `public/assets/fonts/geist-mono-745994b5cd.woff2`
+- `public/assets/fonts/geist-mono-75b3bedbeb.woff2`
+- `public/assets/fonts/geist-mono-d67e4a94ba.woff2`
+- `public/assets/fonts/geist-mono-e27f657e38.woff2`
+- `public/assets/fonts/instrument-serif-60c06664b5.woff2`
+- `public/assets/fonts/instrument-serif-6ee678c33f.woff2`
+- `public/assets/fonts/instrument-serif-a04fc7ed18.woff2`
+- `public/assets/fonts/instrument-serif-a8c4bd7cd7.woff2`
+- `public/assets/fonts/zen-kaku-003939e825.woff2`
+- `public/assets/fonts/zen-kaku-00432691ee.woff2`
+- `public/assets/fonts/zen-kaku-00a5f2b6fb.woff2`
+- `public/assets/fonts/zen-kaku-01f1f5066c.woff2`
