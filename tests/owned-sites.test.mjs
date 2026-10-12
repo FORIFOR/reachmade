@@ -28,16 +28,18 @@ test('owned recordings load offline and reject missing or tampered originals',as
   await fs.rm(file);await assert.rejects(readOwnedRecording('https://reachmade.com'+route,{repositoryRoot}));
  }finally{await fs.rm(repositoryRoot,{recursive:true,force:true});}
 });
-test('four bilingual support pages use owned media and correct app links',async()=>{
+test('six bilingual support pages use correct media, guide and app links',async()=>{
  const dist=await fs.mkdtemp(path.join(os.tmpdir(),'owned-guides-'));
  try{
   const files=['genie/assets/genie-orbit-web.mp4','genie/assets/genie-web-proposal-web.mp4','genie/assets/genie-product-film-web.mp4','ai-meeting/demo.mp4'].map(p=>({path:'/media/originals/'+p,duration:33}));
   await fs.mkdir(path.join(dist,'media/originals'),{recursive:true});await fs.writeFile(path.join(dist,'media/originals/manifest.json'),JSON.stringify({files}));
-  const routes=await writeOwnedGuides(dist);assert.equal(routes.length,4);
+  const routes=await writeOwnedGuides(dist);assert.equal(routes.length,6);
   for(const {route,lang} of routes){
    const html=await fs.readFile(path.join(dist,route,'index.html'),'utf8');
    assert.ok(html.includes(`lang="${lang}"`));assert.ok(html.includes(`href="https://reachmade.com${route}"`));
-   assert.ok(!html.includes('chatgpt.site'));assert.ok(html.includes('preload="none"'));
+   assert.ok(!html.includes('chatgpt.site'));
+   if (!route.includes('oathra')) assert.ok(html.includes('preload="none"'));
+   else { assert.match(html, /#product-oathra/); assert.doesNotMatch(html, /<video|<script|<iframe|<form/); }
    if(route.includes('ai-meeting'))assert.ok(html.includes('https://ai-meeting.web.app/#tasks'));
   }
  }finally{await fs.rm(dist,{recursive:true,force:true});}
