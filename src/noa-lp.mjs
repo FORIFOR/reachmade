@@ -25,7 +25,7 @@ import path from 'node:path';
 import {products as ledgerProducts} from './products.mjs';
 import {noaVideos} from './noa-videos.mjs';
 
-export const NOA_LP_VERSION = '20261004-noa-watch-links-1';
+export const NOA_LP_VERSION = '20261013-noa-public-viewing-1';
 const CSS_MARK = '/* REACHMADE_NOA_LP */';
 const PAGE = 'products/noa/index.html';
 export const CHANNEL = 'https://youtube.com/channel/UCjX52bV1kfUgSuqf3vv_rTQ';
@@ -67,9 +67,9 @@ const WATCH = [
 const watch = () => `<section class="container nlp-section nlp-watch-section" id="watch"><div class="nlp-head"><p class="nlp-label">見る</p><h2>動画で見る、<br>ノアの動きとつくり方。</h2></div><div class="nlp-watch">${WATCH.map(([k, h, b, href]) => {
   const content = `<span class="nlp-code">${k}</span><strong>${h}</strong><span class="nlp-watch__description">${b}</span>`;
   return ext(href, `${content}<span class="nlp-watch__arrow" aria-hidden="true">↗</span>`);
-}).join('')}</div><p class="nlp-note">それぞれの動画をYouTubeで開きます。ゲーム動画は待ち時間をカットしたテスト収録で、配信の通し運転の実録画ではありません。</p><p class="nlp-note">${ext(noaVideos.judgementShort, `28秒で、ゲーム中の3つの判断を見る${arrowOut}`)} · ${ext(CHANNEL, `チャンネルの動画一覧を見る${arrowOut}`)}</p></section>`;
+}).join('')}</div><p class="nlp-note">それぞれの動画をYouTubeで開きます。上の4:08の動画は待ち時間をカットしたテスト収録で、配信の通し運転の実録画ではありません。</p><p class="nlp-note">${ext(noaVideos.judgementShort, `28秒で、ゲーム中の3つの判断を見る${arrowOut}`)} · ${ext(CHANNEL, `チャンネルの動画一覧を見る${arrowOut}`)}</p></section>`;
 
-const status = () => `<section class="container nlp-section nlp-status" id="status"><div class="nlp-head"><p class="nlp-label">現在地</p><h2>できることと、まだ言わないこと。</h2></div><div class="nlp-status__cols"><div><h3>いま動いていること</h3><ul><li>ゲームをプレイしながら、YouTubeのコメントに声と表情で返事をする</li><li>重複・古いコメントの除外、決まった答えの差し込み</li><li>声に合わせた口・目・視線と、6種類の演出</li></ul></div><div><h3>まだ言わないこと</h3><ul><li>不適切な返事を絶対に出さない、とは言えません</li><li>配信の通し運転を記録した実録画は、まだ公開していません</li><li>無料で動くわけではありません。会話AIの利用料と電力がかかります</li></ul></div></div><p class="nlp-terms"><strong>動作条件・ライセンス</strong><span>ソース非公開 · 声：AivisSpeech「コハク」（オズチャット）· 各素材は配布元の規約に従って使用</span></p></section>`;
+const status = () => `<section class="container nlp-section nlp-status" id="status"><div class="nlp-head"><p class="nlp-label">現在地</p><h2>できることと、まだ言わないこと。</h2></div><div class="nlp-status__cols"><div><h3>いま動いていること</h3><ul><li>ゲームをプレイしながら、YouTubeのコメントに声と表情で返事をする</li><li>重複・古いコメントの除外、決まった答えの差し込み</li><li>声に合わせた口・目・視線と、6種類の演出</li></ul></div><div><h3>まだ言わないこと</h3><ul><li>不適切な返事を絶対に出さない、とは言えません</li><li>公開アーカイブは中断後の再開分で、無停止の運転を保証するものではありません</li><li>無料で動くわけではありません。会話AIの利用料と電力がかかります</li></ul></div></div><p class="nlp-terms"><strong>動作条件・ライセンス</strong><span>ソース非公開 · 声：AivisSpeech「コハク」（オズチャット）· 各素材は配布元の規約に従って使用</span></p></section>`;
 
 const footer = () => `<footer class="container owned-footer"><p><a href="/products/">すべてのプロダクト</a>${ext(CHANNEL, `YouTube${arrowOut}`)}</p><small>Reachmade / Shuhei Horio · 配信・解説映像・静止画を区別して公開しています。</small></footer>`;
 

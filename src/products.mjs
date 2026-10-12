@@ -274,6 +274,32 @@ export const products = [
     preview: '/assets/products/noa.jpg', previewSource: 'Frame at 5 s of the introduction film Jev Studio LP Video.mp4 (recreated rc.6 screen layout)',
     source: null,
     evidence: noaVideos.explainer,
+    publicViewing: {
+      ja: {
+        title: 'まずは、実際のゲーム実況を。',
+        note: 'Short、配信の編集版、長尺アーカイブをYouTubeで見られます。音声は日本語です。',
+        primaryLabel: '実況を見る（4分12秒）',
+        secondaryLabel: 'Short・配信アーカイブ',
+        boundary: '長尺アーカイブは、中断後に再開した配信です。無停止の運転を示すものではありません。',
+        videos: [
+          {href: noaVideos.liveShort, duration: '約22秒 · SHORT', title: '短い実況から見る'},
+          {href: noaVideos.liveEdit, duration: '4:12 · 編集版', title: '配信を4分で見る'},
+          {href: noaVideos.liveArchive, duration: '4:08:22 · アーカイブ', title: '長尺の配信を見る（再開分）'}
+        ]
+      },
+      en: {
+        title: 'Start with real gameplay.',
+        note: 'Watch a Short, an edited stream or a long stream archive on YouTube. Audio is in Japanese.',
+        primaryLabel: 'Watch gameplay (4:12)',
+        secondaryLabel: 'Short & stream archive',
+        boundary: 'The long archive is a broadcast resumed after an interruption. It does not establish uninterrupted operation.',
+        videos: [
+          {href: noaVideos.liveShort, duration: '~22 SEC · SHORT', title: 'Try a short gameplay clip'},
+          {href: noaVideos.liveEdit, duration: '4:12 · EDITED STREAM', title: 'Watch the four-minute edit'},
+          {href: noaVideos.liveArchive, duration: '4:08:22 · ARCHIVE', title: 'Watch the resumed stream'}
+        ]
+      }
+    },
     // 2026-10-02: gameplay + chat checked in Jev_VTuber_Studio (private), HEAD 4db1927:
     // docs/PROGRAMME.md, public/noa-blocks.mjs, src/game-runner.mjs, src/talk-engine.mjs.
     // Static implementation evidence; not a gameplay-skill or live-stream performance measurement.
@@ -285,7 +311,7 @@ export const products = [
       description: '返事・声・見た目は別々の仕組み。その間をつなぎ、配信のコメントに声と表情で返します。',
       status: '配信中', license: 'ソース非公開',
       outcome: 'コメント → 判定 → 声・表情',
-      scope: '不適切な返事を絶対に出さない仕組みではありません。会話AIの利用料と電力がかかります。配信の通し運転の実録画は未公開です。',
+      scope: '不適切な返事を絶対に出さない仕組みではありません。会話AIの利用料と電力がかかります。公開アーカイブは中断後に再開した配信で、無停止の運転を保証するものではありません。',
       proof: '紹介映像は配信の実録画ではありません。別に、待ち時間をカットしたゲームのテスト収録を公開しています。',
       consult: 'キャラクターを使った配信、店頭や施設での案内、問い合わせ対応の試作。',
       highlights: [{value:'先にコードで整理',label:'重複・古いコメントはAIに渡さない'},{value:'声はコハク',label:'AivisSpeechの既存音声。専用学習なし'},{value:'演出6種類',label:'声の再生に合わせる。AIの追加呼び出しなし'}],
@@ -301,7 +327,7 @@ export const products = [
       description: 'The reply, the voice and the look are separate systems. Noa joins them and answers stream comments with voice and expression.',
       status: 'Streaming', license: 'Closed source',
       outcome: 'Comment → judgement → voice and expression',
-      scope: 'It is not a system that can never give an inappropriate reply. The conversation AI has usage fees, and running it uses electricity. A recording of a full live run has not been published.',
+      scope: 'It is not a system that can never give an inappropriate reply. The conversation AI has usage fees, and running it uses electricity. The public archive is a stream resumed after an interruption, not a guarantee of uninterrupted operation.',
       proof: 'The introduction film is not a recording of a live stream. A separate gameplay test recording is available with waiting time edited out.',
       consult: 'Character-led streams, guidance in shops and venues, and prototypes for handling enquiries.',
       highlights: [{value:'Sorted in code first',label:'Duplicate and stale comments never reach the AI'},{value:'Kohaku voice',label:'An existing AivisSpeech voice, not trained for Noa'},{value:'Six effects',label:'Timed to the voice, with no extra AI call'}],

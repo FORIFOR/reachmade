@@ -16,7 +16,7 @@ test('Noa watch section opens verified individual videos with matching kinds', a
   assert.match(watch, /5:49.*解説/);
   assert.match(watch, /0:34.*自己紹介/);
   assert.match(watch, /通し運転の実録画ではありません/);
-  assert.match(html, /配信の通し運転を記録した実録画は、まだ公開していません/);
+  assert.match(html, /公開アーカイブは中断後の再開分で、無停止の運転を保証するものではありません/);
 });
 
 test('Noa JA and EN proof/demo paths distinguish an edited test from the intro film', async () => {

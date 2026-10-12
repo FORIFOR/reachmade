@@ -232,8 +232,8 @@ export const landingExperience = Object.freeze({
   },
   noa: {
     ja: {
-      title:'プレイ中も、話しかけて。',
-      lead:'ゲームを進めながら、コメントには声と表情で返事。星藍ノアは、プレイとおしゃべりをいっしょに届けるAIキャラクターです。',
+      title:'AI VTuberのゲーム実況・動画',
+      lead:'AI VTuber星藍ノアの公開ゲーム実況。約22秒のShort、4分12秒の編集版、長尺配信アーカイブから、実際の声と動きを見られます。',
       primary:['配信を見る（YouTube）','https://youtube.com/channel/UCjX52bV1kfUgSuqf3vv_rTQ'],
       secondary:['返答・声・表情の解説を見る',noaVideos.explainer],
       tryNow:'YouTubeの配信で、コメントへの返事と声・表情を見る。',
@@ -243,8 +243,8 @@ export const landingExperience = Object.freeze({
       beats:[['返事','Jevが判定して、返事を決める'],['声','コハクの声で読み上げる'],['見た目','画像を重ねて、表情を動かす']]
     },
     en: {
-      title:'The game’s on. Say hello.',
-      lead:'Noa plays games and responds to stream comments with her voice and expressions. Drop into a stream, leave a comment, and be part of the conversation.',
+      title:'AI VTuber gameplay & videos',
+      lead:'Watch AI VTuber Noa in a short gameplay clip, a four-minute stream edit or a long stream archive. The public videos are in Japanese.',
       featuresTitle:'Gameplay and conversation, side by side.',
       flowTitle:'From your comment to Noa’s response.',
       consultTitle:'Bring your own character to the screen.',

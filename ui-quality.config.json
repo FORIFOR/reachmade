@@ -60,7 +60,15 @@
     "artifacts/ui/home-band-services.png",
     "artifacts/ui/home-m-reel.png",
     "artifacts/ui/home-m-chapter.png",
-    "artifacts/ui/home-m-services.png"
+    "artifacts/ui/home-m-services.png",
+    "artifacts/ui/noa-hero-ja-desktop.png",
+    "artifacts/ui/noa-hero-ja-mobile.png",
+    "artifacts/ui/noa-viewing-ja-desktop.png",
+    "artifacts/ui/noa-viewing-ja-mobile.png",
+    "artifacts/ui/noa-hero-en-desktop.png",
+    "artifacts/ui/noa-hero-en-mobile.png",
+    "artifacts/ui/noa-viewing-en-desktop.png",
+    "artifacts/ui/noa-viewing-en-mobile.png"
   ],
   "reviewFile": "artifacts/ui/review.json",
   "timeoutSeconds": 600,

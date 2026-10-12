@@ -31,7 +31,7 @@ test('the seventh product is 星藍ノア: closed source, with its limits stated
   assert.equal(noa.demo, noaVideos.gameplay);
   assert.equal(noa.ja.license, 'ソース非公開');
   assert.match(noa.ja.scope, /不適切な返事を絶対に出さない仕組みではありません。/);
-  assert.match(noa.ja.scope, /配信の通し運転の実録画は未公開です。/);
+  assert.match(noa.ja.scope, /公開アーカイブは中断後に再開した配信/);
   // The film on the site is an introduction film with recreated screens, never called a recording of the stream.
   assert.match(noa.ja.proof, /紹介映像は配信の実録画ではありません。/);
   assert.match(noa.ja.proof, /待ち時間をカットしたゲームのテスト収録/);
