@@ -280,11 +280,22 @@ function splitProductMain(main, film, {filmInPlace = false} = {}) {
   return {kept, figure, source, filmAnchor};
 }
 
+function publicViewing(p, lang) {
+  if (p.id !== 'noa') return '';
+  const v = p.publicViewing?.[lang];
+  if (!v || v.videos.length !== 3) throw new Error(`Noa viewing: missing ${lang} public video ledger`);
+  return `<section class="rd-noa-viewing" id="noa-viewing" aria-labelledby="noa-viewing-title"><p class="rd-kicker">${lang === 'ja' ? '実況を見る' : 'WATCH NOA'}</p><h2 id="noa-viewing-title">${esc(v.title)}</h2><p>${esc(v.note)}</p><ul class="rd-links">${v.videos.map(item => `<li><a class="rd-link-row" href="${esc(item.href)}"${ext(item.href)}><span class="rd-link-kind">${esc(item.duration)}</span><span class="rd-link-label">${esc(item.title)}</span><span class="rd-link-host">YouTube <span aria-hidden="true">↗</span></span></a></li>`).join('')}</ul><p class="rd-noa-boundary">${esc(v.boundary)}</p><a class="rd-noa-about" href="#film">${lang === 'ja' ? '紹介映像と仕組みの説明へ' : 'Introduction film & how it works'} <span aria-hidden="true">↓</span></a></section>`;
+}
+
 function productMain(p, list, lang, {kept, figure, source, filmAnchor}) {
   const r = redesignCopyFor(lang), t = p[lang], name = displayName(p, lang), n = list.length;
   const film = productFilm(p.id), nav = productNavigation(p, lang), still = stillOf(p, lang);
   const long = name.length > 8 || p.id === 'noa';
   const conceptEntry = p.id === 'oathra' && lang === 'ja';
+  const viewing = p.id === 'noa' ? p.publicViewing?.[lang] : null;
+  const heroActions = viewing
+    ? `<a class="rd-btn rd-btn--ink" href="${esc(viewing.videos[1].href)}"${ext(viewing.videos[1].href)}>${esc(viewing.primaryLabel)}<span aria-hidden="true">↗</span></a><a class="rd-btn rd-btn--line" href="#noa-viewing">${esc(viewing.secondaryLabel)}<span aria-hidden="true">↓</span></a>`
+    : `<a class="rd-btn rd-btn--ink" href="${conceptEntry ? '#concept-demos' : '#film'}"${conceptEntry ? ' aria-describedby="oathra-demo-boundary"' : ''}>${esc(conceptEntry ? '用途別デモを試す' : lang === 'ja' ? '映像を見る' : 'Watch the film')}<span aria-hidden="true">↓</span></a><a class="rd-btn rd-btn--line" href="${contactHref(lang, `#product-${p.id}`)}">${esc(r.consultHero)}<span aria-hidden="true">↗</span></a>`;
   const steps = t.outcome.split(' → ');
   const outcome = steps.map((s, i) => `<li><span>${esc(s)}</span>${i < steps.length - 1 ? `<span class="rd-step-arrow" aria-hidden="true"><i></i>${arrowHead(12, 18)}</span>` : ''}</li>`).join('');
   const highlights = t.highlights.map((h, i) => `<article class="rd-hl" data-rd-reveal><span class="rd-hl-n">0${i + 1}</span><p class="rd-hl-value">${esc(h.value)}</p><p class="rd-hl-label">${esc(h.label)}</p></article>`).join('');
@@ -292,7 +303,7 @@ function productMain(p, list, lang, {kept, figure, source, filmAnchor}) {
   const links = [
     ['demo', nav.demo, nav.demoLabel],
     ...(p.closedSource || !p.repo ? [] : [['source', p.repo, r.sourceLabel]]),
-    ['evidence', p.evidence, r.evidenceLabel]
+    ['evidence', p.evidence, t.evidenceLabel || r.evidenceLabel]
   ].map(([kind, url, label]) => { const href = local(url); return `<li><a class="rd-link-row" href="${esc(href)}"${ext(href)}><span class="rd-link-kind">${r.linkKinds[kind]}</span><span class="rd-link-label">${esc(label)}</span><span class="rd-link-host">${esc(external(href) ? host(href) : 'reachmade.com')} <span aria-hidden="true">↗</span></span></a></li>`; }).join('');
   // A moved figure carries its own labels (a recording block may open on its reconstruction view), so the
   // "recording" label is not repeated beside it. Non-recording kinds are always stated.
@@ -306,9 +317,10 @@ function productMain(p, list, lang, {kept, figure, source, filmAnchor}) {
   return `<section class="rd-phero">
 <div class="rd-meta"><span>${esc(r.productOf(p.index, n))}</span><span>${esc(p.discipline)}</span><span class="rd-status"><i aria-hidden="true"></i>${esc(t.status)} · ${esc(t.license)}</span></div>
 <h1 class="rd-pname${long ? ' rd-pname--long' : ''}"><span data-rd-line>${esc(name)}<em aria-hidden="true">.</em></span></h1>
-<div class="rd-phero-body"><div class="rd-phero-copy" data-rd-fade><p class="rd-headline">${esc(t.headline)}</p><p class="rd-desc">${esc(t.description)}</p><div class="rd-ctas"><a class="rd-btn rd-btn--ink" href="${conceptEntry ? '#concept-demos' : '#film'}"${conceptEntry ? ' aria-describedby="oathra-demo-boundary"' : ''}>${esc(conceptEntry ? '用途別デモを試す' : lang === 'ja' ? '映像を見る' : 'Watch the film')}<span aria-hidden="true">↓</span></a><a class="rd-btn rd-btn--line" href="${contactHref(lang, `#product-${p.id}`)}">${esc(r.consultHero)}<span aria-hidden="true">↗</span></a></div>${conceptEntry ? '<p class="olp-entry-note" id="oathra-demo-boundary">構想デモ・実際の発信/予約は行いません</p>' : ''}${p.id === 'oathra' ? `<a class="rd-experience-entry" href="#experience-film">${lang === 'ja' ? '24秒で利用イメージを見る' : 'Watch the 24-second introduction'} <span aria-hidden="true">↓</span></a>` : ''}</div><figure class="rd-fig" data-rd-fade><div class="rd-fig-frame"><img src="${esc(still.src)}" alt="${esc(still.label)}" fetchpriority="high"></div><figcaption><span>${r.fig} ${esc(p.index)}</span><span>${esc(still.label)}</span></figcaption></figure></div>
+<div class="rd-phero-body"><div class="rd-phero-copy" data-rd-fade><p class="rd-headline">${esc(t.headline)}</p><p class="rd-desc">${esc(t.description)}</p><div class="rd-ctas">${heroActions}</div>${conceptEntry ? '<p class="olp-entry-note" id="oathra-demo-boundary">構想デモ・実際の発信/予約は行いません</p>' : ''}${p.id === 'oathra' ? `<a class="rd-experience-entry" href="#experience-film">${lang === 'ja' ? '24秒で利用イメージを見る' : 'Watch the 24-second introduction'} <span aria-hidden="true">↓</span></a>` : ''}</div><figure class="rd-fig" data-rd-fade><div class="rd-fig-frame"><img src="${esc(still.src)}" alt="${esc(still.label)}" fetchpriority="high"></div><figcaption><span>${r.fig} ${esc(p.index)}</span><span>${esc(still.label)}</span></figcaption></figure></div>
 </section>
 <section class="rd-outcome" aria-label="${esc(r.whatItDoes)}"><p class="rd-kicker">${esc(r.whatItDoes)}</p><ol class="rd-steps">${outcome}</ol></section>
+${publicViewing(p, lang)}
 ${oathraExperienceFilm(p, lang)}
 <section class="rd-film rd-reel" id="film" data-rd-reel data-rd-film-scale=".55" aria-labelledby="rd-film-title"><div class="rd-reel-stage">${figure ? `<div class="rd-reel-frame rd-reel-frame--figure" data-rd-frame>${figure}</div>` : filmAnchor ? `<a class="rd-reel-frame rd-film-link" data-rd-frame href="#${esc(filmAnchor)}"><img src="${esc(film.poster)}" alt="" loading="lazy"><span>${esc(r.filmBelow)} <span aria-hidden="true">↓</span></span></a>` : `<div class="rd-reel-frame" data-rd-frame>${video({...film, label: `${name} — ${kind}`}, lang)}</div>`}<div class="rd-reel-cap"><span id="rd-film-title">${esc(r.film(name))}</span>${figure && film.kind === 'recording' ? '' : `<span><b>${esc(filmAnchor ? r.stillKind : kind)}</b>${figure || filmAnchor ? '' : ` ${esc(note)}`}${extra}</span>`}</div></div></section>
 ${showHighlights ? `<section class="rd-highlights" aria-labelledby="rd-hl-title"><p class="rd-kicker" id="rd-hl-title">${esc(r.highlights)}</p><div class="rd-hl-grid">${highlights}</div></section>` : ''}

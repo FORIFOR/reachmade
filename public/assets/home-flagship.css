@@ -130,7 +130,7 @@ body[data-home-flagship] .site-footer.rm-footer{border-top:1px solid var(--rm-li
  .rm-access-table tbody th{margin-bottom:11px;font-size:18px;white-space:normal}
  .rm-access-table td{display:grid;grid-template-columns:8.5em minmax(0,1fr);gap:14px;padding-block:8px;border-top:1px solid var(--rm-line);font-size:12px}
  .rm-access-table td::before{content:attr(data-label);font:10px/1.9 var(--rm-mono);letter-spacing:.06em;color:var(--rm-dim)}
- .rm-access-link{min-height:38px}
+ .rm-access-link{min-height:38px;min-width:0;max-width:100%;white-space:normal;overflow-wrap:anywhere}
 }
 @media(max-width:650px){
  body[data-home-flagship] .hero.container.lab-hero{padding-top:26px}

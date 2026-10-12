@@ -374,3 +374,10 @@ html.js body[data-rd] [data-rd-hidden]{opacity:0}
  body[data-rd] .rd-cursor{display:none}
 }
 @media print{body[data-rd] .rd-header{position:static;mix-blend-mode:normal}body[data-rd] .rd-progress,body[data-rd] .rd-cursor,body[data-rd] .rd-marquee{display:none}}
+
+/* Public Noa viewing choices use the existing linked-row pattern and paper palette. */
+body[data-rd] .rd-noa-viewing{padding:clamp(40px,5vw,72px) var(--rd-gutter);display:flex;flex-direction:column;gap:24px;scroll-margin-top:100px}
+body[data-rd] .rd-noa-viewing h2{margin:0;font-family:var(--rd-jp);font-size:clamp(28px,3.2vw,48px);line-height:1.4;letter-spacing:-.04em;color:var(--rd-ink)}
+body[data-rd] .rd-noa-viewing>p:not(.rd-kicker){margin:0;max-width:60em;font-size:14px;line-height:1.9;color:var(--rd-muted)}
+body[data-rd] .rd-noa-viewing .rd-link-kind{width:170px;opacity:1;color:inherit;line-height:1.8}
+body[data-rd] .rd-noa-viewing .rd-noa-about{width:fit-content;min-height:44px;display:inline-flex;align-items:center;gap:12px;color:var(--rd-ink);text-decoration:underline;text-underline-offset:5px}
