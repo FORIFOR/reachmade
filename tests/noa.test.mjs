@@ -81,7 +81,7 @@ test('en: the generic page is honest about closed source and the staged film', a
   assert.match(main, /The source is not public\./);
   assert.match(main, /not a recording of a live stream/);
   assert.match(main, /INTRO FILM · RECREATED SCREENS \/ ~13 SEC \/ 1×/);
-  assert.match(main, /aria-label="星藍ノア introduction film \(recreated screens\)"/);
+  assert.match(main, /aria-label="Noa introduction film \(recreated screens\)"/);
   assert.doesNotMatch(main, /REAL PRODUCT/);
   assert.match(main, />Source film <span aria-hidden="true">↗<\/span><\/a>/);
   assert.doesNotMatch(main, /Source recording|>Real recording<|REAL PRODUCT/);

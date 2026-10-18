@@ -86,6 +86,14 @@ body[data-rd] .rd-toggle{display:none}
  html.js body[data-rd] .rd-switcher.open a{justify-content:flex-start}
 }
 @media (min-width:860px) and (max-width:979px){body[data-rd] .rd-header--product .rd-switcher{display:none}}
+/* Once the page moves, the header becomes a solid bar so it never sits on top of other text.
+ * It slides away while reading downward and returns on any upward scroll or keyboard focus. */
+html.js body[data-rd] .rd-header{transition:transform .35s cubic-bezier(.16,1,.3,1),background-color .2s linear}
+html.js body[data-rd] .rd-header[data-rd-scrolled]{mix-blend-mode:normal;background:color-mix(in srgb,var(--rd-paper) 94%,transparent);color:var(--rd-ink);box-shadow:0 1px 0 var(--rd-rule);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);padding-top:10px;padding-bottom:10px}
+html.js body[data-rd] .rd-header[data-rd-scrolled] a,html.js body[data-rd] .rd-header[data-rd-scrolled] .rd-toggle{color:var(--rd-ink)}
+html.js body[data-rd] .rd-header[data-rd-scrolled] .rd-mark{filter:none}
+html.js body[data-rd] .rd-header[data-rd-hidden]:not(:focus-within):not(:has(.rd-nav.open)){transform:translateY(-100%)}
+@media (prefers-reduced-motion:reduce){html.js body[data-rd] .rd-header{transition:none}}
 /* Without script the phone header cannot collapse: it stays in the flow instead of covering the first view. */
 @media (max-width:859px){
  html:not(.js) body[data-rd] .rd-header{position:relative}
@@ -167,7 +175,7 @@ body[data-rd] .rd-reel-cap a{color:var(--rd-ink);text-decoration:underline;text-
  html.js body[data-rd] .rd-film{height:200vh}
  html.js body[data-rd] .rd-reel-stage{position:sticky;top:0;height:100vh;justify-content:center;overflow:hidden;padding:0 var(--rd-gutter)}
  html.js body[data-rd] .rd-reel-frame{width:min(100vw,calc((100vh - 120px) * 16 / 9));will-change:transform}
- html.js body[data-rd] .rd-reel-cap{position:absolute;inset:auto var(--rd-gutter) 20px}
+ html.js body[data-rd] .rd-reel-cap{position:absolute;inset:auto var(--rd-gutter) 20px;width:auto}
 }
 
 /* ---- Home products ---- */
@@ -204,6 +212,18 @@ body[data-rd] .rd-kept{--paper:#f3f2ec;--ink:#1b1e1a;--muted:#5f625b;--rule:#d6d
 /* Earlier layers paint primary buttons with --accent and a fixed dark label; on the darker ink accent the label is light. */
 body[data-rd] #main .rd-kept .owned-primary,body[data-rd] #main .rd-kept .owned-primary:hover{color:var(--rd-paper)}
 body[data-rd] .rd-kept-kicker{padding:0 var(--rd-gutter);margin-bottom:clamp(24px,3vw,40px)}
+/* Product pages: the long-form sections start folded behind one summary row. */
+body[data-rd] .rd-kept--fold{padding-top:0;padding-bottom:0}
+body[data-rd] .rd-kept--fold>summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;min-height:72px;margin:0;border-bottom:1px solid var(--rd-rule);color:var(--rd-ink)}
+body[data-rd] .rd-kept--fold>summary::-webkit-details-marker{display:none}
+body[data-rd] .rd-kept--fold>summary::after{content:"+";font-size:22px;line-height:1;transition:transform .3s cubic-bezier(.16,1,.3,1)}
+body[data-rd] .rd-kept--fold[open]>summary{margin-bottom:clamp(24px,3vw,40px)}
+body[data-rd] .rd-kept--fold[open]>summary::after{transform:rotate(45deg)}
+body[data-rd] .rd-kept--fold>summary:hover{color:var(--rd-signal)}
+body[data-rd] .rd-kept--fold[open]{padding-bottom:clamp(64px,8vw,120px)}
+/* The page hero above already carries these entry links. */
+body[data-rd] .rd-kept--fold>summary+* :is(.owned-actions,.owned-action-note,.outcome-try){display:none}
+@media (prefers-reduced-motion:reduce){body[data-rd] .rd-kept--fold>summary::after{transition:none}}
 body[data-rd] .rd-kept h2,body[data-rd] .rd-kept h3{font-family:var(--rd-jp);font-weight:700;letter-spacing:-.04em;color:var(--rd-ink)}
 body[data-rd] .rd-kept h2{font-size:clamp(28px,3.6vw,56px);line-height:1.15}
 body[data-rd] .rd-kept p,body[data-rd] .rd-kept li,body[data-rd] .rd-kept dd,body[data-rd] .rd-kept td{font-family:var(--rd-jp);line-height:1.85}
@@ -346,6 +366,9 @@ body[data-rd] .rd-link-host{font-family:var(--rd-mono);font-size:12px;opacity:.7
 body[data-rd] .rd-consult{padding:clamp(96px,12vw,170px) var(--rd-gutter) clamp(60px,7vw,100px)}
 body[data-rd] .rd-consult .rd-kicker{margin-bottom:clamp(28px,3vw,44px)}
 body[data-rd] .rd-consult-row{display:flex;flex-wrap:wrap;gap:40px;align-items:end;justify-content:space-between}
+body[data-rd] .rd-consult-ctas{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+body[data-rd] #main .rd-consult .rd-btn--line{border-color:currentColor;color:var(--rd-paper)}
+body[data-rd] #main .rd-consult .rd-btn--line:hover{background:var(--rd-paper);color:var(--rd-ink)}
 body[data-rd] .rd-consult h2{flex:1 1 640px;margin:0;font-family:var(--rd-jp);font-weight:700;font-size:clamp(26px,4.6vw,80px);line-height:1.15;letter-spacing:-.055em;color:var(--rd-forest-text)}
 html[lang="en"] body[data-rd] .rd-consult h2{font-family:var(--rd-latin);font-weight:600;font-size:clamp(30px,3.8vw,64px)}
 body[data-rd] .rd-next{padding:0 var(--rd-gutter)}

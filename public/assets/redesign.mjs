@@ -13,9 +13,16 @@ if (root?.dataset.rd) {
   const bar = document.querySelector('.rd-progress');
   const reels = $$('[data-rd-reel]').map(section => ({section, frame: section.querySelector('[data-rd-frame]'), from: Number(section.dataset.rdFilmScale || .5)}));
   const scaleOn = () => !reduced && matchMedia('(min-width:760px)').matches;
+  const header = document.querySelector('[data-rd-header]');
+  let lastY = doc.scrollTop;
   let ticking = false;
   const onScroll = () => {
     ticking = false;
+    const y = doc.scrollTop;
+    if (header) {
+      header.toggleAttribute('data-rd-scrolled', y > 24);
+      if (Math.abs(y - lastY) > 6) { header.toggleAttribute('data-rd-hidden', y > lastY && y > innerHeight * .6); lastY = y; }
+    }
     const h = doc.scrollHeight - doc.clientHeight;
     if (bar) bar.style.transform = `scaleX(${h > 0 ? Math.min(1, doc.scrollTop / h) : 0})`;
     for (const {section, frame, from} of reels) {
@@ -32,6 +39,16 @@ if (root?.dataset.rd) {
   addEventListener('scroll', requestScroll, {passive: true});
   addEventListener('resize', requestScroll);
   onScroll();
+
+  /* A link into a folded section opens it first, so the browser can scroll to the target. */
+  const unfold = () => {
+    const id = decodeURIComponent(location.hash.slice(1));
+    const target = id ? document.getElementById(id) : null;
+    const fold = target?.closest('details:not([open])');
+    if (fold) { fold.open = true; target.scrollIntoView({block: 'start'}); }
+  };
+  addEventListener('hashchange', unfold);
+  unfold();
 
   /* Tokyo clock (home) */
   const clock = document.querySelector('[data-rd-clock]');

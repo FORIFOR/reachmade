@@ -8,19 +8,26 @@ const services = Object.freeze({
   'ai-character': ['AIキャラクターの実現性検証','AI character feasibility'],
 });
 
-export const inquiryContextIds = Object.freeze([...Object.keys(products).map(id=>`product-${id}`), ...Object.keys(services).map(id=>`service-${id}`)]);
+// Visitors who want to use a product themselves, rather than commission work.
+const uses = Object.freeze({launchloom:['Launchloom','launchloom']});
+
+export const inquiryContextIds = Object.freeze([...Object.keys(products).map(id=>`product-${id}`), ...Object.keys(services).map(id=>`service-${id}`), ...Object.keys(uses).map(id=>`use-${id}`)]);
 
 export function inquiryContext(hash = '', search = '', language = 'ja') {
   if (!['ja','en'].includes(language)) throw new TypeError('Unsupported inquiry language');
   const ja = language === 'ja', params = new URLSearchParams(search);
   // Exact allowlisted fragments only. Unknown fragments never import URL text.
   // Older product/service query links remain usable, without adding new query links.
-  const fragment = /^#(product|service)-([a-z0-9-]+)$/.exec(hash);
+  const fragment = /^#(product|service|use)-([a-z0-9-]+)$/.exec(hash);
   const kind = fragment?.[1] || (params.has('product') ? 'product' : 'service');
   const id = fragment?.[2] || params.get(kind);
   if (kind === 'product' && Object.hasOwn(products, id)) {
     const [name, useCase] = products[id];
     return {id:`product-${id}`, useCase, label:ja?`${name}を見ての開発相談`:`A project inspired by ${name}`, message:ja?`${name}の技術を活かした開発について相談したいです。\n\n対象の業務・試したいこと：\n現在の状況：`:`I would like to discuss a project using the technology behind ${name}.\n\nWorkflow or experience to try:\nCurrent situation:`};
+  }
+  if (kind === 'use' && Object.hasOwn(uses, id)) {
+    const [name, useCase] = uses[id];
+    return {id:`use-${id}`, useCase, label:ja?`${name}を自分の製品で使いたい`:`Using ${name} for my product`, message:ja?`${name}を自分の製品で使いたいです。\n\n紹介したい製品：\n欲しい素材（横動画・縦動画・LP・投稿案）：`:`I would like to use ${name} for my own product.\n\nProduct to introduce:\nAssets I need (landscape film, vertical film, landing page, posts):`};
   }
   if (kind === 'service' && Object.hasOwn(services, id)) {
     const label = services[id][ja ? 0 : 1];

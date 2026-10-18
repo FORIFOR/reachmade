@@ -137,10 +137,9 @@ test('both built homes use the same v4 architecture with their real localized fa
   assert.equal(css.split('/* REACHMADE_HOME_V4 */').length - 1, 1);
 });
 
-test('v4 home retains the public-source check date, and recordings never chain into one another', async () => {
-  const config = JSON.parse(await fs.readFile(new URL('../site.config.json', import.meta.url), 'utf8'));
+test('v4 home states the products are independent, and recordings never chain into one another', async () => {
   const html = await fs.readFile(new URL('../dist/index.html', import.meta.url), 'utf8');
-  assert.ok(html.includes(`公開情報の確認日 ${config.checkedAt}`), 'the source note uses the public-source check, not the capability check');
+  assert.ok(html.includes('各製品は独立しており、自動連携しません。'), 'the products are never presented as one automated pipeline');
   const client = await fs.readFile(new URL('../public/assets/home-v4.mjs', import.meta.url), 'utf8');
   const ended = client.slice(client.indexOf("addEventListener('ended'"), client.indexOf("addEventListener('ended'") + 400);
   assert.doesNotMatch(ended, /load\(|\.play\(/, 'a finished recording must not start the next one');

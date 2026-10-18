@@ -13,11 +13,11 @@
     },
     {
       "path": "/media/films/reachmade-15s.jpg",
-      "bytes": 35149,
-      "sha256": "e47a3277d38ef1faf603911bfed7aa7a9e1dbad89e87e263558233fd7fa524ae",
+      "bytes": 25902,
+      "sha256": "5f8ee66c42afd6d4ff6554cbc56f5a33ebb87296baa9b3ec0934945095cc2ca4",
       "source": "/media/films/reachmade-15s.mp4",
       "sourceSha256": "3235a87ff28db57b8c8256f73793bde1c90c27accca6a2cbebdcfb1b62bdfd24",
-      "render": "ffmpeg -ss 3.2 -frames:v 1 -vf scale=1280:-1 -q:v 3"
+      "render": "ffmpeg -ss 4.6 -frames:v 1 -vf scale=1280:-1 -q:v 3"
     },
     {
       "path": "/media/films/oathra-15s.mp4",
