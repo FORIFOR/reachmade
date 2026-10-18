@@ -19,7 +19,7 @@ test('Genie LP composes once, keeps its anchors in order and fails closed', () =
   assert.ok(at('id="features"') < at('id="demos"') && at('id="demos"') < at('id="artifacts"') && at('id="artifacts"') < at('data-film15="genie"'));
   assert.ok(at('data-film15="genie"') < at('id="flow"') && at('id="flow"') < at('id="trust"') && at('id="trust"') < at('id="start"'));
   assert.match(once, /まずは、<br>手元のメモから。/);
-  assert.throws(() => refineGenieLp(shell.replace('lang="ja"', 'lang="en"'), products), /Japanese Genie/);
+  assert.throws(() => refineGenieLp(shell.replace('lang="ja"', 'lang="fr"'), products), /Japanese or English Genie/);
   assert.throws(() => refineGenieLp(shell.replace('主要機能・できること', 'x'), products), /features heading/);
   assert.throws(() => refineGenieLp(shell.replace('data-recording-src="/media/products/genie.mp4"', ''), products), /top recording/);
   assert.throws(() => refineGenieLp(shell.replace('data-film15="genie"', '').replace('rm-film15--genie', 'x'), products), /15-second film/);
@@ -83,10 +83,18 @@ test('01 shows one work screen where only the next TaskDock changes, labelled as
   assert.ok(html.indexOf('data-glp-return') < html.indexOf('05 · START'), 'the closing line returns to the mark before the start heading');
 });
 
-test('built Genie page is the LP in Japanese only, with its assets present', async () => {
+test('built Genie pages are the LP in Japanese and English, with their assets present', async () => {
   const ja = await read('products/genie/index.html'), en = await read('en/products/genie/index.html');
   assert.match(ja, new RegExp(`data-genie-lp="${GENIE_LP_VERSION}"`));
-  assert.doesNotMatch(en, /data-genie-lp/);
+  assert.match(en, new RegExp(`data-genie-lp="${GENIE_LP_VERSION}"`));
+  // English follows the Japanese sections one for one and keeps the same evidence labels.
+  for (const id of ['id="demos"', 'id="artifacts"', 'data-film15="genie"', 'id="trust"', 'data-glp-how']) assert.ok(en.includes(id), id);
+  assert.match(en, /In the middle of work,<br><span class="glp-trace">call up<\/span> Genie\./);
+  assert.match(en, /Screens cut from a public demonstration of the real app \(Japanese UI\)\. The input is a fictional example\./);
+  assert.match(en, /the final version was made with Codex/);
+  assert.match(en, /It is not a recording of the real app\./);
+  assert.match(en, /<div class="glp-doc__body" lang="ja">/, 'the saved Japanese Markdown is marked as Japanese');
+  assert.doesNotMatch(en.slice(en.indexOf('id="demos"'), en.indexOf('id="artifacts"')), /依頼<\/span>|拡大して見る/);
   for (const f of Object.values(FRAMES)) await fs.access(path.join(root, 'dist', f.src));
   const css = await read('assets/showcase.css'), js = await read('assets/showcase.mjs');
   assert.equal(css.split('/* REACHMADE_GENIE_LP */').length - 1, 1);

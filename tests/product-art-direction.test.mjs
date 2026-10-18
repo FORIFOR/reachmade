@@ -27,16 +27,16 @@ for(const [id,direction] of Object.entries(directions))for(const lang of ['ja','
  });
  test(`integration ${id}/${lang}: final built page contains the active composition`,async()=>{
   const html=await fs.readFile(path.join(root,'dist',lang==='en'?'en':'','products',id,'index.html'),'utf8');
-  // The Japanese Oathra page uses the 2026-09-29 brief's first view instead of the art-directed hero.
-  if(id==='oathra'&&lang==='ja') assert.match(html,/data-oathra-lp="/);
+  // The Oathra pages (Japanese, and English since 2026-10-19) use the 2026-09-29 brief's first view instead of the art-directed hero.
+  if(id==='oathra') assert.match(html,/data-oathra-lp="/);
   // The Japanese 星藍ノア page is re-composed from the owner's patch; its film is the introduction film (tests/noa.test.mjs).
   else if(id==='noa'&&lang==='ja') { assert.match(html,/data-noa-lp="/); return; }
   else assert.match(html,new RegExp(`data-direction="${direction}"`));
   assert.match(html,/data-art-direction="20260919"/);
   assert.equal((html.match(/<script\b/g)||[]).length,1);
   assert.equal((html.match(/rel="stylesheet"/g)||[]).length,1);
-  // The Japanese Genie page opens with the 01 TaskDock reconstruction, labelled as such (tests/genie-lp.test.mjs).
-  assert.ok(html.includes(`data-recording-src="${id==='genie'&&lang==='ja'?'/media/films/genie-taskdock-13s.mp4':`/media/products/${id}.mp4`}"`));
+  // The Genie pages open with the 01 TaskDock reconstruction, labelled as such (tests/genie-lp.test.mjs).
+  assert.ok(html.includes(`data-recording-src="${id==='genie'?'/media/films/genie-taskdock-13s.mp4':`/media/products/${id}.mp4`}"`));
  });
 }
 test('unknown input and changed templates fail closed',()=>{

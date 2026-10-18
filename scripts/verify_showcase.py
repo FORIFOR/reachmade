@@ -78,8 +78,9 @@ class Handler(SimpleHTTPRequestHandler):
             remaining -= len(chunk)
 
 # Product pages whose top film is a produced film rather than the product recording, with the
-# sentence its caption must carry. Japanese Genie plays its TaskDock reconstruction (src/genie-lp.mjs, TOP_FILM).
-PAGE_FILMS = {('ja', 'genie'): ('/media/films/genie-taskdock-13s.mp4', '実アプリの録画ではありません')}
+# sentence its caption must carry. Genie plays its TaskDock reconstruction (src/genie-lp.mjs, TOP_FILM) in both languages.
+PAGE_FILMS = {('ja', 'genie'): ('/media/films/genie-taskdock-13s.mp4', '実アプリの録画ではありません'),
+              ('en', 'genie'): ('/media/films/genie-taskdock-13s.mp4', 'It is not a recording of the real app')}
 
 def main(home_only=False, output='film-qa/product-landings'):
     root = Path(__file__).resolve().parents[1]
@@ -190,7 +191,8 @@ def main(home_only=False, output='film-qa/product-landings'):
                                 # A produced film on a product page must be the declared file and say what it is.
                                 assert info['src'] == origin+PAGE_FILMS[(lang, product)][0], info
                                 caption = page.locator(selector+' figcaption').inner_text()
-                                assert PAGE_FILMS[(lang, product)][1] in caption and '実録画' not in page.locator(selector+' .owned-film__bar').inner_text(), caption
+                                bar = page.locator(selector+' .owned-film__bar').inner_text()
+                                assert PAGE_FILMS[(lang, product)][1] in caption and '実録画' not in bar and 'REAL PRODUCT' not in bar.upper(), caption
                             else:
                                 assert info['src'].startswith(origin+'/media/products/'), info
                             video.evaluate('(v)=>v.pause()')

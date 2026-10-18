@@ -38,8 +38,15 @@ test('three fictional use cases remain usable as links and native players withou
     product.conceptDemos[index].steps.forEach(step => assert.ok(caption.includes(step)));
     assert.ok(caption.includes(product.conceptDemos[index].result), 'the silent film has a text result');
   });
+  // The English page explains the same three demos in English and says their UI and subtitles are Japanese.
   const en = await fs.readFile(path.join(root, 'dist/en/products/oathra/index.html'), 'utf8');
-  assert.ok(!en.includes('id="concept-demos"'), 'Japanese recordings are added only to the requested Japanese LP');
+  const enSection = en.slice(en.indexOf('id="concept-demos"'), en.indexOf('id="ring"'));
+  assert.ok(en.includes('id="concept-demos"'), 'the English LP carries the concept demos');
+  assert.match(enSection, /Concept demo · no real calls or bookings/);
+  assert.match(enSection, /\(Japanese UI\)/);
+  assert.equal((enSection.match(/Japanese subtitles · silent/g) || []).length, 6, 'each film says its subtitles are Japanese (label + caption)');
+  for (const demo of product.conceptDemos) assert.ok(enSection.includes(`href="${demo.href}"`) && enSection.includes(`<source src="${demo.src}" type="video/mp4">`), demo.id);
+  assert.doesNotMatch(enSection, /操作の流れ|動画の結果/);
   assert.throws(() => conceptDemosSection({...product, conceptDemos:[]}), /expected three concept demos/);
 });
 
