@@ -57,7 +57,7 @@ export function improveCopy(original) {
 }
 export function productIndex(products, language) {
   const title = language === 'ja' ? '何をしたいですか？' : 'What would you like to do?';
-  return `<nav class="container purpose-index" aria-label="${title}"><h2>${title}</h2><div>${products.map(p => `<a href="#${escape(p.id)}"><span>${escape(p[language].short)}</span><b>${escape(p.name)} <span aria-hidden="true">↓</span></b></a>`).join('')}</div></nav>`;
+  return `<nav class="container purpose-index" aria-label="${title}"><h2>${title}</h2><div>${products.map(p => `<a href="#${escape(p.id)}"><span>${escape(p[language].short)}</span><b>${escape(language === 'en' && p.id === 'noa' ? 'Noa' : p.name)} <span aria-hidden="true">↓</span></b></a>`).join('')}</div></nav>`;
 }
 const stories = [
   { id: 'oathra', ja: ['AIの「予約できた」だけでは、結果を確定しない。', '相手が保留していても、AIが成功と要約する可能性がある。', '日時・人数・確定の根拠を相手側の発言に結び付ける。', 'ブラウザーの証拠ラボで、返答と判定を一緒に確かめられる。', '会話上の確認は、店舗の予約台帳への登録証明ではない。'], en: ['Do not accept the agent’s “booked” as proof.', 'An agent can summarize success while the other party has only offered to check.', 'Attach dates, party size and confirmation to the other party’s words.', 'Inspect the reply and its verdict together in the browser evidence lab.', 'Spoken confirmation does not prove a booking-system entry.'] },

@@ -35,7 +35,7 @@ export const homeV4Copy = {
       ['新しいAIプロダクトの試作','まだ言葉だけのアイデアを、操作できる試作へ。使い勝手と成立条件を確かめ、次に作る範囲を整理します。','関連 — 複数プロダクトの自主開発経験']
     ],
     productsKicker: '自主開発プロダクト', productsTitle: 'あなたの仕事に、<br>つながるものを。', productsLead: 'できることから選んで、実物を確かめる。<br>試せる範囲と、必要な準備も一緒に。',
-    sourceNote: date => `公開情報の確認日 ${date}。各製品は独立しており、自動連携しません。最新の利用条件は製品ページをご確認ください。`,
+    sourceNote: () => '各製品は独立しており、自動連携しません。',
     principlesKicker: 'REACHMADEのつくり方', principlesTitle: 'つくるだけでなく、<br>確かめるところまで。',
     principlesLead: '自主開発で得た知見を、次の開発へ。<br>コード、実物、検証記録を公開しています。', about: 'ラボ・開発者について', work: '開発・検証記録を見る',
     principles: [
@@ -80,7 +80,7 @@ export const homeV4Copy = {
       ['New AI product prototypes','Turn a spoken idea into something you can operate. Test how it works and what it requires, then decide what to build next.','Related — experience building independent products']
     ],
     productsKicker: 'INDEPENDENT PRODUCTS', productsTitle: 'Find a tool<br>for your work.', productsLead: 'Choose by what it does, then inspect the real work.<br>See what you can try and what you need to prepare.',
-    sourceNote: date => `Public sources checked ${date}. Each product is independent; they do not connect automatically. Check the product pages for current requirements.`,
+    sourceNote: () => 'Each product is independent; they do not connect automatically.',
     principlesKicker: 'HOW REACHMADE BUILDS', principlesTitle: 'Build it.<br>Then check it.',
     principlesLead: 'What we learn from our own products informs the next project.<br>We share code, working examples and verification records.', about: 'About the lab and developer', work: 'Read the development records',
     principles: [

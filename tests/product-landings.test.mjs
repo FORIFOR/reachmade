@@ -72,7 +72,7 @@ test('unknown IDs and language values cannot become output paths',()=>{
 
 test('registry text is escaped in the renderer',()=>{
   const p=structuredClone(products.find(p=>p.id==='genie'));
-  p.name='<script>bad</script>'; p.ja.scope='<img onerror="bad">';
+  p.name='<script>bad</script>'; p.ja.license='<img onerror="bad">';
   const html=renderProductLanding(p,'ja',config,'https://example.org/film.mp4');
   assert.ok(html.includes('&lt;script&gt;bad&lt;/script&gt;'));
   assert.ok(html.includes('&lt;img onerror=&quot;bad&quot;&gt;'));

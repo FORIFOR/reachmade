@@ -72,8 +72,8 @@ export const SHOTS = Object.freeze([
   { file: 'noa-viewing-en-desktop.png', route: '/en/products/noa/', width: 1440, height: 1200, scrollTo: '#noa-viewing', assertVisible: '#noa-viewing', state: 'Noa en public viewing viewing, desktop, reduced motion, real time', reducedMotion: true, realtime: true },
   { file: 'noa-viewing-en-mobile.png', route: '/en/products/noa/', width: 390, height: 1400, scrollTo: '#noa-viewing', assertVisible: '#noa-viewing', state: 'Noa en public viewing viewing, mobile, reduced motion, real time', reducedMotion: true, realtime: true },
   // Public Noa links: inspect the actual changed watch cards and localized proof destinations.
-  { file: 'noa-watch-desktop.png', route: '/products/noa/', width: 1440, height: 1200, scrollTo: '#watch', assertVisible: '#watch .nlp-watch', state: 'Noa individual public video links, reduced motion, real time', reducedMotion: true, realtime: true },
-  { file: 'noa-watch-mobile.png', route: '/products/noa/', width: 390, height: 1800, scrollTo: '#watch', assertVisible: '#watch .nlp-watch', state: 'phone, Noa individual public video links, reduced motion, real time', reducedMotion: true, realtime: true },
+  { file: 'noa-watch-desktop.png', route: '/products/noa/', width: 1440, height: 1200, openDetails: '.rd-kept--fold', scrollTo: '#watch', assertVisible: '#watch .nlp-watch', state: 'Noa individual public video links, reduced motion, real time', reducedMotion: true, realtime: true },
+  { file: 'noa-watch-mobile.png', route: '/products/noa/', width: 390, height: 1800, openDetails: '.rd-kept--fold', scrollTo: '#watch', assertVisible: '#watch .nlp-watch', state: 'phone, Noa individual public video links, reduced motion, real time', reducedMotion: true, realtime: true },
   { file: 'noa-scope-en-desktop.png', route: '/en/products/noa/', width: 1440, height: 1200, scrollTo: '#scope', assertVisible: '#scope .rd-link-row', state: 'English Noa edited-test and explainer destinations, reduced motion, real time', reducedMotion: true, realtime: true },
   { file: 'noa-scope-en-mobile.png', route: '/en/products/noa/', width: 390, height: 1600, scrollTo: '#scope', assertVisible: '#scope .rd-link-row', state: 'phone, English Noa edited-test and explainer destinations, reduced motion, real time', reducedMotion: true, realtime: true },
   // Japanese Genie page (LP re-composition): its sections at a readable size, real time.
@@ -160,6 +160,16 @@ export const SHOTS = Object.freeze([
   // renders too small to read, so the bands that carry the proof get their own frames.
   // Phone widths below the fold, because home-mobile-tall.png is unreadable as one image.
   // The fifteen-second film band (Japanese home only), desktop and phone.
+  // 2026-10-18: once scrolled, the header is a solid bar (it slid away on the way down and returns on the way up).
+  { file: 'header-solid-desktop.png', route: '/', width: 1440, height: 1000, scrollTo: '#products', scrollBack: 240, state: 'home, scrolled down then up 240px: solid header over the product list, reduced motion, real time', reducedMotion: true, realtime: true },
+  { file: 'header-solid-mobile.png', route: '/products/launchloom/', width: 390, height: 844, scrollTo: '#film', scrollBack: 240, state: 'phone, Launchloom scrolled down then up 240px: solid header, reduced motion, real time', reducedMotion: true, realtime: true },
+  // Product long-form sections folded behind one summary row, closed and opened.
+  { file: 'product-fold-mobile.png', route: '/products/launchloom/', width: 390, height: 844, scrollTo: '.rd-kept--fold', state: 'phone, Launchloom folded detail row, reduced motion, real time', reducedMotion: true, realtime: true },
+  { file: 'product-fold-open.png', route: '/products/launchloom/', width: 1440, height: 1000, openDetails: '.rd-kept--fold', scrollTo: '.rd-kept--fold', state: 'Launchloom detail row opened by a click, reduced motion, real time', reducedMotion: true, realtime: true },
+  { file: 'product-consult-launchloom-mobile.png', route: '/products/launchloom/', width: 390, height: 844, scrollTo: '#consult', state: 'phone, Launchloom consult band with the use-it entry, reduced motion, real time', reducedMotion: true, realtime: true },
+  { file: 'product-launchloom-top.png', route: '/products/launchloom/', width: 1440, height: 1000, state: 'Launchloom hero: try link + film link, reduced motion, real time', reducedMotion: true, realtime: true },
+  { file: 'product-launchloom-top-mobile.png', route: '/products/launchloom/', width: 390, height: 844, state: 'phone, Launchloom hero: try link + film link, reduced motion, real time', reducedMotion: true, realtime: true },
+  { file: 'products-index-noa.png', route: '/products/', width: 1440, height: 1000, scrollTo: '#noa', state: 'product index, Noa card caption, reduced motion, real time', reducedMotion: true, realtime: true },
 ]);
 
 function candidates() {
@@ -310,6 +320,8 @@ async function captureRealtime(binary, shots, results = []) {
         const found = await evaluate(`(() => { const e = document.querySelector(${JSON.stringify(shot.scrollTo)}); if (!e) return false; e.scrollIntoView({ block: 'start', behavior: 'instant' }); return true; })()`);
         if (!found) throw new Error(`Real-time capture: ${shot.file} has no ${shot.scrollTo}`);
         await sleep(1600);
+        // A short upward scroll, as a reader does, brings back the header that slid away.
+        if (shot.scrollBack) { await evaluate(`scrollBy({ top: -${Number(shot.scrollBack)}, behavior: 'instant' })`); await sleep(900); }
       }
       if (shot.assertVisible) {
         const visible = await evaluate(`(() => { const e = document.querySelector(${JSON.stringify(shot.assertVisible)}); if (!e) return false; const r = e.getBoundingClientRect(), s = getComputedStyle(e); return r.width > 0 && r.height > 0 && r.top < innerHeight && r.bottom > 0 && s.visibility !== 'hidden' && s.display !== 'none' && Number(s.opacity) > 0; })()`);
