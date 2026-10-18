@@ -296,7 +296,12 @@ def assert_home_v4(page, *, interactive=True):
         expect(page.locator('[data-rd-clock]')).to_be_hidden()
         expect(page.locator('#main-nav')).to_be_visible()
         expect(reel).to_be_visible()
+        # Access, FAQ and records sit in one native disclosure (2026-10-19): it opens without script.
+        fold = page.locator('details.rd-kept--fold > summary')
+        expect(fold).to_be_visible()
+        fold.click()
         expect(page.locator('#access details summary')).to_be_visible()
+        expect(page.locator('#faq')).to_be_visible()
         return {'products': checked, 'javascript': False, 'native_reel': True,
                 'network': _home_requests(page), 'geometry': no_overflow(page)}
 
