@@ -11,16 +11,19 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const dist = path.join(root, 'dist');
 const read = p => fs.readFile(path.join(dist, p), 'utf8');
 
-test('each film appears once, before its anchor, on its Japanese page only', async () => {
+test('each film appears once, before its anchor, on its Japanese and English pages', async () => {
   for (const [id, f] of Object.entries(FILMS)) {
-    const html = await read(f.page);
-    assert.equal(html.split(`data-film15="${id}"`).length - 1, 1, id);
-    // The Japanese Oathra page is re-composed by src/oathra-lp.mjs (2026-09-29 brief); there the film sits in its
-    // recordings section. Elsewhere it still precedes the anchor it was inserted before.
-    if (html.includes('data-oathra-lp=')) assert.ok(html.indexOf('id="recordings"') < html.indexOf(`data-film15="${id}"`) && html.indexOf(`data-film15="${id}"`) < html.indexOf('id="status"'), `${id} sits in the recordings section`);
-    else assert.ok(html.indexOf(`data-film15="${id}"`) < html.indexOf(f.before), `${id} precedes its anchor`);
-    const en = await read(path.join('en', f.page));
-    assert.doesNotMatch(en, /data-film15/, `${id}: the English page gets no Japanese film`);
+    assert.equal(f.en.page, path.join('en', f.page));
+    for (const page of [f.page, f.en.page]) {
+      const html = await read(page);
+      assert.equal(html.split(`data-film15="${id}"`).length - 1, 1, `${id} ${page}`);
+      // The Oathra pages are re-composed by src/oathra-lp.mjs (2026-09-29 brief); there the film sits in its
+      // recordings section. Elsewhere it still precedes the anchor it was inserted before.
+      if (html.includes('data-oathra-lp=')) assert.ok(html.indexOf('id="recordings"') < html.indexOf(`data-film15="${id}"`) && html.indexOf(`data-film15="${id}"`) < html.indexOf('id="status"'), `${id} sits in the recordings section of ${page}`);
+      else assert.ok(html.indexOf(`data-film15="${id}"`) < html.indexOf(f.before), `${id} precedes its anchor on ${page}`);
+    }
+    // The films carry Japanese on-screen text (Oathra: Japanese audio); the English placement says so.
+    assert.match(f.en.meta, /Japanese/);
   }
   // The v4 home links the Genie and Oathra films from their chapters, labelled as edited films.
   const home = await read('index.html');

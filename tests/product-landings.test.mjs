@@ -21,15 +21,15 @@ for (const id of landingIds) for (const lang of ['ja','en']) {
     if (id==='noa' && lang==='ja') { assert.match(await fs.readFile(path.join(root,'dist',route,'index.html'),'utf8'),/data-noa-lp="/); return; }
     const html = await fs.readFile(path.join(root,'dist',route,'index.html'),'utf8');
     assert.match(html,new RegExp(`data-product-id="${id}"`));
-    // The Japanese Genie page opens with the 01 TaskDock reconstruction (owner's choice, 2026-09-30), labelled as such.
-    const film = id==='genie' && lang==='ja' ? {src:'/media/films/genie-taskdock-13s.mp4',poster:'/media/films/genie-taskdock-13s.jpg'} : {src:`/media/products/${id}.mp4`,poster:`/media/products/${id}.jpg`};
+    // The Genie pages open with the 01 TaskDock reconstruction (owner's choice, 2026-09-30; English since 2026-10-19), labelled as such.
+    const film = id==='genie' ? {src:'/media/films/genie-taskdock-13s.mp4',poster:'/media/films/genie-taskdock-13s.jpg'} : {src:`/media/products/${id}.mp4`,poster:`/media/products/${id}.jpg`};
     assert.ok(html.includes(`data-recording-src="${film.src}"`), `${id}/${lang} top film`);
     assert.ok(html.includes(`poster="${film.poster}"`), `${id}/${lang} poster`);
-    if (id==='genie' && lang==='ja') assert.match(html,/再現映像 · 開発中の次の版[\s\S]*実アプリの録画ではありません。/);
+    if (id==='genie') assert.match(html, lang==='ja' ? /再現映像 · 開発中の次の版[\s\S]*実アプリの録画ではありません。/ : /Reconstruction · next version in development[\s\S]*It is not a recording of the real app\./);
     assert.doesNotMatch(html,/<video[^>]*\ssrc=|<video[^>]*\bautoplay\b|<iframe|<form\b/);
     assert.match(html,/preload="none"/);
-    const recomposed = id==='oathra' && lang==='ja';
-    // The Japanese Oathra page follows the 2026-09-29 brief: no hero badges, feature cards or 3-step flow;
+    const recomposed = id==='oathra';
+    // The Oathra pages follow the 2026-09-29 brief: no hero badges, feature cards or 3-step flow;
     // the ledger highlights appear once, in the "where it stands" table (tests/oathra-lp.test.mjs).
     if (!recomposed) assert.equal((html.match(/class="owned-step-index"/g)||[]).length,3);
     assert.equal((html.match(/class="owned-try-now"/g)||[]).length,1);
@@ -39,7 +39,7 @@ for (const id of landingIds) for (const lang of ['ja','en']) {
     assert.ok(html.includes(escaped(x.tryNow)));
     assert.ok(html.includes(escaped(x.actionNote)));
     assert.ok(html.includes(escaped(x.primary[0])));
-    if (id==='genie' && lang==='ja') assert.match(html,/13秒で動きを見る/);
+    if (id==='genie') assert.match(html,lang==='ja'?/13秒で動きを見る/:/See it in 13 seconds/);
     else {
       assert.match(html,lang==='ja'?/13秒で実演を見る/:/See it in 13 seconds/);
       assert.match(html,lang==='ja'?/約13秒.*再生速度は変えていません/:/about 13 seconds; playback speed is unchanged/);

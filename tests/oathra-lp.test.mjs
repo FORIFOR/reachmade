@@ -51,15 +51,25 @@ test('the Japanese Oathra page follows the brief order and states the status of 
   assert.doesNotMatch(html, /href="#features"|href="#flow"/, 'header links follow the new sections');
 });
 
-test('English Oathra and the other product pages are not re-composed', async () => {
-  assert.doesNotMatch(await read('en/products/oathra/index.html'), /data-oathra-lp/);
+test('English Oathra follows the Japanese composition; other product pages are not re-composed', async () => {
+  const en = await read('en/products/oathra/index.html');
+  assert.match(en, /data-oathra-lp=/);
+  const order = ['id="concept-demos"', 'id="ring"', 'id="steps"', 'id="trust"', 'id="recordings"', 'id="status"', 'id="start"'].map(s => en.indexOf(s));
+  assert.ok(order.every((at, i) => at > 0 && (i === 0 || at > order[i - 1])), 'English sections in the brief order');
+  // The redesign keeps this first view below its own title, so the heading becomes an h2 (as on the Japanese page).
+  assert.match(en, /<h[12] id="olp-title">“Done” is not<br>evidence\.<\/h[12]>/);
+  assert.match(en, /Entry into a shop’s booking system/);
+  assert.match(en, /Evaluation with 100 real calls/);
+  assert.match(en, /Design · not in the real-call flow/);
+  assert.match(en, /Screens in development · not released/);
+  assert.doesNotMatch(en, /href="#features"|href="#flow"/, 'header links follow the new sections');
   for (const id of ['genie', 'ai-meeting', 'aisecure', 'agent-team', 'launchloom', 'noa']) assert.doesNotMatch(await read(`products/${id}/index.html`), /data-oathra-lp/);
 });
 
 test('the pass is idempotent and fails closed', async () => {
   const html = await read('products/oathra/index.html');
   assert.equal(refineOathraLp(html, products), html);
-  assert.throws(() => refineOathraLp(html.replace('data-oathra-lp=', 'data-x=').replace('<html lang="ja">', '<html lang="en">'), products), /not the Japanese Oathra page/);
+  assert.throws(() => refineOathraLp(html.replace('data-oathra-lp=', 'data-x=').replace('<html lang="ja">', '<html lang="fr">'), products), /not a Japanese or English Oathra page/);
   const tmp = await fs.mkdtemp(path.join(os.tmpdir(), 'oathra-lp-'));
   try { await assert.rejects(writeOathraLp(tmp, products), /missing \/media\/films\/oathra-30s\.mp4/); }
   finally { await fs.rm(tmp, { recursive: true, force: true }); }

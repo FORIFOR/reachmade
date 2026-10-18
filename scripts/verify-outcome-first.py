@@ -72,8 +72,8 @@ def product_checks(page, lang, product, width):
         assert video.get_attribute('autoplay') is None
         assert video.get_attribute('preload') == 'none'
         assert video.evaluate('v=>v.paused'), 'No product media plays on entry'
-    if lang == 'ja' and product in ['oathra', 'noa']:
-        # These authored pages replaced the generic sample CTA before this PR.
+    if product == 'oathra' or (lang == 'ja' and product == 'noa'):
+        # These authored pages replaced the generic sample CTA before this PR (English Oathra since 2026-10-19).
         # Their real film, source and disclosure replace the missing widget check.
         name = 'olp' if product == 'oathra' else 'nlp'
         figure = page.locator(f'.{name}-film').first
@@ -85,8 +85,8 @@ def product_checks(page, lang, product, width):
         for asset in film.values():
             assert (ROOT / 'dist' / asset.lstrip('/')).is_file(), asset
         if product == 'oathra':
-            expect(figure).to_contain_text('設計画面 · 未リリース')
-            expect(figure.locator('figcaption')).to_contain_text('現行のOathraにはまだありません')
+            expect(figure).to_contain_text('設計画面 · 未リリース' if lang == 'ja' else 'design screens · not released')
+            expect(figure.locator('figcaption')).to_contain_text('現行のOathraにはまだありません' if lang == 'ja' else 'the current Oathra does not have them yet')
             expect(page.locator('#recordings')).to_be_visible()
             if width == 390:
                 page.locator('.owned-film [data-mode="story"]').click()

@@ -169,6 +169,12 @@ export const SHOTS = Object.freeze([
   { file: 'product-consult-launchloom-mobile.png', route: '/products/launchloom/', width: 390, height: 844, scrollTo: '#consult', state: 'phone, Launchloom consult band with the use-it entry, reduced motion, real time', reducedMotion: true, realtime: true },
   { file: 'product-launchloom-top.png', route: '/products/launchloom/', width: 1440, height: 1000, state: 'Launchloom hero: try link + film link, reduced motion, real time', reducedMotion: true, realtime: true },
   { file: 'product-launchloom-top-mobile.png', route: '/products/launchloom/', width: 390, height: 844, state: 'phone, Launchloom hero: try link + film link, reduced motion, real time', reducedMotion: true, realtime: true },
+  // 2026-10-19: English Genie and Oathra follow the Japanese composition.
+  { file: 'genie-en-demos.png', route: '/en/products/genie/', width: 1440, height: 1000, openDetails: '.rd-kept--fold', scrollTo: '#demos', state: 'English Genie 02 requests, reduced motion, real time', reducedMotion: true, realtime: true },
+  { file: 'genie-en-artifacts-mobile.png', route: '/en/products/genie/', width: 390, height: 1400, openDetails: '.rd-kept--fold', scrollTo: '#artifacts', state: 'phone, English Genie 03 files, reduced motion, real time', reducedMotion: true, realtime: true },
+  { file: 'oathra-en-demos.png', route: '/en/products/oathra/', width: 1440, height: 1000, scrollTo: '#concept-demos', state: 'English Oathra concept demos, reduced motion, real time', reducedMotion: true, realtime: true },
+  { file: 'oathra-en-ring-mobile.png', route: '/en/products/oathra/', width: 390, height: 1400, scrollTo: '#ring', state: 'phone, English Oathra ring, reduced motion, real time', reducedMotion: true, realtime: true },
+  { file: 'oathra-en-status.png', route: '/en/products/oathra/', width: 1440, height: 1000, scrollTo: '#status', state: 'English Oathra where it stands, reduced motion, real time', reducedMotion: true, realtime: true },
   { file: 'products-index-noa.png', route: '/products/', width: 1440, height: 1000, scrollTo: '#noa', state: 'product index, Noa card caption, reduced motion, real time', reducedMotion: true, realtime: true },
 ]);
 
