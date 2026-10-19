@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'none'; media-src 'none'; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'">
+  <title>ひとりのAIに、全部は任せない。 — Agent Team 構想デモ</title>
+  <meta name="description" content="ツールづくり・資料の比較・成果物の受け取り。作る係と確かめる係の流れを、架空のデータで操作できる構想デモです。">
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="/assets/mark.svg">
+  <link rel="stylesheet" href="../demo.css">
+  <script type="module" src="./flows.js"></script>
+</head>
+<body data-accent="agent-team">
+  <a class="skip" href="#stage">操作画面へ</a>
+  <p class="notice">構想デモ・架空データ。AIは動かしていません。</p>
+  <header class="top"><a class="brand" href="/products/agent-team/">Agent Team <span>構想デモ</span></a><a class="back" href="/products/agent-team/#concept-demos">製品ページへ戻る</a></header>
+  <main id="stage" class="stage">
+    <h1>ひとりのAIに、全部は任せない。</h1>
+    <nav class="tabs" aria-label="用途">
+      <a href="?flow=tool" data-flow="tool">01 小さな道具</a>
+      <a href="?flow=research" data-flow="research">02 調べて比べる</a>
+      <a href="?flow=docs" data-flow="docs">03 記録つきで受け取る</a>
+    </nav>
+    <div class="board">
+      <section class="talk" aria-labelledby="talk-title">
+        <h2 id="talk-title">お願い</h2>
+        <ol class="log" data-log aria-live="polite"></ol>
+        <div class="say" data-say></div>
+      </section>
+      <section class="tasks" aria-labelledby="rows-title">
+        <h2 id="rows-title" data-rows-title></h2>
+        <ul class="list" data-list></ul>
+        <div class="cards" data-cards aria-live="polite"></div>
+        <p class="status" data-status role="status"></p>
+        <button type="button" class="reset" data-reset>最初から</button>
+      </section>
+    </div>
+    <noscript><p class="nojs">このデモはJavaScriptで動きます。流れ：1. 一度お願いする　2. まとめ役が分担する　3. つくる係が版を作る　4. 確かめる係が、その版を確かめる　5. 記録つきで受け取る。</p></noscript>
+  </main>
+</body>
+</html>

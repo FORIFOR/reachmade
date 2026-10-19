@@ -508,3 +508,5 @@ body[data-rd] .rd-more[open]>summary span::after{content:" −"}
 body[data-rd] .rd-more>summary small{font-size:14px;color:var(--rd-muted)}
 body[data-rd] .rd-more>summary:hover span{color:var(--rd-accent-ink)}
 body[data-rd] .rd-more>summary:focus-visible{outline:2px solid var(--rd-accent-ink);outline-offset:-4px}
+body[data-rd] .rd-consult-scope{padding:clamp(48px,6vw,88px) var(--rd-gutter);border-top:1px solid var(--rd-rule)}
+body[data-rd] .rd-consult-scope>p:not(.rd-kicker){max-width:44em;margin:16px 0 0;font-size:16px;line-height:1.9;color:var(--rd-body)}

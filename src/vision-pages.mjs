@@ -43,6 +43,140 @@ export const VISION = Object.freeze({
       mechKicker: 'How it works', mechTitle: 'Your words are the evidence.', mechLead: 'Nothing is added by guessing. Only changes that quote you are kept, after you confirm.',
       mech: [['Talk', 'In your own words'], ['Quote', 'The exact words, kept'], ['Hold', 'Not applied yet'], ['Confirm', 'Apply or discard'], ['Next time', 'Only what was decided']]
     }
+  },
+  // AI Secure (FORIFOR/AISecure origin/main): docs/index.ja.html「AIに貼る前に、端末で止める。」; decisions, rule texts and
+  // coverage from aisecure/control/web/app.js and documents.py; the 入力 → 検査 → 判定 flow from control/web/index.html.
+  aisecure: {
+    demo: '/demos/aisecure/',
+    ja: {
+      kicker: '用途別の構想デモ', title: 'AIに貼る前に、<br>端末で止める。', lead: '判定・理由・検査範囲が、その場で出ます。送るかどうかは、あなたが決めます。',
+      label: '構想デモ・架空データ', uiNote: '',
+      demos: [
+        {id: 'sheet', kind: '社外秘の資料', title: '見積もりのExcelを、AIに貼る前に。', body: '「社外秘」の表記を見つけて保留。理由と検査範囲が、その場で出ます。', tryLabel: '資料の検査を試す',
+          scene: [['task', '見積もり_次期モデル.xlsx', '未検査', '保留', 4], ['say', 'この資料の要点を確認してください。'], ['card', '判定', '保留　DOC-CLASS', '社外秘などの機密表記があります', '送信せずに検査', '外部送信していません', 4]]},
+        {id: 'personal', kind: '個人情報', title: '顧客メモを、要約に出す前に。', body: '名前やメールアドレスらしい文字列を見つけて保留。取り扱いを確かめてから。', tryLabel: '個人情報の検査を試す',
+          scene: [['task', '顧客メモ.txt', '未検査', '保留', 4], ['say', 'この顧客メモを短くまとめて。'], ['card', '判定', '保留　DOC-PII', '個人情報らしい文字列があります', '送信せずに検査', '外部送信していません', 4]]},
+        {id: 'secret', kind: '認証情報', title: 'スライドのメモに、キーが残っていた。', body: '認証情報らしい文字列は拒否。原本から消して、検査し直します。', tryLabel: '拒否になる例を試す',
+          scene: [['task', '提案資料.pptx', '未検査', '拒否', 4], ['say', 'このスライドの構成を見直して。'], ['card', '判定', '拒否　DOC-SECRET', '原本から削除し、検査し直してください', '送信せずに検査', '外部送信していません', 4]]}
+      ],
+      mechKicker: 'しくみ', mechTitle: 'その場で止まる。<br>送るのは、あなた。', mechLead: '検査はこの端末で。判定には、いつも理由と検査範囲が付きます。',
+      mech: [['入れる', '資料と、送る予定の指示'], ['手元で検査', '外部には送らない'], ['判定', '検査通過・保留・拒否'], ['理由と範囲', '根拠ルールと検査範囲'], ['送るかはあなた', '決めるのは人']]
+    },
+    en: {
+      kicker: 'Concept demos by use', title: 'Before you paste it into AI,<br>it stops on your machine.', lead: 'The decision, its reasons and the coverage appear on the spot. Whether to send is up to you.',
+      label: 'Concept demo · fictional data', uiNote: 'The demos run in Japanese.',
+      demos: [
+        {id: 'sheet', kind: 'Confidential file', title: 'A quote spreadsheet, before it goes to AI.', body: 'A “confidential” marking puts it on hold, with the reason and coverage on the spot.', tryLabel: 'Try checking a file',
+          scene: [['task', 'quote_next_model.xlsx', 'Not checked', 'Hold', 4], ['say', 'Summarise the key points of this file.'], ['card', 'Decision', 'Hold　DOC-CLASS', 'A confidentiality marking was found', 'Check without sending', 'Nothing sent out', 4]]},
+        {id: 'personal', kind: 'Personal data', title: 'Customer notes, before you ask for a summary.', body: 'Something that looks like a name or email address puts it on hold until you check.', tryLabel: 'Try a personal-data check',
+          scene: [['task', 'customer_notes.txt', 'Not checked', 'Hold', 4], ['say', 'Make these customer notes shorter.'], ['card', 'Decision', 'Hold　DOC-PII', 'Something that looks like personal data', 'Check without sending', 'Nothing sent out', 4]]},
+        {id: 'secret', kind: 'Credentials', title: 'A key left in the speaker notes.', body: 'Something that looks like a credential is rejected: remove it from the original and check again.', tryLabel: 'Try a rejected file',
+          scene: [['task', 'proposal.pptx', 'Not checked', 'Rejected', 4], ['say', 'Rework the structure of these slides.'], ['card', 'Decision', 'Rejected　DOC-SECRET', 'Remove it from the original and check again', 'Check without sending', 'Nothing sent out', 4]]}
+      ],
+      mechKicker: 'How it works', mechTitle: 'It stops on the spot.<br>You decide to send.', mechLead: 'Checks run on this machine. Every decision comes with its reasons and coverage.',
+      mech: [['Add', 'The file and the prompt'], ['Check locally', 'Nothing leaves the machine'], ['Decide', 'Passed, hold or rejected'], ['Reasons and coverage', 'Rule IDs and what was checked'], ['You send', 'A person decides']]
+    }
+  },
+  // Launchloom (FORIFOR/Launchloom origin/main): README.ja.md「作った、その先まで。」, homepage/ja「公開の判断は最後まで自分の
+  // 手に。」; stage and button names from launchloom/web/i18n.js and index.html; drafts only, publishing needs approval.
+  launchloom: {
+    demo: '/demos/launchloom/',
+    ja: {
+      kicker: '用途別の構想デモ', title: '作った、<br>その先まで。', lead: '収録1本が、動画と紹介ページと投稿文に。公開の判断は、最後まで自分の手に。',
+      label: '構想デモ・架空データ', uiNote: '',
+      demos: [
+        {id: 'feature', kind: '新機能の告知', title: '30秒の録画を、告知一式に。', body: '構成を読んでから書き出し。横長・縦長の動画、LP、投稿案がそろいます。', tryLabel: '告知づくりを試す',
+          scene: [['task', '操作録画.mp4', '実画面 · 0:30'], ['say', '新しい書き出し機能を、使う人に届けたい。'], ['card', '構成の確認待ち', '見出し：書き出しが、1クリックに。', '字幕 4枚 · 横長 16:9 / 縦長 9:16', '保存して動画を作る', '制作キットを書き出しました', 4], ['new', '制作キット.zip', '動画 · LP · 投稿案（下書き）']]},
+        {id: 'revise', kind: 'LPの改訂', title: 'ボタンひとつ分だけ、作り直す。', body: '録り直さずに改訂。変えたところだけ、書き出し直します。', tryLabel: 'LPの改訂を試す',
+          scene: [['task', '紹介ページ', 'CTA：今すぐ試す', 'CTA：無料ではじめる', 4], ['say', 'ボタンの言葉を「無料ではじめる」に変えて。'], ['card', '改訂の確認', 'CTA　今すぐ試す → 無料ではじめる', '録り直し：なし', '改訂して書き出す', '書き出しました', 4]]},
+        {id: 'publish', kind: '公開はあなた', title: '投稿は、承認したものだけ。', body: '投稿案は下書きのまま。承認した投稿だけが予約されます。', tryLabel: '承認の流れを試す',
+          scene: [['task', 'X', '下書き', '承認済み · 明日 9:00', 4], ['task', 'LinkedIn', '下書き'], ['card', '承認待ち', 'X　「書き出しが、1クリックに。」', '文面・画像・日時に結びつけて承認', '承認して予約', '承認しました', 4]]}
+      ],
+      mechKicker: 'しくみ', mechTitle: '公開の判断は、<br>最後まで自分の手に。', mechLead: '読んでから書き出す。承認したものだけが外に出ます。',
+      mech: [['録画', '実際の画面から'], ['構成', '見出しと字幕'], ['確認', '読んでから書き出す'], ['書き出し', '動画・LP・投稿案'], ['公開はあなた', '承認したものだけ']]
+    },
+    en: {
+      kicker: 'Concept demos by use', title: 'You built it.<br>Now take it further.', lead: 'One recording becomes a film, a page and posts. The decision to publish stays with you.',
+      label: 'Concept demo · fictional data', uiNote: 'The demos run in Japanese.',
+      demos: [
+        {id: 'feature', kind: 'Feature launch', title: 'From a 30-second recording to a launch kit.', body: 'Read the plan, then render: landscape and vertical films, a page and post drafts.', tryLabel: 'Try a launch kit',
+          scene: [['task', 'screen_recording.mp4', 'Real screen · 0:30'], ['say', 'I want people to know about the new export.'], ['card', 'Plan waiting for review', 'Headline: Export, in one click.', '4 captions · 16:9 / 9:16', 'Save and render', 'Launch kit exported', 4], ['new', 'launch_kit.zip', 'Film · page · post drafts']]},
+        {id: 'revise', kind: 'Page update', title: 'Rebuild just the one button.', body: 'Revise without re-recording; only what changed is rendered again.', tryLabel: 'Try a page revision',
+          scene: [['task', 'Product page', 'CTA: Try it now', 'CTA: Start free', 4], ['say', 'Change the button to “Start free”.'], ['card', 'Check the revision', 'CTA　Try it now → Start free', 'Re-recording: none', 'Revise and export', 'Exported', 4]]},
+        {id: 'publish', kind: 'You publish', title: 'Only approved posts go out.', body: 'Post drafts stay drafts. Only the posts you approve are scheduled.', tryLabel: 'Try the approval step',
+          scene: [['task', 'X', 'Draft', 'Approved · tomorrow 9:00', 4], ['task', 'LinkedIn', 'Draft'], ['card', 'Waiting for approval', 'X　“Export, in one click.”', 'Approval is tied to the text, media and time', 'Approve and schedule', 'Approved', 4]]}
+      ],
+      mechKicker: 'How it works', mechTitle: 'The decision to publish<br>stays with you.', mechLead: 'Read it, then render. Only what you approve goes out.',
+      mech: [['Record', 'From the real screen'], ['Shape', 'Headlines and captions'], ['Review', 'Read before rendering'], ['Export', 'Film · page · posts'], ['You publish', 'Only what you approve']]
+    }
+  },
+  // Agent Team (FORIFOR/Multibot origin/main): docs/site/build_site.py「頼むのは一度。作った版を、別のAIが確かめる。」and
+  // 「ひとりのAIに、全部は任せない。」; roles from frontend/src/lib/journey.ts; 通過 / 要修正 / 未確認, 「この版を採用」,
+  // 「まとめて取得」from Workroom.tsx and RunView.tsx. Checks are tied to a version's bytes (README).
+  'agent-team': {
+    demo: '/demos/agent-team/',
+    ja: {
+      kicker: '用途別の構想デモ', title: 'ひとりのAIに、<br>全部は任せない。', lead: '頼むのは一度。作った版を、別のAIが確かめます。',
+      label: '構想デモ・架空データ', uiNote: '',
+      demos: [
+        {id: 'tool', kind: '小さな道具', title: 'CSVの集計ツールを、テストつきで。', body: 'つくる係が作り、確かめる係が差し戻す。2版目で通過しました。', tryLabel: 'ツールづくりを試す',
+          scene: [['say', 'このCSVを年月別に集計するツールを作って。テストも付けて。'], ['task', '版1 · aggregate.py', '要修正'], ['task', '版2 · aggregate.py', '確認中', '通過', 4], ['card', '確かめる係', '版2　テスト：通過', '確認は、この版の中身に結びつきます', 'この版を採用', '採用版になりました', 4]]},
+        {id: 'research', kind: '調べて比べる', title: '公開資料を、出典つきで比べる。', body: '調べる係が出典を集め、つくる係がメモに。照合できない点は「未確認」のまま。', tryLabel: '比較メモを試す',
+          scene: [['say', '3社の公開資料を比べて、違いをまとめて。'], ['task', '出典メモ', '調べる係 · 12件'], ['task', '比較メモ · 版2', '確認中', '通過 · 未確認 1件', 4], ['card', '確かめる係', '指摘3件 → 修正済み', '出典の照合：1件は未確認のまま', '確認の記録を見る', '未確認を残して届けます', 4]]},
+        {id: 'docs', kind: '記録つきで受け取る', title: '採用した版だけ、まとめて受け取る。', body: '確認の記録がない版には警告。選んだ版を、記録ごと受け取ります。', tryLabel: '受け取りを試す',
+          scene: [['task', '版1 · guide.md', '確認の記録なし'], ['task', '版2 · guide.md', '通過', '採用版', 4], ['say', '採用した版だけ、まとめて受け取りたい。'], ['card', 'まとめて取得', '採用版 · 確認の記録 · 作業記録', 'ZIPで受け取ります', 'まとめて取得', '受け取りました', 4]]}
+      ],
+      mechKicker: 'しくみ', mechTitle: '作る係と、<br>確かめる係を分ける。', mechLead: '作った本人は、自分の間違いに気づきにくい。だから、別のAIがその版を確かめます。',
+      mech: [['お願い', '頼むのは一度'], ['分担', 'まとめ役が割り振る'], ['つくる', '版ごとに残る'], ['確かめる', '別のAIが、その版を'], ['記録つきで届く', '選ぶのはあなた']]
+    },
+    en: {
+      kicker: 'Concept demos by use', title: 'Don’t leave everything<br>to one AI.', lead: 'Ask once. One AI makes the file; another checks that exact version.',
+      label: 'Concept demo · fictional data', uiNote: 'The demos run in Japanese.',
+      demos: [
+        {id: 'tool', kind: 'A small tool', title: 'A CSV summary tool, with tests.', body: 'The maker builds it, the checker sends it back, and version 2 passes.', tryLabel: 'Try building a tool',
+          scene: [['say', 'Make a tool that totals this CSV by month, with tests.'], ['task', 'v1 · aggregate.py', 'Needs changes'], ['task', 'v2 · aggregate.py', 'Checking', 'Passed', 4], ['card', 'Checker', 'v2　tests: passed', 'The check is tied to this exact version', 'Use this version', 'Now the adopted version', 4]]},
+        {id: 'research', kind: 'Research and compare', title: 'Compare public documents, with sources.', body: 'The researcher gathers sources, the maker writes the memo, and anything unmatched stays “unverified”.', tryLabel: 'Try a comparison memo',
+          scene: [['say', 'Compare these three companies’ public documents.'], ['task', 'Source notes', 'Researcher · 12'], ['task', 'Comparison memo · v2', 'Checking', 'Passed · 1 unverified', 4], ['card', 'Checker', '3 findings → fixed', 'Source check: 1 still unverified', 'See the check record', 'Delivered with the unverified point', 4]]},
+        {id: 'docs', kind: 'Delivered with records', title: 'Take only the version you adopted.', body: 'A version without a check record is flagged. Take the one you chose, with its records.', tryLabel: 'Try taking delivery',
+          scene: [['task', 'v1 · guide.md', 'No check record'], ['task', 'v2 · guide.md', 'Passed', 'Adopted', 4], ['say', 'I only want the adopted version.'], ['card', 'Download all', 'Adopted version · check record · run log', 'As a ZIP', 'Download all', 'Received', 4]]}
+      ],
+      mechKicker: 'How it works', mechTitle: 'Separate the maker<br>from the checker.', mechLead: 'Whoever made it is the last to spot its mistakes, so another AI checks that version.',
+      mech: [['Ask', 'Once'], ['Share out', 'The lead assigns roles'], ['Make', 'Every version is kept'], ['Check', 'Another AI, that version'], ['Delivered with records', 'You choose']]
+    }
+  },
+  // 星藍ノア (private repository; README「コメントがなくても話が続く。コメントが来たら自然な切れ目で返す。ゲームも実況
+  // する。」): the output gate stays silent when a check fails; game lines from games/smash-ultimate/show.mjs and
+  // src/blocks-show.mjs; effects from public/effect-director.mjs; voice AivisSpeech コハク (docs/VOICE.md).
+  noa: {
+    demo: '/demos/noa/',
+    ja: {
+      kicker: '配信の構想デモ', title: 'コメントがなくても、<br>話が続く。', lead: 'コメントが来たら、自然な切れ目で返す。ゲームも実況する。',
+      label: '構想デモ・架空のコメント', uiNote: '',
+      demos: [
+        {id: 'comment', kind: 'コメントに返す', title: '「どの家具が好き？」', body: '話の切れ目で、短く返事。確かめた言葉だけを、声と表情に。', tryLabel: '返事の流れを試す',
+          scene: [['task', '雑談', '家具の話', 'コメントに返事', 4], ['say', 'どの家具が好き？'], ['card', '返事の候補', '「椅子かな。座ったまま考えごとができるから。」', '表情：照れ', '声にする', '声と表情で返しました', 4]]},
+        {id: 'game', kind: 'ゲーム実況', title: '勝ったら、いっしょに喜ぶ。', body: '試合の様子は観測した結果から。言葉は、その様子に合うかを確かめてから。', tryLabel: '実況の流れを試す',
+          scene: [['task', 'スマブラSP', '試合中', '観測：勝利', 4], ['say', '勝った？'], ['card', '実況の候補', '「やったー、勝利！いい試合だったね。」', '演出：きらきら', '声にする', '喜びの演出で返しました', 4]]},
+        {id: 'blocks', kind: 'NOA BLOCKS', title: '積みすぎたら、ちゃんと焦る。', body: '危ない場面では汗、助かったらきらきら。自己ベストは紙吹雪とチャイムで。', tryLabel: 'NOA BLOCKSを試す',
+          scene: [['task', 'NOA BLOCKS', '危険ゾーン', '自己ベスト更新', 4], ['say', 'がんばれ！'], ['card', '実況の候補', '「よし、4ライン！」', '演出：紙吹雪とチャイム', '声にする', '記録更新を祝いました', 4]]}
+      ],
+      mechKicker: 'しくみ', mechTitle: '話す前に、<br>確かめる。', mechLead: '返事はすべて出力ゲートを通ります。通らなければ、話しません。',
+      mech: [['コメント', '見て、選ぶ'], ['返事を考える', '短い1〜2文'], ['出力ゲート', '通らなければ話さない'], ['声と表情', 'コハクの声で'], ['配信', '自然な切れ目で']]
+    },
+    en: {
+      kicker: 'Stream concept demos', title: 'The talk keeps going,<br>even without comments.', lead: 'When a comment comes in, she answers at a natural break. She commentates games too.',
+      label: 'Concept demo · fictional comments', uiNote: 'The demos run in Japanese.',
+      demos: [
+        {id: 'comment', kind: 'Answering a comment', title: '“Which furniture do you like?”', body: 'A short answer at a natural break. Only checked words become voice and expression.', tryLabel: 'Try a reply',
+          scene: [['task', 'Chat', 'Talking about furniture', 'Answering a comment', 4], ['say', 'Which furniture do you like?'], ['card', 'Reply candidate', '“The chair. I can think while I sit.”', 'Expression: shy', 'Say it', 'Answered with voice and expression', 4]]},
+        {id: 'game', kind: 'Game commentary', title: 'When the match is won, she celebrates.', body: 'What happened comes from the observed game; the words are checked against it first.', tryLabel: 'Try commentary',
+          scene: [['task', 'Smash Bros. Ultimate', 'In the match', 'Observed: win', 4], ['say', 'Did you win?'], ['card', 'Commentary candidate', '“Yes, a win! That was a good match.”', 'Effect: sparkle', 'Say it', 'Celebrated', 4]]},
+        {id: 'blocks', kind: 'NOA BLOCKS', title: 'Stack too high, and she gets nervous.', body: 'Sweat when it is risky, sparkle when she is saved, confetti and a chime for a personal best.', tryLabel: 'Try NOA BLOCKS',
+          scene: [['task', 'NOA BLOCKS', 'Danger zone', 'Personal best', 4], ['say', 'You can do it!'], ['card', 'Commentary candidate', '“Yes, four lines!”', 'Effect: confetti and chime', 'Say it', 'Personal best celebrated', 4]]}
+      ],
+      mechKicker: 'How it works', mechTitle: 'Check first,<br>then speak.', mechLead: 'Every line goes through an output gate. If it does not pass, she stays silent.',
+      mech: [['Comment', 'Read and pick'], ['Think of a reply', 'One or two short lines'], ['Output gate', 'No pass, no speech'], ['Voice and face', 'In the Kohaku voice'], ['Stream', 'At a natural break']]
+    }
   }
 });
 
@@ -70,5 +204,5 @@ export function visionSections(p, lang) {
   const demos = t.demos.map((d, i) => `<article class="vp-demo" aria-labelledby="vp-demo-${esc(d.id)}"><div class="vp-demo-copy"><p class="vp-index">0${i + 1} / ${esc(d.kind)}</p><h3 id="vp-demo-${esc(d.id)}">${esc(d.title)}</h3><p>${esc(d.body)}</p><a class="vp-try" href="${esc(v.demo)}?flow=${esc(d.id)}">${esc(d.tryLabel)} <span aria-hidden="true">↗</span></a></div><figure class="vp-screen" data-vp-scene><p class="vp-screen-bar"><span>${esc(p.name)}</span><span>${esc(t.label)}</span></p><ol class="vp-rows">${sceneHtml(d.scene)}</ol></figure></article>`).join('');
   const mech = t.mech.map(([k, b], i) => `<li class="vp-node vp-node--${i + 1}"><span class="vp-node-n">0${i + 1}</span><b>${esc(k)}</b><span>${esc(b)}</span></li>`).join('');
   return `<section class="vp-demos" id="concept-demos" aria-labelledby="vp-demos-title"><div class="vp-head"><div><p class="rd-kicker">${esc(t.kicker)}</p><h2 id="vp-demos-title">${t.title}</h2></div><p>${esc(t.lead)}${t.uiNote ? ` ${esc(t.uiNote)}` : ''}</p></div><div class="vp-list">${demos}</div></section>`
-    + `<section class="vp-mech" id="how" aria-labelledby="vp-mech-title"><div class="vp-head"><div><p class="rd-kicker">${esc(t.mechKicker)}</p><h2 id="vp-mech-title">${esc(t.mechTitle)}</h2></div><p>${esc(t.mechLead)}</p></div><ol class="vp-flow" data-vp-scene>${mech}</ol></section>`;
+    + `<section class="vp-mech" id="how" aria-labelledby="vp-mech-title"><div class="vp-head"><div><p class="rd-kicker">${esc(t.mechKicker)}</p><h2 id="vp-mech-title">${t.mechTitle}</h2></div><p>${esc(t.mechLead)}</p></div><ol class="vp-flow" data-vp-scene>${mech}</ol></section>`;
 }

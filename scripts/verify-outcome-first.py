@@ -64,6 +64,14 @@ console.log(JSON.stringify({landings:landingExperience, films:{oathra,noa}}));""
 
 def product_checks(page, lang, product, width):
     contract = source_contract()
+    # 2026-10-19, vision first: the one action in the first view is visible on entry and a usable touch target.
+    first = page.locator('.rd-phero .rd-ctas a.rd-btn--ink').first
+    expect(first).to_be_visible()
+    assert first.bounding_box()['height'] >= 44, 'The first action remains a usable touch target'
+    # The original sections, with the landing's own primary action, sit in the one detail fold; open it as a visitor would.
+    more = page.locator('details.rd-more > summary')
+    if more.count():
+        more.first.click()
     primary = page.locator('.owned-primary').first
     expect(primary).to_be_visible()
     assert primary.bounding_box()['height'] >= 44, 'Primary action remains a usable touch target'
@@ -98,6 +106,15 @@ def product_checks(page, lang, product, width):
             if width == 390:
                 page.locator('a.nlp-secondary[href="#watch"]').click()
                 expect(page.locator('#watch')).to_be_visible()
+    elif page.locator('#concept-demos .vp-try').count():
+        # Pages that lead with concept demos: the hands-on sample is the demo page each use case opens.
+        try_link = page.locator('#concept-demos .vp-try').first
+        expect(try_link).to_be_visible()
+        assert try_link.get_attribute('href').startswith(f'/demos/{product}/?flow=')
+        if width == 390:
+            try_link.click()
+            expect(page.locator('.speak')).to_be_visible()
+            page.go_back()
     else:
         sample = page.locator('[data-outcome-sample]:not([hidden])')
         expect(sample).to_be_visible()

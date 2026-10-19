@@ -142,7 +142,8 @@ def main(home_only=False, output='film-qa/product-landings'):
                 assert failed_request.value.failure
                 failures.append(failed_request.value.failure)
                 expect(video).to_be_visible()
-                expect(page.locator('.nlp-actions .owned-primary')).to_be_visible()
+                # The stream stays reachable when the film fails: the first action opens the actual YouTube edit.
+                expect(page.locator('.rd-phero .rd-ctas a.rd-btn--ink[href*="youtube.com"]')).to_be_visible()
             return {'native_error': True, 'same_source_retry': True, 'channel_accessible': True,
                     'failed_requests': failures, 'decoded_frames': 0}
         video.evaluate('v=>v.play()')
@@ -176,9 +177,16 @@ def main(home_only=False, output='film-qa/product-landings'):
                         elif lang == 'ja' and product == 'noa':
                             info = native_noa(page)
                         else:
-                            page.wait_for_selector(selector+' [data-mode="recording"]')
-                            check_story(page, selector, product)
-                            enter_recording(page, selector)
+                            # A product page's film section shows the footage itself (no story overlay or tabs).
+                            # Elsewhere the player sits in the detail fold; open it as a visitor would.
+                            if not page.locator('[data-rd-reel] '+selector).count() and page.locator('details.rd-more > summary').count():
+                                page.locator('details.rd-more > summary').first.click()
+                            if page.locator('[data-rd-reel] '+selector).count():
+                                assert page.locator('[data-rd-reel] .rm-demo-toolbar, [data-rd-reel] .rm-live-demo').count() == 0
+                            else:
+                                page.wait_for_selector(selector+' [data-mode="recording"]')
+                                check_story(page, selector, product)
+                                enter_recording(page, selector)
                             video = page.locator(selector+' video')
                             assert video.evaluate('(v)=>v.paused && v.currentTime===0')
                             assert video.get_attribute('src') is None, 'A recording must not be fetched before play'
@@ -217,8 +225,11 @@ def main(home_only=False, output='film-qa/product-landings'):
                         elif lang == 'ja' and product == 'noa':
                             details = native_noa(page, failed=True)
                         else:
-                            page.wait_for_selector(selector+' [data-mode="recording"]')
-                            enter_recording(page, selector)
+                            if not page.locator('[data-rd-reel] '+selector).count():
+                                if page.locator('details.rd-more > summary').count():
+                                    page.locator('details.rd-more > summary').first.click()
+                                page.wait_for_selector(selector+' [data-mode="recording"]')
+                                enter_recording(page, selector)
                             button = page.locator(selector).locator('.owned-film__play')
                             button.click()
                             page.wait_for_function('s=>document.querySelector(s).dataset.mediaState==="unavailable"',arg=selector)
@@ -230,8 +241,11 @@ def main(home_only=False, output='film-qa/product-landings'):
                             with page.expect_request('**'+PAGE_FILMS[(lang, product)][0] if (lang, product) in PAGE_FILMS else '**/media/products/*.mp4'):
                                 button.click()
                             page.wait_for_function('s=>document.querySelector(s).dataset.mediaState==="unavailable"',arg=selector)
-                            check_story(page, selector, product)
-                            details = {'network_aborted':True,'retry':True,'return_to_story':True}
+                            # Outside a product film section the player still offers its story after a failure.
+                            in_reel = page.locator('[data-rd-reel] '+selector).count() > 0
+                            if not in_reel:
+                                check_story(page, selector, product)
+                            details = {'network_aborted':True,'retry':True,'return_to_story':not in_reel}
                         report['failure_recovery'].append({'case':key,**details})
                     except Exception as exc:
                         report['errors'].append({'case':'failure-'+key,'error':str(exc)})
@@ -254,6 +268,10 @@ def main(home_only=False, output='film-qa/product-landings'):
                 page = context.new_page()
                 try:
                     page.goto(origin+'/products/'+product+'/',wait_until='networkidle')
+                    # Without JavaScript the first action is visible, and the detail fold opens to the original sections.
+                    assert page.locator('.rd-phero .rd-ctas a.rd-btn--ink').first.is_visible()
+                    if page.locator('details.rd-more > summary').count():
+                        page.locator('details.rd-more > summary').first.click()
                     assert page.locator('.owned-primary').first.is_visible()
                     if product == 'noa':
                         expect(page.locator('.nlp-film video')).to_be_visible()

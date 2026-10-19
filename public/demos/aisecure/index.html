@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'none'; media-src 'none'; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'">
+  <title>AIに貼る前に、端末で止める。 — AI Secure 構想デモ</title>
+  <meta name="description" content="社外秘の資料・個人情報・認証情報。AIに渡す前の検査を、架空のデータで操作できる構想デモです。">
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="/assets/mark.svg">
+  <link rel="stylesheet" href="../demo.css">
+  <script type="module" src="./flows.js"></script>
+</head>
+<body data-accent="aisecure">
+  <a class="skip" href="#stage">操作画面へ</a>
+  <p class="notice">構想デモ・架空データ。検査も送信も行いません。</p>
+  <header class="top"><a class="brand" href="/products/aisecure/">AI Secure <span>構想デモ</span></a><a class="back" href="/products/aisecure/#concept-demos">製品ページへ戻る</a></header>
+  <main id="stage" class="stage">
+    <h1>AIに貼る前に、端末で止める。</h1>
+    <nav class="tabs" aria-label="用途">
+      <a href="?flow=sheet" data-flow="sheet">01 社外秘の資料</a>
+      <a href="?flow=personal" data-flow="personal">02 個人情報</a>
+      <a href="?flow=secret" data-flow="secret">03 認証情報</a>
+    </nav>
+    <div class="board">
+      <section class="talk" aria-labelledby="talk-title">
+        <h2 id="talk-title">送る予定のもの</h2>
+        <ol class="log" data-log aria-live="polite"></ol>
+        <div class="say" data-say></div>
+      </section>
+      <section class="tasks" aria-labelledby="rows-title">
+        <h2 id="rows-title" data-rows-title></h2>
+        <ul class="list" data-list></ul>
+        <div class="cards" data-cards aria-live="polite"></div>
+        <p class="status" data-status role="status"></p>
+        <button type="button" class="reset" data-reset>最初から</button>
+      </section>
+    </div>
+    <noscript><p class="nojs">このデモはJavaScriptで動きます。流れ：1. 送る予定の資料と指示を入れる　2. 外部送信せずに検査する　3. 判定・理由・検査範囲を見る　4. 送るかどうかは、あなたが決める。</p></noscript>
+  </main>
+</body>
+</html>

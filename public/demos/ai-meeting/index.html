@@ -4,13 +4,13 @@
   <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'none'; media-src 'none'; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'">
   <title>話して、決まったことだけ残す。 — AI Meeting 構想デモ</title>
-  <meta name="description" content="言い直し・予定への登録・会議の決定。AI Meetingの使い方を、架空のデータで操作できる構想デモです。音声・AI・外部への送信はありません。">
+  <meta name="description" content="言い直し・予定への登録・会議の決定。AI Meetingの使い方を、架空のデータで操作できる構想デモです。">
   <meta name="robots" content="noindex">
   <link rel="icon" href="/assets/mark.svg">
-  <link rel="stylesheet" href="./demo.css">
-  <script type="module" src="./demo.js"></script>
+  <link rel="stylesheet" href="../demo.css">
+  <script type="module" src="./flows.js"></script>
 </head>
-<body>
+<body data-accent="ai-meeting">
   <a class="skip" href="#stage">操作画面へ</a>
   <p class="notice">構想デモ・架空データ。音声・AI・外部への送信はありません。</p>
   <header class="top"><a class="brand" href="/products/ai-meeting/">AI Meeting <span>構想デモ</span></a><a class="back" href="/products/ai-meeting/#concept-demos">製品ページへ戻る</a></header>
@@ -27,8 +27,8 @@
         <ol class="log" data-log aria-live="polite"></ol>
         <div class="say" data-say></div>
       </section>
-      <section class="tasks" aria-labelledby="tasks-title">
-        <h2 id="tasks-title" data-tasks-title>やること</h2>
+      <section class="tasks" aria-labelledby="rows-title">
+        <h2 id="rows-title" data-rows-title></h2>
         <ul class="list" data-list></ul>
         <div class="cards" data-cards aria-live="polite"></div>
         <p class="status" data-status role="status"></p>

@@ -25,10 +25,10 @@ export const premiumFilmCuts = Object.freeze({
     clips: [[3, 9], [14, 20]],
     label: { ja: '入力から判定へ', en: 'Input to decision' },
   },
-  // The teammates (3.5 s), then the run's result and its check record (20.5 s).
+  // The teammates (4 s, after the page has settled), then the run's result and its check record (20.5 s).
   'agent-team': {
-    sourceWindow: [3.5, 27.5],
-    clips: [[3.5, 8.5], [20.5, 27.5]],
+    sourceWindow: [4, 27.5],
+    clips: [[4, 9], [20.5, 27.5]],
     label: { ja: 'チームから確認済みの版へ', en: 'Team to a checked version' },
   },
   launchloom: {
