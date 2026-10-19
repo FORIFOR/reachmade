@@ -58,6 +58,8 @@ export function renderStory(id, lang = 'ja') {
 /** One clock per mounted player. User pause is independent from visibility and motion preferences. */
 export function mountDemo(figure, initialId, lang = 'ja') {
   if (!PRODUCTS.includes(initialId) || figure.dataset.demoVersion) return null;
+  // A product page's film section shows the footage itself, with no story overlay, tabs or notes around it.
+  if (figure.closest('[data-rd-reel]')) return null;
   const screen = figure.querySelector('.studio-player-screen, .owned-film__screen');
   if (!screen) return null;
   const doc = figure.ownerDocument, win = doc.defaultView, ja = lang === 'ja';
@@ -131,8 +133,7 @@ export function mountDemo(figure, initialId, lang = 'ja') {
     visual.innerHTML = renderStory(id,lang);
     chapters.innerHTML = copy.steps.map((label,i) => `<button type="button" data-cue="${i}" aria-pressed="false"><span>0${i+1}</span>${esc(label)}</button>`).join('');
     root.querySelector('.rm-demo-disclosure').textContent = `${t('説明用の再現UI・サンプルデータ。実行速度を示すものではありません。','Illustrative UI · fictional data. Timing is not product performance.')} ${copy.scope}`;
-    // On a product page's film section the real footage is the point, so it opens on the recording; the story stays a tab.
-    draw(); setMode(figure.closest('[data-rd-reel]') && !produced ? 'recording' : 'story');
+    draw(); setMode('story');
   }
   on(toolbar,'click',event => { const b = event.target.closest('button[data-mode]'); if (b) setMode(b.dataset.mode); });
   on(pause,'click',() => { paused = allowed(); userPlay = !paused; reconcile(); });

@@ -491,3 +491,20 @@ body[data-rd] .vp-flow[data-vp-play] .vp-node--5{animation:vp-s5 9s var(--rd-eas
 @media (max-width:860px){body[data-rd] .vp-head,body[data-rd] .vp-demo{grid-template-columns:1fr}body[data-rd] .vp-flow{grid-template-columns:1fr;gap:28px}body[data-rd] .vp-node{padding-right:0}body[data-rd] .vp-rows{min-height:0}}
 @media (prefers-reduced-motion:reduce){body[data-rd] [data-vp-play] *{animation:none!important}}
 @media (forced-colors:active){body[data-rd] .vp-check.is-on,body[data-rd] .vp-node::before,body[data-rd] .vp-mic{forced-color-adjust:none;background:CanvasText}}
+/* Product page, vision first: a short status band, then one fold for everything else. */
+body[data-rd] .rd-now{padding:clamp(72px,9vw,140px) var(--rd-gutter) clamp(56px,7vw,100px);border-top:1px solid var(--rd-rule)}
+body[data-rd] .rd-now-head{display:flex;justify-content:space-between;align-items:baseline;gap:16px;margin-bottom:24px}
+body[data-rd] .rd-now-head .rd-kicker{margin:0}
+body[data-rd] .rd-now-status{display:inline-flex;align-items:center;gap:10px;margin:0;font-family:var(--rd-mono);font-size:12px;letter-spacing:.04em;color:var(--rd-ink)}
+body[data-rd] .rd-now-status i{width:8px;height:8px;border-radius:50%;background:var(--rd-accent)}
+body[data-rd] .rd-now .rd-hl{min-height:0}
+body[data-rd] .rd-now .rd-links{margin-top:clamp(32px,4vw,56px)}
+body[data-rd] .rd-more{border-top:1px solid var(--rd-rule)}
+body[data-rd] .rd-more>summary{list-style:none;cursor:pointer;display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 20px;min-height:88px;padding:28px var(--rd-gutter);color:var(--rd-ink)}
+body[data-rd] .rd-more>summary::-webkit-details-marker{display:none}
+body[data-rd] .rd-more>summary span{font-family:var(--rd-jp);font-weight:700;font-size:clamp(20px,2vw,28px);letter-spacing:-.02em}
+body[data-rd] .rd-more>summary span::after{content:" +";font-weight:400}
+body[data-rd] .rd-more[open]>summary span::after{content:" −"}
+body[data-rd] .rd-more>summary small{font-size:14px;color:var(--rd-muted)}
+body[data-rd] .rd-more>summary:hover span{color:var(--rd-accent-ink)}
+body[data-rd] .rd-more>summary:focus-visible{outline:2px solid var(--rd-accent-ink);outline-offset:-4px}
