@@ -25,10 +25,11 @@ export const premiumFilmCuts = Object.freeze({
     clips: [[3, 9], [14, 20]],
     label: { ja: '入力から判定へ', en: 'Input to decision' },
   },
+  // The teammates (3.5 s), then the run's result and its check record (20.5 s).
   'agent-team': {
-    sourceWindow: [5, 19],
-    clips: [[5, 10], [12, 19]],
-    label: { ja: '依頼から成果物へ', en: 'Brief to artifact' },
+    sourceWindow: [3.5, 27.5],
+    clips: [[3.5, 8.5], [20.5, 27.5]],
+    label: { ja: 'チームから確認済みの版へ', en: 'Team to a checked version' },
   },
   launchloom: {
     sourceWindow: [3, 17],
