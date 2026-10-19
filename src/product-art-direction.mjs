@@ -15,7 +15,7 @@ export const directions = Object.freeze({
 });
 const copy = {
  ja: {
-  category: {genie:'自分のモデルで使う、MacのAIワークスペース','ai-meeting':'話して動かすタスク管理',oathra:'発言を根拠にする、AI電話の実行基盤',aisecure:'AI利用前の確認と、根拠を辿る調査','agent-team':'Agent Team / Multibot — コードや資料をつくるAI作業アプリ',launchloom:'実録画から、公開前の素材をつくる制作基盤',noa:'コメントに、声と表情で返す配信キャラクター'},
+  category: {genie:'自分のモデルで使う、MacのAIワークスペース','ai-meeting':'話して動かすタスク管理',oathra:'発言を根拠にする、AI電話の実行基盤',aisecure:'AIに渡す前に、資料を手元で検査','agent-team':'Agent Team / Multibot — コードや資料をつくるAI作業アプリ',launchloom:'実録画から、公開前の素材をつくる制作基盤',noa:'コメントに、声と表情で返す配信キャラクター'},
   scope:'試す前に知っておくこと', cue:'録画の見どころ', sample:'使い方の例 · 実際の発言ログではありません',
   request:'メモから始める。', requestBody:'何を作りたいかを伝えて、結果を開く。依頼と成果物を、同じ作業場所に。',
   output:['メモ・依頼','計画・下書き・HTML'],
@@ -23,9 +23,9 @@ const copy = {
   voiceSteps:['話す','変更を確かめる','タスクを残す'],
   call:'相手は、何と言った？', callBody:'結果から発言まで、同じ画面で辿る。',
   evidence:[['01','発言','AIの返答ではなく、相手側の言葉。'],['02','条件','日時・金額・確定表現を見比べる。'],['03','判定','会話上の合意と、外部への登録を分ける。']],
-  pre:'AIへ送る前', preBody:'内容・送信先・操作を確認する。', preLink:'送信前チェックの説明へ',
-  post:'兆候を調べる', postBody:'観測・仮説・不明点を分ける。', postLink:'調査の録画を見る',
-  investigation:'ここで見るのは、調査側の実演。', investigationBody:'この録画は合成ログの調査デモです。送信前チェックや実環境の遮断を示すものではありません。',
+  pre:'送る前に検査', preBody:'資料と指示を、この端末だけで。', preLink:'ワークベンチの説明へ',
+  post:'理由を残す', postBody:'判定・根拠ルール・検査範囲をJSONで。', postLink:'実アプリの録画を見る',
+  investigation:'ここで見るのは、実アプリの録画。', investigationBody:'編集できる合成サンプルを、送信せずに検査して保存するまで。',
   handoff:'書く。読み直す。直す。', roleLabel:'役割の案内 · 実行中の状態ではありません',
   stageLabel:'ひとつのコメントが通る道', stage:'コメント → 判定 → 声・表情',
   stageSteps:[['01','返事','Jevが判定して、返事を決める'],['02','声','コハクの声で読み上げる'],['03','見た目','画像を重ねて、表情を動かす']],
@@ -36,16 +36,16 @@ const copy = {
   formats:[['01','横動画','製品を紹介する'],['02','縦動画','モバイルへ届ける'],['03','LP','価値を一ページに'],['04','投稿案','公開前に見直す']]
  },
  en: {
-  category: {genie:'A Mac AI workspace for your own model','ai-meeting':'Voice-driven task management',oathra:'AI phone calls with evidence-led results',aisecure:'Preflight checks and evidence-led investigation','agent-team':'Agent Team / Multibot — an AI work app for code and documents',launchloom:'A local production workflow, from recording to launch material',noa:'A streaming character who answers comments with voice and expression'},
+  category: {genie:'A Mac AI workspace for your own model','ai-meeting':'Voice-driven task management',oathra:'AI phone calls with evidence-led results',aisecure:'Local checks before anything goes to AI','agent-team':'Agent Team / Multibot — an AI work app for code and documents',launchloom:'A local production workflow, from recording to launch material',noa:'A streaming character who answers comments with voice and expression'},
   scope:'Before you try it', cue:'WHAT TO LOOK FOR', sample:'Usage example · not an actual conversation log',
   request:'Watch a note become a draft.', requestBody:'Open the result, copy what you need, and get back to what you were doing.',
   output:['Notes & requests','Plans, drafts & HTML'],
   voice:'“Actually, move the email reply to tomorrow.”', voiceBody:'Review the change before it becomes your plan.', voiceSteps:['Speak','Review the change','Keep the task'],
   call:'What did the other party say?', callBody:'Follow the result back to the words that support it.',
   evidence:[['01','Words','The other party’s words, not the agent’s claim.'],['02','Terms','Compare dates, amounts and confirmation.'],['03','Result','Separate spoken agreement from external registration.']],
-  pre:'Before sending to AI',preBody:'Review content, destination and action.',preLink:'Explore preflight checks',
-  post:'Investigate a signal',postBody:'Separate observations, hypotheses and unknowns.',postLink:'Watch the investigation',
-  investigation:'This recording shows investigation.',investigationBody:'A synthetic-log investigation demo. It does not demonstrate preflight checks or enforcement in a live environment.',
+  pre:'Check before sending',preBody:'The document and prompt, on this machine only.',preLink:'About the workbench',
+  post:'Keep the reasons',postBody:'Decision, rule IDs and coverage as JSON.',postLink:'Watch the real-app recording',
+  investigation:'This is a real-app recording.',investigationBody:'An editable synthetic sample, checked without sending and saved.',
   handoff:'Draft. Review. Refine.',roleLabel:'Role guide · not a live execution status',
   stageLabel:'WHEN A COMMENT COMES IN', stage:'Noa replies. You hear it. Her expression changes.',
   stageSteps:[['01','A comment','A viewer leaves a message in the stream.'],['02','A reply','Noa responds in a voice you can hear.'],['03','An expression','Her face changes as she speaks.']],
@@ -102,8 +102,8 @@ export function artDirectProductHero(html, product, lang) {
    scene=`<div class="ad-call-head">${intro}<div class="ad-call-question">${paragraph(t.cue,'ad-label')}<p>${escapeHTML(t.call)}</p>${paragraph(t.callBody)}</div></div><div class="ad-ledger">${film}<aside class="ad-evidence">${rail(t.evidence,'ad-evidence-list')}</aside></div>`;
    break;
   case 'aisecure': {
-   const preflight=lang==='ja'?'https://forifor.github.io/AISecure/index.ja.html#workbench':'https://forifor.github.io/AISecure/#workbench';
-   scene=`<div class="ad-secure-head">${intro}<nav class="ad-security-routes" aria-label="${escapeHTML(t.category[id])}"><div><span class="ad-route-index" aria-hidden="true">01 / PREFLIGHT</span><h2>${escapeHTML(t.pre)}</h2>${paragraph(t.preBody)}${link(preflight,t.preLink)}</div><div><span class="ad-route-index" aria-hidden="true">02 / INVESTIGATION</span><h2>${escapeHTML(t.post)}</h2>${paragraph(t.postBody)}<a href="#recording">${escapeHTML(t.postLink)} <span aria-hidden="true">↓</span></a></div></nav></div><div class="ad-investigation"><aside>${paragraph('INVESTIGATION / SYNTHETIC DATA','ad-label')}<h2>${escapeHTML(t.investigation)}</h2>${paragraph(t.investigationBody)}</aside>${film}</div>`;
+   const preflight=lang==='ja'?'https://aisecure.reachmade.com/index.ja.html#workbench':'https://aisecure.reachmade.com/#workbench';
+   scene=`<div class="ad-secure-head">${intro}<nav class="ad-security-routes" aria-label="${escapeHTML(t.category[id])}"><div><span class="ad-route-index" aria-hidden="true">01 / PREFLIGHT</span><h2>${escapeHTML(t.pre)}</h2>${paragraph(t.preBody)}${link(preflight,t.preLink)}</div><div><span class="ad-route-index" aria-hidden="true">02 / RECORD</span><h2>${escapeHTML(t.post)}</h2>${paragraph(t.postBody)}<a href="#recording">${escapeHTML(t.postLink)} <span aria-hidden="true">↓</span></a></div></nav></div><div class="ad-investigation"><aside>${paragraph(lang==='ja'?'実アプリ / 合成サンプル':'REAL APP / SYNTHETIC SAMPLE','ad-label')}<h2>${escapeHTML(t.investigation)}</h2>${paragraph(t.investigationBody)}</aside>${film}</div>`;
    break;
   }
   case 'agent-team':

@@ -5,7 +5,8 @@ export const recordings = Object.freeze({
   genie: 'https://reachmade.com/media/originals/genie/assets/genie-orbit-web.mp4',
   'ai-meeting': 'https://reachmade.com/media/originals/ai-meeting/demo.mp4',
   oathra: 'https://forifor.github.io/oathra/media/oathra-battle-ja.mp4',
-  aisecure: 'https://forifor.github.io/AISecure/media/intro.mp4',
+  // Real app, no time compression (AISecure docs/media/demo-build.json). The older intro.mp4 is an animated explainer.
+  aisecure: 'https://forifor.github.io/AISecure/media/demo-desktop.mp4',
   'agent-team': 'https://forifor.github.io/Multibot/media/real-walkthrough-ja-silent.mp4',
   launchloom: 'https://forifor.github.io/Launchloom/film.mp4',
   // Introduction film supplied by the owner as 「Jev Studio LP Video.mp4」 (35.5 s, 16:9, silent, sha256 b2d462e9…a0e9),
