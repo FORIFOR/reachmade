@@ -2,12 +2,12 @@
 *{box-sizing:border-box}
 body{margin:0;background:var(--paper);color:var(--ink);font-family:system-ui,-apple-system,"Hiragino Sans","Noto Sans JP",sans-serif;line-height:1.7;-webkit-font-smoothing:antialiased}
 .skip{position:absolute;left:-9999px}.skip:focus{left:16px;top:8px;z-index:9;background:#fff;padding:8px 12px}
-.notice{margin:0;padding:8px 16px;background:var(--ink);color:var(--paper);font-size:13px;text-align:center}
+.notice{word-break:keep-all;overflow-wrap:anywhere;margin:0;padding:8px 16px;background:var(--ink);color:var(--paper);font-size:13px;text-align:center}
 .top{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:16px clamp(16px,3vw,40px);border-bottom:1px solid var(--rule)}
 .brand{color:var(--ink);font-weight:700;text-decoration:none}.brand span{margin-left:8px;font-weight:500;font-size:13px;color:var(--muted)}
 .back{color:var(--ink);font-size:14px;text-underline-offset:4px}
 .stage{max-width:1180px;margin:0 auto;padding:clamp(24px,4vw,56px) clamp(16px,3vw,40px)}
-h1{margin:0 0 20px;font-size:clamp(26px,3.4vw,44px);line-height:1.25;letter-spacing:-.03em}
+h1{word-break:keep-all;overflow-wrap:anywhere;margin:0 0 20px;font-size:clamp(26px,3.4vw,44px);line-height:1.25;letter-spacing:-.03em}
 .tabs{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 24px}
 .tabs a{min-height:44px;display:inline-flex;align-items:center;padding:0 18px;border:1px solid var(--rule);border-radius:999px;color:var(--ink);text-decoration:none;font-size:14px;background:var(--surface)}
 .tabs a[aria-current="true"]{background:var(--ink);border-color:var(--ink);color:var(--paper)}
@@ -25,7 +25,7 @@ button:focus-visible,.tabs a:focus-visible,.back:focus-visible{outline:2px solid
 .primary{background:var(--accent-ink);color:#fff;border:0;font-weight:600}
 .primary:hover{background:#1d4a92}
 .ghost{background:transparent;border:1px solid var(--rule);color:var(--ink)}
-.speak{text-align:left;line-height:1.5;padding:10px 18px}
+.speak{text-align:left;line-height:1.5;padding:10px 18px;border-radius:18px}
 .list{list-style:none;margin:0 0 16px;padding:0;display:flex;flex-direction:column;gap:8px}
 .task{display:grid;grid-template-columns:auto 1fr auto auto;align-items:center;gap:10px;padding:12px 14px;border:1px solid var(--rule);border-radius:12px;background:#fff}
 .task .dot{width:10px;height:10px;border-radius:50%;border:1.5px solid var(--muted)}
