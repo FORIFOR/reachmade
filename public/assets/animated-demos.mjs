@@ -131,7 +131,8 @@ export function mountDemo(figure, initialId, lang = 'ja') {
     visual.innerHTML = renderStory(id,lang);
     chapters.innerHTML = copy.steps.map((label,i) => `<button type="button" data-cue="${i}" aria-pressed="false"><span>0${i+1}</span>${esc(label)}</button>`).join('');
     root.querySelector('.rm-demo-disclosure').textContent = `${t('説明用の再現UI・サンプルデータ。実行速度を示すものではありません。','Illustrative UI · fictional data. Timing is not product performance.')} ${copy.scope}`;
-    draw(); setMode('story');
+    // On a product page's film section the real footage is the point, so it opens on the recording; the story stays a tab.
+    draw(); setMode(figure.closest('[data-rd-reel]') && !produced ? 'recording' : 'story');
   }
   on(toolbar,'click',event => { const b = event.target.closest('button[data-mode]'); if (b) setMode(b.dataset.mode); });
   on(pause,'click',() => { paused = allowed(); userPlay = !paused; reconcile(); });
