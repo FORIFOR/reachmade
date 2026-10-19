@@ -92,7 +92,7 @@ export function renderAccess(products, lang) {
 
 const QUESTIONS = {
   ja: [
-    ['いますぐ試せますか？', 'プロダクトごとに違います。AI Meetingは登録なしでタスク画面を、Oathraは公開サンプルの照合を、AI Secureは合成データの調査を、Agent TeamとLaunchloomは既存の実行記録と生成済み素材を、そのまま開けます。Genieはローカル設定が必要な開発者プレビューです。星藍ノアはソース非公開のため、YouTubeの配信と解説動画で動きを確かめられます。'],
+    ['いますぐ試せますか？', 'プロダクトごとに違います。AI Meetingは登録なしでタスク画面を、Oathraは公開サンプルの照合を、Agent TeamとLaunchloomは既存の実行記録と生成済み素材を、そのまま開けます。Genie（開発者プレビュー）とAI Secure（アルファ）は手元での起動が必要です。星藍ノアはソース非公開のため、YouTubeの配信と解説動画で動きを確かめられます。'],
     ['料金はかかりますか？', 'このサイトの閲覧と、ここから開けるサンプルに費用はかかりません。ライセンスは製品ごとに異なり、Apache-2.0のものと、まだ全体ライセンスを設定していないもの、ソースを公開していないものがあります。外部のAIモデルを使う構成では、その利用料はご自身の契約によります。'],
     ['導入実績や利用者数は？', '掲載していません。確かめられた事実だけを載せる方針のため、顧客事例・利用者数・性能比較は、検証が済むまで書きません。代わりに、コード、実演の録画、検証資料を公開しています。'],
     ['入力した内容はどう扱われますか？', '広告・アクセス解析タグと外部フォントは読み込みません。相談フォームの送信内容は同じドメインの受付経路から運営者の受付システムへ保存し、対応にのみ使います。AI・広告・解析サービスへは送りません。'],
@@ -100,7 +100,7 @@ const QUESTIONS = {
     ['動きや音を止められますか？', '自動再生はしません。録画は押したときだけ再生し、音声もその操作で初めて鳴ります。OSの「視差効果を減らす」設定では登場演出を止めます。JavaScriptを無効にしても、全ページの内容とリンクは使えます。']
   ],
   en: [
-    ['Can I try it right now?', 'It depends on the product. AI Meeting opens account-free text tasks, Oathra opens a public transcript check, AI Secure opens a synthetic investigation, and Agent Team and Launchloom open existing run records and generated material. Genie is a developer preview that needs local setup. Noa is closed source, so the YouTube stream and explainer video are where you can see it working.'],
+    ['Can I try it right now?', 'It depends on the product. AI Meeting opens account-free text tasks, Oathra opens a public transcript check, and Agent Team and Launchloom open existing run records and generated material. Genie (developer preview) and AI Secure (alpha) need to be run locally. Noa is closed source, so the YouTube stream and explainer video are where you can see it working.'],
     ['Does it cost anything?', 'Browsing this site and opening the samples linked here is free. Licenses differ per product: some are Apache-2.0, some have no project-wide license yet, and some are not open source. If a setup uses an external AI model, that usage is billed under your own account.'],
     ['Do you have customers or user numbers?', 'None are published. Only verified facts are stated here, so customer stories, user counts and performance comparisons stay out until they are verified. What is published instead is the source code, the recordings and the evidence documents.'],
     ['What happens to what I type?', 'No advertising or analytics tags and no external fonts are loaded. An inquiry is sent through a same-origin route to the operator’s existing intake, stored there, and used only to answer you. It is not sent to an AI, advertising or analytics service.'],

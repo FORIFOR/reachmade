@@ -49,13 +49,13 @@ test('replacement tokens in preserved source do not become substitution instruct
  const html=fixture('genie').replace('Description',()=> 'Price $& $$ $1');
  assert.ok(artDirectProductHero(html,{id:'genie'},'ja').includes('Price $& $$ $1'));
 });
-test('security preflight and archived investigation are labelled separately in both languages',()=>{
+test('AI Secure links its workbench and labels the recording as the real app on a synthetic sample',()=>{
  const ja=artDirectProductHero(fixture('aisecure'),{id:'aisecure'},'ja');
  const en=artDirectProductHero(fixture('aisecure'),{id:'aisecure'},'en');
- assert.match(ja,/index\.ja\.html#workbench/);
- assert.match(ja,/合成ログの調査デモ/);
- assert.match(en,/synthetic-log investigation demo/);
- assert.match(en,/href="https:\/\/forifor.github.io\/AISecure\/#workbench"/);
+ assert.match(ja,/href="https:\/\/aisecure\.reachmade\.com\/index\.ja\.html#workbench"/);
+ assert.match(ja,/実アプリ \/ 合成サンプル/);
+ assert.match(en,/REAL APP \/ SYNTHETIC SAMPLE/);
+ assert.match(en,/href="https:\/\/aisecure\.reachmade\.com\/#workbench"/);
 });
 test('usage examples, role guides and output indexes cannot be confused with real execution',()=>{
  assert.match(artDirectProductHero(fixture('ai-meeting'),{id:'ai-meeting'},'ja'),/実際の発言ログではありません/);

@@ -88,6 +88,7 @@ export const redesignCopy = {
     },
     filmNotes: {
       'agent-team': 'Rendered from design files; not a recording of the real app. The request, conversation and checks are fictional examples.',
+      aisecure: 'Japanese UI and captions. The sample file is synthetic.',
     },
     agentTeamRecording: 'Watch a recording of a real run', stillKind: 'Still image (the recording and film are further down)', filmBelow: 'Still image. Play the recording and the film further down this page',
     play: name => `Play the ${name} film`, videoFallback: 'This browser cannot play this video.'

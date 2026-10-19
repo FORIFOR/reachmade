@@ -27,7 +27,7 @@ const subtitles={
  genie:['作業中に呼び出せる、MacのAIアシスタント','An AI assistant for the Mac you’re working on'],
  'ai-meeting':['AIキャラクターと話す、ひとり会議','Think out loud with an AI character'],
  oathra:['AI電話の結果を、相手の発言と照合','Check AI call results against the other party’s words'],
- aisecure:['ログをつないで調べる、AIセキュリティ調査','Trace security signals through the logs'],
+ aisecure:['AIに渡す前に、手元で確かめる','Check before you send to AI'],
  'agent-team':['作成・レビュー・修正を分担するAIチーム','AI agents that draft, review and revise'],
  launchloom:['製品紹介の動画・LP・SNS投稿案をつくる','Videos, pages and posts for your product launch'],
  noa:['星藍ノア / ゲームも会話も楽しむAIキャラクター','Meet Noa, an AI gamer and streaming character']
@@ -36,7 +36,7 @@ export const DIRECT_STARTS=Object.freeze({
  genie:{url:'/media/originals/genie/orbit.html',enUrl:'/media/originals/genie/orbit.html',ja:['実演のHTMLを動かす','保存済みのHTMLを開きます。'],en:['Open the demo HTML','Opens the saved Japanese HTML example.']},
  'ai-meeting':{url:'https://ai-meeting.web.app/#tasks',ja:['登録なしでタスクを試す','文字入力のタスク画面。音声体験は別条件です。'],en:['Try a task without signing up','Japanese text task UI. Voice has separate access conditions.']},
  oathra:{url:'https://forifor.github.io/oathra/check.html',ja:['サンプルの根拠を照合する','公開サンプルの検証。電話は発信しません。'],en:['Inspect a sample transcript','Public sample verification. No phone call is placed.']},
- aisecure:{url:'https://forifor.github.io/AISecure/try.html',ja:['合成ログの調査を試す','合成データのデモ。実環境の監視・遮断は行いません。'],en:['Investigate a synthetic case','Synthetic-data demo. No monitoring or enforcement.']},
+ aisecure:{url:'https://aisecure.reachmade.com/index.ja.html#start',enUrl:'https://aisecure.reachmade.com/#start',ja:['デモの起動手順を見る','合成サンプルを手元で検査。AIには何も送りません。'],en:['See how to run the demo','A synthetic sample, checked locally. Nothing is sent to AI.']},
  'agent-team':{url:'https://forifor.github.io/Multibot/ja/',enUrl:'https://forifor.github.io/Multibot/',ja:['実モデルの作業記録を見る','過去の実行記録を開きます。新しいAI実行は始まりません。'],en:['Read a real-model work record','An existing run record, not a new AI execution.']},
  launchloom:{url:'https://forifor.github.io/Launchloom/ja/',enUrl:'https://forifor.github.io/Launchloom/',ja:['生成済みの素材を開く','既存の作例を閲覧。SNSへの投稿は行いません。'],en:['Open generated launch material','Existing examples. Nothing is published to a social account.']},
  noa:{url:'https://youtube.com/channel/UCjX52bV1kfUgSuqf3vv_rTQ',enUrl:'https://youtube.com/channel/UCjX52bV1kfUgSuqf3vv_rTQ',ja:['配信を見る（YouTube）','ソース非公開。配信と動画で動きを確かめられます。'],en:['Open the YouTube channel','Closed source. This link opens Noa’s YouTube channel.']}

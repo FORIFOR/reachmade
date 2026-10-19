@@ -40,7 +40,7 @@ test('sample outputs never assert external success or actual generated media',()
  assert.match(sampleResult('oathra','en').text,/unverified/);
  assert.match(sampleResult('ai-meeting','en').text,/actual app: no/);
  assert.match(sampleResult('launchloom','en').text,/not generated media/);
- assert.match(sampleResult('aisecure','en').text,/Hypothesis:/);
+ assert.match(sampleResult('aisecure','en').text,/would not prove it safe/);
  assert.match(sampleResult('agent-team','en').text,/Open verification items: 1/);
 });
 test('build extension preserves entrypoints, product pages and is idempotent',async()=>{

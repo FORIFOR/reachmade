@@ -5,8 +5,11 @@ export const recordings = Object.freeze({
   genie: 'https://reachmade.com/media/originals/genie/assets/genie-orbit-web.mp4',
   'ai-meeting': 'https://reachmade.com/media/originals/ai-meeting/demo.mp4',
   oathra: 'https://forifor.github.io/oathra/media/oathra-battle-ja.mp4',
-  aisecure: 'https://forifor.github.io/AISecure/media/intro.mp4',
-  'agent-team': 'https://forifor.github.io/Multibot/media/real-walkthrough-ja-silent.mp4',
+  // Real app, no time compression (AISecure docs/media/demo-build.json). The older intro.mp4 is an animated explainer.
+  aisecure: 'https://forifor.github.io/AISecure/media/demo-desktop.mp4',
+  // Current UI (Multibot origin/main be45e96, sidebar and character teammates), replaying a finished real run from the
+  // repository's evidence (docs/evidence/real-readiness-v18-qwen35-fixed-2026-09-15/01) with no model calls; 1×, silent.
+  'agent-team': 'https://reachmade.com/media/originals/agent-team/real-run-2026-10-19.mp4',
   launchloom: 'https://forifor.github.io/Launchloom/film.mp4',
   // Introduction film supplied by the owner as 「Jev Studio LP Video.mp4」 (35.5 s, 16:9, silent, sha256 b2d462e9…a0e9),
   // transcoded for the web. Its studio screens recreate the rc.6 layout and its comments are examples (stated in the film).

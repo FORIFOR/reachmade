@@ -274,6 +274,20 @@
           "height": 1080
         }
       ]
+    },
+    {
+      "path": "/media/originals/agent-team/real-run-2026-10-19.mp4",
+      "bytes": 3553864,
+      "sha256": "a58ae1a32203aa7442d46553b594247ef42760e0f648dfea0cc674636ee1394c",
+      "duration": 33.067,
+      "streams": [
+        {
+          "codec_name": "h264",
+          "codec_type": "video",
+          "width": 1440,
+          "height": 900
+        }
+      ]
     }
   ]
 }

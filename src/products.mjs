@@ -146,42 +146,42 @@ export const products = [
     }
   },
   {
-    id: 'aisecure', name: 'AI Secure', index: '04', category: 'trust', discipline: 'SECURITY & INVESTIGATION',
+    id: 'aisecure', name: 'AI Secure', index: '04', category: 'trust', discipline: 'SECURITY & PREFLIGHT',
     repo: 'https://github.com/FORIFOR/AISecure', labSite: 'https://aisecure.reachmade.com/', site: 'https://forifor.github.io/AISecure/',
-    preview: '/assets/products/aisecure.jpg', previewSource: 'AISecure/docs/screenshots/audit.png',
+    preview: '/assets/products/aisecure.jpg', previewSource: 'AISecure/docs/media/demo-desktop.mp4',
     source: 'https://github.com/FORIFOR/AISecure/blob/main/README.md',
-    evidence: 'https://github.com/FORIFOR/AISecure/blob/main/docs/TUNING.md',
-    demo: 'https://forifor.github.io/AISecure/try.html', sourceSha: '357abc6d30d32a317be62c738d36550febb08167',
+    evidence: 'https://github.com/FORIFOR/AISecure/blob/main/docs/security/DETECTION_MEASUREMENT.md',
+    demo: 'https://aisecure.reachmade.com/index.ja.html#start', sourceSha: 'b8cebc9afbdbd8b6bd0da01bfc397f94e3803292',
     ja: {
-      headline: '点のアラートを、調べられる一件に。', demoLabel: '合成ケースを調べる', previewLabel: '調査ケースの画面',
-      short: '判断の根拠を辿る、ローカル分析プロトタイプ。',
-      description: '公開状態、特権ログイン、ファイルアクセスを関連づけ、根拠と一緒に調べる。観測したこと、仮説、不明なことを分けて扱います。',
-      status: '検証用プロトタイプ', license: 'MIT',
-      outcome: 'ログ → 関連付け → 調査',
-      scope: 'スナップショット分析です。常時監視、実際の遮断、漏えいの確定は行いません。公開検証は合成データで、本番の性能保証ではありません。',
-      proof: '合成データを使う操作デモと、単独ルール・相関ルールの比較手順。',
-      consult: 'ログ取り込みや判断の根拠を扱う設計の試作・評価。独立した本番セキュリティ対策の代替とはしません。',
-      highlights: [{value:'相関ルール',label:'公開状態・特権ログイン・ファイルアクセスを1件に統合'},{value:'観測 / 仮説 / 不明',label:'根拠のイベントIDを添えて、分けて扱う'},{value:'分析は手元で',label:'デモと分析は外部送信なし。対応実行やOkta連携は設定先へ通信'}],
+      headline: 'AIに渡す前に、手元で確かめる。', demoLabel: 'デモの起動手順を見る', previewLabel: '送信前の検査画面',
+      short: 'AIに送る資料を、この端末だけで検査するアルファ版。',
+      description: 'Excelなどの資料と、一緒に送る予定の指示を、外部に送らずに検査します。判定・理由・検査範囲をJSONで手元に残します。',
+      status: 'アルファ', license: 'MIT',
+      outcome: '資料 → 手元で検査 → 判定と理由',
+      scope: '常時監視や実際の遮断、OCR、端末全体の情報漏えい対策は行いません。自社測定の再現率は0.30で、「検出なし」は安全の証明ではありません。',
+      proof: '編集できる合成サンプルを検査し、判定をJSONで保存するまでの実アプリ録画と、60件の検出測定。',
+      consult: 'AIに渡す前の確認や、判定の根拠を残す仕組みの試作・評価。本番のセキュリティ対策の代わりにはしません。',
+      highlights: [{value:'外部送信なし',label:'検査はこの端末で。デモはAIに何も送りません'},{value:'判定と理由',label:'保留などの判定に、根拠ルールと検査範囲を添える'},{value:'再現率 0.30',label:'60件の自社測定。検出できない種類も公開'}],
       features: [
-        {code:'F-01 / CORRELATION',title:'散らばった警告を1つの調査ケースに',body:'公開状態・特権ログイン・大量の機密ファイルアクセスを1つのルールで結びつけます。公開している比較は合成ログ上のもので、本番の性能保証ではありません。',tags:['相関ルール','単独ルールとの比較','合成データ']},
-        {code:'F-02 / REASONING',title:'観測・仮説・不明点を分ける',body:'各所見には元になったイベントIDを付け、観測した事実、推論上の仮説、まだ分からないことを別の状態として保持します。',tags:['根拠のID','仮説を分離','不明点を明示']},
-        {code:'F-03 / LOCAL',title:'分析は外部に送らない',body:'デモと分析の経路はローカルかつオフラインで動き、アカウントもテレメトリも要りません。任意の対応実行やOkta監視を設定した場合だけ、その送信先へ通信します。',tags:['ローカル実行','テレメトリなし','任意の連携は別']}
+        {code:'F-01 / PREFLIGHT',title:'送る前に、この端末で検査',body:'資料の内容と、一緒に送る予定の指示を、外部に送らずに検査します。AIのアカウントやAPIキーは要りません。',tags:['ローカル実行','APIキー不要','合成サンプル']},
+        {code:'F-02 / REASONS',title:'判定に、理由と範囲を添える',body:'保留などの判定に、根拠になったルールと、どこまで検査したかを添えます。結果はJSONで保存できます。',tags:['根拠ルール','検査範囲','JSONで保存']},
+        {code:'F-03 / MEASURED',title:'見逃しも、測って公開',body:'60件のラベル付きデータで、検出パターンの再現率は0.30でした。マイナンバーやクレジットカード番号など、検出できない種類も公開しています。',tags:['再現率 0.30','60件','限界を公開']}
       ]
     },
     en: {
-      headline: 'From scattered alerts to one reviewable case.', demoLabel: 'Inspect a synthetic case', previewLabel: 'Investigation case',
-      short: 'A local prototype for following the evidence.',
-      description: 'Connect exposure, privileged access, and file activity. Keep observations, hypotheses, and unknowns distinct as you investigate.',
-      status: 'Research prototype', license: 'MIT',
-      outcome: 'Logs → correlation → review',
-      scope: 'Snapshot analysis, not continuous monitoring or enforcement. It does not confirm exfiltration. Published evaluations use synthetic data, not production performance guarantees.',
-      proof: 'An interactive synthetic case and reproducible single-rule versus correlation evaluation.',
-      consult: 'Prototype log ingestion and evidence-aware investigation. Not a replacement for production security controls.',
-      highlights: [{value:'Correlation rule',label:'Exposure, privileged login and file access become one case'},{value:'Observed / hypothesis / unknown',label:'Each finding keeps its source event IDs and its status'},{value:'Analysis stays local',label:'Demo and analysis send nothing; optional execute or Okta paths talk to what you configure'}],
+      headline: 'Check before you send to AI.', demoLabel: 'See how to run the demo', previewLabel: 'Pre-send check screen',
+      short: 'An alpha that checks what you are about to send to AI, on this machine only.',
+      description: 'Check a spreadsheet or other document, and the prompt you plan to send with it, without sending anything out. The decision, reasons and coverage stay with you as JSON.',
+      status: 'Alpha', license: 'MIT',
+      outcome: 'Document → local check → decision and reasons',
+      scope: 'Not continuous monitoring or actual enforcement, and no OCR or whole-device DLP. Our own measured recall is 0.30, so “no findings” is not proof of safety.',
+      proof: 'A real-app recording from checking an editable synthetic sample to saving the decision as JSON, and a 60-case detection measurement.',
+      consult: 'Prototype and evaluate pre-send checks and decision records. Not a replacement for production security controls.',
+      highlights: [{value:'Nothing sent out',label:'Checks run on this machine; the demo sends nothing to AI'},{value:'Decision and reasons',label:'A hold or other decision comes with its rules and coverage'},{value:'Recall 0.30',label:'Measured on 60 cases, with the misses published'}],
       features: [
-        {code:'F-01 / CORRELATION',title:'Scattered alerts into one case',body:'One rule links exposure, privileged login and large sensitive-file access. The published comparison runs on synthetic logs and is not a production performance guarantee.',tags:['Correlation rule','Single-rule comparison','Synthetic data']},
-        {code:'F-02 / REASONING',title:'Observed, hypothesis, unknown',body:'Every finding carries the event IDs it was built from and keeps observed facts, inferred hypotheses and unknowns as separate states.',tags:['Source IDs','Separated hypotheses','Unknowns stay visible']},
-        {code:'F-03 / LOCAL',title:'Analysis without egress',body:'The demo and analysis paths run locally and offline with no account and no telemetry. Only the optional execute and Okta-watch paths send data, and only to the endpoints you configure.',tags:['Local run','No telemetry','Optional connectors']}
+        {code:'F-01 / PREFLIGHT',title:'Checked here, before sending',body:'The document and the prompt you plan to send with it are checked without leaving the machine. No AI account or API key is needed.',tags:['Local run','No API key','Synthetic sample']},
+        {code:'F-02 / REASONS',title:'Decisions with reasons and coverage',body:'A hold or other decision lists the rules behind it and how much was checked. Save the result as JSON.',tags:['Rule IDs','Coverage','JSON report']},
+        {code:'F-03 / MEASURED',title:'Misses, measured and published',body:'On 60 labelled cases the detection patterns reach recall 0.30. Categories they cannot detect yet, such as Japanese My Number and credit card numbers, are published too.',tags:['Recall 0.30','60 cases','Limits published']}
       ]
     }
   },

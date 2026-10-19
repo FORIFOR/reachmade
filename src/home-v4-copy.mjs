@@ -14,7 +14,7 @@ export const homeV4Copy = {
     reelError: '映像を読み込めませんでした。再生ボタンで再試行できます。',
     recordingNotes: '映像の収録・編集について',
     recordingNote: n => `公開映像から各約13秒を選び、無音・速度変更なしで編集しています。Launchloomは自身で作った紹介映像です。Genieは開発中の次の版のTaskDockの動きを再現した映像、Oathraはイメージ映像、Agent Teamは未実装の画面を含む設計動画、星藍ノアは画面を再現した紹介映像です。これらは実アプリや配信の実録画ではありません。入力や検証の条件は各製品の「映像と利用条件」で確認できます。${n}つは独立した製品で、自動連携しません。`,
-    clips: {genie:'呼び出しから結果へ','ai-meeting':'会話からタスクへ',oathra:'会話から証拠へ',aisecure:'兆候から調査へ','agent-team':'依頼から、確かめた版へ',launchloom:'録画から公開素材へ',noa:'管理画面と仕組み'},
+    clips: {genie:'呼び出しから結果へ','ai-meeting':'会話からタスクへ',oathra:'会話から証拠へ',aisecure:'入力から判定へ','agent-team':'依頼から、確かめた版へ',launchloom:'録画から公開素材へ',noa:'管理画面と仕組み'},
     kinds: {genie:'再現映像（開発中の次の版）',oathra:'イメージ映像（演出を含む）','agent-team':'設計動画（画面は再現・未実装を含む）',launchloom:'Launchloomが作った紹介映像',noa:'紹介映像（画面は再現・演出を含む）'},
     clipNotes: {
       genie:'次の版のTaskDock（開発中）の動きを再現した約13秒の映像です。背景は実アプリの紹介映像から切り出した画面で、データは架空です。実アプリの録画ではありません。確認できる記録は「映像と利用条件」と製品ページにあります。',
@@ -22,7 +22,7 @@ export const homeV4Copy = {
       'agent-team':'設計ファイルから書き出した設計動画から約13秒を切り出したもので、実アプリの録画ではありません。確認できる記録は「映像と利用条件」と製品ページにあります。'
     },
     setup: '利用条件・セットアップ', setupNote: 'Macとローカル設定が必要', tasks: 'タスク画面を試す', tasksNote: '文字入力のタスク機能は登録不要',
-    entryNotes: {oathra:'公開サンプルの照合',aisecure:'合成データの調査','agent-team':'既存の実行記録を閲覧',launchloom:'生成済み素材を閲覧',noa:'YouTubeの公開配信・解説を閲覧'},
+    entryNotes: {oathra:'公開サンプルの照合',aisecure:'合成サンプルを手元で検査','agent-team':'既存の実行記録を閲覧',launchloom:'生成済み素材を閲覧',noa:'YouTubeの公開配信・解説を閲覧'},
     productPage: name => `${name}の製品ページ`, viewProduct: '製品を見る', productDetails: '製品詳細', scope: '映像と利用条件', publishedEvidence: '公開している記録', license: 'ライセンス：',
     film15: '15秒の紹介映像（演出を含む）', filmLabels: {genie: '30秒の紹介映像（再現・設計プレビューを含む）'}, noaExplainer: '5:48の解説（演出を含む）を見る',
     nextUi: '次のTaskDockの設計プレビューを見る', nextUiNote: '設計プレビューは未リリースで、実アプリの録画ではありません。',
@@ -59,7 +59,7 @@ export const homeV4Copy = {
     reelError: 'The film could not load. Press play to try again.',
     recordingNotes: 'About the footage and editing',
     recordingNote: n => `Each excerpt uses about 13 seconds of a published film, with no sound or playback-speed change. Launchloom made its own introduction film. Genie is a reconstruction of how the next TaskDock, still in development, moves. Oathra is a staged concept film, Agent Team is a design film with some unimplemented screens, and Noa is an introduction film with recreated screens. Those are not recordings of the live apps or stream. Input and evaluation conditions are in each product’s “Footage and conditions”. The ${n} products are independent and do not connect automatically.`,
-    clips: {genie:'Invocation to result','ai-meeting':'Conversation to tasks',oathra:'Conversation to evidence',aisecure:'Signals to investigation','agent-team':'Request to a checked version',launchloom:'Recording to launch material',noa:'The control room and how it works'},
+    clips: {genie:'Invocation to result','ai-meeting':'Conversation to tasks',oathra:'Conversation to evidence',aisecure:'Input to decision','agent-team':'Request to a checked version',launchloom:'Recording to launch material',noa:'The control room and how it works'},
     kinds: {genie:'Illustrative reconstruction (next version, in development)',oathra:'Concept film (includes staging)','agent-team':'Design film (recreated screens, partly not implemented)',launchloom:'Introduction film made by Launchloom',noa:'Introduction film (recreated screens and staging)'},
     clipNotes: {
       genie:'About 13 seconds reconstructing how the next TaskDock (in development) moves. The background is a frame cut from the real app’s introduction film and the data is fictional. It is not a recording of the real app. Published evidence is in “Footage and conditions” and on the product page.',
@@ -67,7 +67,7 @@ export const homeV4Copy = {
       'agent-team':'About 13 seconds from a design film rendered from design files, not a recording of the real app. Published evidence is in “Footage and conditions” and on the product page.'
     },
     setup: 'Setup and requirements', setupNote: 'Requires a Mac and local setup', tasks: 'Try the task screen', tasksNote: 'Text tasks need no sign-up',
-    entryNotes: {oathra:'Inspect a public sample',aisecure:'Investigate synthetic data','agent-team':'Read an existing run record',launchloom:'View generated material',noa:'Watch the public YouTube stream and explainers'},
+    entryNotes: {oathra:'Inspect a public sample',aisecure:'Check a synthetic sample locally','agent-team':'Read an existing run record',launchloom:'View generated material',noa:'Watch the public YouTube stream and explainers'},
     productPage: name => `${name} product page`, viewProduct: 'View product', productDetails: 'Product details', scope: 'Footage and conditions', publishedEvidence: 'Published evidence', license: 'License: ',
     film15: '15-second introduction film (includes motion graphics)', filmLabels: {genie: '30-second introduction film (recreation and design preview)'}, noaExplainer: 'Where to watch the 5:48 explainer (includes staging)',
     nextUi: 'See the next TaskDock design preview', nextUiNote: 'This design is not released. It is not a recording of the real app.',

@@ -27,7 +27,7 @@ test('unknown product and locale cannot become injected markup',()=>{
 });
 test('stories retain human approval and unverified boundaries',()=>{
  assert.match(renderStory('oathra','en'),/External booking: unverified/);
- assert.match(renderStory('aisecure','en'),/HYPOTHESIS · UNCONFIRMED/);
+ assert.match(renderStory('aisecure','en'),/“No findings” is not proof of safety/);
  assert.match(renderStory('agent-team','en'),/1 open check/);
  assert.match(renderStory('launchloom','en'),/Nothing is published/);
  assert.match(renderStory('ai-meeting','en'),/Confirm change \(demo\)/);

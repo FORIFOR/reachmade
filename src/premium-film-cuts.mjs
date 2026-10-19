@@ -18,15 +18,18 @@ export const premiumFilmCuts = Object.freeze({
     clips: [[6, 11], [13, 20]],
     label: { ja: '会話から証拠へ', en: 'Conversation to evidence' },
   },
+  // Real-app recording: typing the sample (from 3 s), the check and the 保留 result (7.5 s), then saving the JSON (17 s).
+  // The reading pause between the result and the save is cut.
   aisecure: {
-    sourceWindow: [0, 14],
-    clips: [[0, 5], [7, 14]],
-    label: { ja: '兆候から調査へ', en: 'Signal to investigation' },
+    sourceWindow: [3, 20],
+    clips: [[3, 9], [14, 20]],
+    label: { ja: '入力から判定へ', en: 'Input to decision' },
   },
+  // The teammates (3.5 s), then the run's result and its check record (20.5 s).
   'agent-team': {
-    sourceWindow: [5, 19],
-    clips: [[5, 10], [12, 19]],
-    label: { ja: '依頼から成果物へ', en: 'Brief to artifact' },
+    sourceWindow: [3.5, 27.5],
+    clips: [[3.5, 8.5], [20.5, 27.5]],
+    label: { ja: 'チームから確認済みの版へ', en: 'Team to a checked version' },
   },
   launchloom: {
     sourceWindow: [3, 17],
