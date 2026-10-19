@@ -47,9 +47,11 @@ with sync_playwright() as pw:
             page=context.new_page();page.on('pageerror',lambda error:errors.append(str(error)))
             page.set_default_timeout(7000)
             try:
-                # Actual home -> record -> scoped offer -> contextual inquiry.
+                # Actual home -> record -> scoped offer -> contextual inquiry. The records sit in the home fold,
+                # so the visitor opens it first, as they would.
                 page.goto(BASE+prefix+'/',wait_until='networkidle')
-                page.locator(f'a[href="{prefix}/work/#noa"]').click()
+                page.locator('details.rd-kept--home > summary').click()
+                page.locator(f'.rd-records a[href="{prefix}/work/#noa"]').click()
                 expect(page.locator('#noa .work-consult')).to_be_visible()
                 page.screenshot(path=str(OUT/f'work-{language}-{width}.png'),full_page=False)
                 page.locator(f'#noa a[href="{prefix}/services/#ai-character"]').click()
