@@ -27,6 +27,7 @@ import {capabilitiesCheckedAt} from './products.mjs';
 import {productNavigation} from './site-experience.mjs';
 import {recordings} from './films.mjs';
 import {oathraExperienceFilm} from './oathra-experience-films.mjs';
+import {visionSections} from './vision-pages.mjs';
 
 const {checkedAt: sourcesCheckedAt} = JSON.parse(await fs.readFile(new URL('../site.config.json', import.meta.url), 'utf8'));
 
@@ -330,6 +331,7 @@ function productMain(p, list, lang, {kept, figure, source, filmAnchor}) {
 <section class="rd-outcome" aria-label="${esc(r.whatItDoes)}"><p class="rd-kicker">${esc(r.whatItDoes)}</p><ol class="rd-steps">${outcome}</ol></section>
 ${publicViewing(p, lang)}
 ${oathraExperienceFilm(p, lang)}
+${visionSections(p, lang)}
 <section class="rd-film rd-reel" id="film" data-rd-reel data-rd-film-scale=".55" aria-labelledby="rd-film-title"><div class="rd-reel-stage">${figure ? `<div class="rd-reel-frame rd-reel-frame--figure" data-rd-frame>${figure}</div>` : filmAnchor ? `<a class="rd-reel-frame rd-film-link" data-rd-frame href="#${esc(filmAnchor)}"><img src="${esc(film.poster)}" alt="" loading="lazy"><span>${esc(r.filmBelow)} <span aria-hidden="true">↓</span></span></a>` : `<div class="rd-reel-frame" data-rd-frame>${video({...film, label: `${name} — ${kind}`}, lang)}</div>`}<div class="rd-reel-cap"><span id="rd-film-title">${esc(r.film(name))}</span>${figure && film.kind === 'recording' ? (note ? `<span>${esc(note)}</span>` : '') : `<span><b>${esc(filmAnchor ? r.stillKind : kind)}</b>${figure || filmAnchor ? '' : ` ${esc(note)}`}${extra}</span>`}</div></div></section>
 ${showHighlights ? `<section class="rd-highlights" aria-labelledby="rd-hl-title"><p class="rd-kicker" id="rd-hl-title">${esc(r.highlights)}</p><div class="rd-hl-grid">${highlights}</div></section>` : ''}
 ${kept.length ? `<div class="rd-kept rd-kept--product"><p class="rd-kicker rd-kept-kicker">${esc(r.detailKicker)}</p>${openKept}</div>` : ''}${foldKept ? `<details class="rd-kept rd-kept--product rd-kept--fold"><summary class="rd-kicker rd-kept-kicker">${esc(r.detailMore)}</summary>${foldKept}</details>` : ''}

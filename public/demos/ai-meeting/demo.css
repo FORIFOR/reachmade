@@ -1,0 +1,45 @@
+:root{--paper:#f3f2ec;--surface:#fbfaf6;--ink:#1b1e1a;--body:#4c4f48;--muted:#5f625b;--rule:#d6d7cf;--accent:#2f6fd6;--accent-ink:#2558ad;color-scheme:light}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:system-ui,-apple-system,"Hiragino Sans","Noto Sans JP",sans-serif;line-height:1.7;-webkit-font-smoothing:antialiased}
+.skip{position:absolute;left:-9999px}.skip:focus{left:16px;top:8px;z-index:9;background:#fff;padding:8px 12px}
+.notice{margin:0;padding:8px 16px;background:var(--ink);color:var(--paper);font-size:13px;text-align:center}
+.top{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:16px clamp(16px,3vw,40px);border-bottom:1px solid var(--rule)}
+.brand{color:var(--ink);font-weight:700;text-decoration:none}.brand span{margin-left:8px;font-weight:500;font-size:13px;color:var(--muted)}
+.back{color:var(--ink);font-size:14px;text-underline-offset:4px}
+.stage{max-width:1180px;margin:0 auto;padding:clamp(24px,4vw,56px) clamp(16px,3vw,40px)}
+h1{margin:0 0 20px;font-size:clamp(26px,3.4vw,44px);line-height:1.25;letter-spacing:-.03em}
+.tabs{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 24px}
+.tabs a{min-height:44px;display:inline-flex;align-items:center;padding:0 18px;border:1px solid var(--rule);border-radius:999px;color:var(--ink);text-decoration:none;font-size:14px;background:var(--surface)}
+.tabs a[aria-current="true"]{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+.board{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.talk,.tasks{padding:20px;border:1px solid var(--rule);border-radius:18px;background:var(--surface);min-height:420px}
+h2{margin:0 0 14px;font-size:13px;letter-spacing:.06em;color:var(--muted);font-weight:600}
+.log{list-style:none;margin:0 0 16px;padding:0;display:flex;flex-direction:column;gap:10px}
+.msg{max-width:90%}.msg p{margin:2px 0 0;padding:10px 14px;border-radius:14px;background:#fff;border:1px solid var(--rule)}
+.msg .who{font-size:12px;color:var(--muted)}
+.msg--you{align-self:flex-end;text-align:right}.msg--you p{background:var(--ink);color:var(--paper);border-color:var(--ink);text-align:left}
+.msg--meeting p{background:transparent;border-style:dashed}
+.say-hint{margin:0 0 8px;font-size:13px;color:var(--muted)}
+button{font:inherit;cursor:pointer;min-height:44px;border-radius:999px;padding:0 18px}
+button:focus-visible,.tabs a:focus-visible,.back:focus-visible{outline:2px solid var(--accent-ink);outline-offset:3px}
+.primary{background:var(--accent-ink);color:#fff;border:0;font-weight:600}
+.primary:hover{background:#1d4a92}
+.ghost{background:transparent;border:1px solid var(--rule);color:var(--ink)}
+.speak{text-align:left;line-height:1.5;padding:10px 18px}
+.list{list-style:none;margin:0 0 16px;padding:0;display:flex;flex-direction:column;gap:8px}
+.task{display:grid;grid-template-columns:auto 1fr auto auto;align-items:center;gap:10px;padding:12px 14px;border:1px solid var(--rule);border-radius:12px;background:#fff}
+.task .dot{width:10px;height:10px;border-radius:50%;border:1.5px solid var(--muted)}
+.task .when,.task .state{font-size:13px;color:var(--muted)}
+.task.is-changed{border-color:var(--accent);background:#eef3fc}.task.is-changed .dot{background:var(--accent);border-color:var(--accent)}.task.is-changed .state{color:var(--accent-ink);font-weight:600}
+.empty{color:var(--muted);font-size:14px}
+.cards{display:flex;flex-direction:column;gap:10px}
+.card{padding:14px 16px;border:1.5px solid var(--accent);border-radius:14px;background:#fff}
+.card p{margin:0}.card-label{font-size:12px;font-weight:600;color:var(--accent-ink)}.card-main{font-weight:700}
+.card-quote,.card-extra,.card-note{font-size:13px;color:var(--body)}
+.card-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.card.is-done{border-color:var(--rule)}.card.is-dropped{opacity:.6;border-style:dashed}
+.status{min-height:1.7em;margin:12px 0;font-size:14px;color:var(--accent-ink)}
+.reset{background:transparent;border:1px solid var(--rule);color:var(--ink)}
+.nojs{padding:16px;border:1px solid var(--rule);border-radius:12px;background:#fff}
+@media (max-width:760px){.board{grid-template-columns:1fr}.talk,.tasks{min-height:0}}
+@media (forced-colors:active){.task .dot,.primary{forced-color-adjust:auto}}
