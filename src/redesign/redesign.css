@@ -214,14 +214,24 @@ body[data-rd] #main .rd-kept .owned-primary,body[data-rd] #main .rd-kept .owned-
 body[data-rd] .rd-kept-kicker{padding:0 var(--rd-gutter);margin-bottom:clamp(24px,3vw,40px)}
 /* Product pages: the long-form sections start folded behind one summary row. */
 body[data-rd] .rd-kept--fold{padding-top:0;padding-bottom:0;border-top:0}
-body[data-rd] .rd-kept--fold>summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;min-height:72px;margin:0;border-bottom:1px solid var(--rd-rule);color:var(--rd-ink)}
+body[data-rd] .rd-kept--fold>summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:flex-start;gap:14px;min-height:72px;margin:0;border-bottom:1px solid var(--rd-rule);color:var(--rd-ink);font-family:var(--rd-jp);font-size:clamp(15px,1.2vw,18px);font-weight:600;letter-spacing:.02em;text-transform:none}
 body[data-rd] .rd-kept--fold>summary::-webkit-details-marker{display:none}
 body[data-rd] .rd-kept--fold>summary::after{content:"+";font-size:22px;line-height:1;transition:transform .3s cubic-bezier(.16,1,.3,1)}
 body[data-rd] .rd-kept--fold[open]>summary{margin-bottom:clamp(24px,3vw,40px)}
 body[data-rd] .rd-kept--fold[open]>summary::after{transform:rotate(45deg)}
 body[data-rd] .rd-kept--fold>summary:hover{color:var(--rd-signal)}
 body[data-rd] .rd-kept--fold[open]{padding-bottom:clamp(64px,8vw,120px)}
+/* Inside the home fold the record links stack under their label, on the same left edge as the sections below. */
+body[data-rd] .rd-kept--fold>.rd-records{display:block;margin:0 var(--rd-gutter) clamp(40px,5vw,72px)}
+body[data-rd] .rd-kept--fold>.rd-records .rd-kicker{margin-bottom:12px}
 @media (prefers-reduced-motion:reduce){body[data-rd] .rd-kept--fold>summary::after{transition:none}}
+/* On the home page the fold reads as the last row of the product list, not as a band of its own. */
+body[data-rd] .rd-products:has(+ .rd-kept--home){padding-bottom:clamp(40px,5vw,72px)}
+body[data-rd] .rd-kept--home{background:transparent;padding-bottom:clamp(72px,9vw,128px)}
+body[data-rd] .rd-kept--home>summary{margin:0 var(--rd-gutter);padding:0;border-top:1px solid var(--rd-ink);border-bottom:1px solid var(--rd-rule)}
+body[data-rd] .rd-kept--home[open]>summary{margin-bottom:clamp(24px,3vw,40px)}
+body[data-rd] .rd-kept--home>.v4-wrap{width:auto;max-width:none;margin-left:var(--rd-gutter);margin-right:var(--rd-gutter);padding-left:0;padding-right:0}
+body[data-rd] .rd-kept--home>.v4-wrap .container{margin-left:0;margin-right:0}
 body[data-rd] .rd-kept h2,body[data-rd] .rd-kept h3{font-family:var(--rd-jp);font-weight:700;letter-spacing:-.04em;color:var(--rd-ink)}
 body[data-rd] .rd-kept h2{font-size:clamp(28px,3.6vw,56px);line-height:1.15}
 body[data-rd] .rd-kept p,body[data-rd] .rd-kept li,body[data-rd] .rd-kept dd,body[data-rd] .rd-kept td{font-family:var(--rd-jp);line-height:1.85}

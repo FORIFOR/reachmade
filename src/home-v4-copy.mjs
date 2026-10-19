@@ -28,22 +28,22 @@ export const homeV4Copy = {
     nextUi: '次のTaskDockの設計プレビューを見る', nextUiNote: '設計プレビューは未リリースで、実アプリの録画ではありません。',
     accessOriginalLink: '詳しく見る', access: '利用条件を一覧で比べる', accessHint: '状態・ライセンス・入口',
     servicesKicker: '企業向け開発支援', servicesTitle: '変えたい仕事から、<br>はじめましょう。',
-    servicesLead: '設計・試作・評価から、必要な連携の実装まで。最初に何を確かめるかを決め、一緒に進めます。', servicesLink: '支援内容と進め方を見る',
+    servicesLead: '最初に確かめることを決め、設計から実装まで一緒に進めます。', servicesLink: '支援内容と進め方を見る',
     services: [
       ['業務AI・エージェント実装','調査、下書き、レビュー、承認。人とAIの分担を設計し、結果を追える業務フローを試作します。','関連 — Genie · Agent Team'],
       ['音声・電話AIの開発','対話型の練習、音声入力、電話業務。自然さだけでなく、誤認識・同意・人への引き継ぎまで設計します。','関連 — AI Meeting · Oathra'],
       ['新しいAIプロダクトの試作','まだ言葉だけのアイデアを、操作できる試作へ。使い勝手と成立条件を確かめ、次に作る範囲を整理します。','関連 — 複数プロダクトの自主開発経験']
     ],
-    productsKicker: '自主開発プロダクト', productsTitle: 'あなたの仕事に、<br>つながるものを。', productsLead: 'できることから選んで、実物を確かめる。<br>試せる範囲と、必要な準備も一緒に。',
+    productsKicker: '自主開発プロダクト', productsTitle: 'あなたの仕事に、<br>つながるものを。', productsLead: '選んで、すぐ確かめる。',
     sourceNote: () => '各製品は独立しており、自動連携しません。',
     principlesKicker: 'REACHMADEのつくり方', principlesTitle: 'つくるだけでなく、<br>確かめるところまで。',
-    principlesLead: '自主開発で得た知見を、次の開発へ。<br>コード、実物、検証記録を公開しています。', about: 'ラボ・開発者について', work: '開発・検証記録を見る',
+    principlesLead: '自主開発で得た知見を、次の開発へ。', about: 'ラボ・開発者について', work: '開発・検証記録を見る',
     principles: [
       ['実物で話す。','自主開発のプロダクト、コード、実行記録。言葉だけでなく、確認できるものを見せます。'],
       ['結果を確かめる。','AIの「できました」を、成功の証拠にしない。実行と確認を分け、未完了も残します。'],
       ['使う人に決定権を。','外部への送信、費用、権限、人の承認。使う人が判断できるよう、設計に組み込みます。']
     ],
-    contactTitle: 'その「できたら」を、<br>一緒につくりませんか', contactLead: '構想が固まる前の段階から。<br>対象の業務と、試してみたいことを聞かせてください。'
+    contactTitle: 'その「できたら」を、<br>一緒につくりませんか', contactLead: '構想が固まる前から。<br>試したいことを聞かせてください。'
   },
   en: {
     eyebrow: 'Independent AI products and development for companies',
@@ -73,22 +73,22 @@ export const homeV4Copy = {
     nextUi: 'See the next TaskDock design preview', nextUiNote: 'This design is not released. It is not a recording of the real app.',
     accessOriginalLink: 'Open', access: 'Compare access and requirements', accessHint: 'Stage · license · entry point',
     servicesKicker: 'DEVELOPMENT FOR COMPANIES', servicesTitle: 'Start with the work<br>you want to change.',
-    servicesLead: 'From design, prototypes and evaluation to the integrations you need. We decide what to test first, then build it together.', servicesLink: 'See the support and process',
+    servicesLead: 'We decide what to test first, then design and build it with you.', servicesLink: 'See the support and process',
     services: [
       ['AI workflows and agents','Research, drafts, review and approval. We design how people and AI share the work, then prototype a workflow with results you can trace.','Related — Genie · Agent Team'],
       ['Voice and phone AI','Conversation practice, voice input and phone workflows. We plan for misheard words, consent and human handover, as well as natural conversation.','Related — AI Meeting · Oathra'],
       ['New AI product prototypes','Turn a spoken idea into something you can operate. Test how it works and what it requires, then decide what to build next.','Related — experience building independent products']
     ],
-    productsKicker: 'INDEPENDENT PRODUCTS', productsTitle: 'Find a tool<br>for your work.', productsLead: 'Choose by what it does, then inspect the real work.<br>See what you can try and what you need to prepare.',
+    productsKicker: 'INDEPENDENT PRODUCTS', productsTitle: 'Find a tool<br>for your work.', productsLead: 'Pick one. See it work.',
     sourceNote: () => 'Each product is independent; they do not connect automatically.',
     principlesKicker: 'HOW REACHMADE BUILDS', principlesTitle: 'Build it.<br>Then check it.',
-    principlesLead: 'What we learn from our own products informs the next project.<br>We share code, working examples and verification records.', about: 'About the lab and developer', work: 'Read the development records',
+    principlesLead: 'What we learn from our own products goes into the next one.', about: 'About the lab and developer', work: 'Read the development records',
     principles: [
       ['Show the work.','Independent products, code and run records. We show things you can inspect alongside the description.'],
       ['Check the result.','The AI saying “done” is not evidence of success. We separate execution from verification and retain unfinished results.'],
       ['Keep people in control.','External data transfers, costs, permissions and approval are part of the design, so the person using it can decide.']
     ],
-    contactTitle: 'Let’s make your<br>next idea useful', contactLead: 'You can start before the brief is settled.<br>Tell us about the work and what you would like to try.'
+    contactTitle: 'Let’s make your<br>next idea useful', contactLead: 'Start before the brief is settled.<br>Tell us what you would like to try.'
   }
 };
 
