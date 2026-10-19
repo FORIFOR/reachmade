@@ -27,6 +27,7 @@ import {capabilitiesCheckedAt} from './products.mjs';
 import {productNavigation} from './site-experience.mjs';
 import {recordings} from './films.mjs';
 import {oathraExperienceFilm} from './oathra-experience-films.mjs';
+import {VISION, visionSections} from './vision-pages.mjs';
 
 const {checkedAt: sourcesCheckedAt} = JSON.parse(await fs.readFile(new URL('../site.config.json', import.meta.url), 'utf8'));
 
@@ -293,11 +294,12 @@ function productMain(p, list, lang, {kept, figure, source, filmAnchor}) {
   const long = name.length > 8 || p.id === 'noa';
   const conceptEntry = p.id === 'oathra' && lang === 'ja';
   const viewing = p.id === 'noa' ? p.publicViewing?.[lang] : null;
+  // One action in the first view; everything else is further down the page.
   const heroActions = viewing
-    ? `<a class="rd-btn rd-btn--ink" href="${esc(viewing.videos[1].href)}"${ext(viewing.videos[1].href)}>${esc(viewing.primaryLabel)}<span aria-hidden="true">↗</span></a><a class="rd-btn rd-btn--line" href="#noa-viewing">${esc(viewing.secondaryLabel)}<span aria-hidden="true">↓</span></a>`
+    ? `<a class="rd-btn rd-btn--ink" href="${esc(viewing.videos[1].href)}"${ext(viewing.videos[1].href)}>${esc(viewing.primaryLabel)}<span aria-hidden="true">↗</span></a>`
     : conceptEntry
-      ? `<a class="rd-btn rd-btn--ink" href="#concept-demos" aria-describedby="oathra-demo-boundary">用途別デモを試す<span aria-hidden="true">↓</span></a><a class="rd-btn rd-btn--line" href="#film">紹介映像へ<span aria-hidden="true">↓</span></a>`
-      : `<a class="rd-btn rd-btn--ink" href="${esc(local(nav.demo))}"${ext(local(nav.demo))}>${esc(nav.demoLabel)}<span aria-hidden="true">↗</span></a><a class="rd-btn rd-btn--line" href="#film">${esc(lang === 'ja' ? '紹介映像へ' : 'To the film')}<span aria-hidden="true">↓</span></a>`;
+      ? `<a class="rd-btn rd-btn--ink" href="#concept-demos" aria-describedby="oathra-demo-boundary">用途別デモを試す<span aria-hidden="true">↓</span></a>`
+      : `<a class="rd-btn rd-btn--ink" href="${esc(local(nav.demo))}"${ext(local(nav.demo))}>${esc(nav.demoLabel)}<span aria-hidden="true">↗</span></a>`;
   const steps = t.outcome.split(' → ');
   const outcome = steps.map((s, i) => `<li><span>${esc(s)}</span>${i < steps.length - 1 ? `<span class="rd-step-arrow" aria-hidden="true"><i></i>${arrowHead(12, 18)}</span>` : ''}</li>`).join('');
   const highlights = t.highlights.map((h, i) => `<article class="rd-hl" data-rd-reveal><span class="rd-hl-n">0${i + 1}</span><p class="rd-hl-value">${esc(h.value)}</p><p class="rd-hl-label">${esc(h.label)}</p></article>`).join('');
@@ -310,14 +312,18 @@ function productMain(p, list, lang, {kept, figure, source, filmAnchor}) {
   // A moved figure carries its own labels (a recording block may open on its reconstruction view), so the
   // "recording" label is not repeated beside it. Non-recording kinds are always stated.
   const kind = r.filmKinds[film.kind];
-  const keptHtml = kept.join('');
   // The original hero (its own try link and the real-recording block) stays in view: evidence sits next to the claim.
   // Only the long-form sections after it fold away; a page whose film links down into them keeps everything open.
-  const lastEntry = Math.max(kept.findIndex(k => k.includes('class="owned-primary"')), kept.findIndex(k => k.includes('class="owned-film')));
-  const split = filmAnchor ? kept.length : lastEntry + 1;
-  const openKept = kept.slice(0, split).join(''), foldKept = kept.slice(split).join('');
+  // Vision first: the owner-composed use cases and ideas (Oathra's demos, ring and screens to come; Genie's examples and
+  // take-home files) stay on the page. Every other kept section, the capabilities and the scope go into one fold.
+  const VISION_KEPT = ['olp-demos', 'olp-ring', 'olp-steps', 'glp-demos', 'glp-artifacts'];
+  const isVision = k => VISION_KEPT.some(c => new RegExp(`^<section\\b[^>]*class="[^"]*\\b${c}\\b`).test(k.trimStart()));
+  const visionKept = kept.filter(isVision).join('');
+  // Where the page has concept demos, the old guided-sample entry points to them instead.
+  const tryDemos = VISION[p.id] ? `<div class="outcome-try"><a href="#concept-demos">${lang === 'ja' ? '構想デモを試す' : 'Try the concept demos'} <span aria-hidden="true">↑</span></a></div>` : null;
+  const moreKept = kept.filter(k => !isVision(k)).join('').replace(/<div class="outcome-try">[\s\S]*?<\/a><\/div>/, m => tryDemos || m);
   // Oathra's status table already shows every highlight; the ledger values must not appear twice.
-  const showHighlights = !t.highlights.every(h => keptHtml.includes(esc(h.label)));
+  const showHighlights = !t.highlights.every(h => kept.join('').includes(esc(h.label)));
   // The proof line lives once, in #scope.
   const note = r.filmNotes[p.id] || '';
   const extra = p.id === 'agent-team' ? ` <a href="${esc(recordings['agent-team'])}" target="_blank" rel="noopener noreferrer">${esc(r.agentTeamRecording)} ↗</a>` : '';
@@ -330,12 +336,14 @@ function productMain(p, list, lang, {kept, figure, source, filmAnchor}) {
 <section class="rd-outcome" aria-label="${esc(r.whatItDoes)}"><p class="rd-kicker">${esc(r.whatItDoes)}</p><ol class="rd-steps">${outcome}</ol></section>
 ${publicViewing(p, lang)}
 ${oathraExperienceFilm(p, lang)}
+${visionSections(p, lang)}
+${visionKept}
 <section class="rd-film rd-reel" id="film" data-rd-reel data-rd-film-scale=".55" aria-labelledby="rd-film-title"><div class="rd-reel-stage">${figure ? `<div class="rd-reel-frame rd-reel-frame--figure" data-rd-frame>${figure}</div>` : filmAnchor ? `<a class="rd-reel-frame rd-film-link" data-rd-frame href="#${esc(filmAnchor)}"><img src="${esc(film.poster)}" alt="" loading="lazy"><span>${esc(r.filmBelow)} <span aria-hidden="true">↓</span></span></a>` : `<div class="rd-reel-frame" data-rd-frame>${video({...film, label: `${name} — ${kind}`}, lang)}</div>`}<div class="rd-reel-cap"><span id="rd-film-title">${esc(r.film(name))}</span>${figure && film.kind === 'recording' ? (note ? `<span>${esc(note)}</span>` : '') : `<span><b>${esc(filmAnchor ? r.stillKind : kind)}</b>${figure || filmAnchor ? '' : ` ${esc(note)}`}${extra}</span>`}</div></div></section>
-${showHighlights ? `<section class="rd-highlights" aria-labelledby="rd-hl-title"><p class="rd-kicker" id="rd-hl-title">${esc(r.highlights)}</p><div class="rd-hl-grid">${highlights}</div></section>` : ''}
-${kept.length ? `<div class="rd-kept rd-kept--product"><p class="rd-kicker rd-kept-kicker">${esc(r.detailKicker)}</p>${openKept}</div>` : ''}${foldKept ? `<details class="rd-kept rd-kept--product rd-kept--fold"><summary class="rd-kicker rd-kept-kicker">${esc(r.detailMore)}</summary>${foldKept}</details>` : ''}
+<section class="rd-now" id="now" aria-labelledby="rd-now-title"><div class="rd-now-head"><p class="rd-kicker" id="rd-now-title">${esc(r.nowKicker)}</p><p class="rd-now-status"><i aria-hidden="true"></i>${esc(t.status)} · ${esc(t.license)}</p></div><ul class="rd-links">${links}</ul></section>
+<details class="rd-more" id="more"><summary class="rd-more-summary"><span>${esc(r.moreSummary)}</span><small>${esc(r.moreHint)}</small></summary>${showHighlights ? `<section class="rd-highlights" aria-labelledby="rd-hl-title"><p class="rd-kicker" id="rd-hl-title">${esc(r.highlights)}</p><div class="rd-hl-grid">${highlights}</div></section>` : ''}<section class="rd-consult-scope" aria-label="${esc(r.consultKicker)}"><p class="rd-kicker">${esc(r.consultKicker)}</p><p>${esc(t.consult)}</p></section>${moreKept ? `<div class="rd-kept rd-kept--product">${moreKept}</div>` : ''}
 <section class="rd-features rd-forest" id="capabilities" aria-labelledby="rd-feat-title"><div class="rd-feat-side"><div class="rd-sticky"><p class="rd-kicker">${esc(r.features)}</p><h2 id="rd-feat-title">${esc(t.short)}</h2>${source ? source : `<p class="rd-feat-note">${esc(r.featuresNote(capabilitiesCheckedAt))}</p>`}</div></div><div class="rd-feat-list">${features}</div></section>
-<section class="rd-scope rd-forest" id="scope" aria-labelledby="rd-scope-title"><div class="rd-card"><div class="rd-scope-head"><div><p class="rd-kicker">${esc(r.scopeKicker)}</p><h2 id="rd-scope-title">${r.scopeTitle}</h2></div><p>${esc(r.scopeNote(sourcesCheckedAt))}</p></div><div class="rd-scope-cols"><div data-rd-reveal><p class="rd-scope-label">${esc(r.scopeLabel)}</p><p>${esc(t.scope)}</p></div><div data-rd-reveal><p class="rd-scope-label">${esc(r.proofLabel)}</p><p>${esc(t.proof)}</p></div></div><ul class="rd-links">${links}</ul></div></section>
-<section class="rd-consult rd-forest" id="consult" aria-labelledby="rd-consult-title"><p class="rd-kicker">${esc(r.consultKicker)}</p><div class="rd-consult-row"><h2 id="rd-consult-title" data-rd-reveal>${esc(t.consult)}</h2><div class="rd-consult-ctas">${p.id === 'launchloom' ? `<a class="rd-btn rd-btn--amber rd-btn--xl" href="${contactHref(lang, '#use-launchloom')}">${esc(r.useLaunchloom)}<span aria-hidden="true">↗</span></a>` : ''}<a class="rd-btn ${p.id === 'launchloom' ? 'rd-btn--line' : 'rd-btn--amber rd-btn--xl'}" href="${contactHref(lang, `#product-${p.id}`)}">${esc(r.consultCta)}<span aria-hidden="true">↗</span></a></div></div></section>
+<section class="rd-scope rd-forest" id="scope" aria-labelledby="rd-scope-title"><div class="rd-card"><div class="rd-scope-head"><div><p class="rd-kicker">${esc(r.scopeKicker)}</p><h2 id="rd-scope-title">${r.scopeTitle}</h2></div><p>${esc(r.scopeNote(sourcesCheckedAt))}</p></div><div class="rd-scope-cols"><div data-rd-reveal><p class="rd-scope-label">${esc(r.scopeLabel)}</p><p>${esc(t.scope)}</p></div><div data-rd-reveal><p class="rd-scope-label">${esc(r.proofLabel)}</p><p>${esc(t.proof)}</p></div></div></div></section></details>
+<section class="rd-consult rd-forest" id="consult" aria-labelledby="rd-consult-title"><p class="rd-kicker">${esc(r.consultKicker)}</p><div class="rd-consult-row"><h2 id="rd-consult-title" data-rd-reveal>${esc(r.consultTitle)}</h2><div class="rd-consult-ctas">${p.id === 'launchloom' ? `<a class="rd-btn rd-btn--amber rd-btn--xl" href="${contactHref(lang, '#use-launchloom')}">${esc(r.useLaunchloom)}<span aria-hidden="true">↗</span></a>` : ''}<a class="rd-btn ${p.id === 'launchloom' ? 'rd-btn--line' : 'rd-btn--amber rd-btn--xl'}" href="${contactHref(lang, `#product-${p.id}`)}">${esc(r.consultCta)}<span aria-hidden="true">↗</span></a></div></div></section>
 <nav class="rd-next rd-forest" aria-label="${esc(r.next)}"><a class="rd-next-link" href="${route(next.id, lang)}"><span class="rd-next-copy"><span class="rd-next-meta">${r.next} — ${esc(next.index)} / ${esc(next.discipline)}</span><span class="rd-next-name">${esc(displayName(next, lang))} <span aria-hidden="true">→</span></span><span class="rd-next-headline">${esc(next[lang].headline)}</span></span><span class="rd-next-thumb"><img src="${esc(stillOf(next, lang).src)}" alt="" loading="lazy"></span></a></nav>`;
 }
 

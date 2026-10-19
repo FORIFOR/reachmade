@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'none'; media-src 'none'; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'">
+  <title>話して、決まったことだけ残す。 — AI Meeting 構想デモ</title>
+  <meta name="description" content="言い直し・予定への登録・会議の決定。AI Meetingの使い方を、架空のデータで操作できる構想デモです。">
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="/assets/mark.svg">
+  <link rel="stylesheet" href="../demo.css">
+  <script type="module" src="./flows.js"></script>
+</head>
+<body data-accent="ai-meeting">
+  <a class="skip" href="#stage">操作画面へ</a>
+  <p class="notice">構想デモ・架空データ。音声・AI・外部への送信はありません。</p>
+  <header class="top"><a class="brand" href="/products/ai-meeting/">AI Meeting <span>構想デモ</span></a><a class="back" href="/products/ai-meeting/#concept-demos">製品ページへ戻る</a></header>
+  <main id="stage" class="stage">
+    <h1>話して、決まったことだけ残す。</h1>
+    <nav class="tabs" aria-label="用途">
+      <a href="?flow=reschedule" data-flow="reschedule">01 言い直し</a>
+      <a href="?flow=calendar" data-flow="calendar">02 会話から予定へ</a>
+      <a href="?flow=team" data-flow="team">03 チームで</a>
+    </nav>
+    <div class="board">
+      <section class="talk" aria-labelledby="talk-title">
+        <h2 id="talk-title">会話</h2>
+        <ol class="log" data-log aria-live="polite"></ol>
+        <div class="say" data-say></div>
+      </section>
+      <section class="tasks" aria-labelledby="rows-title">
+        <h2 id="rows-title" data-rows-title></h2>
+        <ul class="list" data-list></ul>
+        <div class="cards" data-cards aria-live="polite"></div>
+        <p class="status" data-status role="status"></p>
+        <button type="button" class="reset" data-reset>最初から</button>
+      </section>
+    </div>
+    <noscript><p class="nojs">このデモはJavaScriptで動きます。流れ：1. 話す　2. 発言を引用した変更案が「まだ反映していません」の状態で出る　3. 反映するか取り消すかを選ぶ　4. 決まったことだけが残る。</p></noscript>
+  </main>
+</body>
+</html>

@@ -58,6 +58,8 @@ export function renderStory(id, lang = 'ja') {
 /** One clock per mounted player. User pause is independent from visibility and motion preferences. */
 export function mountDemo(figure, initialId, lang = 'ja') {
   if (!PRODUCTS.includes(initialId) || figure.dataset.demoVersion) return null;
+  // A product page's film section shows the footage itself, with no story overlay, tabs or notes around it.
+  if (figure.closest('[data-rd-reel]')) return null;
   const screen = figure.querySelector('.studio-player-screen, .owned-film__screen');
   if (!screen) return null;
   const doc = figure.ownerDocument, win = doc.defaultView, ja = lang === 'ja';

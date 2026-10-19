@@ -14,10 +14,12 @@ test('the Japanese Oathra page follows the brief order and states the status of 
   assert.match(html, new RegExp(`data-oathra-lp="${OATHRA_LP_VERSION}"`));
   assert.equal((html.match(/<h1[\s>]/g) || []).length, 1);
   const at = s => { const i = html.indexOf(s); assert.ok(i >= 0, s); return i; };
-  const order = ['class="container olp-hero"', 'id="ring"', 'id="steps"', 'id="trust"', 'id="recordings"', 'id="status"', 'id="start"', 'id="consult"', 'class="rd-next'].map(at); // 2026-10 redesign: consult and next-product sections
+  // 2026-10-19, vision first (owner): the use cases, the ring and the screens to come lead; the brief's first view, the
+  // delegation levels, the recordings and the status follow inside the detail fold, still in the brief's order.
+  const order = ['id="concept-demos"', 'id="ring"', 'id="steps"', 'class="container olp-hero"', 'id="trust"', 'id="recordings"', 'id="status"', 'id="start"', 'id="consult"', 'class="rd-next'].map(at);
   assert.deepEqual([...order].sort((a, b) => a - b), order, 'sections follow the brief');
   // First view: one primary button, one-line note, the 30-second image film labelled as such, never autoplaying.
-  const hero = html.slice(order[0], order[1]);
+  const hero = html.slice(order[3], order[4]);
   assert.equal((hero.match(/class="owned-primary"/g) || []).length, 1);
   assert.match(hero, /構想デモ・実際の発信\/予約は行いません。合成データだけで、承認から結果までを試せます。/);
   assert.match(hero, /イメージ映像（演出を含む）/);
@@ -28,11 +30,11 @@ test('the Japanese Oathra page follows the brief order and states the status of 
   const steps = html.slice(order[2], order[3]);
   assert.equal(steps.split('開発中の画面 · 未リリース').length - 1, STEPS.length);
   assert.match(steps, /現行のOathra（CLIとシミュレーター）には、この画面はまだありません/);
-  const trust = html.slice(order[3], order[4]);
+  const trust = html.slice(order[4], order[5]);
   assert.match(trust, /設計 · 実電話フローには未実装/);
   assert.match(trust, /この3段階の指定、発信前の承認、費用の上限による打ち切り、着信の応対はまだありません/);
   // 4: the existing 13-second recording and the 15-second film, moved not rewritten.
-  const rec = html.slice(order[4], order[5]);
+  const rec = html.slice(order[5], order[6]);
   assert.match(rec, /data-recording-src="\/media\/products\/oathra\.mp4"/);
   assert.match(rec, /data-film15="oathra"/);
   assert.match(rec, /最初に出るのは、判定の流れを説明する再現です/);
@@ -41,7 +43,7 @@ test('the Japanese Oathra page follows the brief order and states the status of 
   assert.equal(html.split(license + ' — ').length - 1 + html.split('>' + license + ' · ').length - 1, 1, 'the licence is stated once, in the table');
   assert.match(rec, /公開シミュレーター.*再生速度は変えていません/);
   // 5: the ledger highlights appear once, in the status table, next to the unclaimed items.
-  const status = html.slice(order[5], order[6]);
+  const status = html.slice(order[6], order[7]);
   for (const h of products.find(p => p.id === 'oathra').ja.highlights) assert.ok(status.includes(h.label), h.value);
   assert.match(status, /店舗システムへの登録/);
   assert.match(status, /100件の実電話検証/);

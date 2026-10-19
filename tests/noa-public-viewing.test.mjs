@@ -13,7 +13,8 @@ test('Noa JA/EN first action opens an actual stream edit before the recreated fi
     const firstAction = hero.match(/<a class="rd-btn rd-btn--ink"[^>]*>[\s\S]*?<\/a>/)?.[0];
     assert.ok(firstAction?.includes(`href="${noaVideos.liveEdit}"`));
     assert.match(firstAction, prefix ? /Watch gameplay \(4:12\)/ : /実況を見る（4分12秒）/);
-    assert.match(hero, /href="#noa-viewing"/);
+    // One action in the first view (2026-10-19); the viewing list follows directly after it.
+    assert.ok(html.indexOf('id="noa-viewing"') - html.indexOf('</section>', html.indexOf('<section class="rd-outcome"')) < 200);
     assert.doesNotMatch(hero, /href="[^\"]*contact/);
     assert.ok(html.indexOf('id="noa-viewing"') < html.indexOf('id="film"'));
     assert.match(html, new RegExp(`href="/${prefix}contact/#product-noa"`));

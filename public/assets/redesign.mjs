@@ -93,6 +93,11 @@ if (root?.dataset.rd) {
       }, {rootMargin: '0px 0px -6% 0px'});
       pending.forEach(el => io.observe(el));
     }
+    /* Vision scenes: the steps play only while the scene is on screen; the finished state is the default. */
+    if ('IntersectionObserver' in window) {
+      const scenes = new IntersectionObserver(entries => entries.forEach(entry => entry.target.toggleAttribute('data-vp-play', entry.isIntersecting)), {threshold: .35});
+      $$('[data-vp-scene]').forEach(el => scenes.observe(el));
+    }
   }
 
   /* Cursor preview on the home product list: fine pointers with hover only, never under reduced motion. */

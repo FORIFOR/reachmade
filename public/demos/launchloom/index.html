@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'none'; media-src 'none'; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'">
+  <title>作った、その先まで。 — Launchloom 構想デモ</title>
+  <meta name="description" content="新機能の告知・LPの改訂・投稿の承認。収録1本から公開前の素材までを、架空のデータで操作できる構想デモです。">
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="/assets/mark.svg">
+  <link rel="stylesheet" href="../demo.css">
+  <script type="module" src="./flows.js"></script>
+</head>
+<body data-accent="launchloom">
+  <a class="skip" href="#stage">操作画面へ</a>
+  <p class="notice">構想デモ・架空データ。書き出しも投稿も行いません。</p>
+  <header class="top"><a class="brand" href="/products/launchloom/">Launchloom <span>構想デモ</span></a><a class="back" href="/products/launchloom/#concept-demos">製品ページへ戻る</a></header>
+  <main id="stage" class="stage">
+    <h1>作った、その先まで。</h1>
+    <nav class="tabs" aria-label="用途">
+      <a href="?flow=feature" data-flow="feature">01 新機能の告知</a>
+      <a href="?flow=revise" data-flow="revise">02 LPの改訂</a>
+      <a href="?flow=publish" data-flow="publish">03 公開はあなた</a>
+    </nav>
+    <div class="board">
+      <section class="talk" aria-labelledby="talk-title">
+        <h2 id="talk-title">制作</h2>
+        <ol class="log" data-log aria-live="polite"></ol>
+        <div class="say" data-say></div>
+      </section>
+      <section class="tasks" aria-labelledby="rows-title">
+        <h2 id="rows-title" data-rows-title></h2>
+        <ul class="list" data-list></ul>
+        <div class="cards" data-cards aria-live="polite"></div>
+        <p class="status" data-status role="status"></p>
+        <button type="button" class="reset" data-reset>最初から</button>
+      </section>
+    </div>
+    <noscript><p class="nojs">このデモはJavaScriptで動きます。流れ：1. 実画面の録画と、伝えたいことを入れる　2. 構成を確かめる　3. 動画・LP・投稿案を書き出す　4. 公開は、承認したものだけ。</p></noscript>
+  </main>
+</body>
+</html>

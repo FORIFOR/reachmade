@@ -7,7 +7,7 @@ const entries = {
   oathra: { ja: ['https://oathra.reachmade.com/', 'https://reachmade.com/demos/oathra/', '用途別の構想デモを試す'], en: ['https://oathra.reachmade.com/en/', 'https://oathra.reachmade.com/en/#sim', 'Try the evidence engine'] },
   aisecure: { ja: ['https://aisecure.reachmade.com/index.ja.html', 'https://aisecure.reachmade.com/index.ja.html#start', 'デモの起動手順を見る'], en: ['https://aisecure.reachmade.com/', 'https://aisecure.reachmade.com/#start', 'See how to run the demo'] },
   'agent-team': { ja: ['https://multibot.reachmade.com/ja/', 'https://multibot.reachmade.com/ja/#guide', '3ステップの使い方を見る'], en: ['https://multibot.reachmade.com/', 'https://multibot.reachmade.com/#workflow', 'See the three-step workflow'] },
-  launchloom: { ja: ['https://launchloom.reachmade.com/ja/', 'https://launchloom.reachmade.com/ja/#kit', '完成した公開素材を見る'], en: ['https://launchloom.reachmade.com/', 'https://launchloom.reachmade.com/#kit', 'Explore the launch kit'] },
+  launchloom: { ja: ['https://launchloom.reachmade.com/ja/', 'https://launchloom.reachmade.com/ja/#proof', '完成した公開素材を見る'], en: ['https://launchloom.reachmade.com/', 'https://launchloom.reachmade.com/#proof', 'Explore the launch kit'] },
 };
 export function productNavigation(product, language) {
   if (!['ja', 'en'].includes(language)) throw new TypeError('Unsupported language');
