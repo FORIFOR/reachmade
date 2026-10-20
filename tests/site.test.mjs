@@ -30,8 +30,8 @@ test('contact must use a known mode',()=>{const c=clone();c.contact.mode='form';
 test('rejects non-HTTPS contact',()=>{const c=clone();c.contact.url='javascript:alert(1)';assert.throws(()=>validateConfig(c));});
 test('email mode rejects an absent address',()=>{const c=clone();c.contact.email=null;assert.throws(()=>{c.contact.mode='email';validateConfig(c);});});
 test('email mode supports an owner-configured address',()=>{const c=clone();c.contact.mode='email';c.contact.email='owner@example.org';assert.doesNotThrow(()=>validateConfig(c));});
-test('34 routes represent portfolio, product and owned guide pages in both languages',()=>{
- assert.equal(routes.length,34);for(const lang of ['ja','en'])assert.equal(routes.filter(r=>r.lang===lang).length,17);
+test('40 routes represent portfolio, product and owned guide pages in both languages',()=>{
+ assert.equal(routes.length,40);for(const lang of ['ja','en'])assert.equal(routes.filter(r=>r.lang===lang).length,20);
  assert.equal(routes.filter(r=>r.page.startsWith('product-')).length,14);
 });
 test('attribute checks do not mistake lazy data-src attributes for active sources',()=>{
@@ -56,7 +56,7 @@ for(const r of routes){
   assert.match(html,/hreflang="ja"/);assert.match(html,/hreflang="en"/);assert.match(html,/hreflang="x-default"/);
   assert.match(html,/og:image/);assert.match(html,/name="description"/);
   const ids=attr(html,'id');assert.equal(new Set(ids).size,ids.length,'duplicate IDs');
-  assert.equal((html.match(/<script\b/g)||[]).length,['genie-demos','ai-meeting-guide','oathra-guide'].includes(r.page)?0:1);
+  assert.equal((html.match(/<script\b/g)||[]).length,['genie-demos','ai-meeting-guide','oathra-guide','noa-contact','noa-sponsor','noa-games'].includes(r.page)?0:1);
   assert.ok(!/<iframe|\bonclick=|\bonload=/.test(html),'No inline scripts or external embeds');
   if(r.page==='contact'){
    assert.equal((html.match(/<form\b/g)||[]).length,1);

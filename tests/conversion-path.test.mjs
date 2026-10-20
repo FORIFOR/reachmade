@@ -32,6 +32,17 @@ for (const lang of ['ja','en']) {
   assert.equal(inquiryContext('#product-noa','',lang).useCase,'custom');
   for(const id of ['voice-ai','ai-character'])assert.equal(inquiryContext(`#service-${id}`,'',lang).useCase,'custom');
  });
+ test(`${lang}: each Noa request page lands on its own form context and a valid inquiry`,async()=>{
+  const labels=new Set();
+  for(const [suffix,anchor] of [['contact','noa-contact'],['sponsor','noa-sponsor'],['games','noa-game']]){
+   assert.ok((await read(`${b}products/noa/${suffix}/index.html`)).includes(`href="/${b}contact/#use-${anchor}"`));
+   const ctx=inquiryContext(`#use-${anchor}`,'',lang);
+   assert.equal(ctx.useCase,'custom');assert.match(ctx.label,/ノア/);labels.add(ctx.label);
+   assert.ok(canInsertInquiryTemplate({message:'',useCase:ctx.useCase,busy:false,unresolved:false,accepted:false}));
+   assert.doesNotThrow(()=>parseInquiry({...valid,language:lang,useCase:ctx.useCase,message:ctx.message}));
+  }
+  assert.equal(labels.size,3);
+ });
 }
 test('unknown or hostile URL input never becomes a context or message',()=>{
  for(const [hash,search] of [['#service-constructor',''],['#product-__proto__',''],['','?product=%3Cscript%3E'],['#service-voice-ai%0Asecret',''],['#product-genie/../../',''],['','?message=private&email=private'],['#service-toString','']])assert.equal(inquiryContext(hash,search),null);

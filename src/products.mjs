@@ -305,6 +305,14 @@ export const products = [
     // Static implementation evidence; not a gameplay-skill or live-stream performance measurement.
     // Public video destinations checked 2026-10-04; implementation-check date is unchanged.
     demo: noaVideos.gameplay, capabilitiesCheckedAt: '2026-10-02',
+    // 2026-10-21: sponsor slot checked in Jev_VTuber_Studio origin/main docs/SPONSOR_OVERLAY.md (870167e).
+    // Still images and text only: video ads exist there but OBS playback is unverified. No audience figures or prices.
+    // Games: only the title the F-01 card already names; Minecraft and Smash are not checked for the ledger.
+    requests: {
+      checkedAt: '2026-10-21',
+      ja: {sponsorSlot: ['配信画面の広告枠（16:9）に、画像またはテキストで表示します。画像はPNG・JPEG・WebP、1920×1080pxを推奨します。', '広告には必ず「広告 / PR」と表示し、YouTubeの有料プロモーションとして申告します。', '画面上のURLは押せないため、リンクは配信の説明欄にも載せます。'], games: ['Vampire Survivors（ノアが自分で操作）']},
+      en: {sponsorSlot: ['Shown in the 16:9 ad slot on the stream, as an image or text. Images: PNG, JPEG or WebP, 1920×1080 px recommended.', 'Every ad carries the on-screen label “広告 / PR” (Ad / PR) and is declared as a paid promotion on YouTube.', 'Links on screen cannot be clicked, so the link also goes in the stream description.'], games: ['Vampire Survivors (Noa plays it herself)']}
+    },
     ja: {
       headline: 'コメントを、声と表情に。', demoLabel: 'ゲームのテスト収録を見る（編集版）', evidenceLabel: '返答・声・表情の解説を見る', previewLabel: '紹介映像の一場面（画面は再現）',
       short: 'コメントに、声と表情で返す配信キャラクター。',
