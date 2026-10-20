@@ -155,6 +155,21 @@
     "page": "oathra-guide"
   },
   {
+    "route": "/products/noa/contact/",
+    "lang": "ja",
+    "page": "noa-contact"
+  },
+  {
+    "route": "/products/noa/sponsor/",
+    "lang": "ja",
+    "page": "noa-sponsor"
+  },
+  {
+    "route": "/products/noa/games/",
+    "lang": "ja",
+    "page": "noa-games"
+  },
+  {
     "route": "/en/products/genie/demos/",
     "lang": "en",
     "page": "genie-demos"
@@ -168,5 +183,20 @@
     "route": "/en/products/oathra/guide/",
     "lang": "en",
     "page": "oathra-guide"
+  },
+  {
+    "route": "/en/products/noa/contact/",
+    "lang": "en",
+    "page": "noa-contact"
+  },
+  {
+    "route": "/en/products/noa/sponsor/",
+    "lang": "en",
+    "page": "noa-sponsor"
+  },
+  {
+    "route": "/en/products/noa/games/",
+    "lang": "en",
+    "page": "noa-games"
   }
 ]

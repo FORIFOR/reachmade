@@ -36,7 +36,7 @@ export const redesignCopy = {
     scopeNote: () => '最新の利用条件は、各リポジトリでご確認ください。',
     scopeLabel: 'SCOPE / 範囲', proofLabel: 'PROOF / 公開している根拠',
     linkKinds: { demo: 'DEMO', source: 'SOURCE', evidence: 'EVIDENCE' }, sourceLabel: 'コードをGitHubで読む', evidenceLabel: '検証資料を読む',
-    consultKicker: '(07) この技術で相談する', consultTitle: 'この仕組みを、あなたの仕事にも。', consultCta: '開発を相談する', useLaunchloom: '自分の製品で使いたい',
+    consultKicker: '(07) この技術で相談する', consultTitle: 'この仕組みを、あなたの仕事にも。', consultCta: '開発を相談する', useLaunchloom: '自分の製品で使いたい', noaRequests: [['contact', 'ノアに問い合わせる'], ['sponsor', '広告掲載の募集'], ['games', 'やって欲しいゲームを募集']],
     next: 'NEXT', fig: 'FIG.',
     filmKinds: {
       recording: '実録画（無音・編集あり）',
@@ -80,7 +80,7 @@ export const redesignCopy = {
     scopeNote: () => 'Current terms live in each repository.',
     scopeLabel: 'SCOPE', proofLabel: 'PROOF / PUBLISHED EVIDENCE',
     linkKinds: { demo: 'DEMO', source: 'SOURCE', evidence: 'EVIDENCE' }, sourceLabel: 'Read the code on GitHub', evidenceLabel: 'Read the evaluation record',
-    consultKicker: '(07) Build with it', consultTitle: 'Bring this to your work.', consultCta: 'Discuss a project', useLaunchloom: 'Use it for my product',
+    consultKicker: '(07) Build with it', consultTitle: 'Bring this to your work.', consultCta: 'Discuss a project', useLaunchloom: 'Use it for my product', noaRequests: [['contact', 'Contact Noa'], ['sponsor', 'Advertise on the stream'], ['games', 'Request a game']],
     next: 'NEXT', fig: 'FIG.',
     filmKinds: {
       recording: 'Real recording (silent · edited)',
