@@ -34,6 +34,8 @@ for(const language of ['ja','en']) {
   const html=await read(prefix+'privacy/index.html');
   assert.match(html,language==='ja'?/同じドメイン/:/own domain/);
   assert.match(html,/Google Cloud/);
+  // The intake emails each inquiry to the operator through Resend; the page must say so.
+  assert.match(html,/Resend/);
   assert.doesNotMatch(html,/動画埋め込みを入れていません|no advertising or analytics tags, external fonts, or embedded video/);
  });
  test(`${language}: examples and profile are generated with their limitations`,async()=>{
