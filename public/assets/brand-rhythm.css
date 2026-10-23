@@ -1,10 +1,97 @@
-/* Final brand/rhythm layer: less homepage copy, more product-specific pacing. */
+/* Product worlds: one Reachmade standard, six distinct art directions. */
 .hero-copy h1::after{content:"CLAIM  →  PROOF"!important;display:block!important;margin-top:clamp(26px,3.6vw,48px);padding-top:12px;border-top:1px solid currentColor;color:var(--rm-proof-red,#a83b2f);font-size:11px;line-height:1.2;letter-spacing:.18em;font-weight:760;white-space:nowrap}
 .hero-description::before{content:none!important;display:none!important}
 .hero-copy h1{margin-bottom:22px!important;max-width:9ch!important;font-size:clamp(58px,6.8vw,100px)!important;line-height:.92!important;letter-spacing:-.072em!important}
 .hero-description{max-width:34em!important;font-size:clamp(16px,1.35vw,19px)!important;line-height:1.68!important}
 .hero-actions{margin-top:26px!important}.hero-actions .text-link,.hero-footnote{display:none!important}
 .hero .eyebrow{margin-bottom:20px!important;letter-spacing:.14em!important}
+
+/* Shared product-page restraint. Product identity comes from rhythm, framing and evidence — not generic effects. */
+.owned-product .owned-film,.owned-product .owned-start{box-shadow:none}
+.owned-product .owned-film__play{box-shadow:none}
+.owned-product .owned-kicker{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+.owned-product .owned-film__bar{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+.owned-product .owned-step-index{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+
+/* GENIE — Intelligent Work Atelier. Warm paper, cobalt notation, a working ledger rather than a dashboard. */
+.owned-product.owned-product--genie{--paper:#f2eee5;--ink:#1b2130;--muted:#666a70;--line:#cbc7bc;--stage:#182131;--accent:#3156b8;background:var(--paper)}
+.owned-product--genie .owned-header{border-bottom-color:#1b2130}
+.owned-product--genie .owned-brand{font-family:Georgia,"Times New Roman",serif;font-style:italic;font-weight:500;letter-spacing:-.035em}
+.owned-product--genie .owned-brand span{font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",sans-serif;font-style:normal;font-size:12px;letter-spacing:.02em;text-transform:uppercase}
+.owned-product--genie .owned-hero-grid{grid-template-columns:minmax(300px,.88fr) minmax(0,1.32fr);column-gap:76px;padding-block:74px 88px}
+.owned-product--genie .owned-hero-grid h1{font-family:Georgia,"Times New Roman",serif;font-size:clamp(48px,5.2vw,76px);font-weight:400;line-height:1.06;letter-spacing:-.055em}
+.owned-product--genie .owned-film{border-radius:2px;border-color:#1b2130;background:#182131}
+.owned-product--genie .owned-film__bar{background:#e5dfd3;color:#626775;border-bottom:1px solid #1b2130}
+.owned-product--genie .owned-film__bar span:first-child{color:#1b2130}
+.owned-product--genie .owned-film__screen{border-color:#1b2130}
+.owned-product--genie .owned-film__play{border-radius:1px;background:#f2eee5;color:#1b2130;border-color:#f2eee5}
+.owned-product--genie .owned-primary{border-radius:1px;background:#3156b8;border-color:#3156b8}
+.owned-product--genie .owned-try-now{border-top-color:#1b2130}
+.owned-product--genie .owned-start{background:#e5dfd3}
+
+/* AI MEETING — Live Conversation Flow. Warm human surface, quiet dark conversation field. */
+.owned-product.owned-product--ai-meeting{--paper:#f4efe7;--ink:#171915;--muted:#66675f;--line:#d1ccc1;--stage:#121815;--accent:#a44734;background:var(--paper)}
+.owned-product--ai-meeting .owned-header{border-bottom-color:#171915}
+.owned-product--ai-meeting .owned-hero-grid{grid-template-columns:minmax(300px,.72fr) minmax(0,1.48fr);column-gap:54px;padding-block:66px 80px}
+.owned-product--ai-meeting .owned-hero-grid h1{font-size:clamp(48px,5.5vw,78px);line-height:1.02;letter-spacing:-.06em}
+.owned-product--ai-meeting .owned-film{border:0;border-radius:30px;background:#121815;overflow:hidden}
+.owned-product--ai-meeting .owned-film__bar{padding:15px 20px;color:#9aa39b;border-bottom:1px solid #344039}
+.owned-product--ai-meeting .owned-film__screen{border-color:#344039}
+.owned-product--ai-meeting .owned-film__play{border-radius:999px;background:#f4efe7;color:#171915;border-color:#f4efe7}
+.owned-product--ai-meeting .owned-primary{border-radius:999px;background:#171915;border-color:#171915;padding-inline:22px}
+.owned-product--ai-meeting .owned-try-now{border-top-color:#171915}
+.owned-product--ai-meeting .owned-outcome h2{font-size:clamp(42px,5vw,70px);line-height:1.08}
+
+/* OATHRA — Evidence Clarity. Hard rules, oxide red, transcript/evidence ledger. */
+.owned-product.owned-product--oathra{--paper:#f3f0e8;--ink:#111310;--muted:#686c65;--line:#c9c6bc;--stage:#111310;--accent:#b53b22;background:var(--paper)}
+.owned-product--oathra .owned-header{border-bottom-color:#111310}
+.owned-product--oathra .owned-hero-grid{grid-template-columns:minmax(290px,.64fr) minmax(0,1.46fr);column-gap:52px;padding-block:62px 76px}
+.owned-product--oathra .owned-hero-grid h1{font-size:clamp(46px,5vw,72px);line-height:1.02}
+.owned-product--oathra .owned-film{border-radius:0;border:1px solid #111310;background:#111310}
+.owned-product--oathra .owned-film__bar{background:#111310;border-bottom:1px solid #444a43;color:#a5aba3}
+.owned-product--oathra .owned-film__screen{border-color:#444a43}
+.owned-product--oathra .owned-film__play{border-radius:0;background:#f3f0e8;color:#111310;border-color:#f3f0e8}
+.owned-product--oathra .owned-primary{border-radius:0;background:#111310;border-color:#111310}
+.owned-product--oathra .owned-try-now{border-top:3px solid #b53b22;padding-top:13px}
+.owned-product--oathra .owned-kicker,.owned-product--oathra .owned-step-index{color:#b53b22}
+
+/* AI SECURE — Trust Infrastructure. Control surface, hard green rules, no decorative shell. */
+.owned-product.owned-product--aisecure{--paper:#eff0eb;--ink:#111710;--muted:#61675f;--line:#c7cbc3;--stage:#101514;--accent:#2a6650;background:var(--paper)}
+.owned-product--aisecure .owned-header{background:#eff0eb;border-bottom-color:#111710}
+.owned-product--aisecure .owned-hero-grid{grid-template-columns:minmax(280px,.58fr) minmax(0,1.52fr);column-gap:48px;padding-block:58px 72px}
+.owned-product--aisecure .owned-hero-grid h1{font-size:clamp(45px,4.8vw,70px);line-height:1.02}
+.owned-product--aisecure .owned-film{border-radius:0;border:1px solid #111710;background:#101514}
+.owned-product--aisecure .owned-film__bar{background:#dfe2db;color:#58605a;border-bottom:1px solid #111710}
+.owned-product--aisecure .owned-film__bar span:first-child{color:#111710}
+.owned-product--aisecure .owned-film__screen{border-color:#111710}
+.owned-product--aisecure .owned-film__play{border-radius:0;background:#eff0eb;color:#111710;border-color:#eff0eb}
+.owned-product--aisecure .owned-primary{border-radius:0;background:#111710;border-color:#111710}
+.owned-product--aisecure .owned-start{border-radius:0;border-color:#111710;background:#dfe2db}
+.owned-product--aisecure .owned-try-now{border-top-color:#2a6650}
+
+/* AGENT TEAM — Collective Intelligence Network. Staggered handoffs, olive technical paper. */
+.owned-product.owned-product--agent-team{--paper:#eeece3;--ink:#1c1e1a;--muted:#66675f;--line:#cbc8bb;--stage:#171a17;--accent:#696535;background:var(--paper)}
+.owned-product--agent-team .owned-header{border-bottom-color:#1c1e1a}
+.owned-product--agent-team .owned-hero-grid{grid-template-columns:minmax(300px,.76fr) minmax(0,1.44fr);column-gap:62px;padding-block:66px 84px}
+.owned-product--agent-team .owned-film{border-radius:0;border:1px solid #696535;background:#171a17}
+.owned-product--agent-team .owned-film__bar{background:#242820;border-bottom:1px solid #696535;color:#adb0a4}
+.owned-product--agent-team .owned-film__screen{border-color:#696535}
+.owned-product--agent-team .owned-film__play{border-radius:0;background:#eeece3;color:#1c1e1a;border-color:#eeece3}
+.owned-product--agent-team .owned-primary{border-radius:0;background:#696535;border-color:#696535}
+.owned-product--agent-team .owned-try-now{border-top-color:#696535}
+.owned-product--agent-team .owned-start{border-radius:0;background:#e2dfd1;border-color:#696535}
+
+/* LAUNCHLOOM — Editorial Campaign Cinema. Large film, red editorial notation, output-led page. */
+.owned-product.owned-product--launchloom{--paper:#f6f5f0;--ink:#171a17;--muted:#686b64;--line:#d8d6ce;--stage:#0d0f0e;--accent:#a83b2f;background:var(--paper)}
+.owned-product--launchloom .owned-header{border-bottom-color:#171a17}
+.owned-product--launchloom .owned-hero-grid{grid-template-columns:minmax(260px,.52fr) minmax(0,1.58fr);column-gap:48px;padding-block:54px 82px}
+.owned-product--launchloom .owned-hero-grid h1{font-size:clamp(52px,5.8vw,84px);line-height:.98}
+.owned-product--launchloom .owned-film{border-radius:0;border:1px solid #171a17;background:#0d0f0e}
+.owned-product--launchloom .owned-film__bar{padding:10px 14px;background:#171a17;border-bottom:1px solid #3a3e39;color:#aeb3ac}
+.owned-product--launchloom .owned-film__screen{border-color:#3a3e39}
+.owned-product--launchloom .owned-film__play{border-radius:0;background:#f6f5f0;color:#171a17;border-color:#f6f5f0}
+.owned-product--launchloom .owned-primary{border-radius:0;background:#a83b2f;border-color:#a83b2f}
+.owned-product--launchloom .owned-try-now{border-top-color:#171a17}
 
 @media(min-width:1101px){
 /* Genie — editorial work ledger. */
@@ -13,6 +100,7 @@
 .owned-product--genie .owned-flow li{display:grid!important;grid-template-columns:72px 220px 1fr;gap:24px;padding:22px 0!important;border-top:1px solid var(--line)!important}
 .owned-product--genie .owned-flow li+li{border-left:0!important}
 .owned-product--genie .owned-outcome{max-width:820px;margin-left:auto;padding-block:120px!important}
+.owned-product--genie .owned-outcome h2{font-family:Georgia,"Times New Roman",serif;font-weight:400;font-size:clamp(42px,4.7vw,66px)}
 .owned-product--genie .owned-start{max-width:1040px;background:transparent!important;border:0!important;border-left:6px solid var(--accent)!important;border-radius:0!important}
 
 /* AI Meeting — conversation field, then a quiet centered conclusion. */
@@ -21,6 +109,7 @@
 .owned-product--ai-meeting .owned-flow ol{grid-template-columns:1fr!important;border-top:1px solid #3d4740!important}
 .owned-product--ai-meeting .owned-flow li{display:grid!important;grid-template-columns:80px 260px 1fr;gap:24px;padding:24px 0!important;border-bottom:1px solid #3d4740!important}
 .owned-product--ai-meeting .owned-flow li+li{border-left:0!important}
+.owned-product--ai-meeting .owned-flow li:nth-child(1){padding-left:0!important}.owned-product--ai-meeting .owned-flow li:nth-child(2){padding-left:7%!important}.owned-product--ai-meeting .owned-flow li:nth-child(3){padding-left:14%!important}
 .owned-product--ai-meeting .owned-outcome{display:block!important;max-width:900px;text-align:center;padding-block:120px!important}
 .owned-product--ai-meeting .owned-outcome h2,.owned-product--ai-meeting .owned-outcome>p:last-child{max-width:760px;margin-inline:auto}
 .owned-product--ai-meeting .owned-start{background:transparent!important;border-inline:0!important;border-radius:0!important;padding-inline:0!important}
@@ -40,12 +129,14 @@
 .owned-product--aisecure .owned-flow{padding-block:94px 74px}.owned-product--aisecure .owned-outcome{padding-block:40px 110px!important;border-top-color:#39403c!important}
 .owned-product--aisecure .owned-flow .owned-kicker,.owned-product--aisecure .owned-flow li p,.owned-product--aisecure .owned-outcome .owned-kicker,.owned-product--aisecure .owned-outcome>p:last-child{color:#b7beb8!important}
 .owned-product--aisecure .owned-flow ol{border-top-color:#39403c!important}.owned-product--aisecure .owned-flow li+li{border-left-color:#39403c!important}
+.owned-product--aisecure .owned-flow li{padding-top:28px!important}.owned-product--aisecure .owned-flow h3{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:15px;text-transform:uppercase;letter-spacing:.04em}
 .owned-product--aisecure .owned-start{margin-top:100px}
 
 /* Agent Team — staged handoff instead of a flat three-card row. */
 .owned-product--agent-team .owned-flow{padding-block:104px 138px}.owned-product--agent-team .owned-flow ol{border-top:0!important;align-items:start}
 .owned-product--agent-team .owned-flow li{border-top:3px solid #5d5a36!important;padding-top:22px!important}.owned-product--agent-team .owned-flow li+li{border-left:0!important}
 .owned-product--agent-team .owned-flow li:nth-child(2){margin-top:56px}.owned-product--agent-team .owned-flow li:nth-child(3){margin-top:112px}
+.owned-product--agent-team .owned-flow li:nth-child(1)::after,.owned-product--agent-team .owned-flow li:nth-child(2)::after{content:"HANDOFF →";display:block;margin-top:24px;font:700 9px/1.3 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.12em;color:#696535}
 .owned-product--agent-team .owned-outcome{max-width:880px;margin-left:auto}.owned-product--agent-team .owned-start{max-width:980px;margin-inline:auto}
 
 /* Launchloom — output wall, then one cinematic result statement. */
@@ -56,4 +147,12 @@
 .owned-product--launchloom .owned-start{background:transparent!important;border:0!important;border-top:1px solid var(--line)!important;border-bottom:1px solid var(--line)!important;border-radius:0!important;padding-inline:0!important}
 }
 
-@media(max-width:650px){.hero-copy h1{font-size:clamp(50px,15vw,68px)!important;line-height:.94!important;margin-bottom:18px!important}.hero-copy h1::after{margin-top:24px;font-size:9px;letter-spacing:.14em;white-space:normal}.hero-description{font-size:16px!important;line-height:1.65!important}.hero-actions{margin-top:22px!important}}
+@media(max-width:1100px){
+.owned-product--genie .owned-hero-grid,.owned-product--ai-meeting .owned-hero-grid,.owned-product--oathra .owned-hero-grid,.owned-product--aisecure .owned-hero-grid,.owned-product--agent-team .owned-hero-grid,.owned-product--launchloom .owned-hero-grid{grid-template-columns:1fr}
+.owned-product--genie .owned-film--hero,.owned-product--ai-meeting .owned-film--hero,.owned-product--oathra .owned-film--hero,.owned-product--aisecure .owned-film--hero,.owned-product--agent-team .owned-film--hero,.owned-product--launchloom .owned-film--hero{margin-top:28px}
+}
+
+@media(max-width:650px){.hero-copy h1{font-size:clamp(50px,15vw,68px)!important;line-height:.94!important;margin-bottom:18px!important}.hero-copy h1::after{margin-top:24px;font-size:9px;letter-spacing:.14em;white-space:normal}.hero-description{font-size:16px!important;line-height:1.65!important}.hero-actions{margin-top:22px!important}
+.owned-product--genie .owned-hero-grid h1,.owned-product--ai-meeting .owned-hero-grid h1,.owned-product--oathra .owned-hero-grid h1,.owned-product--aisecure .owned-hero-grid h1,.owned-product--agent-team .owned-hero-grid h1,.owned-product--launchloom .owned-hero-grid h1{font-size:clamp(38px,11.5vw,52px)}
+.owned-product--ai-meeting .owned-film{border-radius:18px}
+}
