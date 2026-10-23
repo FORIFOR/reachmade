@@ -21,6 +21,7 @@ import { writeGenieLp } from '../src/genie-lp.mjs';
 import { writeOathraLp } from '../src/oathra-lp.mjs';
 import { writeNoaLp } from '../src/noa-lp.mjs';
 import { writeRedesign } from '../src/redesign.mjs';
+import { writeGeniePrivacy } from '../src/genie-privacy.mjs';
 export { root, escapeHTML, validateConfig } from './build-core.mjs';
 
 export async function build() {
@@ -54,6 +55,8 @@ export async function build() {
   // 2026-10 redesign: the final composition of the home and every product page. Keeps the access table, FAQ and the
   // product sections the new template does not replace.
   await writeRedesign(dist,products);
+  // Genie privacy policy: built from the finished site privacy page, and linked from the finished Genie page.
+  routes.push(...await writeGeniePrivacy(dist,config.origin.replace(/\/$/,'')));
   const showcaseRoutes = ['', 'en/', ...products.flatMap(p=>[`products/${p.id}/`,`en/products/${p.id}/`])];
   const cssVersion = createHash('sha256').update(await fs.readFile(path.join(dist,'assets/showcase.css'))).digest('hex').slice(0,16);
   for (const route of showcaseRoutes) {

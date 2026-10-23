@@ -30,8 +30,9 @@ test('contact must use a known mode',()=>{const c=clone();c.contact.mode='form';
 test('rejects non-HTTPS contact',()=>{const c=clone();c.contact.url='javascript:alert(1)';assert.throws(()=>validateConfig(c));});
 test('email mode rejects an absent address',()=>{const c=clone();c.contact.email=null;assert.throws(()=>{c.contact.mode='email';validateConfig(c);});});
 test('email mode supports an owner-configured address',()=>{const c=clone();c.contact.mode='email';c.contact.email='owner@example.org';assert.doesNotThrow(()=>validateConfig(c));});
-test('40 routes represent portfolio, product and owned guide pages in both languages',()=>{
- assert.equal(routes.length,40);for(const lang of ['ja','en'])assert.equal(routes.filter(r=>r.lang===lang).length,20);
+test('42 routes represent portfolio, product, owned guide and Genie privacy pages in both languages',()=>{
+ assert.equal(routes.length,42);for(const lang of ['ja','en'])assert.equal(routes.filter(r=>r.lang===lang).length,21);
+ assert.equal(routes.filter(r=>r.page==='genie-privacy').length,2);
  assert.equal(routes.filter(r=>r.page.startsWith('product-')).length,14);
 });
 test('attribute checks do not mistake lazy data-src attributes for active sources',()=>{

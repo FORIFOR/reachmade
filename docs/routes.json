@@ -198,5 +198,15 @@
     "route": "/en/products/noa/games/",
     "lang": "en",
     "page": "noa-games"
+  },
+  {
+    "route": "/products/genie/privacy/",
+    "lang": "ja",
+    "page": "genie-privacy"
+  },
+  {
+    "route": "/en/products/genie/privacy/",
+    "lang": "en",
+    "page": "genie-privacy"
   }
 ]
