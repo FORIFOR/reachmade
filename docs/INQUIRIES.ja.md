@@ -17,11 +17,10 @@ reachmade.com の相談フォームは、このサイトの Worker が受け付�
 ## 初回の設定（1回だけ）
 
 ```sh
-npx wrangler@4 d1 create reachmade-inquiries          # 表示された database_id を wrangler.jsonc に入れる
+# データベースは作成済み（database_id は wrangler.jsonc）。返信先 INQUIRY_REPLY_TO は wrangler.jsonc の vars。
 npx wrangler@4 d1 migrations apply reachmade-inquiries --remote
 npx wrangler@4 secret put RESEND_API_KEY              # Resend の送信専用キー（reachmade.com）
 npx wrangler@4 secret put INQUIRY_NOTIFY_TO           # 通知を受け取るアドレス
-npx wrangler@4 secret put INQUIRY_REPLY_TO            # 相手の返事を受け取るアドレス（例 pw@reachmade.com）
 npx wrangler@4 secret put INQUIRY_REPLY_SECRET        # openssl rand -base64 48 の出力。変えると送信済みのリンクが無効になる
 npm run deploy
 ```
