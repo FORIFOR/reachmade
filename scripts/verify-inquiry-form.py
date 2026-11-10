@@ -23,7 +23,7 @@ with sync_playwright() as pw:
             # An accidental external request cannot contact the live intake.
             context.route('https://**/*', lambda r: r.abort())
             submitted = []
-            replies = [(503, {'error':'UNAVAILABLE'}),(201, {'receipt':'AM-1234ABCD'}),(429, {'error':'CAPACITY'}),(200, {'receipt':'AM-1234ABCD'})]
+            replies = [(503, {'error':'UNAVAILABLE'}),(201, {'receipt':'RM-1234ABCD'}),(429, {'error':'CAPACITY'}),(200, {'receipt':'RM-1234ABCD'})]
             def intake(r):
                 submitted.append(r.request.post_data_json)
                 status, payload = replies.pop(0)
@@ -64,7 +64,7 @@ with sync_playwright() as pw:
                 expect(page.locator('#inquiry-submit')).to_be_enabled()
                 fill(); page.locator('[name=consent]').check()
                 page.locator('#inquiry-submit').click()
-                expect(page.locator('#inquiry-result')).to_have_attribute('data-receipt','AM-1234ABCD')
+                expect(page.locator('#inquiry-result')).to_have_attribute('data-receipt','RM-1234ABCD')
                 assert len(submitted)==2 and submitted[0]['requestId']!=submitted[1]['requestId']
                 assert submitted[1]['language']==language
                 expect(page.locator('[name=message]')).to_have_value('')

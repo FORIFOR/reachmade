@@ -10,5 +10,9 @@
     "html_handling": "force-trailing-slash",
     "not_found_handling": "404-page"
   },
-  "workers_dev": true
+  "workers_dev": true,
+  "d1_databases": [
+    { "binding": "INQUIRIES", "database_name": "reachmade-inquiries", "database_id": "SET-WITH-wrangler-d1-create", "migrations_dir": "migrations" }
+  ],
+  "triggers": { "crons": ["17 18 * * *"] }
 }

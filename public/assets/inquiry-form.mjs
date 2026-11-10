@@ -54,7 +54,7 @@ if (form) {
     try {
       const r=await fetch('/api/inquiries',{method:'POST',credentials:'omit',cache:'no-store',redirect:'error',headers:{'Content-Type':'application/json'},body:JSON.stringify({requestId,...content}),signal:AbortSignal.timeout(18000)});
       const answer=await r.json();
-      if(r.status===201&&/^AM-[A-F\d]{8}$/.test(answer.receipt||'')){
+      if(r.status===201&&/^(?:RM|AM)-[A-F\d]{8}$/.test(answer.receipt||'')){
         form.dataset.state='accepted';form.reset();previous=null;result.dataset.receipt=answer.receipt;
         say(t(`相談を受け付けました。受付番号：${answer.receipt}。自動返信メールはありません。`,`Inquiry received. Receipt: ${answer.receipt}. No automatic email is sent.`));
       }else if(r.status===429){form.dataset.state='rejected';say(t('受付件数の上限に達しています。入力は残しています。時間を置いて再試行してください。','The intake limit was reached. Your input is retained. Please retry later.'));}

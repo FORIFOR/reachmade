@@ -1,5 +1,9 @@
-/** Same-origin facade for the owner's existing private intake. No public reads. */
-export const INTAKE_ORIGIN = 'https://ai-meeting-broker-pdygkns5gq-an.a.run.app';
+/**
+ * The inquiry form's own intake: stored in this site's D1 database and announced to the
+ * operator by email. No public reads; nothing is forwarded to another service.
+ */
+import { inquiryStore, StoreError } from './inquiry-store.mjs';
+import { noticeConfigured, replyLink, sendNotice } from './inquiry-mail.mjs';
 export const SITE_ORIGIN = 'https://reachmade.com';
 export const MAX_INQUIRY_BYTES = 8192;
 const uses = new Set(['tasks','interview','training','language','custom','genie','oathra','aisecure','agent-team','launchloom']);
@@ -34,36 +38,34 @@ export async function boundedJson(body, maxBytes = MAX_INQUIRY_BYTES) {
   } finally { reader.releaseLock(); }
 }
 const json = (status,data) => new Response(JSON.stringify(data),{status,headers:{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store','X-Content-Type-Options':'nosniff','Referrer-Policy':'no-referrer'}});
-export async function handleInquiry(request, fetcher = fetch) {
+export const intakeReady = env => !!env?.INQUIRIES && noticeConfigured(env);
+export async function handleInquiry(request, env = {}, { fetcher = fetch, now = Date.now } = {}) {
   const url = new URL(request.url);
   if (url.pathname !== '/api/inquiries' && url.pathname !== '/api/inquiries/status') return null;
-  // Never forward a caller-selected origin, path, cookies, authorization or IP.
   if (url.origin !== SITE_ORIGIN || url.search || request.headers.get('Sec-Fetch-Site') === 'cross-site') return json(403,{error:'ORIGIN'});
   const statusOnly = url.pathname.endsWith('/status');
   if (request.method !== (statusOnly ? 'GET' : 'POST')) return json(405,{error:'METHOD'});
   if (!statusOnly && request.headers.get('Origin') !== SITE_ORIGIN) return json(403,{error:'ORIGIN'});
   if (!statusOnly && !/^application\/json(?:;|$)/i.test(request.headers.get('Content-Type') || '')) return json(415,{error:'CONTENT_TYPE'});
+  // Read-only capability probe. Fails closed until storage and the operator notice are both configured.
+  if (statusOnly) return intakeReady(env) ? json(200,{available:true}) : json(503,{available:false,error:'UNAVAILABLE'});
   try {
-    const payload = statusOnly ? undefined : parseInquiry(await boundedJson(request.body));
-    // The real site origin must be authorized by the broker; no impersonation
-    // of its older GitHub Pages origin is used to get around that policy.
-    const response = await fetcher(INTAKE_ORIGIN + '/api/site/' + (statusOnly ? 'status' : 'leads'), {
-      method: statusOnly ? 'GET' : 'POST', redirect:'manual', signal:AbortSignal.timeout(12000),
-      headers:{Origin:SITE_ORIGIN,'Content-Type':'application/json',Accept:'application/json'},
-      ...(payload ? {body:JSON.stringify(payload)} : {}),
-    });
-    if (response.status >= 300 && response.status < 400) { await response.body?.cancel(); return json(503,{error:'UNAVAILABLE'}); }
-    if (!/^application\/json(?:;|$)/i.test(response.headers.get('Content-Type') || '')) { await response.body?.cancel(); return json(503,{error:'UNAVAILABLE'}); }
-    let result;
-    try { result = await boundedJson(response.body,2048); }
-    catch { return json(503,{error:'UNAVAILABLE'}); }
-    if (statusOnly) return response.status === 200 && result.available === true ? json(200,{available:true}) : json(503,{available:false,error:'UNAVAILABLE'});
-    if (response.status === 201 && typeof result.receipt === 'string' && /^AM-[A-F\d]{8}$/.test(result.receipt)) return json(201,{receipt:result.receipt});
-    const errors = {400:'INVALID_INPUT',409:'REQUEST_CONFLICT',429:'CAPACITY'};
-    if (Object.hasOwn(errors,response.status)) return json(response.status,{error:errors[response.status]});
-    return json(503,{error:'UNAVAILABLE'});
+    const lead = parseInquiry(await boundedJson(request.body));
+    if (!intakeReady(env)) return json(503,{error:'UNAVAILABLE'});
+    const store = inquiryStore(env.INQUIRIES, now);
+    const { receipt, created } = await store.create(lead);
+    // The inquiry is already stored; a failed email must not turn it into an error for the visitor.
+    // The outcome stays on the record so unannounced inquiries can be found.
+    if (created) {
+      const outcome = await replyLink(env, SITE_ORIGIN, lead.requestId, now())
+        .then(link => sendNotice(env, lead, receipt, link, fetcher))
+        .then(() => 'sent', error => { console.error('[inquiries] notice failed', receipt, error instanceof Error ? error.message : ''); return 'failed'; });
+      await store.noticed(lead.requestId, outcome).catch(() => {});
+    }
+    return json(201,{receipt});
   } catch (error) {
-    if (error instanceof InquiryError) return json(error.status,{error:error.code});
+    if (error instanceof InquiryError || error instanceof StoreError) return json(error.status,{error:error.code});
+    console.error('[inquiries] intake failed', error instanceof Error ? error.message : '');
     return json(503,{error:'UNAVAILABLE'});
   }
 }
