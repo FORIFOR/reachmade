@@ -42,8 +42,9 @@ test('stores the inquiry, then emails the operator once with a reply link and no
   assert.equal(sent.length, 1);
   const { url, init, body } = sent[0];
   assert.equal(url, 'https://api.resend.com/emails'); assert.equal(init.headers['Idempotency-Key'], `inquiry-notice-${receipt}`);
-  assert.deepEqual(body.to, ['owner@example.invalid']); assert.equal(body.from, 'Reachmade <no-reply@reachmade.com>');
+  assert.deepEqual(body.to, ['owner@example.invalid']); assert.equal(body.from, 'Reachmade <contact@reachmade.com>');
   assert.equal('reply_to' in body, false);
+  assert.ok(body.text.includes('contact@reachmade.com から送ります')); assert.equal(body.text.includes('no-reply'), false);
   assert.match(body.text, new RegExp(`${SITE_ORIGIN}/inquiries/reply/${valid().requestId}\\?exp=\\d+&sig=[\\w-]{43}`));
   for (const field of ['Test visitor', 'qa@example.invalid', 'Synthetic test inquiry only.', receipt]) assert.ok(body.text.includes(field));
 });

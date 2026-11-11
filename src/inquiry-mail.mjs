@@ -5,7 +5,9 @@
  * Reply-To: answering it from a personal inbox would show that personal address to the visitor.
  * Replies to visitors come from INQUIRY_MAIL_FROM with Reply-To INQUIRY_REPLY_TO, a real inbox.
  */
-export const DEFAULT_FROM = 'Reachmade <no-reply@reachmade.com>';
+export const DEFAULT_FROM = 'Reachmade <contact@reachmade.com>';
+/** The bare address replies come from, for the texts that name it. */
+export const senderAddress = env => (/<([^<>\s]+@[^<>\s]+)>/.exec(env.INQUIRY_MAIL_FROM || DEFAULT_FROM) ?? [, env.INQUIRY_MAIL_FROM || DEFAULT_FROM])[1];
 export const REPLY_LINK_DAYS = 30;
 const topics = { custom: '星藍ノア・共同開発・未定', genie: 'Genie', tasks: 'AI Meeting', oathra: 'Oathra', aisecure: 'AI Secure', 'agent-team': 'Agent Team', launchloom: 'Launchloom',
   interview: 'interview', training: 'training', language: 'language' };
@@ -44,13 +46,13 @@ async function send(env, fetcher, message, idempotencyKey) {
 
 export const noticeConfigured = env => !!env.RESEND_API_KEY && !!env.INQUIRY_NOTIFY_TO;
 
-export function noticeText(lead, receipt, link) {
+export function noticeText(lead, receipt, link, from = senderAddress({})) {
   return `受付番号: ${receipt}\nお名前: ${lead.name}\nメール: ${lead.email}\n会社・団体: ${lead.organization || '（なし）'}\n相談の対象: ${topicName(lead.useCase)}\n言語: ${lead.language === 'en' ? '英語' : '日本語'}\n\n${lead.message}\n\n`
-    + (link ? `返信はこちらから（no-reply@reachmade.com から送ります。このメールには返信しないでください）:\n${link}\n` : '返信ページが設定されていません。このメールに返信すると、あなたのアドレスから相手に届きます。\n');
+    + (link ? `返信はこちらから（${from} から送ります。このメールには返信しないでください）:\n${link}\n` : '返信ページが設定されていません。このメールに返信すると、あなたのアドレスから相手に届きます。\n');
 }
 
 export async function sendNotice(env, lead, receipt, link, fetcher = fetch) {
-  await send(env, fetcher, { to: [env.INQUIRY_NOTIFY_TO], subject: `新しい問い合わせ ${receipt}`, text: noticeText(lead, receipt, link),
+  await send(env, fetcher, { to: [env.INQUIRY_NOTIFY_TO], subject: `新しい問い合わせ ${receipt}`, text: noticeText(lead, receipt, link, senderAddress(env)),
     ...(link ? {} : { reply_to: lead.email }) }, `inquiry-notice-${receipt}`);
 }
 

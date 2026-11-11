@@ -37,7 +37,7 @@ test('the page shows the inquiry escaped, privately, and refuses without a valid
   assert.equal(ok.status, 200);
   const html = await ok.text();
   assert.ok(html.includes('山田 &lt;b&gt;太郎&lt;/b&gt;')); assert.equal(html.includes('<b>太郎'), false);
-  assert.ok(html.includes('asker@example.invalid')); assert.ok(html.includes('お問い合わせいただき、ありがとうございます'));
+  assert.ok(html.includes('asker@example.invalid')); assert.ok(html.includes('contact@reachmade.com から送ります')); assert.equal(html.includes('no-reply'), false); assert.ok(html.includes('お問い合わせいただき、ありがとうございます'));
   assert.equal(/<script/i.test(html), false);
   assert.match(ok.headers.get('Content-Security-Policy'), /default-src 'none'/); assert.match(ok.headers.get('Content-Security-Policy'), /form-action 'self'/);
   assert.equal(ok.headers.get('X-Robots-Tag'), 'noindex, nofollow'); assert.equal(ok.headers.get('Cache-Control'), 'no-store');
@@ -60,7 +60,7 @@ test('sends one reply to the visitor from the Reachmade address and ignores a do
   }
   assert.equal(sent.length, 1);
   const { init, body } = sent[0];
-  assert.deepEqual(body.to, ['asker@example.invalid']); assert.equal(body.from, 'Reachmade <no-reply@reachmade.com>'); assert.equal(body.reply_to, 'inbox@example.invalid');
+  assert.deepEqual(body.to, ['asker@example.invalid']); assert.equal(body.from, 'Reachmade <contact@reachmade.com>'); assert.equal(body.reply_to, 'inbox@example.invalid');
   assert.equal(init.headers['Idempotency-Key'], `inquiry-reply-${ID}-${nonce}`);
   assert.ok(body.subject.includes('RM-')); assert.ok(body.text.startsWith('山田様\n\n資料をお送りします。')); assert.ok(body.text.includes('> Genie を試したいです。'));
   assert.deepEqual(db.sqlite.prepare('SELECT nonce, text, at FROM inquiry_replies').all().map(r => ({ ...r })), [{ nonce, text: '山田様\n\n資料をお送りします。', at: 5_000 }]);

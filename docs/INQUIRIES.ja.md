@@ -5,11 +5,11 @@ reachmade.com の相談フォームは、このサイトの Worker が受け付�
 ```
 フォーム ─POST /api/inquiries─▶ Worker ─▶ D1（reachmade-inquiries）に保存
                                      └─▶ Resend で運営者へ通知（返信ページへのリンク付き）
-運営者 ─通知のリンク─▶ /inquiries/reply/<id>?exp&sig ─▶ Resend で相手へ返信（no-reply@reachmade.com から）
+運営者 ─通知のリンク─▶ /inquiries/reply/<id>?exp&sig ─▶ Resend で相手へ返信（contact@reachmade.com から）
 ```
 
 - 通知メールには返信先（Reply-To）を付けません。Gmail から返信すると個人のアドレスが相手に見えるためです。
-- 返信は `INQUIRY_MAIL_FROM`（既定 `Reachmade <no-reply@reachmade.com>`）から送り、Reply-To を `INQUIRY_REPLY_TO` にします。相手の返事はそこに届きます。
+- 返信は `INQUIRY_MAIL_FROM`（既定 `Reachmade <contact@reachmade.com>`）から送り、Reply-To を `INQUIRY_REPLY_TO` にします。相手の返事はそこに届きます。
 - 返信ページのリンクは、お問い合わせ1件ごとに署名され、30日で切れます。ページは検索に載らず、他サイトからの送信を拒みます。
 - 保存は90日。毎日1回（UTC 18:17 = 日本時間 3:17）の削除処理で、期限切れの問い合わせと返信の記録を消します。
 - 受付の上限は1日100件、同じメールアドレスから1日3件。受付番号は `RM-` で始まります。

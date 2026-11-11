@@ -36,7 +36,7 @@ for(const language of ['ja','en']) {
   // Inquiries are stored by this site itself, at Cloudflare; no other intake is named.
   assert.match(html,/Cloudflare/);
   assert.doesNotMatch(html,/Google Cloud/);
-  assert.match(html,/no-reply@reachmade\.com/);
+  assert.match(html,/contact@reachmade\.com/);
   // The intake emails each inquiry to the operator through Resend; the page must say so.
   assert.match(html,/Resend/);
   assert.doesNotMatch(html,/動画埋め込みを入れていません|no advertising or analytics tags, external fonts, or embedded video/);
