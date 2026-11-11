@@ -10,5 +10,10 @@
     "html_handling": "force-trailing-slash",
     "not_found_handling": "404-page"
   },
-  "workers_dev": true
+  "workers_dev": true,
+  "d1_databases": [
+    { "binding": "INQUIRIES", "database_name": "reachmade-inquiries", "database_id": "470b4940-6b55-479a-a50e-953f35088465", "migrations_dir": "migrations" }
+  ],
+  "triggers": { "crons": ["17 18 * * *"] },
+  "vars": { "INQUIRY_REPLY_TO": "pw@reachmade.com" }
 }

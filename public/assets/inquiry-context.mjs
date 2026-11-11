@@ -10,8 +10,14 @@ const services = Object.freeze({
 
 // Visitors who want to use a product themselves, rather than commission work.
 const uses = Object.freeze({launchloom:['Launchloom','launchloom']});
+// 星藍ノア's own request pages (/products/noa/contact|sponsor|games/). The intake has no Noa category, so they file as custom.
+const requests = Object.freeze({
+  'noa-contact': [['星藍ノアへのお問い合わせ','星藍ノアへのお問い合わせです。\n\n内容（コラボ・出演・取材など）：\n希望の時期（任意）：'],['Contacting 星藍ノア (Noa)','This is an inquiry for 星藍ノア (Noa).\n\nTopic (collaboration, appearance, press, etc.):\nPreferred timing (optional):']],
+  'noa-sponsor': [['星藍ノアの配信への広告掲載','星藍ノアの配信への広告掲載を相談したいです。\n\n会社・サービス名：\n掲載したい内容：\n希望の期間・時期：'],['Advertising on 星藍ノア (Noa)’s stream','I would like to discuss advertising on 星藍ノア (Noa)’s stream.\n\nCompany or service:\nWhat to show:\nPreferred period:']],
+  'noa-game': [['星藍ノアにやって欲しいゲーム','星藍ノアにやって欲しいゲームのリクエストです。\n\nゲーム名：\n機種（PC・Switchなど）：\nおすすめの理由（任意）：'],['A game for 星藍ノア (Noa) to play','A game request for 星藍ノア (Noa).\n\nGame title:\nPlatform (PC, Switch, etc.):\nWhy you recommend it (optional):']],
+});
 
-export const inquiryContextIds = Object.freeze([...Object.keys(products).map(id=>`product-${id}`), ...Object.keys(services).map(id=>`service-${id}`), ...Object.keys(uses).map(id=>`use-${id}`)]);
+export const inquiryContextIds = Object.freeze([...Object.keys(products).map(id=>`product-${id}`), ...Object.keys(services).map(id=>`service-${id}`), ...Object.keys(uses).map(id=>`use-${id}`), ...Object.keys(requests).map(id=>`use-${id}`)]);
 
 export function inquiryContext(hash = '', search = '', language = 'ja') {
   if (!['ja','en'].includes(language)) throw new TypeError('Unsupported inquiry language');
@@ -24,6 +30,10 @@ export function inquiryContext(hash = '', search = '', language = 'ja') {
   if (kind === 'product' && Object.hasOwn(products, id)) {
     const [name, useCase] = products[id];
     return {id:`product-${id}`, useCase, label:ja?`${name}を見ての開発相談`:`A project inspired by ${name}`, message:ja?`${name}の技術を活かした開発について相談したいです。\n\n対象の業務・試したいこと：\n現在の状況：`:`I would like to discuss a project using the technology behind ${name}.\n\nWorkflow or experience to try:\nCurrent situation:`};
+  }
+  if (kind === 'use' && Object.hasOwn(requests, id)) {
+    const [label, message] = requests[id][ja ? 0 : 1];
+    return {id:`use-${id}`, useCase:'custom', label, message};
   }
   if (kind === 'use' && Object.hasOwn(uses, id)) {
     const [name, useCase] = uses[id];

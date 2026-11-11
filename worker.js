@@ -3,6 +3,8 @@ import { ownedAliasTarget } from './src/owned-aliases.mjs';
 import { products } from './src/products.mjs';
 import { serveStaticRecording } from './src/static-recordings.mjs';
 import { handleInquiry } from './src/inquiries.mjs';
+import { handleReply } from './src/inquiry-reply.mjs';
+import { inquiryStore } from './src/inquiry-store.mjs';
 
 const productSites = Object.fromEntries(products.filter(product => product.labSite && product.site).map(product => [new URL(product.labSite).hostname, (product.appSite || product.site)]));
 function productRedirect(url) {
@@ -24,8 +26,10 @@ export default {
     }
     const productTarget = productRedirect(url);
     if (productTarget) return Response.redirect(productTarget.toString(), 302);
-    const inquiry = await handleInquiry(request);
+    const inquiry = await handleInquiry(request, env);
     if (inquiry) return inquiry;
+    const reply = await handleReply(request, env);
+    if (reply) return reply;
     const ownedRecording = await serveOwnedRecording(request, env.ASSETS);
     if (ownedRecording) return ownedRecording;
     const recording = await serveStaticRecording(request, env.ASSETS);
@@ -38,5 +42,9 @@ export default {
       return new Response(asset.body,{status:asset.status,statusText:asset.statusText,headers});
     }
     return asset;
+  },
+  // Daily: remove inquiries past their 90-day retention, with their replies and old counters.
+  async scheduled(_controller, env) {
+    if (env.INQUIRIES) await inquiryStore(env.INQUIRIES).sweep();
   },
 };

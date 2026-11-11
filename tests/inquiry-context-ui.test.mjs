@@ -14,7 +14,7 @@ class Element {
  setAttribute(k,v){this.attributes[k]=v;}
  removeAttribute(k){delete this.attributes[k];}
 }
-async function fixture({hash='#service-ai-character',search='',lang='ja',reply=async()=>new Response('{"receipt":"AM-1234ABCD"}',{status:201})}={}){
+async function fixture({hash='#service-ai-character',search='',lang='ja',reply=async()=>new Response('{"receipt":"RM-1234ABCD"}',{status:201})}={}){
  const fields=Object.fromEntries(['name','email','organization','useCase','message','consent','website'].map(k=>[k,new Element(k==='useCase'?'custom':'')]));
  const nodes=Object.fromEntries(['reachmade-inquiry','inquiry-submit','inquiry-readiness','inquiry-result','inquiry-reconnect','inquiry-entry','inquiry-entry-label','inquiry-use-template','inquiry-template-status'].map(k=>[k,new Element()]));
  const form=nodes['reachmade-inquiry'],fieldset=new Element();form.dataset.language=lang;
@@ -59,7 +59,7 @@ test('pending and unconfirmed submissions retain work and cannot be templated or
 });
 test('accepted receipt resets consent/message and template cannot silently repopulate accepted inquiry',async()=>{
  const f=await fixture({hash:'#product-noa'});await f.template();f.fields.name.value='Local QA';f.fields.email.value='qa@example.invalid';f.fields.consent.checked=true;await f.submit();
- assert.equal(f.form.dataset.state,'accepted');assert.equal(f.nodes['inquiry-result'].dataset.receipt,'AM-1234ABCD');assert.equal(f.fields.message.value,'');assert.equal(f.fields.consent.checked,false);
+ assert.equal(f.form.dataset.state,'accepted');assert.equal(f.nodes['inquiry-result'].dataset.receipt,'RM-1234ABCD');assert.equal(f.fields.message.value,'');assert.equal(f.fields.consent.checked,false);
  await f.template();assert.equal(f.fields.message.value,'');assert.equal(f.fields.consent.checked,false);
  const payload=JSON.parse(f.requests.find(x=>x.url==='/api/inquiries').init.body);assert.equal(payload.useCase,'custom');
  assert.deepEqual(Object.keys(payload).sort(),['consent','email','language','message','name','organization','requestId','useCase','website'].sort());
@@ -74,7 +74,7 @@ test('same-page form jump preserves newer fragment context over an older query',
 test('existing non-default topic prevents template insertion even with an empty message',async()=>{
  const f=await fixture();f.fields.useCase.value='genie';await f.template();assert.equal(f.fields.useCase.value,'genie');assert.equal(f.fields.message.value,'');
 });
-for(const [status,payload]of [[200,{receipt:'AM-1234ABCD'}],[201,{receipt:'invalid'}]])test(`controller rejects false receipt boundary ${status}/${payload.receipt}`,async()=>{
+for(const [status,payload]of [[200,{receipt:'RM-1234ABCD'}],[201,{receipt:'invalid'}]])test(`controller rejects false receipt boundary ${status}/${payload.receipt}`,async()=>{
  const f=await fixture({reply:async()=>new Response(JSON.stringify(payload),{status})});await f.template();f.fields.name.value='Local QA';f.fields.email.value='qa@example.invalid';f.fields.consent.checked=true;await f.submit();
  assert.equal(f.form.dataset.state,'unconfirmed');assert.equal(f.nodes['inquiry-result'].dataset.receipt,undefined);assert.equal(f.nodes['inquiry-submit'].disabled,true);
 });
